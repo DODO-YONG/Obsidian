@@ -267,7 +267,7 @@
           </div>
           <div class="flow">
             <span class="arrow">→ Drive</span>
-            <div><b>프로젝트 + 복원 키트</b><small>푸시할 때마다, 그리고 매일 밤 백업. 날짜별 폴더와 새 PC 복원 키트를 함께 보관.</small></div>
+            <div><b>프로젝트 + 복원 키트</b><small>1시간마다(바뀐 게 있을 때만), 매일 밤, 그리고 폴더를 잠그기 직전에 백업. 날짜별 폴더와 새 PC 복원 키트를 함께 보관.</small></div>
           </div>
         </div>
       </div>
@@ -324,7 +324,7 @@
         <li class="step">
           <span class="dot">8</span>
           <h3>구글 드라이브 백업</h3>
-          <p>GitHub에 푸시할 때마다, 그리고 매일 밤 23:50에 구글 드라이브로 백업합니다. 최신본과 함께 날짜별 마지막 상태를 따로 남깁니다.</p>
+          <p>1시간마다(지난 백업 이후 바뀐 게 있을 때만), 그리고 매일 밤 23:50에 구글 드라이브로 백업합니다. 최신본과 함께 날짜별 마지막 상태를 따로 남깁니다.</p>
           <div class="tags"><span class="tag">rclone</span><span class="tag">current / daily</span><span class="tag ok">드라이브 권한 최소화</span></div>
         </li>
         <li class="step">
@@ -377,7 +377,8 @@
           <thead><tr><th>언제</th><th>무엇을</th><th>어디로</th></tr></thead>
           <tbody>
             <tr><td><b>10분마다</b></td><td>바뀐 게 있으면 자동 커밋하고 푸시</td><td>GitHub</td></tr>
-            <tr><td><b>푸시할 때마다</b></td><td>최신본, 오늘 날짜 폴더, 복원 키트 갱신 (푸시를 기다리게 하지 않고 뒤에서 실행)</td><td>구글 드라이브</td></tr>
+            <tr><td><b>1시간마다</b></td><td>지난 백업 이후 바뀐 게 있으면 최신본, 오늘 날짜 폴더, 복원 키트 갱신 (없으면 건너뜀)</td><td>구글 드라이브</td></tr>
+            <tr><td><b>폴더를 잠글 때</b></td><td><code>cloud-close</code>가 GitHub 푸시와 드라이브 백업을 먼저 끝낸 뒤 잠금</td><td>GitHub · 구글 드라이브</td></tr>
             <tr><td><b>매일 23:50</b></td><td>푸시가 없던 날에도 그날의 마지막 상태를 남김</td><td>구글 드라이브</td></tr>
             <tr><td><b>Windows 로그인 시</b></td><td>Ubuntu를 화면 없이 켜서 위 작업들이 돌 수 있게 함</td><td>이 PC</td></tr>
           </tbody>
@@ -432,7 +433,7 @@
         <div class="cmd"><div class="what">보안 점검 에이전트 실행</div><div class="cmd-line"><code>~/run-security-agent.sh</code><button class="copy" type="button">복사</button></div></div>
         <div class="cmd"><div class="what">지금 바로 드라이브 백업</div><div class="cmd-line"><code>~/bin/gdrive-backup.sh</code><button class="copy" type="button">복사</button></div></div>
         <div class="cmd"><div class="what">자동 푸시 기록 보기</div><div class="cmd-line"><code>journalctl --user -u autopush.service -n 20</code><button class="copy" type="button">복사</button></div></div>
-        <div class="cmd"><div class="what">③ 끝나면 잠그기 (claude 먼저 종료)</div><div class="cmd-line"><code>cloud-close</code><button class="copy" type="button">복사</button></div></div>
+        <div class="cmd"><div class="what">③ 끝나면 잠그기 — 푸시·백업 후 잠금 (claude 먼저 종료)</div><div class="cmd-line"><code>cloud-close</code><button class="copy" type="button">복사</button></div></div>
       </div>
     </section>
 
