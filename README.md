@@ -1,5 +1,7 @@
 # 웹사이트 보안 점검 에이전트
 
+> 📖 **소개 페이지**: https://dodo-yong.github.io/security-agent/
+
 Claude Agent SDK(Python)로 만든 대화형 보안 점검 에이전트입니다.
 URL을 주면 **비침습(non-invasive)** 방식으로 점검하고, 취약점이 있으면
 **무엇이 문제인지 · 왜 위험한지 · 얕은 수준에서 어떻게 뚫릴 수 있는지 · 고치는 법**을
