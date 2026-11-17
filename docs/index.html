@@ -376,8 +376,8 @@
         <table>
           <thead><tr><th>언제</th><th>무엇을</th><th>어디로</th></tr></thead>
           <tbody>
-            <tr><td><b>10분마다</b></td><td>바뀐 게 있으면 자동 커밋하고 푸시</td><td>GitHub</td></tr>
-            <tr><td><b>1시간마다</b></td><td>지난 백업 이후 바뀐 게 있으면 최신본, 오늘 날짜 폴더, 복원 키트 갱신 (없으면 건너뜀)</td><td>구글 드라이브</td></tr>
+            <tr><td><b>파일이 바뀌고 1분 뒤</b></td><td>커밋하고, GitHub 최신과 합친 뒤 푸시 (10분마다 예비 실행)</td><td>GitHub</td></tr>
+            <tr><td><b>1시간마다</b></td><td>바뀐 게 있으면 시각이 붙은 '사진'(git 기록 + 리포트)을 새로 쌓고 열람용 폴더 갱신 (없으면 건너뜀)</td><td>구글 드라이브</td></tr>
             <tr><td><b>폴더를 잠글 때</b></td><td><code>cloud-close</code>가 GitHub 푸시와 드라이브 백업을 먼저 끝낸 뒤 잠금</td><td>GitHub · 구글 드라이브</td></tr>
             <tr><td><b>매일 23:50</b></td><td>푸시가 없던 날에도 그날의 마지막 상태를 남김</td><td>구글 드라이브</td></tr>
             <tr><td><b>Windows 로그인 시</b></td><td>Ubuntu를 화면 없이 켜서 위 작업들이 돌 수 있게 함</td><td>이 PC</td></tr>
@@ -389,9 +389,9 @@
         <div class="card">
           <h3>구글 드라이브 폴더 구성</h3>
 <pre style="margin:10px 0 0;background:var(--surface-2);padding:14px 16px;border-radius:10px;overflow-x:auto;line-height:1.6">security-agent-backup/
-├─ current/     최신 상태
-├─ daily/
-│  └─ 날짜/     그날 마지막 상태
+├─ snapshots/   시각별 사진 (덮어쓰지 않음)
+├─ current/     최신 상태 (열람용)
+├─ daily/       날짜별 마지막 상태 (열람용)
 └─ env/         새 PC 복원 키트</pre>
         </div>
         <div class="card">
@@ -410,13 +410,15 @@
           <ul class="check">
             <li><span>점검 리포트, <code>.env</code>, 키 파일은 GitHub에 올라가지 않음</span></li>
             <li><span>API 키·토큰·개인키처럼 보이는 내용이 있으면 자동 푸시를 멈춤 (가짜 키로 시험 완료)</span></li>
-            <li><span>자동 푸시가 겹쳐 실행되지 않도록 잠금</span></li>
+            <li><span>GitHub와 겹치면 강제로 덮어쓰지 않고, 이 PC 작업을 별도 브랜치에 안전하게 보관</span></li>
+            <li><span>푸시나 백업이 실패하면 Windows 알림</span></li>
           </ul>
         </div>
         <div class="card">
           <ul class="check">
             <li><span>작업 폴더는 비밀번호로 잠기는 암호화 폴더</span></li>
             <li><span>구글 드라이브 권한은 "백업 도구가 만든 파일만" 접근</span></li>
+            <li><span>드라이브 백업은 덮어쓰지 않고 쌓기만 함. 최근 7일은 전부, 90일까지 하루 1개 보관</span></li>
             <li><span>복원 키트에는 로그인 정보를 넣지 않음. 새 PC에서 다시 로그인</span></li>
           </ul>
         </div>
