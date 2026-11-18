@@ -9,3 +9,5 @@
 ## [2026-11-18] output | security-agent 이전 (DODO-YONG/security-agent → agents/security-agent, 이력 보존) + 위키 허브·README 등록
 
 ## [2026-11-18] output | interview-coach 에이전트 첫 버전 (agents/interview-coach) + 위키 허브·README 등록
+
+## [2026-11-18] output | 작업 소개 페이지(docs/index.html, GitHub Pages) + README 대표 이미지

@@ -1,6 +1,10 @@
-# 🤖 나만의 에이전트 만들기
+# 🤖 나만의 에이전트 작업실
 
-수업에서 만드는 AI 에이전트 프로젝트 모음. 코드는 `agents/`, 설계·학습 메모는 Obsidian 위키(`wiki/`)에 있다.
+[![나만의 에이전트 작업실 소개 페이지](docs/preview.png)](https://dodo-yong.github.io/Obsidian/)
+
+**🌐 소개 페이지: https://dodo-yong.github.io/Obsidian/**
+
+AWS 인턴십 과정에서 Claude Code와 함께 만드는, 오직 나를 위한 AI 에이전트 모음. 코드는 `agents/`, 설계·학습 메모는 Obsidian 위키(`wiki/`)에 있다.
 
 ## 🗺️ 프로젝트 지도
 
