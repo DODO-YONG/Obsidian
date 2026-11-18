@@ -8,3 +8,29 @@
 
 # Claude Code 개인 설정
 .claude/settings.local.json
+
+# ── 🔒 비밀·민감 정보 (절대 올리지 않음) ──────────────────
+# API 키·토큰: 각 폴더의 .env 에 두고, 형식만 .env.example 로 공유
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+id_rsa*
+credentials*.json
+secrets*.json
+# 올리고 싶지 않은 문서·메모: 아무 곳에나 private/ 폴더를 만들어 넣으면 됨
+private/
+*.private.*
+
+# ── 코드 부산물 (용량만 크고 다시 만들 수 있음) ──────────────
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+dist/
+build/
+*.log

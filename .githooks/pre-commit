@@ -1,0 +1,29 @@
+#!/bin/sh
+# 커밋 직전 비밀 정보 검사. Obsidian Git 자동 커밋에도 적용됨.
+# 걸리면 커밋이 막힌다. 정말 괜찮은 줄이면 줄 끝에 "# allow-secret" 을 붙인다.
+
+fail=0
+
+# 1) 올리면 안 되는 파일 이름
+bad_files=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '(^|/)(\.env(\..*)?|id_rsa.*|.*\.(pem|key|p12)|credentials.*\.json|secrets.*\.json)$' | grep -vE '(^|/)\.env\.example$')
+if [ -n "$bad_files" ]; then
+  echo "🔒 커밋 차단: 비밀 파일이 포함됨 →"
+  echo "$bad_files" | sed 's/^/   /'
+  fail=1
+fi
+
+# 2) 새로 추가된 줄 안의 키 모양 문자열
+pattern='(sk-ant-[A-Za-z0-9_-]{20,}|sk-(proj-)?[A-Za-z0-9_-]{32,}|gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,}|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{35}|xox[abpr]-[A-Za-z0-9-]{10,}|-----BEGIN [A-Z ]*PRIVATE KEY-----)'
+hits=$(git diff --cached -U0 --diff-filter=ACMR -- . ':(exclude).githooks/*' \
+  | grep -E '^\+' | grep -vE '^\+\+\+' | grep -v 'allow-secret' | grep -E "$pattern")
+if [ -n "$hits" ]; then
+  echo "🔒 커밋 차단: API 키·토큰으로 보이는 문자열 발견 →"
+  echo "$hits" | cut -c1-80 | sed 's/^/   /'
+  fail=1
+fi
+
+if [ $fail -ne 0 ]; then
+  echo "→ 키는 .env 에 옮기고(자동 제외됨), 다시 저장하세요."
+  exit 1
+fi
+exit 0

@@ -1,5 +1,8 @@
 {
   "useMarkdownLinks": false,
   "newLinkFormat": "shortest",
-  "attachmentFolderPath": "raw/assets"
+  "attachmentFolderPath": "raw/assets",
+  "userIgnoreFilters": [
+    "agents/"
+  ]
 }
