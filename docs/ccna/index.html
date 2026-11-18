@@ -189,6 +189,14 @@
   .ladder li.top { color: var(--ink); font-weight: 700; }
   .fine { margin-top: 14px; font-size: 12.5px; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 4px 18px; }
   .intro-mini { max-width: 1320px; margin: 0 auto; padding: 14px max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left)); }
+  .mini-card { display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 14px; align-items: center; padding: 14px 16px;
+    border-radius: 14px; border: 1px solid var(--accent); background: linear-gradient(100deg, var(--accent-soft), var(--panel) 70%); }
+  .mini-ic { font-size: 26px; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; background: var(--panel); border: 1px solid var(--rule); }
+  .mini-k { font-family: var(--mono); font-size: 12px; color: var(--accent); font-weight: 700; letter-spacing: .05em; }
+  .mini-t { font-size: 15.5px; font-weight: 600; margin-top: 2px; }
+  .mini-lv { display: inline-block; margin-left: 6px; font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); background: var(--panel); border: 1px solid var(--rule); border-radius: 999px; padding: 1px 9px; vertical-align: 2px; }
+  .mini-act { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  @media (max-width: 760px) { .mini-card { grid-template-columns: auto minmax(0,1fr); } .mini-act { grid-column: 1 / -1; justify-content: stretch; } .mini-act .btn { flex: 1; justify-content: center; } }
   .intro-mini .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-size: 14px; color: var(--ink-2); background: var(--panel); border: 1px solid var(--rule); border-radius: 12px; padding: 10px 14px; }
   .intro-mini b { color: var(--ink); }
   .linkbtn { border: 0; background: none; color: var(--accent); cursor: pointer; padding: 0; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
@@ -255,7 +263,7 @@
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261118135328';
+  var SITE_V = '20261118135443';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -285,7 +293,7 @@
   </div>
 </header>
 
-<!-- 소개. 항상 보이고, 사용자가 "소개 접기"를 누른 경우에만 한 줄 요약으로 접힌다 -->
+<!-- 소개. 처음 온 사람에게는 펼쳐 보이고, 문제를 풀어 본 사람에게는 접힌 안내 카드로 보인다(직접 펼치거나 접으면 그 선택을 기억) -->
 <section class="intro" id="intro" aria-labelledby="introTitle">
   <div class="hero2">
     <div>
@@ -334,7 +342,17 @@
   </div>
 </section>
 <div class="intro-mini" id="introMini" hidden>
-  <div class="row"><b>TRACER</b><span>CCNA 200-301 연습 · 영어 출제와 해설 · XP와 칭호</span><button class="linkbtn" id="showIntro" type="button">소개 펼치기</button></div>
+  <div class="mini-card">
+    <span class="mini-ic" aria-hidden="true">🧭</span>
+    <div class="mini-txt">
+      <div class="mini-k">DY-003 TRACER · 다시 오셨네요</div>
+      <div class="mini-t">CCNA를 실제 시험처럼 영어로 풀고 바로 해설받는 연습장 <span class="mini-lv" id="miniLv">Lv 1</span></div>
+    </div>
+    <div class="mini-act">
+      <button class="btn" id="showIntro" type="button">📖 소개 펼치기</button>
+      <button class="btn primary" id="miniStart" type="button">이어서 풀기 →</button>
+    </div>
+  </div>
 </div>
 
 <div class="layout">
@@ -808,10 +826,16 @@ var Subnet = (function () {
       return '<li class="' + (x.lv === lv ? 'me' : '') + (x.lv === 10 ? ' top' : '') + '"><span>Lv ' + x.lv + '</span>' + esc(x.name) + (x.lv === lv ? ' ← 지금' : '') + '</li>';
     }).join('');
   }
-  function setIntro(open) { $('#intro').hidden = !open; $('#introMini').hidden = open; lsSet('tracer-intro-hidden', open ? '' : '1'); }
-  if (lsGet('tracer-intro-hidden') === '1') { $('#intro').hidden = true; $('#introMini').hidden = false; }
-  $('#showIntro').addEventListener('click', function () { setIntro(true); $('#intro').scrollIntoView({ behavior: 'smooth' }); });
-  $('#hideIntro').addEventListener('click', function () { setIntro(false); });
+  function setIntro(open, remember) {
+    $('#intro').hidden = !open; $('#introMini').hidden = open;
+    if (remember) lsSet('tracer-intro', open ? 'open' : 'hidden');
+    if (!open) $('#miniLv').textContent = 'Lv ' + Game.level() + ' · ' + Game.title(Game.level());
+  }
+  var introPref = lsGet('tracer-intro');   // 'open' | 'hidden' | '' (선택 안 함 → 문제를 풀어 봤으면 접기)
+  setIntro(introPref ? introPref === 'open' : !Game.played(), false);
+  $('#showIntro').addEventListener('click', function () { setIntro(true, true); $('#intro').scrollIntoView({ behavior: 'smooth' }); });
+  $('#hideIntro').addEventListener('click', function () { setIntro(false, true); });
+  $('#miniStart').addEventListener('click', goApp);
 
   // ---- 게임 패널
   Game.render();
