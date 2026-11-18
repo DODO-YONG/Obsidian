@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CCNA 코치</title>
+<meta name="description" content="CCNA 200-301 단원별 문제 풀이와 해설. 답변은 주인의 Mac에서 도는 서버가 제미나이로 만든다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23146C63'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h16' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='10' r='2.4' fill='white'/%3E%3Ccircle cx='20' cy='16' r='2.4' fill='white'/%3E%3Ccircle cx='14' cy='22' r='2.4' fill='white'/%3E%3C/svg%3E">
+<style>
+  /* Layout: 왼쪽 출제 범위 패널(단원 → 세부 범위 체크) + 가운데 문제·답·해설 작업대 + 오른쪽 진도.
+     콘솔 케이블 색(시안 계열 청록)을 강조색으로, 문제의 show 출력은 터미널처럼. */
+  :root {
+    --bg: #F3F5F4; --panel: #FFFFFF; --sunk: #E8ECEA; --ink: #121A18; --ink-2: #4B5856; --ink-3: #7D8A88; --rule: #D8DFDC;
+    --accent: #146C63; --accent-soft: #DDEFEC; --ok: #1F7A45; --ok-soft: #DDF1E4; --bad: #B4402C; --bad-soft: #F8E2DC;
+    --part: #A0660F; --part-soft: #F6EAD3; --term-bg: #111917; --term-ink: #D9E3E0;
+    --sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg: #0E1413; --panel: #151D1B; --sunk: #1C2624; --ink: #E5EDEA; --ink-2: #A6B4B0; --ink-3: #788683; --rule: #26322F;
+    --accent: #5FC7B8; --accent-soft: #15302C; --ok: #7BD49C; --ok-soft: #16301F; --bad: #F08C78; --bad-soft: #3A1C17;
+    --part: #E8B04A; --part-soft: #33260F; --term-bg: #0A0F0E; --term-ink: #D9E3E0; color-scheme: dark; } }
+  :root[data-theme="dark"] {
+    --bg: #0E1413; --panel: #151D1B; --sunk: #1C2624; --ink: #E5EDEA; --ink-2: #A6B4B0; --ink-3: #788683; --rule: #26322F;
+    --accent: #5FC7B8; --accent-soft: #15302C; --ok: #7BD49C; --ok-soft: #16301F; --bad: #F08C78; --bad-soft: #3A1C17;
+    --part: #E8B04A; --part-soft: #33260F; --term-bg: #0A0F0E; --term-ink: #D9E3E0; color-scheme: dark; }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15.5px; line-height: 1.65; word-break: keep-all; overflow-wrap: anywhere; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  code, .mono { font-family: var(--mono); }
+
+  header { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule); }
+  .bar { max-width: 1320px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left)); height: 58px; display: flex; align-items: center; gap: 14px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; white-space: nowrap; }
+  .logo .mk { width: 26px; height: 26px; border-radius: 7px; background: var(--accent); display: grid; place-items: center; }
+  .logo small { font-family: var(--mono); font-weight: 500; color: var(--ink-3); font-size: 12px; }
+  .tabs { display: flex; gap: 4px; margin-left: 12px; }
+  .tabs button { border: 0; background: none; padding: 6px 12px; border-radius: 999px; color: var(--ink-2); cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  .spacer { flex: 1; }
+  .dday { font-family: var(--mono); font-size: 13px; color: var(--ink-2); white-space: nowrap; }
+  .dday b { color: var(--accent); }
+  .icon-btn { width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--rule); background: var(--panel); color: var(--ink-2); cursor: pointer; display: grid; place-items: center; }
+
+  .layout { max-width: 1320px; margin: 0 auto; padding: 20px max(16px, env(safe-area-inset-right)) 60px max(16px, env(safe-area-inset-left)); display: grid; grid-template-columns: 300px minmax(0, 1fr) 280px; gap: 20px; align-items: start; }
+  .panel { background: var(--panel); border: 1px solid var(--rule); border-radius: 14px; }
+  .panel h2 { font-size: 13px; letter-spacing: .04em; color: var(--ink-3); font-weight: 600; margin: 0; padding: 14px 16px 10px; text-transform: uppercase; }
+  aside.scope { position: sticky; top: 78px; max-height: calc(100vh - 96px); display: flex; flex-direction: column; }
+  .scope-list { overflow-y: auto; padding: 0 8px 8px; }
+  .dom { border-top: 1px solid var(--rule); }
+  .dom:first-child { border-top: 0; }
+  .dom-head { display: grid; grid-template-columns: 22px minmax(0,1fr) auto 20px; gap: 8px; align-items: center; padding: 10px 8px; cursor: pointer; border-radius: 8px; }
+  .dom-head:hover { background: var(--sunk); }
+  .dom-head .num { font-family: var(--mono); font-size: 12px; color: var(--accent); font-weight: 600; }
+  .dom-head .nm { font-weight: 600; font-size: 14.5px; }
+  .dom-head .w { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); }
+  .dom-head .chev { color: var(--ink-3); transition: transform .15s; font-family: var(--mono); }
+  .dom.open .chev { transform: rotate(90deg); }
+  .dom-meter { height: 3px; border-radius: 2px; background: var(--sunk); margin: 0 8px 8px 38px; overflow: hidden; }
+  .dom-meter i { display: block; height: 100%; background: var(--accent); width: 0; }
+  .subs { display: none; padding: 0 8px 10px 30px; }
+  .dom.open .subs { display: grid; gap: 2px; }
+  .subs label { display: grid; grid-template-columns: 18px 34px minmax(0,1fr); gap: 6px; align-items: start; font-size: 13.5px; color: var(--ink-2); padding: 4px 6px; border-radius: 6px; cursor: pointer; }
+  .subs label:hover { background: var(--sunk); }
+  .subs label .sid { font-family: var(--mono); font-size: 12px; color: var(--ink-3); padding-top: 1px; }
+  .subs input { margin-top: 4px; accent-color: var(--accent); }
+  .all { font-size: 12.5px; color: var(--accent); background: none; border: 0; cursor: pointer; padding: 0 6px 6px; justify-self: start; }
+  .scope-foot { border-top: 1px solid var(--rule); padding: 12px 16px; font-size: 13px; color: var(--ink-2); }
+
+  main { display: grid; gap: 16px; min-width: 0; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 14px 16px; }
+  .seg { display: inline-flex; background: var(--sunk); border-radius: 10px; padding: 3px; }
+  .seg button { border: 0; background: none; padding: 5px 12px; border-radius: 8px; cursor: pointer; color: var(--ink-2); font-size: 14px; white-space: nowrap; }
+  .seg button[aria-pressed="true"] { background: var(--panel); color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .btn { border: 1px solid var(--rule); background: var(--panel); border-radius: 10px; padding: 0 16px; min-height: 40px; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  :root[data-theme="dark"] .btn.primary { color: #08201D; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #08201D; } }
+  .btn:disabled { opacity: .55; cursor: wait; }
+  .controls .btn.primary { margin-left: auto; }
+
+  .card { padding: 22px; }
+  .q-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 12.5px; margin-bottom: 12px; }
+  .pill { font-family: var(--mono); padding: 2px 9px; border-radius: 999px; background: var(--sunk); color: var(--ink-2); }
+  .pill.acc { background: var(--accent-soft); color: var(--accent); }
+  .q-text { font-size: 17px; line-height: 1.75; white-space: pre-wrap; }
+  .q-text code, .q-text .cli { display: block; background: var(--term-bg); color: var(--term-ink); font-family: var(--mono); font-size: 13.5px; padding: 12px 14px; border-radius: 10px; margin: 10px 0; overflow-x: auto; white-space: pre; }
+  .choices { display: grid; gap: 8px; margin-top: 16px; }
+  .choice { display: grid; grid-template-columns: 30px minmax(0,1fr); gap: 10px; align-items: start; text-align: left; border: 1px solid var(--rule); background: var(--panel); border-radius: 10px; padding: 11px 14px; cursor: pointer; }
+  .choice:hover { border-color: var(--ink-3); }
+  .choice .ltr { font-family: var(--mono); font-weight: 600; color: var(--ink-3); }
+  .choice[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+  .choice[aria-pressed="true"] .ltr { color: var(--accent); }
+  .choice.correct { border-color: var(--ok); background: var(--ok-soft); }
+  .choice.wrong { border-color: var(--bad); background: var(--bad-soft); }
+  .answer-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .answer-row input, textarea { flex: 1; min-width: 200px; border: 1px solid var(--rule); background: var(--panel); border-radius: 10px; padding: 10px 12px; }
+  textarea { width: 100%; resize: vertical; min-height: 110px; font-family: var(--sans); line-height: 1.6; }
+  .empty { text-align: center; padding: 48px 20px; color: var(--ink-2); }
+  .empty .big { font-size: 34px; }
+  .empty h3 { margin: 10px 0 6px; color: var(--ink); }
+
+  .exp { padding: 22px; border-left: 4px solid var(--rule); }
+  .exp.v-정답 { border-left-color: var(--ok); }
+  .exp.v-오답 { border-left-color: var(--bad); }
+  .exp.v-부분 { border-left-color: var(--part); }
+  .verdict { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 18px; }
+  .verdict .dot { width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+  .v-정답 .verdict { color: var(--ok); } .v-오답 .verdict { color: var(--bad); } .v-부분 .verdict { color: var(--part); }
+  .exp dl { display: grid; grid-template-columns: 110px minmax(0,1fr); gap: 10px 16px; margin: 16px 0 0; }
+  .exp dt { font-size: 13px; color: var(--ink-3); font-weight: 600; padding-top: 2px; }
+  .exp dd { margin: 0; white-space: pre-wrap; }
+  .exp dd.cli { font-family: var(--mono); font-size: 13.5px; background: var(--term-bg); color: var(--term-ink); padding: 10px 12px; border-radius: 8px; overflow-x: auto; white-space: pre; }
+  .exp .foot { margin-top: 14px; font-size: 12.5px; color: var(--ink-3); }
+
+  aside.side { display: grid; gap: 16px; position: sticky; top: 78px; }
+  .stat-top { padding: 0 16px 14px; display: flex; align-items: baseline; gap: 10px; }
+  .stat-top b { font-family: var(--mono); font-size: 30px; font-variant-numeric: tabular-nums; }
+  .stat-top span { color: var(--ink-2); font-size: 13.5px; }
+  .drow { display: grid; grid-template-columns: 18px minmax(0,1fr) 54px; gap: 8px; align-items: center; padding: 4px 16px; font-size: 13.5px; }
+  .drow .n { font-family: var(--mono); color: var(--accent); font-size: 12px; }
+  .drow .r { font-family: var(--mono); font-size: 12px; color: var(--ink-2); text-align: right; font-variant-numeric: tabular-nums; }
+  .weak, .recent { list-style: none; margin: 0; padding: 0 16px 14px; display: grid; gap: 6px; font-size: 13.5px; }
+  .weak li { display: flex; justify-content: space-between; gap: 8px; }
+  .weak button { border: 0; background: none; color: var(--accent); cursor: pointer; padding: 0; text-align: left; }
+  .recent li { display: grid; grid-template-columns: 10px minmax(0,1fr); gap: 8px; color: var(--ink-2); }
+  .recent .d { width: 8px; height: 8px; border-radius: 50%; margin-top: 7px; }
+  .muted { color: var(--ink-3); font-size: 13px; padding: 0 16px 14px; }
+  .warn { margin: 0 16px 14px; padding: 10px 12px; border-radius: 10px; background: var(--part-soft); color: var(--part); font-size: 13px; }
+
+  .conn { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--rule); background: var(--panel); border-radius: 999px; padding: 4px 11px; font-size: 13px; color: var(--ink-2); cursor: pointer; white-space: nowrap; }
+  .conn .cd { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-3); }
+  .conn.on .cd { background: var(--ok); box-shadow: 0 0 0 3px var(--ok-soft); }
+  .conn.off .cd { background: var(--part); }
+  .home { font-size: 13.5px; color: var(--ink-2); text-decoration: none; }
+  .home:hover { color: var(--ink); }
+  .help { margin: 0 0 16px; padding: 14px 16px; border-radius: 12px; background: var(--part-soft); color: var(--ink); font-size: 14px; display: grid; gap: 6px; }
+  .help code { background: var(--panel); padding: 2px 6px; border-radius: 6px; font-size: 13px; }
+  .help b { color: var(--part); }
+  .toast { position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px; max-width: min(560px, calc(100% - 32px)); z-index: 20; }
+  .spin { width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: s .8s linear infinite; }
+  @keyframes s { to { transform: rotate(360deg); } }
+  .note { font-size: 13px; color: var(--ink-3); margin-top: 8px; }
+
+  @media (max-width: 1100px) { .layout { grid-template-columns: 280px minmax(0,1fr); } aside.side { grid-column: 1 / -1; position: static; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }
+  @media (max-width: 760px) {
+    .layout { grid-template-columns: 1fr; }
+    aside.scope { position: static; max-height: none; }
+    .tabs { margin-left: 0; } .logo small, .dday, .home { display: none; } .bar { gap: 8px; } .tabs button { padding: 6px 9px; }
+    .exp dl { grid-template-columns: 1fr; gap: 2px 0; } .exp dd { margin-bottom: 8px; }
+    .controls .btn.primary { margin-left: 0; width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="logo">
+      <span class="mk" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M2 4h12M2 8h12M2 12h12"/></svg></span>
+      <span id="appName">CCNA 코치</span><small>200-301</small>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="모드">
+      <button role="tab" aria-selected="true" data-tab="practice" id="tab-practice">문제 풀기</button>
+      <button role="tab" aria-selected="false" data-tab="custom" id="tab-custom">내 문제 해설</button>
+    </nav>
+    <span class="spacer"></span>
+    <span class="dday" id="dday" hidden></span>
+    <button class="conn" id="conn" type="button" aria-describedby="connHelp"><span class="cd" aria-hidden="true"></span><span id="connText">서버 확인 중</span></button>
+    <a class="home" href="../" title="소개 페이지">소개</a>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="어두운 화면으로 전환">◐</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="panel scope" aria-label="출제 범위">
+    <h2>출제 범위</h2>
+    <div class="scope-list" id="scopeList"></div>
+    <div class="scope-foot" id="scopeFoot">선택한 범위가 없으면 전체에서 나와요.</div>
+  </aside>
+
+  <main>
+    <div class="help" id="connHelp" hidden>
+      <div><b>AI 문제·해설은 이 사이트 주인의 Mac에서 답변 서버가 켜져 있을 때만 동작해요.</b> 서브넷 계산 문제는 서버 없이 누구나 풀 수 있어요.</div>
+      <div>주인이라면 터미널에서 <code>cd ~/Obsidian/agents/ccna-coach && python3 server.py</code> 를 실행한 뒤 <button class="btn" id="retry" type="button" style="min-height:30px;padding:0 10px">다시 연결</button></div>
+      <div class="note" style="margin:0">처음 연결할 때 브라우저가 "로컬 네트워크 접근"을 물으면 허용해 주세요. 크롬에서 가장 잘 동작해요.</div>
+    </div>
+    <!-- 문제 풀기 -->
+    <section id="view-practice" aria-labelledby="tab-practice">
+      <div class="panel controls">
+        <div class="seg" role="group" aria-label="형식" id="qtypeSeg">
+          <button aria-pressed="true" data-v="mcq">객관식</button>
+          <button aria-pressed="false" data-v="short">주관식</button>
+          <button aria-pressed="false" data-v="subnet">서브넷 계산</button>
+        </div>
+        <div class="seg" role="group" aria-label="난이도" id="diffSeg">
+          <button aria-pressed="false" data-v="쉬움">쉬움</button>
+          <button aria-pressed="true" data-v="보통">보통</button>
+          <button aria-pressed="false" data-v="어려움">어려움</button>
+        </div>
+        <button class="btn primary" id="newQ">문제 받기</button>
+      </div>
+      <div style="height:16px"></div>
+      <div class="panel card" id="qCard">
+        <div class="empty">
+          <div class="big" aria-hidden="true">🧭</div>
+          <h3>범위를 고르고 "문제 받기"를 누르세요</h3>
+          <p>왼쪽에서 단원을 펼쳐 세부 범위를 체크할 수 있어요. 서브넷 계산은 API를 쓰지 않고 바로 나와요.</p>
+        </div>
+      </div>
+      <div style="height:16px"></div>
+      <div id="expBox"></div>
+    </section>
+
+    <!-- 내 문제 해설 -->
+    <section id="view-custom" hidden aria-labelledby="tab-custom">
+      <div class="panel card">
+        <label for="cQ"><b>문제</b> <span class="note">책·기출·강의에서 가져온 문제를 붙여 넣으세요 (보기 포함)</span></label>
+        <textarea id="cQ" placeholder="예) Which command shows the OSPF neighbor state?&#10;A. show ip ospf interface&#10;B. show ip ospf neighbor&#10;C. show ip route ospf&#10;D. show ip protocols"></textarea>
+        <div style="height:12px"></div>
+        <label for="cA"><b>내 답</b> <span class="note">비워 두면 해설만 받아요</span></label>
+        <div class="answer-row" style="margin-top:6px">
+          <input id="cA" placeholder="예) A">
+          <button class="btn primary" id="cGo">해설 받기</button>
+        </div>
+        <p class="note">세부 범위를 하나 체크해 두면 그 범위로 기록돼요. 개인정보는 넣지 마세요 (제미나이 무료 등급).</p>
+      </div>
+      <div style="height:16px"></div>
+      <div id="cExpBox"></div>
+    </section>
+  </main>
+
+  <aside class="side" aria-label="진도">
+    <div class="panel">
+      <h2>진도</h2>
+      <div class="stat-top"><b id="sTotal">0</b><span id="sRate">아직 푼 문제가 없어요</span></div>
+      <div id="sDomains"></div>
+      <div style="height:12px"></div>
+      <div id="sWarn"></div>
+    </div>
+    <div class="panel">
+      <h2>약한 범위</h2>
+      <ul class="weak" id="sWeak"></ul>
+    </div>
+    <div class="panel">
+      <h2>최근 풀이</h2>
+      <ul class="recent" id="sRecent"></ul>
+    </div>
+  </aside>
+</div>
+
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script>
+// 서브넷 계산 문제: AI 없이 브라우저가 직접 만들고 채점한다 (AI가 틀리기 쉬운 계산이라)
+var Subnet = (function () {
+  var KINDS = { network: '네트워크 주소', broadcast: '브로드캐스트 주소', hosts: '사용 가능한 호스트 수', first: '첫 번째 사용 가능한 호스트 주소', last: '마지막 사용 가능한 호스트 주소', mask: '서브넷 마스크 (점 표기)' };
+  function r(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
+  function toInt(ip) { return ip.split('.').reduce(function (a, o) { return a * 256 + Number(o); }, 0); }
+  function toIp(n) { return [n >>> 24, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join('.'); }
+  function make(diff) {
+    var rng = { '쉬움': [24, 28], '보통': [20, 29], '어려움': [17, 30] }[diff] || [20, 29];
+    var p = r(rng[0], rng[1]), f = [10, 172, 192][r(0, 2)];
+    var ip = f === 10 ? '10.' + r(0, 255) + '.' + r(0, 255) + '.' + r(1, 254)
+      : f === 172 ? '172.' + r(16, 31) + '.' + r(0, 255) + '.' + r(1, 254) : '192.168.' + r(0, 255) + '.' + r(1, 254);
+    var size = Math.pow(2, 32 - p), mask = (0xFFFFFFFF - size + 1) >>> 0;
+    var net = (toInt(ip) & mask) >>> 0, bc = (net + size - 1) >>> 0;
+    var d = { network: toIp(net), broadcast: toIp(bc), mask: toIp(mask), prefix: p, block: size, hosts: String(Math.max(size - 2, 0)), first: toIp(net + 1), last: toIp(bc - 1) };
+    var keys = Object.keys(KINDS), k = keys[r(0, keys.length - 1)];
+    return { id: 'local', qtype: 'subnet', question: '호스트 ' + ip + '/' + p + ' 가 속한 서브넷의 ' + KINDS[k] + '는 무엇인가요?', choices: [],
+      answer: d[k], kind: k, detail: d, sub: '1.6', sub_name: '서브넷 계산', domain: '네트워크 기초', difficulty: diff };
+  }
+  function grade(q, u) {
+    u = String(u).replace(/\s|개|,/g, '').split('/')[0];
+    if (q.kind === 'hosts') return u === q.answer;
+    var parts = u.split('.');
+    return parts.length === 4 && parts.every(function (x) { return /^\d+$/.test(x) && +x < 256; }) && parts.map(Number).join('.') === q.answer;
+  }
+  function explain(q, user) {
+    var d = q.detail, ok = grade(q, user);
+    return { verdict: ok ? '정답' : '오답', correct_answer: q.answer,
+      explanation: '/' + d.prefix + ' → 서브넷 크기(블록) = 2^' + (32 - d.prefix) + ' = ' + d.block + '개 주소, 마스크 ' + d.mask + '. 주소가 ' + d.block + ' 단위로 끊기므로 이 호스트가 속한 블록은 ' + d.network + ' ~ ' + d.broadcast + '입니다. 첫 주소는 네트워크 주소, 마지막 주소는 브로드캐스트라 쓸 수 있는 호스트는 ' + d.first + ' ~ ' + d.last + ', 모두 ' + d.hosts + '개입니다.',
+      why_wrong: ok ? '' : "입력하신 답 '" + user + "' 대신 " + q.answer + '입니다. 블록 크기로 범위를 먼저 구하면 실수가 줄어요.',
+      key_concept: '블록 크기 = 256 - (마지막 0이 아닌 마스크 옥텟). 네트워크 주소는 블록의 배수.', cli_example: '',
+      tip: '/25=128, /26=64, /27=32, /28=16, /29=8, /30=4 블록 크기를 외워 두면 빨라요.' };
+  }
+  return { make: make, grade: grade, explain: explain };
+})();
+
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var LOCAL = /^(127\.0\.0\.1|localhost)$/.test(location.hostname) && location.port === '8765';
+  var API = LOCAL ? '' : 'http://127.0.0.1:8765';
+  var state = { topics: [], selected: new Set(), qtype: 'mcq', diff: '보통', q: null, choice: null, busy: false, online: false };
+  try { var saved = JSON.parse(localStorage.getItem('ccna-sel') || '[]'); saved.forEach(function (s) { state.selected.add(s); }); } catch (e) {}
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function toast(msg) { var t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(function () { t.hidden = true; }, 4500); }
+  function api(path, body) {
+    var url = path.indexOf('/api/') === 0 ? API + path : path;
+    return fetch(url, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {})
+      .catch(function () { setOnline(false); throw new Error('답변 서버에 연결하지 못했어요. 주인의 Mac에서 server.py가 켜져 있어야 해요.'); })
+      .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || '요청 실패'); return j; }); });
+  }
+  function saveSel() { try { localStorage.setItem('ccna-sel', JSON.stringify(Array.from(state.selected))); } catch (e) {} }
+
+  // ---- 범위 패널
+  function renderScope(stats) {
+    var byDom = {}; (stats && stats.by_domain || []).forEach(function (d) { byDom[d.id] = d; });
+    $('#scopeList').innerHTML = state.topics.map(function (d) {
+      var s = byDom[d.id] || { n: 0, ok: 0 }; var pct = s.n ? Math.round(s.ok / s.n * 100) : 0;
+      var picked = d.subs.filter(function (x) { return state.selected.has(x.id); }).length;
+      return '<div class="dom' + (picked ? ' open' : '') + '" data-d="' + d.id + '">' +
+        '<div class="dom-head" role="button" tabindex="0" aria-expanded="' + (picked ? 'true' : 'false') + '">' +
+          '<span class="num">' + d.id + '</span><span class="nm">' + esc(d.name) + (picked ? ' <span class="pill acc">' + picked + '</span>' : '') + '</span>' +
+          '<span class="w">' + d.weight + '%</span><span class="chev">›</span></div>' +
+        '<div class="dom-meter" title="정답률 ' + pct + '%"><i style="width:' + pct + '%"></i></div>' +
+        '<div class="subs"><button class="all" data-all="' + d.id + '">이 단원 전체 ' + (picked === d.subs.length ? '해제' : '선택') + '</button>' +
+          d.subs.map(function (x) {
+            return '<label><input type="checkbox" value="' + x.id + '"' + (state.selected.has(x.id) ? ' checked' : '') + '>' +
+              '<span class="sid">' + x.id + '</span><span>' + esc(x.name) + '</span></label>';
+          }).join('') + '</div></div>';
+    }).join('');
+    var n = state.selected.size;
+    $('#scopeFoot').textContent = n ? n + '개 범위에서 나와요.' : '선택한 범위가 없으면 전체에서 나와요.';
+  }
+  $('#scopeList').addEventListener('click', function (e) {
+    var head = e.target.closest('.dom-head');
+    if (head) { var dom = head.parentElement; dom.classList.toggle('open'); head.setAttribute('aria-expanded', dom.classList.contains('open')); return; }
+    var all = e.target.closest('[data-all]');
+    if (all) {
+      var d = state.topics.find(function (t) { return t.id === all.dataset.all; });
+      var every = d.subs.every(function (x) { return state.selected.has(x.id); });
+      d.subs.forEach(function (x) { every ? state.selected.delete(x.id) : state.selected.add(x.id); });
+      saveSel(); refreshStats();
+    }
+  });
+  $('#scopeList').addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('dom-head')) { e.preventDefault(); e.target.click(); } });
+  $('#scopeList').addEventListener('change', function (e) {
+    if (e.target.type !== 'checkbox') return;
+    e.target.checked ? state.selected.add(e.target.value) : state.selected.delete(e.target.value);
+    saveSel(); renderScope(state.lastStats);
+  });
+
+  // ---- 형식·난이도
+  function seg(id, key) {
+    $(id).addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      $(id).querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      state[key] = b.dataset.v;
+    });
+  }
+  seg('#qtypeSeg', 'qtype'); seg('#diffSeg', 'diff');
+
+  // ---- 문제
+  function busy(btn, on, label) { state.busy = on; btn.disabled = on; btn.innerHTML = on ? '<span class="spin" aria-hidden="true"></span>' + label : btn.dataset.label; }
+  $('#newQ').dataset.label = '문제 받기';
+  $('#newQ').addEventListener('click', function () {
+    var btn = this;
+    if (state.qtype === 'subnet') { state.q = Subnet.make(state.diff); state.choice = null; renderQ(); $('#expBox').innerHTML = ''; return; }
+    if (!state.online) { toast('AI 문제는 답변 서버가 켜져 있어야 해요. 서브넷 계산은 바로 풀 수 있어요.'); $('#connHelp').hidden = false; return; }
+    busy(btn, true, '제미나이가 출제 중');
+    api('/api/question', { subs: Array.from(state.selected), difficulty: state.diff, qtype: state.qtype })
+      .then(function (q) { state.q = q; state.choice = null; renderQ(); $('#expBox').innerHTML = ''; })
+      .catch(function (e) { toast(e.message); })
+      .finally(function () { busy(btn, false); });
+  });
+
+  function formatQ(text) {
+    // 줄 맨 앞이 장비 프롬프트(R1#, Switch> 등)나 show 출력처럼 보이는 연속 줄은 터미널 블록으로
+    var lines = esc(text).split('\n'), out = [], block = [];
+    function flush() { if (block.length) { out.push('<span class="cli">' + block.join('\n') + '</span>'); block = []; } }
+    lines.forEach(function (l) {
+      if (/^\s*([A-Za-z0-9_-]+(\(config[^)]*\))?[#>]|interface |router |ip |ipv6 |\s{2,}\S|[A-Z]\*?\s+\d+\.\d+|Gi|Fa|Vlan)/.test(l)) block.push(l);
+      else { flush(); out.push(l); }
+    });
+    flush(); return out.join('\n');
+  }
+
+  function renderQ() {
+    var q = state.q;
+    var meta = '<div class="q-meta"><span class="pill acc">' + esc(q.sub) + '</span><span class="pill">' + esc(q.domain) + '</span>' +
+      '<span class="pill">' + esc(q.difficulty) + '</span><span class="pill">' + ({ mcq: '객관식', short: '주관식', subnet: '서브넷 계산' }[q.qtype]) + '</span></div>';
+    var body = '<div class="q-text">' + formatQ(q.question) + '</div>';
+    if (q.choices && q.choices.length) {
+      body += '<div class="choices" role="group" aria-label="보기">' + q.choices.map(function (c, i) {
+        return '<button class="choice" aria-pressed="false" data-l="' + 'ABCD'[i] + '"><span class="ltr">' + 'ABCD'[i] + '</span><span>' + esc(c) + '</span></button>';
+      }).join('') + '</div><div class="answer-row"><button class="btn primary" id="gradeBtn" disabled>채점하고 해설 받기</button></div>';
+    } else {
+      body += '<div class="answer-row"><input id="ansIn" placeholder="' + (q.qtype === 'subnet' ? '예) 192.168.1.64 또는 62' : '답을 짧게 입력하세요') + '" aria-label="내 답">' +
+        '<button class="btn primary" id="gradeBtn">채점하고 해설 받기</button></div>';
+    }
+    $('#qCard').innerHTML = meta + body;
+    var g = $('#gradeBtn'); g.dataset.label = '채점하고 해설 받기';
+    $('#qCard').querySelectorAll('.choice').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (state.graded) return;
+        $('#qCard').querySelectorAll('.choice').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+        state.choice = b.dataset.l; g.disabled = false;
+      });
+    });
+    var inp = $('#ansIn'); if (inp) { inp.focus(); inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') g.click(); }); }
+    state.graded = false;
+    g.addEventListener('click', function () {
+      var ans = state.choice || (inp && inp.value.trim());
+      if (!ans) { toast('답을 입력해 주세요.'); return; }
+      busy(g, true, q.qtype === 'subnet' ? '채점 중' : '제미나이가 해설 중');
+      var req = q.qtype === 'subnet' ? Promise.resolve(Subnet.explain(q, ans)) : api('/api/grade', { id: q.id, answer: ans });
+      if (q.qtype === 'subnet' && state.online) {
+        var r0 = Subnet.explain(q, ans);
+        api('/api/log', { verdict: r0.verdict, difficulty: q.difficulty, question: q.question, user: ans, answer: q.answer }).catch(function () {});
+      }
+      req.then(function (r) {
+        state.graded = true;
+        if (q.choices && q.choices.length) {
+          var right = (r.correct_answer || '').trim().charAt(0).toUpperCase();
+          $('#qCard').querySelectorAll('.choice').forEach(function (x) {
+            if (x.dataset.l === right) x.classList.add('correct');
+            else if (x.dataset.l === state.choice) x.classList.add('wrong');
+          });
+        }
+        $('#expBox').innerHTML = renderExp(r, q.qtype === 'subnet');
+        g.dataset.label = '다음 문제'; busy(g, false); g.onclick = function () { $('#newQ').click(); };
+        refreshStats();
+      }).catch(function (e) { toast(e.message); busy(g, false); });
+    });
+  }
+
+  function renderExp(r, local) {
+    var v = r.verdict || '오답', cls = v === '부분 정답' ? 'v-부분' : 'v-' + v;
+    var rows = [['정답', r.correct_answer], ['해설', r.explanation], ['틀린 이유', r.why_wrong], ['핵심 개념', r.key_concept], ['명령 예시', r.cli_example, 'cli'], ['기억 팁', r.tip]];
+    return '<div class="panel exp ' + cls + '"><div class="verdict"><span class="dot" aria-hidden="true"></span>' + esc(v) + '</div><dl>' +
+      rows.filter(function (x) { return x[1] && String(x[1]).trim(); }).map(function (x) {
+        return '<dt>' + x[0] + '</dt><dd' + (x[2] ? ' class="cli"' : '') + '>' + esc(x[1]) + '</dd>';
+      }).join('') + '</dl><p class="foot">' + (local ? '코드가 직접 계산한 정답과 해설이에요.' : 'AI 해설은 틀릴 수 있어요. 헷갈리면 공식 문서로 확인하세요. · ' + esc(r.model || '')) + '</p></div>';
+  }
+
+  // ---- 내 문제 해설
+  $('#cGo').dataset.label = '해설 받기';
+  $('#cGo').addEventListener('click', function () {
+    var q = $('#cQ').value.trim(); if (!q) { toast('문제를 입력해 주세요.'); return; }
+    if (!state.online) { toast('해설은 답변 서버가 켜져 있어야 해요.'); $('#connHelp').hidden = false; return; }
+    var btn = this; busy(btn, true, '제미나이가 해설 중');
+    api('/api/explain', { question: q, answer: $('#cA').value.trim(), sub: Array.from(state.selected)[0] || '' })
+      .then(function (r) { $('#cExpBox').innerHTML = renderExp(r, false); refreshStats(); })
+      .catch(function (e) { toast(e.message); })
+      .finally(function () { busy(btn, false); });
+  });
+
+  // ---- 탭
+  document.querySelectorAll('[role="tab"]').forEach(function (t) {
+    t.addEventListener('click', function () {
+      document.querySelectorAll('[role="tab"]').forEach(function (x) { x.setAttribute('aria-selected', x === t ? 'true' : 'false'); });
+      $('#view-practice').hidden = t.dataset.tab !== 'practice'; $('#view-custom').hidden = t.dataset.tab !== 'custom';
+    });
+  });
+
+  // ---- 진도
+  function refreshStats() {
+    if (!state.online) { renderScope(null); offlineStats(); return Promise.resolve(); }
+    return api('/api/stats').then(function (s) {
+      state.lastStats = s; renderScope(s);
+      $('#sTotal').textContent = s.total;
+      $('#sRate').textContent = s.total ? '문제 · 정답률 ' + Math.round(s.ok / s.total * 100) + '%' : '아직 푼 문제가 없어요';
+      $('#sDomains').innerHTML = s.by_domain.map(function (d) {
+        return '<div class="drow"><span class="n">' + d.id + '</span><span>' + esc(d.name) + '</span><span class="r">' + (d.n ? d.ok + '/' + d.n : '–') + '</span></div>';
+      }).join('');
+      var w = [];
+      if (!s.has_key) w.push('서버에 GOOGLE_API_KEY가 없어요. 볼트 .env에 넣으면 객관식·주관식이 동작해요.');
+      if (!s.private_ok) w.push('기록 폴더가 비공개가 아니라 풀이 기록을 저장하지 않아요.');
+      $('#sWarn').innerHTML = w.map(function (x) { return '<div class="warn">' + esc(x) + '</div>'; }).join('');
+      $('#sWeak').innerHTML = s.weak.length ? s.weak.map(function (x) {
+        return '<li><button data-sub="' + x.sub + '">' + esc(x.sub + ' ' + x.name.split(' (')[0]) + '</button><span class="mono">' + x.ok + '/' + x.n + '</span></li>';
+      }).join('') : '<li class="muted" style="padding:0">같은 범위를 2문제 이상 풀면 보여요.</li>';
+      $('#sRecent').innerHTML = s.recent.length ? s.recent.map(function (r) {
+        var c = r.verdict === '정답' ? 'var(--ok)' : r.verdict === '부분 정답' ? 'var(--part)' : 'var(--bad)';
+        return '<li><span class="d" style="background:' + c + '"></span><span>' + esc(r.question) + '</span></li>';
+      }).join('') : '<li class="muted" style="padding:0">아직 없어요.</li>';
+      if (s.exam_date) {
+        var days = Math.ceil((new Date(s.exam_date + 'T00:00:00') - new Date(new Date().toDateString())) / 86400000);
+        var el = $('#dday'); el.hidden = false; el.innerHTML = days >= 0 ? '시험까지 <b>D-' + days + '</b>' : '시험 끝';
+      }
+    }).catch(function () {});
+  }
+  $('#sWeak').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-sub]'); if (!b) return;
+    state.selected = new Set([b.dataset.sub]); saveSel(); renderScope(state.lastStats); toast(b.textContent + ' 범위만 선택했어요.');
+  });
+
+  // ---- 테마
+  var root = document.documentElement, mq = matchMedia('(prefers-color-scheme: dark)');
+  try { var th = localStorage.getItem('ccna-theme'); if (th) root.setAttribute('data-theme', th); } catch (e) {}
+  $('#themeBtn').addEventListener('click', function () {
+    var dark = root.getAttribute('data-theme') ? root.getAttribute('data-theme') === 'dark' : mq.matches;
+    root.setAttribute('data-theme', dark ? 'light' : 'dark'); try { localStorage.setItem('ccna-theme', dark ? 'light' : 'dark'); } catch (e) {}
+  });
+
+  function offlineStats() {
+    $('#sTotal').textContent = '–'; $('#sRate').textContent = '답변 서버에 연결되면 내 진도가 보여요';
+    $('#sDomains').innerHTML = ''; $('#sWarn').innerHTML = '';
+    $('#sWeak').innerHTML = '<li class="muted" style="padding:0">서버 연결 후 보여요.</li>';
+    $('#sRecent').innerHTML = '<li class="muted" style="padding:0">풀이 기록은 주인의 Mac에만 저장돼요.</li>';
+  }
+  function setOnline(on) {
+    state.online = on;
+    var c = $('#conn'); c.classList.toggle('on', on); c.classList.toggle('off', !on);
+    $('#connText').textContent = on ? '내 서버 연결됨' : '서버 꺼짐 · 서브넷만';
+    if (on) $('#connHelp').hidden = true;
+  }
+  function checkServer() {
+    return fetch(API + '/api/health').then(function (r) { return r.json(); })
+      .then(function (h) { setOnline(!!h.ok); }).catch(function () { setOnline(false); })
+      .then(refreshStats);
+  }
+  $('#conn').addEventListener('click', function () { $('#connHelp').hidden = !$('#connHelp').hidden; });
+  $('#retry').addEventListener('click', function () { checkServer().then(function () { toast(state.online ? '연결됐어요.' : '아직 연결되지 않았어요.'); }); });
+  fetch('topics.json').then(function (r) { return r.json(); })
+    .then(function (t) { state.topics = t; renderScope(); return checkServer(); })
+    .catch(function () { $('#scopeList').innerHTML = '<p class="muted">출제 범위를 불러오지 못했어요.</p>'; });
+})();
+</script>
+</body>
+</html>

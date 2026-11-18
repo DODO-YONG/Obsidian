@@ -20,6 +20,10 @@
 
 - [[interview-coach]] — 허브: AWS 16 LP 면접 코치 에이전트 (코드 `agents/interview-coach/`)
 
+# 📁 프로젝트: ccna-coach
+
+- [[ccna-coach]] — 허브: CCNA 200-301 문제·해설 사이트. 화면은 GitHub Pages, 답변은 내 Mac 서버가 제미나이로(키는 로컬에만)
+
 # 🔗 공통 (shared)
 - [[나]] — 사용자 본인 페이지
 - [[백업 현황]] — 공개 저장소·비공개 저장소(private/)·드라이브(Windows 시절, 중단) 백업 범위, 다른 컴퓨터로 옮기는 법
