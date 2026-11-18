@@ -35,3 +35,5 @@
 ## [2026-11-18] output | TRACER 사이트 맨 앞에 소개 영역(예시 카드·3단계·출제 비중·칭호 사다리), 재방문자는 한 줄로 접힘
 
 ## [2026-11-18] output | 공개 사이트 자동 새 버전 확인(docs/version.json + scripts/bump-site-version.sh)
+
+## [2026-11-18] output | README 갱신: TRACER(영어·누구나 접속·게임·소개), 공개 사이트 표, 스크립트 표, 비용 원칙
