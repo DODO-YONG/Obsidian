@@ -51,3 +51,5 @@
 ## [2026-11-18] output | TRACER 바로가기 주소: /ccna/#intro(소개 처음부터) · /ccna/#how(작동 방식) — 접힘 설정과 상관없이 펼쳐서 보여 줌
 
 ## [2026-11-18] output | 문서 정리: README(TRACER 작동 방식 링크·공용 파일·공식 표현), TRACER README(HOW IT WORKS·바로가기), index, 소개 페이지 작업 기록(14:23·14:43) + 미리보기 설정(.claude/launch.json)
+
+## [2026-11-18] output | DY-006 SWEEPER 첫 버전(agents/laptop-helper): 다운로드·데스크탑 정리·문서 모으기(raw로 복사)·폴더 정리, 스캔은 코드·승인은 터미널 y/N·휴지통만 + 코드명·README·홈·index·소개 페이지 등록

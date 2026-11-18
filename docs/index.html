@@ -16,11 +16,11 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="tracer-how.css?v=20261118145419">
+<link rel="stylesheet" href="tracer-how.css?v=20261118152200">
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261118145419';
+  var SITE_V = '20261118152200';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -58,7 +58,7 @@
     <div>
       <p class="kicker"><span class="pulse" aria-hidden="true"></span>Agent DY · AWS 인턴십 과정 · 학습 기록</p>
       <h1>나에게 필요한 에이전트를<br><span class="hl">하나씩</span> 만들어 보는 중</h1>
-      <p class="lead">AWS 인턴십 과정에서 Claude Code를 써 가며 배우고 있습니다. 지금은 초기 버전 에이전트 세 개(SENTINEL · MIRROR · TRACER)와, 메모와 코드를 함께 정리하는 Obsidian 위키가 있습니다.</p>
+      <p class="lead">AWS 인턴십 과정에서 Claude Code를 써 가며 배우고 있습니다. 지금은 초기 버전 에이전트 네 개(SENTINEL · MIRROR · TRACER · SWEEPER)와, 메모와 코드를 함께 정리하는 Obsidian 위키가 있습니다.</p>
       <div class="cta">
         <a class="btn primary" href="#agents">만든 에이전트 보기
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
@@ -89,7 +89,7 @@
           <li><span class="h">98a3ff0</span><span class="t">13:36</span><span class="m">TRACER: 영어 출제 + 게임</span></li>
           <li><span class="h">ee5e5bf</span><span class="t">14:43</span><span class="m">TRACER 작동 방식 그림</span></li>
         </ol>
-        <div class="tail">53 commits · 2 days<span class="cursor" aria-hidden="true"></span></div>
+        <div class="tail">54 commits · 2 days<span class="cursor" aria-hidden="true"></span></div>
       </div>
     </figure>
   </div>
@@ -114,7 +114,7 @@
             </div>
             <div class="zone">
               <h4><span class="dot" aria-hidden="true"></span>에이전트 (agents/)</h4>
-              <ul class="mono"><li>DY-001 SENTINEL</li><li>DY-002 MIRROR</li><li>DY-003 TRACER</li></ul>
+              <ul class="mono"><li>DY-001 SENTINEL</li><li>DY-002 MIRROR</li><li>DY-003 TRACER</li><li>DY-006 SWEEPER</li></ul>
             </div>
             <div class="zone private">
               <h4><span class="dot" aria-hidden="true"></span>비공개 구역 · 밖으로 나가지 않음</h4>
@@ -148,7 +148,7 @@
         <p class="label"><span class="n">02</span>에이전트</p>
         <div>
           <h2>지금까지 만든 에이전트</h2>
-          <p>007처럼 번호와 코드명을 붙였습니다. SENTINEL과 MIRROR는 Claude Agent SDK(Python), TRACER는 제미나이 API로 만든 초기 버전입니다.</p>
+          <p>007처럼 번호와 코드명을 붙였습니다. SENTINEL·MIRROR·SWEEPER는 Claude Agent SDK(Python), TRACER는 제미나이 API로 만든 초기 버전입니다.</p>
         </div>
       </div>
 
@@ -220,6 +220,29 @@
               <li>방문자 사용량 제한으로 무료 한도 보호, 방문자 기록은 남기지 않음</li>
               <li>서브넷 계산은 AI 없이 코드가 출제·채점 (서버가 꺼져 있어도 사용)</li>
               <li>XP·레벨·칭호(Cable Rookie → CCNA Ready)·오늘의 퀘스트·배지</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+      <div class="agents" style="margin-top:20px">
+        <article class="agent">
+          <div class="agent-id">
+            <span class="mono">DY-006 · agents/laptop-helper</span>
+            <h3>SWEEPER</h3>
+            <span class="chip">초기 버전</span>
+            <div class="links">
+              <a href="https://github.com/DODO-YONG/Obsidian/tree/main/agents/laptop-helper">코드 보기 →</a>
+            </div>
+          </div>
+          <div class="agent-body">
+            <p>개인 컴퓨터의 홈 폴더를 정리해 주는 도우미. 다운로드·데스크탑 현황을 보고하고, 흩어진 문서를 위키로 모으고, 폴더를 종류별로 나눕니다.</p>
+            <ol class="pipeline" aria-label="동작 순서">
+              <li><span>스캔 (AI 없음)</span></li><li><span>정리 제안</span></li><li><span>직접 승인</span></li><li><span>옮기기·휴지통</span></li>
+            </ol>
+            <ul class="points">
+              <li>파일 목록·분류는 코드가 계산하고, AI는 결과를 설명하고 제안만 함 (보고서만 볼 땐 AI 사용 0)</li>
+              <li>옮기기·복사·휴지통은 실행 직전에 터미널에서 사람이 직접 승인. 지우기는 휴지통으로만</li>
+              <li>키·인증서·앱 데이터·비공개 폴더는 목록도 보지 않음, 파일 내용은 읽지 않음</li>
             </ul>
           </div>
         </article>
@@ -304,6 +327,9 @@
           <div class="ev"><time>14:43</time><div><h4>TRACER 사이트에도 같은 설명</h4>
             <p>그림을 공용 파일로 분리해 이 페이지와 TRACER 소개 화면이 함께 쓰게 했습니다. 바로가기 주소(#how)도 만들었습니다.</p>
             <div class="tags"><span>공용 컴포넌트</span></div></div></div>
+          <div class="ev"><time>15:20</time><div><h4>여섯 번째 에이전트: SWEEPER</h4>
+            <p>작업 범위를 볼트 밖 홈 폴더로 넓혔습니다. 다운로드·데스크탑 정리, 문서 모으기, 폴더 정리부터 시작하고, 쓰기 작업은 사람이 직접 승인해야만 실행되게 했습니다.</p>
+            <div class="tags"><span>Agent SDK</span><span>Safety</span></div></div></div>
         </div>
       </div>
     </div>
@@ -382,6 +408,6 @@
   }
 })();
 </script>
-<script src="tracer-how.js?v=20261118145419" defer></script>
+<script src="tracer-how.js?v=20261118152200" defer></script>
 </body>
 </html>
