@@ -6,6 +6,7 @@ cd "$(dirname "$0")/.." || exit 1
 V="$(date +%Y%m%d%H%M%S)"
 for f in docs/index.html docs/terminal.html docs/ccna/index.html; do
   sed -i '' -E "s/var SITE_V = '[0-9]+';/var SITE_V = '$V';/" "$f"
+  sed -i '' -E "s/tracer-how\.(css|js)\?v=[0-9]+/tracer-how.\1?v=$V/g" "$f"
 done
 printf '{"v": "%s"}\n' "$V" > docs/version.json
 echo "사이트 버전: $V"
