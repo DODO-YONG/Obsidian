@@ -41,3 +41,5 @@
 ## [2026-11-18] output | ccna 공부 프로젝트 생성 (wiki/projects/ccna 허브 + 도메인 메모, raw/projects/ccna)
 
 ## [2026-11-18] output | 소개 페이지에 "TRACER 원리" 섹션(docs/index.html #how): 구조도(서버 켜짐/꺼짐 전환)·문제 하나 풀리는 순서(스윔레인)·설계 이유 4개
+
+## [2026-11-18] output | "TRACER 원리" 섹션 개편: 재생형 토폴로지(패킷이 단계별로 이동, AI 문제/서브넷 문제 탭) + 역할 트리(어디서 무엇을)
