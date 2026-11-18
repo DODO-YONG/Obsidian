@@ -300,7 +300,12 @@ def main():
     print(f"   기록: {LOG if PRIVATE_OK else '⚠️ 비공개 폴더가 아니라 저장하지 않음'}")
     print("   끄기: Ctrl+C\n")
     try:
-        ThreadingHTTPServer((HOST, PORT), Handler).serve_forever()
+        server = ThreadingHTTPServer((HOST, PORT), Handler)
+    except OSError:
+        sys.exit(f"⚠️  {PORT}번 포트를 이미 쓰고 있어요. 답변 서버가 다른 창에서 이미 켜져 있을 수 있어요.\n"
+                 f"   그 창에서 Ctrl+C로 끄거나, 그대로 쓰세요. (확인: lsof -nP -iTCP:{PORT} -sTCP:LISTEN)")
+    try:
+        server.serve_forever()
     except KeyboardInterrupt:
         print("\n종료합니다.")
 
