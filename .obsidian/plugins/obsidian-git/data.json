@@ -1,0 +1,16 @@
+{
+  "commitMessage": "자동 백업: {{date}}",
+  "autoCommitMessage": "자동 백업: {{date}}",
+  "commitDateFormat": "YYYY-MM-DD HH:mm",
+  "autoSaveInterval": 10,
+  "autoPushInterval": 0,
+  "differentIntervalCommitAndPush": false,
+  "autoPullInterval": 10,
+  "autoPullOnBoot": true,
+  "autoBackupAfterFileChange": false,
+  "disablePush": false,
+  "pullBeforePush": true,
+  "syncMethod": "merge",
+  "disablePopups": false,
+  "showStatusBar": true
+}
