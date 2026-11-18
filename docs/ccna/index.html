@@ -255,7 +255,7 @@
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261118134741';
+  var SITE_V = '20261118135328';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -285,7 +285,7 @@
   </div>
 </header>
 
-<!-- 소개 (처음 온 사람용). 문제를 풀어 본 적이 있으면 아래 한 줄 요약으로 접힌다 -->
+<!-- 소개. 항상 보이고, 사용자가 "소개 접기"를 누른 경우에만 한 줄 요약으로 접힌다 -->
 <section class="intro" id="intro" aria-labelledby="introTitle">
   <div class="hero2">
     <div>
@@ -295,6 +295,7 @@
       <div class="cta2">
         <button class="btn primary" id="goStart" type="button">바로 시작하기 →</button>
         <button class="btn" id="goSubnet" type="button">서브넷 계산부터 풀기</button>
+        <button class="linkbtn" id="hideIntro" type="button" style="align-self:center">소개 접기</button>
       </div>
       <div class="chips2"><span>가입 없음</span><span>무료</span><span>6개 단원 · 52개 범위</span><span>진행은 내 브라우저에 저장</span></div>
     </div>
@@ -807,8 +808,10 @@ var Subnet = (function () {
       return '<li class="' + (x.lv === lv ? 'me' : '') + (x.lv === 10 ? ' top' : '') + '"><span>Lv ' + x.lv + '</span>' + esc(x.name) + (x.lv === lv ? ' ← 지금' : '') + '</li>';
     }).join('');
   }
-  if (Game.played()) { $('#intro').hidden = true; $('#introMini').hidden = false; }
-  $('#showIntro').addEventListener('click', function () { $('#intro').hidden = false; $('#introMini').hidden = true; $('#intro').scrollIntoView({ behavior: 'smooth' }); });
+  function setIntro(open) { $('#intro').hidden = !open; $('#introMini').hidden = open; lsSet('tracer-intro-hidden', open ? '' : '1'); }
+  if (lsGet('tracer-intro-hidden') === '1') { $('#intro').hidden = true; $('#introMini').hidden = false; }
+  $('#showIntro').addEventListener('click', function () { setIntro(true); $('#intro').scrollIntoView({ behavior: 'smooth' }); });
+  $('#hideIntro').addEventListener('click', function () { setIntro(false); });
 
   // ---- 게임 패널
   Game.render();
