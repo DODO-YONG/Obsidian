@@ -8,11 +8,13 @@
 import json
 import os
 import re
+import time
 import urllib.error
 import urllib.request
 from pathlib import Path
 
 VAULT = Path(__file__).resolve().parents[2]
+_cooldown: dict[str, float] = {}  # 모델 → 이 시각까지 건너뜀
 DEFAULT_MODELS = ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.1-flash-lite"]
 
 
@@ -68,7 +70,20 @@ def ask_json(system: str, prompt: str, schema: dict | None = None) -> tuple[dict
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
         "generationConfig": {"responseMimeType": "application/json", "temperature": 0.7},
     }
-    order = models()
+    # 최근에 한도 초과·무응답이던 모델은 맨 뒤로 보낸다(매번 기다리지 않게). 모두 바쁘면 2초 쉬고 한 번 더.
+    for attempt in range(2):
+        try:
+            return _ask_once(base, schema, key)
+        except GeminiError as e:
+            if attempt == 1 or not any(c in str(e) for c in ("HTTP 503", "HTTP 429", "연결 문제")):
+                raise
+            time.sleep(2)
+    raise GeminiError("모든 모델 실패")
+
+
+def _ask_once(base: dict, schema: dict | None, key: str) -> tuple[dict, str]:
+    now = time.time()
+    order = sorted(models(), key=lambda m: _cooldown.get(m, 0) > now)
     last_err = "모든 모델 실패"
     for i, model in enumerate(order):
         is_last = i == len(order) - 1
@@ -77,7 +92,7 @@ def ask_json(system: str, prompt: str, schema: dict | None = None) -> tuple[dict
             if use_schema:
                 body["generationConfig"]["responseSchema"] = schema
             try:
-                data = _post(model, body, key, 120 if is_last else 40)
+                data = _post(model, body, key, 90 if is_last else 15)
                 cand = (data.get("candidates") or [{}])[0]
                 text = "".join(p.get("text", "") for p in cand.get("content", {}).get("parts", []))
                 if not text:
@@ -88,11 +103,14 @@ def ask_json(system: str, prompt: str, schema: dict | None = None) -> tuple[dict
                 if e.code == 400 and use_schema:
                     continue  # 스키마를 못 받는 모델 → 스키마 없이 재시도
                 last_err = f"{model}: HTTP {e.code} {msg}"
+                if e.code in (429, 503, 404):
+                    _cooldown[model] = time.time() + (3600 if e.code == 404 else 600)
                 if e.code in (429, 503, 404, 500) and not is_last:
                     break  # 다음 모델
                 raise GeminiError(last_err)
             except (TimeoutError, urllib.error.URLError) as e:
                 last_err = f"{model}: 연결 문제 {e}"
+                _cooldown[model] = time.time() + 120
                 if not is_last:
                     break
                 raise GeminiError(last_err)
