@@ -7,3 +7,5 @@
 - `agents/`(+`_template`), 루트 `README.md`(Mermaid 지도), `.gitignore` 비밀 규칙, `.githooks/pre-commit` 키 검사 추가
 
 ## [2026-11-18] output | security-agent 이전 (DODO-YONG/security-agent → agents/security-agent, 이력 보존) + 위키 허브·README 등록
+
+## [2026-11-18] output | interview-coach 에이전트 첫 버전 (agents/interview-coach) + 위키 허브·README 등록

@@ -16,5 +16,9 @@
 ## topics
 *(아직 없음)*
 
+# 📁 프로젝트: interview-coach
+
+- [[interview-coach]] — 허브: AWS 16 LP 면접 코치 에이전트 (코드 `agents/interview-coach/`)
+
 # 🔗 공통 (shared)
 - [[나]] — 사용자 본인 페이지

@@ -17,12 +17,21 @@ flowchart LR
   end
   W --> SA
 
+  subgraph IC["🎤 interview-coach · AWS 리더십 원칙 면접 코치"]
+    direction TB
+    IC1["📚 경험 은행<br/>(비공개)"] --> IC2["❓ 약한 원칙 질문<br/>+ 꼬리 질문"]
+    IC2 --> IC3["📊 5개 항목 평가<br/>→ 연습기록"]
+    IC3 -.-> IC1
+  end
+  W --> IC
+
   classDef plan fill:#fff4d6,stroke:#d9a400,color:#5a4500
   classDef dev fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
   classDef done fill:#dcfce7,stroke:#16a34a,color:#14532d
   classDef base fill:#f3f4f6,stroke:#9ca3af,color:#374151
   class W,T base
   style SA fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+  style IC fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
 ```
 
 <sub>색: 🟨 기획 · 🟦 개발중 · 🟩 완료</sub>
@@ -32,6 +41,7 @@ flowchart LR
 | 프로젝트 | 한 줄 설명 | 상태 | 코드 | 메모 |
 |---|---|---|---|---|
 | 🛡️ security-agent | URL을 주면 공격 없이 응답만 읽어 보안 약점을 찾고, 위험도와 고치는 법을 리포트로 써 줌 | 🟦 개발중 | [agents/security-agent](agents/security-agent) | [위키](wiki/projects/security-agent/security-agent.md) · [소개 페이지](https://dodo-yong.github.io/security-agent/) |
+| 🎤 interview-coach | AWS 16가지 리더십 원칙 면접 연습. 약한 원칙부터 묻고, 꼬리 질문으로 파고든 뒤 STAR·수치·원칙 적합도로 평가 | 🟦 개발중 | [agents/interview-coach](agents/interview-coach) | [위키](wiki/projects/interview-coach/interview-coach.md) |
 
 ## 📁 폴더 구조
 
