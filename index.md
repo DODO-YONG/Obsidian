@@ -22,4 +22,4 @@
 
 # 🔗 공통 (shared)
 - [[나]] — 사용자 본인 페이지
-- [[gemini-chat]] — `scripts/gemini.py`: 터미널 제미나이 대화(키는 .env, 기록은 볼트 밖, 모델 자동 전환). 결제 등급 확인 필요
+- [[gemini-chat]] — `scripts/gemini.py`: 터미널 제미나이 대화(키는 .env, 기록은 볼트 밖, 모델 자동 전환). 무료 등급, 민감정보 전송 금지
