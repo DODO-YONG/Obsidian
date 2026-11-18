@@ -55,15 +55,17 @@ LOG_DIR = DATA_DIR / "연습기록"
 def data_dir_is_private() -> bool:
     """데이터 폴더가 git에서 제외돼 있는지 확인. 공개 저장소로 새는 것을 막는다."""
     probe = LOG_DIR / "_probe.md"
+    # 기준은 '코드가 들어 있는 공개 저장소(볼트)'. private/ 가 따로 비공개 저장소여도,
+    # 공개 저장소에서 제외돼 있기만 하면 안전하다.
     try:
         r = subprocess.run(
             ["git", "check-ignore", "-q", str(probe)],
-            cwd=DATA_DIR if DATA_DIR.exists() else BASE_DIR,
+            cwd=BASE_DIR,
             capture_output=True,
         )
     except FileNotFoundError:
         return True  # git이 없으면 업로드될 일도 없음
-    if r.returncode == 128:  # git 저장소 밖
+    if r.returncode == 128:  # 데이터 폴더가 공개 저장소 밖
         return True
     return r.returncode == 0
 
