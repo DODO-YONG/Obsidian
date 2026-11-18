@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>나만의 에이전트 작업실</title>
-<meta name="description" content="AWS 인턴십 과정에서 Claude Code와 함께, 오직 나를 위한 AI 에이전트를 만드는 작업 기록.">
+<meta name="description" content="AWS 인턴십 과정에서 Claude Code로 나에게 필요한 에이전트를 하나씩 만들어 보는 학습 기록.">
 <meta property="og:title" content="나만의 에이전트 작업실">
-<meta property="og:description" content="AWS 인턴십 과정에서 Claude Code와 함께 만드는 개인 AI 에이전트 작업 기록">
+<meta property="og:description" content="AWS 인턴십 과정에서 Claude Code로 에이전트를 만들어 보는 학습 기록">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://dodo-yong.github.io/Obsidian/preview.png">
 <meta name="theme-color" content="#F4F6F8" media="(prefers-color-scheme: light)">
@@ -36,7 +36,7 @@
     --body:    "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
     --mono:    "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
 
-    --step--1: 0.875rem; --step-0: 1rem; --step-1: 1.1875rem; --step-2: 1.5rem; --step-3: 2rem; --step-4: clamp(2.2rem, 5.2vw, 3.6rem);
+    --step--1: 0.875rem; --step-0: 1rem; --step-1: 1.1875rem; --step-2: 1.5rem; --step-3: 2rem; --step-4: clamp(1.9rem, 4.2vw, 2.75rem);
     --radius: 12px;
     --gutter-l: max(16px, env(safe-area-inset-left, 0px));
     --gutter-r: max(16px, env(safe-area-inset-right, 0px));
@@ -101,7 +101,7 @@
   .theme-btn svg { width: 18px; height: 18px; }
 
   /* ── 히어로 */
-  .hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 48px; align-items: center; padding-block: 72px 56px; }
+  .hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 48px; align-items: center; padding-block: 56px 48px; }
   .kicker { font-family: var(--body); font-size: 14px; letter-spacing: .01em; color: var(--ink-2); display: flex; align-items: center; gap: 10px; }
   .kicker .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px var(--ok-soft); }
   .hero h1 { font-size: var(--step-4); font-weight: 700; letter-spacing: -.025em; margin: 18px 0 18px; }
@@ -140,11 +140,11 @@
   @keyframes blink { 50% { opacity: 0; } }
 
   /* ── 섹션 공통 */
-  section { padding-block: 72px; border-top: 1px solid var(--rule); }
+  section { padding-block: 56px; border-top: 1px solid var(--rule); }
   .sec-head { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 24px; margin-bottom: 36px; }
   .label { font-size: 14px; font-weight: 500; color: var(--ink-3); padding-top: 9px; }
   .label .n { font-family: var(--mono); color: var(--signal); margin-right: 8px; }
-  .sec-head h2 { font-size: var(--step-3); font-weight: 700; letter-spacing: -.015em; }
+  .sec-head h2 { font-size: var(--step-2); font-weight: 700; letter-spacing: -.015em; }
   .sec-head p { color: var(--ink-2); margin-top: 10px; max-width: 40em; }
 
   /* ── 구조도 (HTML이라 휴대폰에서 세로로 쌓임) */
@@ -189,7 +189,7 @@
   .pipeline li span { background: var(--sunk); border-radius: 8px; padding: 6px 12px; }
   .pipeline li span::before { content: counter(s); font-family: var(--mono); font-weight: 600; font-size: 11.5px; color: var(--ink-3); margin-right: 8px; }
   .pipeline li + li::before { content: ""; width: 18px; height: 1px; background: var(--ink-3); margin: 0 4px; }
-  .points { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 28px; margin: 0; padding: 0; list-style: none; }
+  .points { display: grid; grid-template-columns: 1fr; gap: 6px; margin: 0; padding: 0; list-style: none; }
   .points li { position: relative; padding-left: 18px; font-size: 15px; color: var(--ink-2); }
   .points li::before { content: ""; position: absolute; left: 0; top: .72em; width: 7px; height: 7px; border-radius: 2px; background: var(--signal); }
   .points b { color: var(--ink); font-weight: 600; }
@@ -221,6 +221,8 @@
   .rule.key h3 { color: var(--ok); }
   .rule.key .big { font-family: var(--mono); font-size: 30px; font-weight: 600; color: var(--ok); line-height: 1.2; display: block; margin-top: 4px; }
 
+  .aside { margin-top: 18px; font-size: 15px; color: var(--ink-2); }
+  .plain { margin: 14px 0 0; padding-left: 1.2em; color: var(--ink-2); display: grid; gap: 6px; }
   .stack { display: flex; flex-wrap: wrap; gap: 8px; }
   .stack span { font-family: var(--mono); font-size: 13.5px; border: 1px solid var(--rule); background: var(--panel); padding: 5px 12px; border-radius: 8px; }
   .stack span i { font-style: normal; font-family: var(--body); font-size: 12.5px; color: var(--ink-3); margin-left: 6px; }
@@ -269,8 +271,8 @@
     <nav class="nav" aria-label="섹션">
       <a href="#structure">구조</a>
       <a href="#agents">에이전트</a>
-      <a href="#log">만든 과정</a>
-      <a href="#rules">원칙</a>
+      <a href="#log">작업 기록</a>
+      <a href="#rules">지키는 것</a>
       <a href="#next">다음</a>
     </nav>
     <button class="theme-btn" id="themeBtn" type="button" aria-label="어두운 화면으로 전환">
@@ -282,9 +284,9 @@
 <main id="main">
   <div class="wrap hero" id="top">
     <div>
-      <p class="kicker"><span class="pulse" aria-hidden="true"></span>AWS 인턴십 과정 · Claude Code와 함께 · 진행 중</p>
-      <h1>오직 <span class="hl">나를 위한</span><br>AI 에이전트를<br>만드는 작업실</h1>
-      <p class="lead">내게 필요한 일을 대신하는 에이전트를 직접 만들고 있습니다. 코드와 배운 것은 Obsidian 위키 하나에 모이고 GitHub에 자동으로 쌓입니다. 개인 정보와 비밀값은 밖으로 나가지 않게 설계했습니다.</p>
+      <p class="kicker"><span class="pulse" aria-hidden="true"></span>AWS 인턴십 과정 · 학습 기록</p>
+      <h1>나에게 필요한 에이전트를<br><span class="hl">하나씩</span> 만들어 보는 중</h1>
+      <p class="lead">AWS 인턴십 과정에서 Claude Code를 써 가며 배우고 있습니다. 지금은 초기 버전 에이전트 두 개와, 메모와 코드를 함께 정리하는 Obsidian 위키가 있습니다.</p>
       <div class="cta">
         <a class="btn primary" href="#agents">만든 에이전트 보기
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
@@ -292,12 +294,6 @@
           <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 .2a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.81.06 1.23.83 1.23.83.72 1.22 1.88.87 2.34.67.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.66 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 8 .2z"/></svg>
           GitHub 저장소</a>
       </div>
-      <p class="facts" aria-label="요약">
-        <span>에이전트 <b>2</b></span>
-        <span>저장소 <b>1</b></span>
-        <span>비밀 차단 <b>3중</b></span>
-        <span>추가 비용 <b>₩0</b></span>
-      </p>
     </div>
 
     <figure class="term" aria-label="이 저장소의 실제 커밋 기록">
@@ -327,8 +323,8 @@
       <div class="sec-head">
         <p class="label"><span class="n">01</span>구조</p>
         <div>
-          <h2>한 볼트 안에서 메모와 코드가 함께 자란다</h2>
-          <p>Obsidian 볼트 하나에 위키, 에이전트 코드, 비공개 구역이 같이 있습니다. 공개해도 되는 것만 검사를 통과해 GitHub로 올라갑니다.</p>
+          <h2>메모와 코드를 한곳에</h2>
+          <p>Obsidian 볼트 하나에 메모와 에이전트 코드를 같이 둡니다. 개인 자료와 키는 git에서 빼 두고, 나머지만 GitHub에 올라갑니다.</p>
         </div>
       </div>
 
@@ -376,7 +372,7 @@
         <p class="label"><span class="n">02</span>에이전트</p>
         <div>
           <h2>지금까지 만든 에이전트</h2>
-          <p>둘 다 Claude Agent SDK(Python)로 만들었고, 각자 꼭 필요한 전용 도구만 쓰도록 권한을 좁혔습니다.</p>
+          <p>둘 다 Claude Agent SDK(Python)로 만든 초기 버전입니다.</p>
         </div>
       </div>
 
@@ -385,7 +381,7 @@
           <div class="agent-id">
             <span class="mono">agents/security-agent</span>
             <h3>security-agent</h3>
-            <span class="chip">개발중</span>
+            <span class="chip">초기 버전</span>
             <div class="links">
               <a href="https://github.com/DODO-YONG/Obsidian/tree/main/agents/security-agent">코드 보기 →</a>
               <a href="https://dodo-yong.github.io/security-agent/">1일차 작업 기록 →</a>
@@ -397,13 +393,10 @@
               <li><span>권한 확인</span></li><li><span>헤더·쿠키·TLS·본문 점검</span></li><li><span>리포트 저장</span></li>
             </ol>
             <ul class="points">
-              <li>사이트마다 <b>점검 권한을 먼저 묻고</b> 승인된 곳만 점검. 프롬프트가 아니라 코드로 강제</li>
-              <li>SQL 인젝션 같은 공격 페이로드를 <b>보내지 않는</b> 비침습 방식</li>
-              <li>전용 도구 7개: 헤더·보안 헤더·쿠키·TLS·본문·리포트·권한</li>
-              <li>취약점이 담긴 리포트는 공개 저장소에 올리지 않음</li>
+              <li>점검 전에 그 사이트를 점검해도 되는지 먼저 묻기</li>
+              <li>공격 요청은 보내지 않고 응답만 읽기</li>
+              <li>연습용 취약 사이트로 시험해 봄</li>
             </ul>
-            <p class="result">시험용 취약 사이트 점검 결과
-              <span class="sev hi">높음 2</span><span class="sev mid">중간 1</span><span class="sev lo">낮음 1</span></p>
           </div>
         </article>
 
@@ -411,7 +404,7 @@
           <div class="agent-id">
             <span class="mono">agents/interview-coach</span>
             <h3>interview-coach</h3>
-            <span class="chip">개발중</span>
+            <span class="chip">초기 버전</span>
             <div class="links">
               <a href="https://github.com/DODO-YONG/Obsidian/tree/main/agents/interview-coach">코드 보기 →</a>
             </div>
@@ -422,24 +415,24 @@
               <li><span>내 경험 읽기</span></li><li><span>질문 + 꼬리 질문</span></li><li><span>5개 항목 평가</span></li><li><span>연습 기록</span></li>
             </ol>
             <ul class="points">
-              <li>평가: <b>STAR 구조 · 본인 행동 · 결과 수치 · 원칙 적합도 · 전달력</b></li>
-              <li>기록이 쌓일수록 <b>점수가 낮은 원칙부터</b> 다시 질문</li>
-              <li>답변 뼈대는 <b>내가 말한 사실로만</b> 다듬고, 빈 곳은 [수치 필요]로 표시</li>
-              <li>경험·연습 기록은 비공개 구역에만 저장. 아니면 저장을 거부</li>
+              <li>STAR 구조, 수치, 원칙과 맞는지 등을 보고 피드백</li>
+              <li>연습 기록이 쌓이면 약한 원칙부터 다시 질문</li>
+              <li>개인 경험 기록은 공개 저장소에 올리지 않음</li>
             </ul>
           </div>
         </article>
       </div>
+      <p class="aside">그 밖에 <a href="https://github.com/DODO-YONG/Obsidian/blob/main/scripts/gemini.py"><code>scripts/gemini.py</code></a>: 터미널에서 제미나이와 대화하는 작은 스크립트도 있습니다.</p>
     </div>
   </section>
 
   <section id="log">
     <div class="wrap">
       <div class="sec-head">
-        <p class="label"><span class="n">03</span>만든 과정</p>
+        <p class="label"><span class="n">03</span>작업 기록</p>
         <div>
-          <h2>이틀 동안 쌓고, 한 번 크게 바꿨다</h2>
-          <p>필요할 때마다 한 칸씩 쌓았고, 더 나은 구조가 보이자 첫 환경을 그대로 옮기는 대신 방향을 바꿨습니다.</p>
+          <h2>작업 기록</h2>
+          <p>11월 17~18일, 이틀 동안 한 일입니다.</p>
         </div>
       </div>
       <div class="days">
@@ -448,8 +441,8 @@
           <div class="ev"><time>11:57</time><div><h4>첫 에이전트: 웹사이트 보안 점검</h4>
             <p>대화형 에이전트에 점검 도구를 붙이고 권한 확인과 비침습 원칙을 코드에 넣었습니다.</p>
             <div class="tags"><span>Agent SDK</span><span>Python</span></div></div></div>
-          <div class="ev"><time>오후</time><div><h4>집 PC를 클라우드 작업실로</h4>
-            <p>Ubuntu(WSL) 안에서 자동 커밋·푸시, 비밀번호로 잠기는 암호화 폴더, 구글 드라이브 날짜별 백업, 새 PC 복원 키트를 만들고 복원 시험을 통과했습니다.</p>
+          <div class="ev"><time>오후</time><div><h4>자동 백업 환경 만들기</h4>
+            <p>Windows의 Ubuntu(WSL)에서 자동 커밋과 구글 드라이브 백업을 설정했습니다.</p>
             <div class="tags"><span>WSL2</span><span>gocryptfs</span><span>rclone</span></div></div></div>
           <div class="ev"><time>13:17</time><div><h4>작업 기록 페이지 공개</h4>
             <p>비개발자도 이해할 수 있게 첫 소개 페이지를 GitHub Pages로 올렸습니다.</p>
@@ -457,21 +450,24 @@
         </div>
         <div class="day">
           <h3><b>2일차</b> · 2026-11-18 · Mac</h3>
-          <div class="ev turn"><time>09:36</time><div><h4>옮기는 대신 구조를 바꿈</h4>
-            <p>에이전트가 늘어날 것을 보고, 메모와 코드를 Obsidian 볼트 하나에 모으고 Claude Code가 규칙서대로 관리하는 위키를 세웠습니다.</p>
+          <div class="ev"><time>09:36</time><div><h4>맥으로 옮기며 Obsidian으로 정리</h4>
+            <p>메모와 코드를 Obsidian 볼트 하나에 모으고, Claude Code가 정리 규칙(CLAUDE.md)을 따르게 했습니다.</p>
             <div class="tags"><span>Obsidian</span><span>CLAUDE.md</span></div></div></div>
-          <div class="ev"><time>09:55</time><div><h4>공개 저장소용 안전장치</h4>
-            <p>.gitignore, 비공개 구역, 커밋 전 키 검사를 겹겹이 두고 시나리오별로 직접 시험했습니다.</p>
-            <div class="tags"><span>pre-commit</span><span>시험 11건</span></div></div></div>
-          <div class="ev"><time>10:04</time><div><h4>첫 에이전트를 이력째 이사</h4>
+          <div class="ev"><time>09:55</time><div><h4>키가 올라가지 않게 설정</h4>
+            <p>.gitignore와 커밋 전 검사로 키·개인 자료가 공개 저장소에 들어가지 않게 했습니다.</p>
+            <div class="tags"><span>pre-commit</span></div></div></div>
+          <div class="ev"><time>10:04</time><div><h4>첫 에이전트 옮기기</h4>
             <p>커밋 기록을 보존한 채 새 구조로 옮기고, 원래 저장소는 읽기 전용으로 보관했습니다.</p>
             <div class="tags"><span>git subtree</span><span>Archive</span></div></div></div>
           <div class="ev"><time>10:25</time><div><h4>두 번째 에이전트: 면접 코치</h4>
             <p>작업 기록에서 면접용 경험을 뽑아 비공개 경험 은행을 만들고, 이를 읽어 연습시키는 코치를 만들었습니다.</p>
             <div class="tags"><span>16 LP</span><span>STAR</span></div></div></div>
-          <div class="ev"><time>10:28</time><div><h4>추가 비용 0원 장치</h4>
-            <p>API 키가 설정돼 있으면 에이전트가 스스로 실행을 거부하게 했습니다. 구독 로그인으로만 돌아갑니다.</p>
-            <div class="tags"><span>비용 가드</span></div></div></div>
+          <div class="ev"><time>10:28</time><div><h4>API 키로는 실행 안 되게</h4>
+            <p>추가 요금이 나가지 않도록 구독 로그인으로만 실행되게 했습니다.</p>
+            </div></div>
+          <div class="ev"><time>10:41</time><div><h4>제미나이 대화 스크립트</h4>
+            <p>터미널에서 구글 제미나이에게 질문하는 작은 스크립트. 바쁘면 다른 모델로 자동으로 넘어갑니다.</p>
+            <div class="tags"><span>Gemini API</span><span>Python</span></div></div></div>
         </div>
       </div>
     </div>
@@ -480,41 +476,15 @@
   <section id="rules">
     <div class="wrap">
       <div class="sec-head">
-        <p class="label"><span class="n">04</span>원칙</p>
+        <p class="label"><span class="n">04</span>지키는 것</p>
         <div>
-          <h2>모든 작업에 똑같이 지키는 규칙</h2>
-          <p>규칙은 위키의 규칙서(CLAUDE.md)에 적혀 있어 Claude Code가 매번 따릅니다.</p>
+          <h2>작업하면서 지키는 것</h2>
+          <ul class="plain">
+            <li>키와 개인 자료는 공개 저장소에 올리지 않는다.</li>
+            <li>Claude 구독 말고 추가 비용은 쓰지 않는다.</li>
+            <li>만든 것은 직접 돌려 보고, 확인 못 한 건 그렇다고 적는다.</li>
+          </ul>
         </div>
-      </div>
-      <div class="rules">
-        <div class="rule key"><span class="mono">COST</span><span class="big">₩0</span><h3>추가 비용 없음</h3>
-          <p>Claude 구독 로그인으로만 실행합니다. API 키가 보이면 실행하지 않고, 유료 서비스는 쓰지 않습니다.</p></div>
-        <div class="rule"><span class="mono">SECRETS</span><h3>비밀은 밖으로 안 나간다</h3>
-          <p>키는 <code>.env</code>에만, 개인 자료는 <code>private/</code>에만. 실수로 섞여도 커밋 전 검사가 막고, 알림에서도 값을 가립니다.</p></div>
-        <div class="rule"><span class="mono">CONSENT</span><h3>허락받은 일만 한다</h3>
-          <p>보안 점검은 권한 확인 뒤에만, 개인 데이터 저장은 비공개 구역일 때만. 코드로 강제합니다.</p></div>
-        <div class="rule"><span class="mono">FACTS</span><h3>사실만 쓴다</h3>
-          <p>요약·평가·답변 뼈대에서 모르는 건 지어내지 않고 "확인 필요"로 남깁니다.</p></div>
-        <div class="rule"><span class="mono">MEMORY</span><h3>기억은 위키에 쌓는다</h3>
-          <p>대화는 사라져도 결정과 배운 것은 위키 페이지로 남아 다음 작업의 맥락이 됩니다.</p></div>
-        <div class="rule"><span class="mono">VERIFY</span><h3>돌려 보고 말한다</h3>
-          <p>만든 것은 직접 시험하고, 확인하지 못한 부분은 확인하지 못했다고 적습니다.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="stack">
-    <div class="wrap">
-      <div class="sec-head">
-        <p class="label"><span class="n">05</span>도구</p>
-        <div>
-          <h2>모두 무료이거나 쓰던 구독 안에서</h2>
-        </div>
-      </div>
-      <div class="stack">
-        <span>Claude Code<i>구독</i></span><span>Claude Agent SDK<i>Python</i></span><span>Obsidian</span><span>Obsidian Git</span>
-        <span>Dataview</span><span>git · gh</span><span>GitHub Pages</span><span>Mermaid</span>
-        <span>WSL2 · Ubuntu</span><span>gocryptfs</span><span>rclone</span>
       </div>
     </div>
   </section>
@@ -522,9 +492,9 @@
   <section id="next">
     <div class="wrap">
       <div class="sec-head">
-        <p class="label"><span class="n">06</span>다음</p>
+        <p class="label"><span class="n">05</span>다음</p>
         <div>
-          <h2>필요가 생기는 순서대로</h2>
+          <h2>해 보고 싶은 것</h2>
         </div>
       </div>
       <div class="next">
@@ -541,7 +511,7 @@
 
 <footer>
   <div class="wrap">
-    <span>Claude Code와 함께 만드는 개인 작업 기록</span>
+    <span>Claude Code · Claude Agent SDK · Obsidian · GitHub Pages로 만듦</span>
     <a href="https://github.com/DODO-YONG/Obsidian">github.com/DODO-YONG/Obsidian</a>
   </div>
 </footer>

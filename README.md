@@ -4,7 +4,7 @@
 
 **🌐 소개 페이지: https://dodo-yong.github.io/Obsidian/**
 
-AWS 인턴십 과정에서 Claude Code와 함께 만드는, 오직 나를 위한 AI 에이전트 모음. 코드는 `agents/`, 설계·학습 메모는 Obsidian 위키(`wiki/`)에 있다.
+AWS 인턴십 과정에서 Claude Code로 나에게 필요한 에이전트를 하나씩 만들어 보는 학습 기록. 코드는 `agents/`, 설계·학습 메모는 Obsidian 위키(`wiki/`)에 있다.
 
 ## 🗺️ 프로젝트 지도
 
@@ -44,8 +44,10 @@ flowchart LR
 
 | 프로젝트 | 한 줄 설명 | 상태 | 코드 | 메모 |
 |---|---|---|---|---|
-| 🛡️ security-agent | URL을 주면 공격 없이 응답만 읽어 보안 약점을 찾고, 위험도와 고치는 법을 리포트로 써 줌 | 🟦 개발중 | [agents/security-agent](agents/security-agent) | [위키](wiki/projects/security-agent/security-agent.md) · [소개 페이지](https://dodo-yong.github.io/security-agent/) |
-| 🎤 interview-coach | AWS 16가지 리더십 원칙 면접 연습. 약한 원칙부터 묻고, 꼬리 질문으로 파고든 뒤 STAR·수치·원칙 적합도로 평가 | 🟦 개발중 | [agents/interview-coach](agents/interview-coach) | [위키](wiki/projects/interview-coach/interview-coach.md) |
+| 🛡️ security-agent | URL을 주면 공격 없이 응답만 읽어 보안 약점을 찾고, 위험도와 고치는 법을 리포트로 써 줌 | 🟦 초기 버전 | [agents/security-agent](agents/security-agent) | [위키](wiki/projects/security-agent/security-agent.md) · [소개 페이지](https://dodo-yong.github.io/security-agent/) |
+| 🎤 interview-coach | AWS 16가지 리더십 원칙 면접 연습. 약한 원칙부터 묻고, 꼬리 질문으로 파고든 뒤 STAR·수치·원칙 적합도로 평가 | 🟦 초기 버전 | [agents/interview-coach](agents/interview-coach) | [위키](wiki/projects/interview-coach/interview-coach.md) |
+
+**보조 도구**: [`scripts/gemini.py`](scripts/gemini.py) — 터미널에서 구글 제미나이와 대화 (키는 `.env`, 대화 기록은 볼트 밖)
 
 ## 📁 폴더 구조
 

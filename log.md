@@ -11,3 +11,5 @@
 ## [2026-11-18] output | interview-coach 에이전트 첫 버전 (agents/interview-coach) + 위키 허브·README 등록
 
 ## [2026-11-18] output | 작업 소개 페이지(docs/index.html, GitHub Pages) + README 대표 이미지
+
+## [2026-11-18] output | 소개 페이지 톤 낮춤 + gemini-chat 도구 정리(wiki/shared/gemini-chat)
