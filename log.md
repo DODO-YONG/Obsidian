@@ -17,3 +17,5 @@
 ## [2026-11-18] output | 백업 현황 정리(드라이브 백업 11-18 08:32 이후 중단 확인), Windows→맥 이전 내용 추가
 
 ## [2026-11-18] output | private/ 비공개 저장소(DODO-YONG/Obsidian-private) 백업 + scripts/backup-private.sh
+
+## [2026-11-18] output | 터미널 작업 기록 페이지(docs/terminal.html) + 공용 스타일(docs/style.css)

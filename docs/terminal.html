@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>터미널 작업 기록</title>
+<meta name="description" content="Claude 앱과 별도로, 맥 터미널의 Claude Code로 한 작업 기록: 맥 세팅, git 시작, 제미나이 연결, 지시문 다듬기.">
+<meta property="og:title" content="터미널 작업 기록">
+<meta property="og:description" content="맥 터미널의 Claude Code로 한 작업 기록">
+<meta property="og:image" content="https://dodo-yong.github.io/Obsidian/preview.png">
+<meta name="theme-color" content="#F4F6F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1319" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<style>
+  /* 이 페이지 전용: 앱·터미널이 볼트로 이어지는 그림, 묻고 답한 것 목록 */
+  .crumb { font-size: 14px; color: var(--ink-3); }
+  .crumb a { color: var(--ink-2); }
+  .bridge { display: grid; grid-template-columns: minmax(0,1fr) 64px minmax(0,1.1fr) 64px minmax(0,1fr); align-items: center; }
+  .bnode { border: 1px solid var(--rule); background: var(--panel); border-radius: 14px; padding: 18px; min-width: 0; }
+  .bnode .mono { font-size: 12px; color: var(--ink-3); letter-spacing: .04em; }
+  .bnode strong { display: block; font-size: 16.5px; margin: 4px 0 6px; }
+  .bnode p { font-size: 14px; color: var(--ink-2); }
+  .bnode.center { background: var(--signal-soft); border-color: var(--signal); }
+  .bnode.center strong { color: var(--signal); }
+  .link2 { height: 2px; background: var(--ink-3); margin: 0 8px; position: relative; }
+  .link2::before, .link2::after { content: ""; position: absolute; top: -4px; border: 5px solid transparent; }
+  .link2::before { left: -2px; border-right: 7px solid var(--ink-3); border-left: 0; }
+  .link2::after { right: -2px; border-left: 7px solid var(--ink-3); border-right: 0; }
+  .bridge-note { margin-top: 14px; font-size: 14.5px; color: var(--ink-2); }
+
+  .qa { display: grid; gap: 0; border-top: 1px solid var(--rule); }
+  .qa details { border-bottom: 1px solid var(--rule); padding: 4px 0; }
+  .qa summary { cursor: pointer; list-style: none; display: grid; grid-template-columns: 28px minmax(0,1fr) 20px; gap: 10px; align-items: baseline; padding: 14px 0; font-weight: 600; font-size: 16.5px; }
+  .qa summary::-webkit-details-marker { display: none; }
+  .qa summary .q { font-family: var(--mono); color: var(--signal); font-weight: 600; font-size: 14px; }
+  .qa summary .chev { color: var(--ink-3); transition: transform .15s; font-family: var(--mono); }
+  .qa details[open] .chev { transform: rotate(90deg); }
+  .qa .ans { padding: 0 0 18px 38px; color: var(--ink-2); font-size: 15.5px; display: grid; gap: 8px; max-width: 46em; }
+  .qa .ans b { color: var(--ink); }
+  .mini { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  .mini th, .mini td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .mini th { color: var(--ink-3); font-weight: 500; font-size: 13px; }
+  .tbl { overflow-x: auto; }
+
+  .tools { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .tool { background: var(--panel); border: 1px solid var(--rule); border-radius: 14px; padding: 22px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+  .tool .mono { font-size: 12.5px; color: var(--ink-3); }
+  .tool h3 { font-family: var(--mono); font-size: 18px; font-weight: 600; }
+  .tool p { color: var(--ink-2); font-size: 15px; }
+  .tool pre { margin: 0; background: var(--term-bg); color: var(--term-ink); border-radius: 10px; padding: 12px 14px; font-family: var(--mono); font-size: 13px; overflow-x: auto; line-height: 1.6; }
+  .tool pre .c { color: var(--term-dim); }
+  .tool .note { font-size: 13.5px; color: var(--ink-3); }
+  .tool .chip { justify-self: start; }
+  .chip.wait { background: var(--lock-soft); color: var(--lock); }
+  .lesson { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+  .lesson div { border-left: 2px solid var(--signal); padding: 2px 0 2px 16px; }
+  .lesson h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .lesson p { font-size: 14.5px; color: var(--ink-2); }
+
+  @media (max-width: 860px) {
+    .bridge { grid-template-columns: 1fr; }
+    .link2 { width: 2px; height: 30px; margin: 0 auto; }
+    .link2::before { left: -4px; top: -2px; border: 5px solid transparent; border-bottom: 7px solid var(--ink-3); border-top: 0; }
+    .link2::after { left: -4px; right: auto; top: auto; bottom: -2px; border: 5px solid transparent; border-top: 7px solid var(--ink-3); border-bottom: 0; }
+    .tools, .lesson { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="소개 페이지로">
+      <span class="brand-mark"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 5l3 3-3 3M8.5 11.5h4"/></svg></span>
+      <span class="brand-text">나만의 에이전트 작업실</span>
+    </a>
+    <nav class="nav" aria-label="섹션">
+      <a href="#how">연결 방식</a>
+      <a href="#log">작업 기록</a>
+      <a href="#gemini">제미나이</a>
+      <a href="#qa">물어본 것</a>
+    </nav>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="어두운 화면으로 전환">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap hero" id="top">
+    <div>
+      <p class="crumb"><a href="./">소개</a> / 터미널 작업 기록</p>
+      <h1 style="margin-top:14px">터미널에서 한 작업</h1>
+      <p class="lead">Claude 앱과 별도로, 맥의 터미널에서 Claude Code를 실행해 한 작업들입니다. 맥 세팅, 볼트의 첫 git 커밋, 제미나이 연결, 지시문 다듬기를 여기서 했습니다.</p>
+      <div class="cta">
+        <a class="btn primary" href="#log">시간순으로 보기
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        <a class="btn" href="./">소개 페이지로</a>
+      </div>
+    </div>
+
+    <figure class="term" aria-label="터미널 세션에서 실행한 명령 예시">
+      <div class="term-bar" aria-hidden="true"><i></i><i></i><i></i><span>~/Obsidian — claude</span></div>
+      <div class="term-body">
+        <div><span class="prompt">$</span> cd ~/Obsidian &amp;&amp; claude</div>
+        <ol>
+          <li class="day"># 11-18 · 터미널 세션</li>
+          <li><span class="h">09:36</span><span class="t">git</span><span class="m">볼트 git 시작 · 첫 커밋 f68cc56</span></li>
+          <li><span class="h">10:30</span><span class="t">.env</span><span class="m">구글 키 저장 (git 제외)</span></li>
+          <li><span class="h">10:39</span><span class="t">py</span><span class="m">gemini.py — 제미나이 첫 답변</span></li>
+          <li><span class="h">10:42</span><span class="t">py</span><span class="m">대화 모드 · 앞 대화 기억</span></li>
+          <li><span class="h">11:01</span><span class="t">py</span><span class="m">beginner-faq/ask.py 작성</span></li>
+        </ol>
+        <div class="tail">파일과 git으로 앱 세션과 이어짐<span class="cursor" aria-hidden="true"></span></div>
+      </div>
+    </figure>
+  </div>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label"><span class="n">01</span>연결 방식</p>
+        <div>
+          <h2>앱과 터미널은 대화가 아니라 파일로 이어진다</h2>
+          <p>두 곳의 대화 내용은 서로 공유되지 않습니다. 대신 같은 볼트 폴더를 고치고, 같은 규칙서(CLAUDE.md)를 읽고, 같은 GitHub 저장소에 올라갑니다.</p>
+        </div>
+      </div>
+      <div class="bridge">
+        <div class="bnode"><span class="mono">CLAUDE 앱</span><strong>앱의 Claude Code</strong><p>에이전트 만들기, 위키·소개 페이지 정리</p></div>
+        <div class="link2" aria-hidden="true"></div>
+        <div class="bnode center"><span class="mono">~/Obsidian</span><strong>같은 볼트 폴더</strong><p>위키 · agents/ · CLAUDE.md 규칙 · git 기록</p></div>
+        <div class="link2" aria-hidden="true"></div>
+        <div class="bnode"><span class="mono">TERMINAL</span><strong>터미널의 Claude Code</strong><p>맥 세팅, 제미나이 연결, 지시문 실험</p></div>
+      </div>
+      <p class="bridge-note">그래서 터미널에서 <code>cd ~/Obsidian</code> 한 뒤 실행하면 같은 규칙과 기억을 쓰고, 다른 폴더에서 실행하면 쓰지 않습니다.</p>
+    </div>
+  </section>
+
+  <section id="log">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label"><span class="n">02</span>작업 기록</p>
+        <div>
+          <h2>11월 18일, 터미널에서</h2>
+          <p>시간은 한국 시간입니다.</p>
+        </div>
+      </div>
+      <div class="days">
+        <div class="day">
+          <h3><b>오전</b> · 맥 세팅과 볼트 시작</h3>
+          <div class="ev"><time>09:13</time><div><h4>복원 키트로 맥 세팅 시작</h4>
+            <p>Windows 때 만든 복원 키트의 맥용 안내를 따라 git, GitHub CLI, Python 등을 설치했습니다. 파이썬은 이미 설치돼 있어 그대로 썼습니다.</p>
+            <div class="tags"><span>Homebrew</span><span>Python 3.15</span></div></div></div>
+          <div class="ev"><time>09:24</time><div><h4>Obsidian 권장 설정</h4>
+            <p>위키 링크 방식, 첨부 파일 폴더(<code>raw/assets</code>)를 설정했습니다.</p>
+            <div class="tags"><span>.obsidian/app.json</span></div></div></div>
+          <div class="ev"><time>09:31</time><div><h4>Obsidian으로 하기로</h4>
+            <p>기존 환경을 그대로 재현하는 대신, 지금까지의 작업을 Obsidian 볼트에서 이어가기로 했습니다.</p></div></div>
+          <div class="ev"><time>09:36</time><div><h4>볼트에 git 시작</h4>
+            <p>볼트를 git 저장소로 만들고 첫 커밋을 했습니다. 창 배치처럼 자주 바뀌는 파일은 제외했습니다. 이후의 모든 기록이 여기서 시작합니다.</p>
+            <div class="tags"><span>f68cc56</span><span>.gitignore</span></div></div></div>
+        </div>
+        <div class="day">
+          <h3><b>오전 후반</b> · 제미나이 연결과 실험</h3>
+          <div class="ev"><time>10:25</time><div><h4>매번 묻지 않고 진행하도록 설정</h4>
+            <p>파일 수정이나 일반 명령은 바로 실행하고, 위험해 보이는 작업만 확인하는 모드로 바꿨습니다.</p>
+            <div class="tags"><span>auto 모드</span></div></div></div>
+          <div class="ev"><time>10:30</time><div><h4>구글 키 저장</h4>
+            <p>구글 API 키를 볼트의 <code>.env</code>에 넣었습니다. git에서 제외되고, 본인만 읽을 수 있게 했습니다.</p></div></div>
+          <div class="ev"><time>10:39</time><div><h4>제미나이에게 첫 질문</h4>
+            <p>처음 고른 모델이 막혀 있거나 응답이 늦어서, 바쁘면 다음 모델로 넘어가게 고친 뒤 답을 받았습니다.</p>
+            <div class="tags"><span>scripts/gemini.py</span></div></div></div>
+          <div class="ev"><time>10:42</time><div><h4>앞 대화를 기억하는 대화 모드</h4>
+            <p>터미널에서 계속 묻고 답하는 모드와, 이어 묻기(<code>-c</code>)를 추가했습니다.</p></div></div>
+          <div class="ev"><time>10:59</time><div><h4>지시문 다듬기</h4>
+            <p>"초보자 질문 15개와 두 줄 답"을 받기 위해 역할, AI가 할 일, 내가 할 일, 답 모양을 나눈 지시문을 만들었습니다. 이때는 API를 부르지 않았습니다.</p></div></div>
+          <div class="ev"><time>11:01</time><div><h4>beginner-faq 만들기</h4>
+            <p>그 지시문을 시스템 지시로 실어 요청을 한 번만 보내고, 답을 <code>answer.md</code>에 저장하는 스크립트를 만들었습니다. 아직 실행 전입니다.</p>
+            <div class="tags"><span>agents/beginner-faq</span></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="gemini">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label"><span class="n">03</span>제미나이</p>
+        <div>
+          <h2>제미나이로 만든 두 가지</h2>
+          <p>무료 등급 키를 씁니다. 무료 등급은 보낸 내용이 서비스 개선에 쓰일 수 있어서, 개인 자료는 보내지 않습니다.</p>
+        </div>
+      </div>
+      <div class="tools">
+        <article class="tool">
+          <span class="mono">scripts/gemini.py</span>
+          <h3>gemini-chat</h3>
+          <span class="chip">사용 중</span>
+          <p>터미널에서 제미나이와 대화합니다. 앞 대화를 기억하고, 모델이 바쁘면 다음 모델로 넘어갑니다.</p>
+<pre><span class="c"># 대화 모드 (/new 새 대화, /exit 끝)</span>
+python3 scripts/gemini.py
+<span class="c"># 한 번만 묻기 / 이어 묻기</span>
+python3 scripts/gemini.py "질문"
+python3 scripts/gemini.py -c "이어서 질문"</pre>
+          <p class="note">대화 기록은 볼트 밖(<code>~/.local/state</code>)에 저장되어 GitHub에 올라가지 않습니다.</p>
+        </article>
+        <article class="tool">
+          <span class="mono">agents/beginner-faq/ask.py</span>
+          <h3>beginner-faq</h3>
+          <span class="chip wait">실행 전</span>
+          <p>정한 분야의 초보자 질문 15개와 두 줄 답을 받아 <code>answer.md</code>로 저장합니다. 요청은 한 번만 보내고, 저장된 답이 있으면 다시 묻지 않습니다.</p>
+<pre><span class="c"># 처음 한 번</span>
+cd agents/beginner-faq
+python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -r requirements.txt
+<span class="c"># 실행</span>
+python ask.py</pre>
+          <p class="note">실행 전에 <code>ask.py</code>의 <code>[내 분야]</code>를 바꾸고, <code>.env</code>에 <code>GEMINI_MODEL</code>을 넣어야 합니다.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="qa">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label"><span class="n">04</span>물어본 것</p>
+        <div>
+          <h2>작업하면서 물어보고 알게 된 것</h2>
+          <p>터미널 세션에서 나눈 질문과 답을 짧게 정리했습니다. 눌러서 펼쳐 보세요.</p>
+        </div>
+      </div>
+      <div class="qa">
+        <details open>
+          <summary><span class="q">Q1</span><span>Obsidian 볼트로 AI를 쓰는 이 방식은 뭐라고 불러?</span><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="ans">
+            <p>정해진 이름은 없지만 <b>LLM 위키</b>(LLM이 관리하는 지식베이스), <b>AI 세컨드 브레인</b>, 기술 쪽에선 <b>컨텍스트 엔지니어링·에이전트 메모리</b>라고 부릅니다.</p>
+            <p>핵심은 Obsidian이 아니라 <b>파일을 직접 읽고 쓰는 코딩 에이전트</b>입니다. 질문할 때마다 원본을 검색하는 방식과 달리, 미리 읽고 정리한 위키가 계속 쌓입니다.</p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="q">Q2</span><span>이 방식은 토큰이 많이 들어?</span><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="ans">
+            <p><b>자료를 넣을 때는 많이 들고, 물어볼 때는 적게 듭니다.</b> 정리할 때 원본을 통째로 읽고 여러 페이지를 고치지만, 질문할 때는 정리된 짧은 페이지 몇 개만 읽습니다.</p>
+            <div class="tbl"><table class="mini">
+              <thead><tr><th>상황</th><th>결과</th></tr></thead>
+              <tbody>
+                <tr><td>같은 자료로 여러 날 여러 번 질문</td><td>위키 방식이 유리</td></tr>
+                <tr><td>여러 자료를 엮어서 묻기</td><td>크게 유리 (연결이 이미 정리됨)</td></tr>
+                <tr><td>한두 번 보고 끝</td><td>원본을 바로 묻는 게 쌈</td></tr>
+              </tbody>
+            </table></div>
+            <p>토큰보다 큰 이득은 세션이 바뀌어도 맥락이 남는다는 점입니다.</p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="q">Q3</span><span>개인 비서처럼 할 일·공부에 쓰기 좋은 방법이야?</span><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="ans">
+            <p><b>잘 맞는 일:</b> 쌓아 둔 자료로 작업하기, 공부한 내용을 연결해 두고 나중에 묻기, 나에 대한 맥락을 매번 설명하지 않기.</p>
+            <p><b>약한 일:</b> 먼저 말을 걸지 않아서 알림·일정 관리는 캘린더가 낫고, 매일 바뀌는 정보나 짧은 일회성 질문은 위키 없이 묻는 게 빠릅니다.</p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="q">Q4</span><span>앱에서 한 작업과 터미널 작업이 연동돼?</span><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="ans">
+            <p>대화는 연동되지 않고, <b>파일과 git으로만</b> 이어집니다. 같은 폴더를 고치니 서로의 파일과 커밋은 볼 수 있습니다. 대화 기록은 이 맥에 남아 있어 필요하면 읽어 볼 수 있습니다.</p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="q">Q5</span><span>터미널에서 <code>cd /</code>가 왜 안 먹혀?</span><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="ans">
+            <p>Claude Code는 시작한 폴더 밖으로 나가면 다음 명령에서 원래 폴더로 되돌립니다. 안전장치입니다. 다른 폴더에서 일하려면 그 폴더를 작업 폴더로 추가하거나, 처음부터 그 폴더에서 실행하면 됩니다.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label"><span class="n">05</span>정리</p>
+        <div><h2>터미널 작업에서 남은 것</h2></div>
+      </div>
+      <div class="lesson">
+        <div><h3>폴더가 기준이다</h3><p>어디서 실행하느냐에 따라 Claude가 읽는 규칙과 기억이 달라집니다. 볼트에서 실행하면 같은 맥락을 씁니다.</p></div>
+        <div><h3>키는 .env에만</h3><p>코드에는 키를 넣지 않고 <code>.env</code>에서 읽습니다. 공개 저장소에 올라가도 안전합니다.</p></div>
+        <div><h3>요청은 아껴서</h3><p>지시문은 먼저 다듬고, 요청은 한 번만 보내고, 받은 답은 저장해 다시 묻지 않게 했습니다.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span><a href="./">← 소개 페이지</a></span>
+    <a href="https://github.com/DODO-YONG/Obsidian">github.com/DODO-YONG/Obsidian</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement, btn = document.getElementById('themeBtn');
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function isDark() { var t = root.getAttribute('data-theme'); return t ? t === 'dark' : mq.matches; }
+  function sync() { btn.setAttribute('aria-label', isDark() ? '밝은 화면으로 전환' : '어두운 화면으로 전환'); }
+  try { var saved = localStorage.getItem('theme'); if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved); } catch (e) {}
+  sync();
+  btn.addEventListener('click', function () {
+    var next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  mq.addEventListener && mq.addEventListener('change', sync);
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        links.forEach(function (a) { a.setAttribute('aria-current', a.getAttribute('href') === '#' + en.target.id ? 'true' : 'false'); });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    links.forEach(function (a) { var s = document.querySelector(a.getAttribute('href')); if (s) io.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>
