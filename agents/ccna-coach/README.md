@@ -28,6 +28,26 @@ cd ~/Obsidian/agents/ccna-coach && python3 server.py
 
 설치할 것 없음(파이썬 기본 기능만). 끄기: `Ctrl+C`.
 
+## 다른 사람에게 열기 (다른 네트워크에서 접속)
+`127.0.0.1`은 '그 기기 자신'이라, 다른 사람이 화면을 열면 자기 컴퓨터에서 서버를 찾다가 실패한다.
+그래서 내 Mac 서버에 Cloudflare 임시 터널(무료, 가입 불필요)로 공개 주소를 붙인다. 키는 여전히 내 Mac에만 있다.
+
+```bash
+cd ~/Obsidian/agents/ccna-coach && ./start-public.sh
+```
+출력 예:
+```
+손님에게 보낼 링크:  https://dodo-yong.github.io/Obsidian/ccna/#server=https://xxxx.trycloudflare.com
+접속 코드:          a1b2c3      (링크와 따로 알려 주세요)
+```
+- 손님은 링크를 열고 **접속 코드**를 넣으면 AI 문제·해설을 쓸 수 있다(오른쪽 위 "손님으로 연결됨").
+- **보호 장치**: 코드 없으면 거부, 8번 틀리면 10분 차단 · 손님 1명당 시간당 30번 · 서버 전체 하루 300번 ·
+  손님에게 내 진도·기록 안 보임 · 손님 풀이는 기록 안 함.
+- `Ctrl+C`로 끄면 주소가 사라지고, 다시 켜면 **주소가 바뀐다** → 새 링크를 다시 보낸다.
+- 내 Mac이 켜져 있고 이 창이 열려 있을 때만 동작한다.
+- 설정(볼트 `.env`, 선택): `CCNA_ACCESS_CODE`(코드 고정), `CCNA_GUEST_PER_HOUR`, `CCNA_DAILY_LIMIT`.
+- 필요: `brew install cloudflared` (한 번)
+
 ## 기능
 | 기능 | 제미나이 사용 |
 |---|---|
@@ -45,7 +65,8 @@ cd ~/Obsidian/agents/ccna-coach && python3 server.py
 ## 파일
 | 파일 | 설명 |
 |---|---|
-| `server.py` | 답변 서버(제미나이 지시문, 채점, 기록, CORS) |
+| `server.py` | 답변 서버(제미나이 지시문, 채점, 기록, CORS, 손님 접속 코드·사용량 제한) |
+| `start-public.sh` | 서버 + Cloudflare 임시 터널을 함께 켜고 손님용 링크·코드 출력 |
 | `gemini_client.py` | 제미나이 REST 호출(모델 자동 전환, JSON 응답) |
 | `../../docs/ccna/index.html` | 공개 화면 |
 | `../../docs/ccna/topics.json` | 출제 범위(단원·세부 범위) — 화면과 서버가 함께 씀 |
