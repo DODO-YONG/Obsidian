@@ -144,6 +144,10 @@
   .help { margin: 0 0 16px; padding: 14px 16px; border-radius: 12px; background: var(--part-soft); color: var(--ink); font-size: 14px; display: grid; gap: 6px; }
   .help code { background: var(--panel); padding: 2px 6px; border-radius: 6px; font-size: 13px; }
   .help b { color: var(--part); }
+  .connform { display: grid; grid-template-columns: minmax(0,2fr) minmax(0,1fr) auto; gap: 8px; align-items: end; }
+  .connform label { display: grid; gap: 4px; font-size: 12.5px; color: var(--ink-2); min-width: 0; }
+  .connform input { border: 1px solid var(--rule); background: var(--panel); border-radius: 9px; padding: 8px 10px; min-width: 0; }
+  @media (max-width: 760px) { .connform { grid-template-columns: 1fr; } }
   .toast { position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px; max-width: min(560px, calc(100% - 32px)); z-index: 20; }
   .spin { width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: s .8s linear infinite; }
   @keyframes s { to { transform: rotate(360deg); } }
@@ -187,9 +191,14 @@
 
   <main>
     <div class="help" id="connHelp" hidden>
-      <div><b>AI 문제·해설은 이 사이트 주인의 Mac에서 답변 서버가 켜져 있을 때만 동작해요.</b> 서브넷 계산 문제는 서버 없이 누구나 풀 수 있어요.</div>
-      <div>주인이라면 터미널에서 <code>cd ~/Obsidian/agents/ccna-coach && python3 server.py</code> 를 실행한 뒤 <button class="btn" id="retry" type="button" style="min-height:30px;padding:0 10px">다시 연결</button></div>
-      <div class="note" style="margin:0">처음 연결할 때 브라우저가 "로컬 네트워크 접근"을 물으면 허용해 주세요. 크롬에서 가장 잘 동작해요.</div>
+      <div><b>AI 문제·해설은 답변 서버에 연결됐을 때 동작해요.</b> 서브넷 계산 문제는 연결 없이 누구나 풀 수 있어요.</div>
+      <form class="connform" id="connForm">
+        <label>서버 주소<input id="srvIn" type="url" inputmode="url" placeholder="https://….trycloudflare.com" autocomplete="off"></label>
+        <label>접속 코드<input id="codeIn" type="password" placeholder="받은 코드" autocomplete="off"></label>
+        <button class="btn primary" type="submit">연결</button>
+      </form>
+      <div class="note" style="margin:0">서버 주소와 접속 코드는 이 사이트 주인에게 받으세요. 주인은 자기 Mac에서 <code>./start-public.sh</code>로 서버를 켜면 주소와 코드가 나와요.
+        입력한 문제와 답은 구글 제미나이로 전송되니 개인정보는 넣지 마세요.</div>
     </div>
     <!-- 문제 풀기 -->
     <section id="view-practice" aria-labelledby="tab-practice">
@@ -295,8 +304,14 @@ var Subnet = (function () {
 
 (function () {
   var $ = function (s) { return document.querySelector(s); };
-  var LOCAL = /^(127\.0\.0\.1|localhost)$/.test(location.hostname) && location.port === '8765';
-  var API = LOCAL ? '' : 'http://127.0.0.1:8765';
+  // 서버 주소: 서버가 직접 이 화면을 준 경우(내 Mac·터널 주소) → 같은 곳, 아니면 저장값 → 링크의 #server= → 내 Mac
+  var SERVED = (location.port === '8765' && /^(127\.0\.0\.1|localhost)$/.test(location.hostname)) || /trycloudflare\.com$/.test(location.hostname);
+  function lsGet(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
+  function lsSet(k, v) { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch (e) {} }
+  var fromHash = (location.hash.match(/server=([^&]+)/) || [])[1];
+  if (fromHash) { lsSet('ccna-server', decodeURIComponent(fromHash)); history.replaceState(null, '', location.pathname); }
+  var API = SERVED ? '' : (lsGet('ccna-server') || 'http://127.0.0.1:8765').replace(/\/+$/, '');
+  var CODE = lsGet('ccna-code');
   var state = { topics: [], selected: new Set(), qtype: 'mcq', diff: '보통', q: null, choice: null, busy: false, online: false };
   try { var saved = JSON.parse(localStorage.getItem('ccna-sel') || '[]'); saved.forEach(function (s) { state.selected.add(s); }); } catch (e) {}
 
@@ -304,9 +319,12 @@ var Subnet = (function () {
   function toast(msg) { var t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(function () { t.hidden = true; }, 4500); }
   function api(path, body) {
     var url = path.indexOf('/api/') === 0 ? API + path : path;
-    return fetch(url, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {})
-      .catch(function () { setOnline(false); throw new Error('답변 서버에 연결하지 못했어요. 주인의 Mac에서 server.py가 켜져 있어야 해요.'); })
-      .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || '요청 실패'); return j; }); });
+    var headers = { 'Content-Type': 'application/json' }; if (CODE) headers['X-Access-Code'] = CODE;
+    return fetch(url, body ? { method: 'POST', headers: headers, body: JSON.stringify(body) } : { headers: CODE ? { 'X-Access-Code': CODE } : {} })
+      .catch(function () { setOnline(false); throw new Error('답변 서버에 연결하지 못했어요. 서버 주소를 확인하거나 주인에게 서버가 켜져 있는지 물어보세요.'); })
+      .then(function (r) { return r.json().then(function (j) {
+        if (r.status === 401) { $('#connHelp').hidden = false; $('#codeIn').focus(); }
+        if (!r.ok) throw new Error(j.error || '요청 실패'); return j; }); });
   }
   function saveSel() { try { localStorage.setItem('ccna-sel', JSON.stringify(Array.from(state.selected))); } catch (e) {} }
 
@@ -364,7 +382,7 @@ var Subnet = (function () {
   $('#newQ').addEventListener('click', function () {
     var btn = this;
     if (state.qtype === 'subnet') { state.q = Subnet.make(state.diff); state.choice = null; renderQ(); $('#expBox').innerHTML = ''; return; }
-    if (!state.online) { toast('AI 문제는 답변 서버가 켜져 있어야 해요. 서브넷 계산은 바로 풀 수 있어요.'); $('#connHelp').hidden = false; return; }
+    if (!state.online) { toast('AI 문제는 답변 서버에 연결해야 해요. 서브넷 계산은 바로 풀 수 있어요.'); $('#connHelp').hidden = false; return; }
     busy(btn, true, '제미나이가 출제 중');
     api('/api/question', { subs: Array.from(state.selected), difficulty: state.diff, qtype: state.qtype })
       .then(function (q) { state.q = q; state.choice = null; renderQ(); $('#expBox').innerHTML = ''; })
@@ -412,7 +430,7 @@ var Subnet = (function () {
       if (!ans) { toast('답을 입력해 주세요.'); return; }
       busy(g, true, q.qtype === 'subnet' ? '채점 중' : '제미나이가 해설 중');
       var req = q.qtype === 'subnet' ? Promise.resolve(Subnet.explain(q, ans)) : api('/api/grade', { id: q.id, answer: ans });
-      if (q.qtype === 'subnet' && state.online) {
+      if (q.qtype === 'subnet' && state.online && !state.guest) {
         var r0 = Subnet.explain(q, ans);
         api('/api/log', { verdict: r0.verdict, difficulty: q.difficulty, question: q.question, user: ans, answer: q.answer }).catch(function () {});
       }
@@ -445,7 +463,7 @@ var Subnet = (function () {
   $('#cGo').dataset.label = '해설 받기';
   $('#cGo').addEventListener('click', function () {
     var q = $('#cQ').value.trim(); if (!q) { toast('문제를 입력해 주세요.'); return; }
-    if (!state.online) { toast('해설은 답변 서버가 켜져 있어야 해요.'); $('#connHelp').hidden = false; return; }
+    if (!state.online) { toast('해설은 답변 서버에 연결해야 해요.'); $('#connHelp').hidden = false; return; }
     var btn = this; busy(btn, true, '제미나이가 해설 중');
     api('/api/explain', { question: q, answer: $('#cA').value.trim(), sub: Array.from(state.selected)[0] || '' })
       .then(function (r) { $('#cExpBox').innerHTML = renderExp(r, false); refreshStats(); })
@@ -464,6 +482,7 @@ var Subnet = (function () {
   // ---- 진도
   function refreshStats() {
     if (!state.online) { renderScope(null); offlineStats(); return Promise.resolve(); }
+    if (state.guest) { renderScope(null); offlineStats('손님 모드: 풀이 기록은 저장하지 않아요'); return Promise.resolve(); }
     return api('/api/stats').then(function (s) {
       state.lastStats = s; renderScope(s);
       $('#sTotal').textContent = s.total;
@@ -501,25 +520,34 @@ var Subnet = (function () {
     root.setAttribute('data-theme', dark ? 'light' : 'dark'); try { localStorage.setItem('ccna-theme', dark ? 'light' : 'dark'); } catch (e) {}
   });
 
-  function offlineStats() {
-    $('#sTotal').textContent = '–'; $('#sRate').textContent = '답변 서버에 연결되면 내 진도가 보여요';
+  function offlineStats(msg) {
+    $('#sTotal').textContent = '–'; $('#sRate').textContent = msg || '답변 서버에 연결되면 진도가 보여요';
     $('#sDomains').innerHTML = ''; $('#sWarn').innerHTML = '';
     $('#sWeak').innerHTML = '<li class="muted" style="padding:0">서버 연결 후 보여요.</li>';
-    $('#sRecent').innerHTML = '<li class="muted" style="padding:0">풀이 기록은 주인의 Mac에만 저장돼요.</li>';
+    $('#sRecent').innerHTML = '<li class="muted" style="padding:0">풀이 기록은 서버 주인의 Mac에만 저장돼요.</li>';
   }
-  function setOnline(on) {
-    state.online = on;
+  function setOnline(on, guest) {
+    state.online = on; state.guest = !!guest;
     var c = $('#conn'); c.classList.toggle('on', on); c.classList.toggle('off', !on);
-    $('#connText').textContent = on ? '내 서버 연결됨' : '서버 꺼짐 · 서브넷만';
-    if (on) $('#connHelp').hidden = true;
+    $('#connText').textContent = on ? (guest ? '손님으로 연결됨' : '내 서버 연결됨') : '연결 안 됨 · 서브넷만';
+    if (on && (!guest || CODE)) $('#connHelp').hidden = true;
   }
   function checkServer() {
     return fetch(API + '/api/health').then(function (r) { return r.json(); })
-      .then(function (h) { setOnline(!!h.ok); }).catch(function () { setOnline(false); })
+      .then(function (h) { setOnline(!!h.ok, h.guest); if (h.needs_code && !CODE) { $('#connHelp').hidden = false; } })
+      .catch(function () { setOnline(false); })
       .then(refreshStats);
   }
+  $('#srvIn').value = SERVED ? location.origin : (lsGet('ccna-server') || '');
+  $('#codeIn').value = CODE;
+  $('#connForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var s = $('#srvIn').value.trim().replace(/\/+$/, '');
+    if (!SERVED) { if (s && !/^https?:\/\//.test(s)) s = 'https://' + s; lsSet('ccna-server', s); API = s || 'http://127.0.0.1:8765'; }
+    CODE = $('#codeIn').value.trim(); lsSet('ccna-code', CODE);
+    checkServer().then(function () { toast(state.online ? (state.guest ? '연결됐어요. 손님 모드예요.' : '내 서버에 연결됐어요.') : '연결하지 못했어요. 주소를 확인해 주세요.'); });
+  });
   $('#conn').addEventListener('click', function () { $('#connHelp').hidden = !$('#connHelp').hidden; });
-  $('#retry').addEventListener('click', function () { checkServer().then(function () { toast(state.online ? '연결됐어요.' : '아직 연결되지 않았어요.'); }); });
   fetch('topics.json').then(function (r) { return r.json(); })
     .then(function (t) { state.topics = t; renderScope(); return checkServer(); })
     .catch(function () { $('#scopeList').innerHTML = '<p class="muted">출제 범위를 불러오지 못했어요.</p>'; });

@@ -8,11 +8,21 @@
 - 풀이 기록은 볼트의 private/ccna-coach/ 에만 저장(공개 저장소에서 제외된 곳인지 검사).
 - 이 서버로 직접 들어와도(http://127.0.0.1:8765) 같은 화면을 볼 수 있다.
 
+다른 사람에게 열 때(./start-public.sh → Cloudflare 임시 터널):
+- 터널로 들어온 요청은 '손님'이다. 접속 코드가 맞아야 AI 기능을 쓸 수 있다.
+- 손님은 사람당 시간당 횟수, 서버 전체는 하루 횟수가 제한된다(무료 한도 보호).
+- 손님에게는 내 진도·기록을 보여 주지 않고, 손님의 풀이도 내 기록에 남기지 않는다.
+
 실행: python3 server.py   (끄기: Ctrl+C)
 """
 
+import hmac
 import json
 import random
+import secrets
+import threading
+import time
+from collections import defaultdict, deque
 import subprocess
 import sys
 import uuid
@@ -22,7 +32,7 @@ from pathlib import Path
 
 import gemini_client as gc
 
-HOST, PORT = "127.0.0.1", 8765
+HOST, PORT = "127.0.0.1", int(__import__("os").environ.get("CCNA_PORT", "8765"))
 BASE = Path(__file__).resolve().parent
 VAULT = BASE.parents[1]
 WEB = VAULT / "docs" / "ccna"                 # 공개 화면과 같은 파일
@@ -33,6 +43,15 @@ ALLOWED_ORIGINS = {
     f"http://{HOST}:{PORT}",
     f"http://localhost:{PORT}",
 }
+
+# ---- 손님(터널로 들어온 사람) 보호 장치 --------------------------------------
+ACCESS_CODE = gc._env("CCNA_ACCESS_CODE") or secrets.token_hex(3)   # 없으면 켤 때마다 새 코드
+GUEST_PER_HOUR = int(gc._env("CCNA_GUEST_PER_HOUR") or 30)          # 손님 1명당 시간당 AI 요청
+DAILY_LIMIT = int(gc._env("CCNA_DAILY_LIMIT") or 300)               # 서버 전체 하루 AI 요청
+_lock = threading.Lock()
+_hits: dict[str, deque] = defaultdict(deque)      # 손님별 최근 요청 시각
+_fails: dict[str, deque] = defaultdict(deque)     # 손님별 틀린 코드 시각
+_day = {"date": "", "n": 0}
 
 DOMAINS = json.loads((WEB / "topics.json").read_text(encoding="utf-8"))
 SUB_INDEX = {s["id"]: (d, s["name"]) for d in DOMAINS for s in d["subs"]}
@@ -133,12 +152,14 @@ def new_question(sub_ids: list[str], difficulty: str, qtype: str) -> dict:
          "domain": domain["name"], "domain_id": domain["id"], "qtype": qtype,
          "difficulty": difficulty, "model": model}
     QUESTIONS[qid] = q
+    if len(QUESTIONS) > 500:
+        QUESTIONS.pop(next(iter(QUESTIONS)))
     RECENT.append(q["question"][:80])
     return {k: q[k] for k in ("id", "question", "choices", "sub", "sub_name", "domain", "domain_id",
                               "qtype", "difficulty", "model")}  # 정답은 보내지 않음
 
 
-def grade_question(qid: str, user: str) -> dict:
+def grade_question(qid: str, user: str, owner: bool = True) -> dict:
     q = QUESTIONS.get(qid)
     if not q:
         raise gc.GeminiError("문제를 찾을 수 없어요(서버를 다시 켰다면 새 문제를 받아 주세요).")
@@ -156,20 +177,22 @@ def grade_question(qid: str, user: str) -> dict:
         if letter in "ABCD" and len(q["choices"]) == 4:
             res["correct_answer"] = f"{letter}. {q['choices']['ABCD'.index(letter)]}"
     res["model"] = model
-    log({"mode": "practice", "domain_id": q["domain_id"], "sub": q["sub"], "qtype": q["qtype"],
-         "difficulty": q["difficulty"], "verdict": res.get("verdict"), "question": q["question"],
-         "user": user, "answer": q["answer"]})
+    if owner:
+        log({"mode": "practice", "domain_id": q["domain_id"], "sub": q["sub"], "qtype": q["qtype"],
+             "difficulty": q["difficulty"], "verdict": res.get("verdict"), "question": q["question"],
+             "user": user, "answer": q["answer"]})
     return res
 
 
-def explain_custom(question: str, user: str, sub: str) -> dict:
+def explain_custom(question: str, user: str, sub: str, owner: bool = True) -> dict:
     scope = f"{SUB_INDEX[sub][0]['en']} / {SUB_INDEX[sub][1]}" if sub in SUB_INDEX else "범위 지정 안 함"
     prompt = (f"(학생이 직접 가져온 문제입니다. 정답은 주어지지 않았으니 직접 판단하세요.)\n"
               f"범위: {scope}\n\n문제:\n{question}\n\n학생의 답: {user or '(답 없음 — 해설만 원함)'}")
     res, model = gc.ask_json(SYS_GRADE, prompt, G_SCHEMA)
     res["model"] = model
-    log({"mode": "custom", "domain_id": SUB_INDEX[sub][0]["id"] if sub in SUB_INDEX else "",
-         "sub": sub, "qtype": "custom", "verdict": res.get("verdict"), "question": question, "user": user})
+    if owner:
+        log({"mode": "custom", "domain_id": SUB_INDEX[sub][0]["id"] if sub in SUB_INDEX else "",
+             "sub": sub, "qtype": "custom", "verdict": res.get("verdict"), "question": question, "user": user})
     return res
 
 
@@ -208,13 +231,52 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):  # 내용은 찍지 않고 요청 줄만
         sys.stderr.write(f"  {self.command} {self.path.split('?')[0]}\n")
 
+    def _self_origin(self) -> str:
+        host = self.headers.get("Host", "")
+        return ("https://" if self.is_guest() else "http://") + host
+
     def _origin_ok(self) -> bool:
         o = self.headers.get("Origin")
-        return o is None or o in ALLOWED_ORIGINS
+        return o is None or o in ALLOWED_ORIGINS or o == self._self_origin()
+
+    def is_guest(self) -> bool:
+        """터널(Cloudflare)을 거쳐 들어오면 손님. 내 Mac에서 직접 오면 주인."""
+        return bool(self.headers.get("CF-Connecting-IP")) or self.client_address[0] not in ("127.0.0.1", "::1")
+
+    def client_id(self) -> str:
+        return self.headers.get("CF-Connecting-IP") or self.client_address[0]
+
+    def guard(self) -> str | None:
+        """AI 요청 전 검사. 문제가 있으면 오류 문장을, 통과하면 None."""
+        now = time.time()
+        with _lock:
+            today = time.strftime("%Y-%m-%d")
+            if _day["date"] != today:
+                _day.update(date=today, n=0)
+            if _day["n"] >= DAILY_LIMIT:
+                return "오늘 쓸 수 있는 AI 요청을 모두 썼어요. 내일 다시 이용해 주세요."
+            if self.is_guest():
+                cid = self.client_id()
+                fails = _fails[cid]
+                while fails and now - fails[0] > 600:
+                    fails.popleft()
+                if len(fails) >= 8:
+                    return "접속 코드를 여러 번 틀려서 10분 동안 막혔어요."
+                if not hmac.compare_digest(self.headers.get("X-Access-Code", ""), ACCESS_CODE):
+                    fails.append(now)
+                    return "CODE"
+                hits = _hits[cid]
+                while hits and now - hits[0] > 3600:
+                    hits.popleft()
+                if len(hits) >= GUEST_PER_HOUR:
+                    return f"한 시간에 {GUEST_PER_HOUR}번까지 쓸 수 있어요. 잠시 뒤 다시 시도해 주세요."
+                hits.append(now)
+            _day["n"] += 1
+        return None
 
     def _cors(self):
         o = self.headers.get("Origin")
-        if o in ALLOWED_ORIGINS:
+        if o in ALLOWED_ORIGINS or (o and o == self._self_origin()):
             self.send_header("Access-Control-Allow-Origin", o)
             self.send_header("Vary", "Origin")
             self.send_header("Access-Control-Allow-Private-Network", "true")  # 공개 사이트 → 내 컴퓨터 요청 허용(크롬)
@@ -237,7 +299,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(204)
         self._cors()
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Access-Code")
         self.send_header("Access-Control-Max-Age", "600")
         self.end_headers()
 
@@ -249,8 +311,11 @@ class Handler(BaseHTTPRequestHandler):
         if not self._origin_ok():
             return self._json(403, {"error": "허용되지 않은 사이트"})
         if path == "/api/health":
-            self._json(200, {"ok": True, "has_key": gc.has_key(), "private_ok": PRIVATE_OK})
+            self._json(200, {"ok": True, "has_key": gc.has_key(), "guest": self.is_guest(),
+                             "needs_code": self.is_guest()})
         elif path == "/api/stats":
+            if self.is_guest():  # 손님에게는 내 진도를 보여 주지 않는다
+                return self._json(200, {"guest": True})
             self._json(200, stats())
         else:
             self._json(404, {"error": "없는 주소"})
@@ -264,6 +329,16 @@ class Handler(BaseHTTPRequestHandler):
         except (ValueError, json.JSONDecodeError):
             return self._json(400, {"error": "요청을 읽지 못했어요."})
         path = self.path.split("?")[0]
+        owner = not self.is_guest()
+        if path == "/api/log":
+            if not owner:
+                return self._json(200, {"ok": True})  # 손님 풀이는 기록하지 않음
+        elif path in ("/api/question", "/api/grade", "/api/explain"):
+            err = self.guard()
+            if err == "CODE":
+                return self._json(401, {"error": "접속 코드가 맞지 않아요.", "code": "bad_code"})
+            if err:
+                return self._json(429, {"error": err})
         try:
             if path == "/api/question":
                 diff = body.get("difficulty") if body.get("difficulty") in ("쉬움", "보통", "어려움") else "보통"
@@ -273,12 +348,12 @@ class Handler(BaseHTTPRequestHandler):
                 user = str(body.get("answer", "")).strip()[:2000]
                 if not user:
                     return self._json(400, {"error": "답을 입력해 주세요."})
-                self._json(200, grade_question(str(body.get("id", "")), user))
+                self._json(200, grade_question(str(body.get("id", "")), user, owner))
             elif path == "/api/explain":
                 q = str(body.get("question", "")).strip()[:4000]
                 if not q:
                     return self._json(400, {"error": "문제를 입력해 주세요."})
-                self._json(200, explain_custom(q, str(body.get("answer", "")).strip()[:2000], str(body.get("sub", ""))))
+                self._json(200, explain_custom(q, str(body.get("answer", "")).strip()[:2000], str(body.get("sub", "")), owner))
             elif path == "/api/log":  # 브라우저가 직접 채점한 서브넷 문제 기록
                 v = body.get("verdict") if body.get("verdict") in ("정답", "오답") else None
                 if v:
@@ -298,6 +373,7 @@ def main():
     print("   화면: https://dodo-yong.github.io/Obsidian/ccna/  (또는 http://127.0.0.1:8765)")
     print(f"   키: {'있음' if gc.has_key() else '없음 (.env 에 GOOGLE_API_KEY)'} · 모델: {', '.join(gc.models())}")
     print(f"   기록: {LOG if PRIVATE_OK else '⚠️ 비공개 폴더가 아니라 저장하지 않음'}")
+    print(f"   손님 접속 코드: {ACCESS_CODE}   (손님: 1명당 시간당 {GUEST_PER_HOUR}번, 전체 하루 {DAILY_LIMIT}번)")
     print("   끄기: Ctrl+C\n")
     try:
         server = ThreadingHTTPServer((HOST, PORT), Handler)
