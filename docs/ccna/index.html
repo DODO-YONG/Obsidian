@@ -252,6 +252,18 @@
     .controls .btn.primary { margin-left: 0; width: 100%; justify-content: center; }
   }
 </style>
+<script>
+/* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
+(function () {
+  var SITE_V = '20261118134741';
+  fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
+    if (!j.v || j.v === SITE_V) return;
+    var k = 'site-reloaded-' + j.v;
+    try { if (sessionStorage.getItem(k)) return; sessionStorage.setItem(k, '1'); } catch (e) { return; }
+    location.replace(location.pathname + '?v=' + j.v + location.hash);
+  }).catch(function () {});
+})();
+</script>
 </head>
 <body>
 <header>
