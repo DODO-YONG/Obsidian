@@ -22,7 +22,7 @@
 
 # 📁 프로젝트: ccna-coach
 
-- [[ccna-coach]] — 허브: CCNA 200-301 문제·해설 사이트. 화면은 GitHub Pages, 답변은 내 Mac 서버가 제미나이로(키는 로컬에만)
+- [[ccna-coach]] — 허브: CCNA 200-301 문제·해설 사이트. 화면은 GitHub Pages, 답변은 개인 서버(내 Mac)가 제미나이로(키는 로컬에만). 작동 방식 그림은 공용 `docs/tracer-how.*`
 
 # 📁 프로젝트: ccna
 

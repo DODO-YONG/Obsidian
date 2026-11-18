@@ -16,11 +16,11 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="tracer-how.css?v=20261118144627">
+<link rel="stylesheet" href="tracer-how.css?v=20261118145419">
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261118144627';
+  var SITE_V = '20261118145419';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -87,8 +87,9 @@
           <li><span class="h">4be9b9c</span><span class="t">11:28</span><span class="m">에이전트 코드명(007 스타일)</span></li>
           <li><span class="h">41c22e1</span><span class="t">13:23</span><span class="m">TRACER: 누구나 접속</span></li>
           <li><span class="h">98a3ff0</span><span class="t">13:36</span><span class="m">TRACER: 영어 출제 + 게임</span></li>
+          <li><span class="h">ee5e5bf</span><span class="t">14:43</span><span class="m">TRACER 작동 방식 그림</span></li>
         </ol>
-        <div class="tail">32 commits · 2 days<span class="cursor" aria-hidden="true"></span></div>
+        <div class="tail">53 commits · 2 days<span class="cursor" aria-hidden="true"></span></div>
       </div>
     </figure>
   </div>
@@ -297,6 +298,12 @@
           <div class="ev"><time>13:36</time><div><h4>영어 출제와 게임 요소</h4>
             <p>실제 시험처럼 문제와 해설을 영어로 바꾸고, XP·레벨·칭호·퀘스트·배지를 붙였습니다.</p>
             <div class="tags"><span>English</span><span>XP · quest</span></div></div></div>
+          <div class="ev"><time>14:23</time><div><h4>TRACER 작동 방식을 그림으로</h4>
+            <p>문제 하나가 화면·개인 서버·제미나이를 오가는 길을 재생되는 구성도와 역할 트리로 보여 줍니다. 다크 모드에서 잘 안 보인다는 피드백을 받고 큰 카드와 진한 선으로 다시 그렸습니다.</p>
+            <div class="tags"><span>SVG</span><span>Dark mode</span></div></div></div>
+          <div class="ev"><time>14:43</time><div><h4>TRACER 사이트에도 같은 설명</h4>
+            <p>그림을 공용 파일로 분리해 이 페이지와 TRACER 소개 화면이 함께 쓰게 했습니다. 바로가기 주소(#how)도 만들었습니다.</p>
+            <div class="tags"><span>공용 컴포넌트</span></div></div></div>
         </div>
       </div>
     </div>
@@ -375,6 +382,6 @@
   }
 })();
 </script>
-<script src="tracer-how.js?v=20261118144627" defer></script>
+<script src="tracer-how.js?v=20261118145419" defer></script>
 </body>
 </html>

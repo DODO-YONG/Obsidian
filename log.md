@@ -49,3 +49,5 @@
 ## [2026-11-18] output | TRACER 사이트 소개에도 작동 방식(구성도·트리) 추가 — 공용 docs/tracer-how.{js,css}로 분리해 두 페이지가 함께 씀. 공개 문구 "제 Mac" → "개인 서버·개인 컴퓨터 환경"
 
 ## [2026-11-18] output | TRACER 바로가기 주소: /ccna/#intro(소개 처음부터) · /ccna/#how(작동 방식) — 접힘 설정과 상관없이 펼쳐서 보여 줌
+
+## [2026-11-18] output | 문서 정리: README(TRACER 작동 방식 링크·공용 파일·공식 표현), TRACER README(HOW IT WORKS·바로가기), index, 소개 페이지 작업 기록(14:23·14:43) + 미리보기 설정(.claude/launch.json)

@@ -57,6 +57,9 @@ cd ~/Obsidian/agents/ccna-coach && ./start-public.sh
 ### 화면 구성
 - **맨 앞 소개**: 예시 문제 카드, 3단계 사용법, 단원별 출제 비중, 칭호 10단계 사다리, 안내 문구(비공식 학습 도구 고지 포함).
   처음 온 사람에게는 펼쳐 보이고, 문제를 풀어 본 사람에게는 **"다시 오셨네요" 안내 카드**(소개 펼치기 · 이어서 풀기)로 접힌다. 직접 펼치거나 접으면 그 선택을 기억.
+- **소개 안 "HOW IT WORKS"**: 재생형 구성도(패킷이 브라우저·임시 터널·개인 서버·제미나이·주소 안내판을 오감, AI 문제 10단계 / 서브넷 문제 5단계), 역할 트리, 설계 이유 4개.
+  소개 페이지(`docs/index.html#how`)와 같은 공용 파일 `docs/tracer-how.js`·`docs/tracer-how.css`를 쓴다.
+- **바로가기 주소**: `…/ccna/#intro`(소개 처음부터) · `…/ccna/#how`(작동 방식). 소개가 접혀 있어도 펼쳐서 보여 주고, 접힘 설정은 그대로.
 - **왼쪽** 출제 범위 · **가운데** 문제·답·해설 · **오른쪽** 내 레벨·오늘의 퀘스트·업적 배지·진도.
 - 상단: Lv 칩, AI 연결 상태(AI 연결됨 / AI 꺼짐 · 서브넷만), 밝게·어둡게.
 - 새 버전이 배포되면 열린 화면이 한 번 자동 새로고침(`scripts/bump-site-version.sh`).
@@ -83,3 +86,4 @@ cd ~/Obsidian/agents/ccna-coach && ./start-public.sh
 | `gemini_client.py` | 제미나이 REST 호출(모델 자동 전환, JSON 응답) |
 | `../../docs/ccna/index.html` | 공개 화면 |
 | `../../docs/ccna/topics.json` | 출제 범위(단원·세부 범위) — 화면과 서버가 함께 씀 |
+| `../../docs/tracer-how.js` · `.css` | 작동 방식 그림(구성도·트리) — 소개 페이지와 TRACER 소개가 함께 씀 |

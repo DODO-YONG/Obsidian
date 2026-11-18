@@ -2,7 +2,7 @@
 
 [![나만의 에이전트 작업실 소개 페이지](docs/preview.png)](https://dodo-yong.github.io/Obsidian/)
 
-**🌐 소개 페이지: https://dodo-yong.github.io/Obsidian/** · 🧠 [CCNA 코치 TRACER](https://dodo-yong.github.io/Obsidian/ccna/) · 💻 [터미널 작업 기록](https://dodo-yong.github.io/Obsidian/terminal.html)
+**🌐 소개 페이지: https://dodo-yong.github.io/Obsidian/** · 🧠 [CCNA 코치 TRACER](https://dodo-yong.github.io/Obsidian/ccna/) · 🗺️ [TRACER 작동 방식](https://dodo-yong.github.io/Obsidian/ccna/#how) · 💻 [터미널 작업 기록](https://dodo-yong.github.io/Obsidian/terminal.html)
 
 AWS 인턴십 과정에서 Claude Code로 나에게 필요한 에이전트를 하나씩 만들어 보는 학습 기록. 코드는 `agents/`, 설계·학습 메모는 Obsidian 위키(`wiki/`)에 있다.
 에이전트에는 007처럼 번호와 코드명을 붙였다(나는 Agent DY). → [코드명 목록](wiki/shared/에이전트%20코드명.md)
@@ -32,7 +32,7 @@ flowchart LR
 
   subgraph CC["DY-003 TRACER · CCNA 시험 대비 코치 (누구나 접속)"]
     direction TB
-    CC1["🌐 공개 화면 (GitHub Pages)<br/>소개 · 단원·범위 선택 · 🎮 XP·칭호·퀘스트"] -->|"server.json으로<br/>주소 자동 확인"| CC2["💻 내 Mac 답변 서버<br/>Cloudflare 임시 터널 · 키는 로컬에만"]
+    CC1["🌐 공개 화면 (GitHub Pages)<br/>소개 · 단원·범위 선택 · 🎮 XP·칭호·퀘스트"] -->|"server.json으로<br/>주소 자동 확인"| CC2["💻 개인 서버 (답변 서버)<br/>Cloudflare 임시 터널 · 키는 로컬에만"]
     CC2 --> CC3["✨ 제미나이 무료 등급<br/>영어 문제 · 영어 해설"]
     CC1 -.->|"서버 없이도"| CC4["🔢 서브넷 계산<br/>브라우저가 직접 출제·채점"]
   end
@@ -61,7 +61,7 @@ flowchart LR
 |---|---|---|---|---|
 | 🛡️ DY-001 **SENTINEL** | URL을 주면 공격 없이 응답만 읽어 보안 약점을 찾고, 위험도와 고치는 법을 리포트로 써 줌 | 🟦 초기 버전 | [agents/security-agent](agents/security-agent) | [위키](wiki/projects/security-agent/security-agent.md) · [1일차 기록](https://dodo-yong.github.io/security-agent/) |
 | 🎤 DY-002 **MIRROR** | AWS 16가지 리더십 원칙 면접 연습. 약한 원칙부터 묻고, 꼬리 질문으로 파고든 뒤 STAR·수치·원칙 적합도로 평가 | 🟦 초기 버전 | [agents/interview-coach](agents/interview-coach) | [위키](wiki/projects/interview-coach/interview-coach.md) |
-| 🧠 DY-003 **TRACER** | CCNA 200-301 연습 사이트. 단원·범위를 골라 **영어 문제**를 받고 **영어 해설**까지. 누구나 접속, XP·칭호·퀘스트·배지. 화면은 공개, 답변은 키가 있는 내 Mac 서버가 제미나이로 | 🟦 초기 버전 · 공개 | [agents/ccna-coach](agents/ccna-coach) · [**사이트**](https://dodo-yong.github.io/Obsidian/ccna/) | [위키](wiki/projects/ccna-coach/ccna-coach.md) |
+| 🧠 DY-003 **TRACER** | CCNA 200-301 연습 사이트. 단원·범위를 골라 **영어 문제**를 받고 **영어 해설**까지. 누구나 접속, XP·칭호·퀘스트·배지. 화면은 공개, 답변은 키를 보관한 개인 서버가 제미나이로. [작동 방식 그림](https://dodo-yong.github.io/Obsidian/ccna/#how) | 🟦 초기 버전 · 공개 | [agents/ccna-coach](agents/ccna-coach) · [**사이트**](https://dodo-yong.github.io/Obsidian/ccna/) | [위키](wiki/projects/ccna-coach/ccna-coach.md) |
 | 💬 DY-004 **TWIN** | 터미널에서 구글 제미나이와 대화 (키는 `.env`, 대화 기록은 볼트 밖) | 사용 중 | [scripts/gemini.py](scripts/gemini.py) | [위키](wiki/shared/gemini-chat.md) |
 | 📝 DY-005 **PRIMER** | 내 분야 초보자가 자주 묻는 질문 15개와 두 줄 답을 Gemini에게 한 번 받아 `answer.md`로 저장 | 🟦 초기 버전 | [agents/beginner-faq](agents/beginner-faq) | — |
 
@@ -79,11 +79,13 @@ flowchart LR
 
 | 페이지 | 주소 | 파일 |
 |---|---|---|
-| 소개 (Q-BRANCH) | https://dodo-yong.github.io/Obsidian/ | `docs/index.html` |
-| TRACER (CCNA 코치) | https://dodo-yong.github.io/Obsidian/ccna/ | `docs/ccna/index.html`, `topics.json`, `server.json` |
+| 소개 (Q-BRANCH) | https://dodo-yong.github.io/Obsidian/ (TRACER 원리: `#how`) | `docs/index.html`, `style.css` |
+| TRACER (CCNA 코치) | https://dodo-yong.github.io/Obsidian/ccna/ (소개: `#intro`, 작동 방식: `#how`) | `docs/ccna/index.html`, `topics.json`, `server.json` |
+| TRACER 작동 방식 (공용) | 위 두 페이지에 함께 들어감 | `docs/tracer-how.js`, `docs/tracer-how.css` — 여기만 고치면 두 곳이 같이 바뀜 |
 | 터미널 작업 기록 | https://dodo-yong.github.io/Obsidian/terminal.html | `docs/terminal.html` |
 
-- 사이트를 고친 뒤엔 `scripts/bump-site-version.sh`로 버전을 올린다 → 열린 페이지가 새 버전을 감지하면 한 번 자동 새로고침(브라우저 캐시 대응).
+- 사이트를 고친 뒤엔 `scripts/bump-site-version.sh`로 버전을 올린다 → 열린 페이지가 새 버전을 감지하면 한 번 자동 새로고침(브라우저 캐시 대응). 공용 파일 주소의 `?v=`도 함께 올린다.
+- 공개 문구는 "제 Mac" 대신 "개인 서버", "개인 컴퓨터 환경" 같은 공식 표현을 쓴다.
 - `docs/ccna/server.json`은 `start-public.sh`가 켜고 끌 때 자동으로 갱신·커밋한다.
 
 ## 📁 폴더 구조
@@ -102,7 +104,7 @@ private/                비공개 — 이 저장소에서 제외, 별도 비공�
 |---|---|
 | `scripts/gemini.py` | DY-004 TWIN: 터미널에서 제미나이와 대화 |
 | `scripts/backup-private.sh` | `private/`를 비공개 저장소에 백업 (푸시 전 비공개 여부 확인) |
-| `scripts/bump-site-version.sh` | 공개 사이트 버전 올리기 (자동 새로고침용) |
+| `scripts/bump-site-version.sh` | 공개 사이트 버전 올리기 (자동 새로고침용, `tracer-how.*?v=` 포함) |
 
 ## 🔒 비밀 정보 다루는 법
 
