@@ -91,24 +91,27 @@ def read_log() -> list[dict]:
 
 # ---- 제미나이 지시문 ---------------------------------------------------------
 
-SYS_QUESTION = """당신은 Cisco CCNA 200-301 시험을 10년 넘게 가르친 강사입니다.
-지정된 출제 범위에서 실제 시험과 비슷한 문제를 1개 만듭니다.
+SYS_QUESTION = """You are a Cisco CCNA 200-301 instructor with 10+ years of experience writing exam-style questions.
+Write exactly ONE question from the given exam topic, in ENGLISH, in the style of the real CCNA exam.
 
-규칙
-- 한국어로 쓰되, 명령어·프로토콜 이름·용어는 영어 원문을 그대로 씁니다 (예: show ip route, OSPF, native VLAN).
-- 정답이 하나로 분명한 문제만 냅니다. 사실이 확실하지 않으면 다른 문제를 냅니다.
-- 필요하면 짧은 show 출력이나 설정 일부를 문제에 넣습니다(줄바꿈 \\n 사용).
-- 객관식이면 보기 4개, answer는 "A"~"D" 중 하나. 보기 문자열 앞에 A. 같은 기호는 붙이지 않습니다.
-- 주관식이면 choices는 빈 배열, answer는 짧은 모범 답안.
-- 최근에 낸 문제와 겹치지 않게 합니다."""
+Rules
+- Use precise Cisco terminology and IOS command syntax (e.g. show ip route, OSPF, native VLAN).
+- Only write questions with one clearly correct answer. If you are not certain of a fact, choose a different question.
+- When useful, include a short IOS config snippet or show-command output (use \\n for new lines).
+- Multiple choice: exactly 4 options; "answer" is one letter "A"-"D". Do not prefix options with "A." etc.
+- Short answer: "choices" is an empty array; "answer" is a concise model answer.
+- Do not repeat the recent questions listed by the user."""
 
-SYS_GRADE = """당신은 Cisco CCNA 200-301 강사입니다. 학생의 답을 보고 해설합니다.
-- 한국어로, 명령어·용어는 영어 원문 유지. 쉽고 짧게.
-- 정답 여부를 먼저 판단하고(주어진 판정이 있으면 그것을 따름), 왜 그런지 설명합니다.
-- 틀렸으면 학생이 왜 그렇게 생각했을지 짚고 바로잡습니다.
-- 관련 IOS 명령 예시가 도움이 되면 cli_example에 넣고, 아니면 빈 문자열.
-- 확실하지 않은 내용은 단정하지 말고 "공식 문서로 확인"이라고 적습니다.
-- 네트워크·CCNA와 관련 없는 질문이면 해설하지 말고, verdict는 "오답", explanation에 "CCNA 관련 문제만 해설할 수 있어요."라고만 적습니다."""
+SYS_GRADE = """You are a Cisco CCNA 200-301 instructor reviewing a student's answer. Write everything in clear, simple ENGLISH.
+- Decide whether the answer is correct first (if a verdict is already given, use it), then explain why.
+- If the answer is wrong, point out the likely misconception and correct it.
+- Put a relevant IOS command example in "cli_example" when it helps; otherwise use an empty string.
+- Do not state uncertain facts as certain; say "verify in the official Cisco documentation" instead.
+- verdict must be exactly one of: "correct", "partial", "incorrect".
+- If the question is not about networking/CCNA, do not explain it: verdict "incorrect" and explanation "I can only explain CCNA-related questions." """
+
+# 화면·기록은 한국어 판정값을 쓴다
+VERDICT_KO = {"correct": "정답", "partial": "부분 정답", "incorrect": "오답"}
 
 Q_SCHEMA = {
     "type": "OBJECT",
@@ -123,7 +126,7 @@ Q_SCHEMA = {
 G_SCHEMA = {
     "type": "OBJECT",
     "properties": {
-        "verdict": {"type": "STRING", "enum": ["정답", "부분 정답", "오답"]},
+        "verdict": {"type": "STRING", "enum": ["correct", "partial", "incorrect"]},
         "correct_answer": {"type": "STRING"},
         "explanation": {"type": "STRING"},
         "why_wrong": {"type": "STRING"},
@@ -134,15 +137,22 @@ G_SCHEMA = {
     "required": ["verdict", "correct_answer", "explanation", "key_concept"],
 }
 
+DIFF_EN = {"쉬움": "easy", "보통": "medium", "어려움": "hard"}
+
+
+def _norm_verdict(v) -> str:
+    v = str(v or "").strip().lower()
+    return VERDICT_KO.get(v) or ("정답" if v in ("정답",) else "부분 정답" if "부분" in v else "오답")
+
 
 def new_question(sub_ids: list[str], difficulty: str, qtype: str) -> dict:
     subs = [s for s in sub_ids if s in SUB_INDEX] or list(SUB_INDEX)
     sid = random.choice(subs)
     domain, sub_name = SUB_INDEX[sid]
-    kind = "객관식(보기 4개)" if qtype == "mcq" else "주관식(짧은 답)"
-    recent = "\n".join(f"- {r}" for r in RECENT[-6:]) or "(없음)"
-    prompt = (f"출제 범위: {domain['en']} / {sub_name}\n난이도: {difficulty}\n형식: {kind}\n"
-              f"최근 낸 문제(겹치지 말 것):\n{recent}")
+    kind = "multiple choice (4 options)" if qtype == "mcq" else "short answer"
+    recent = "\n".join(f"- {r}" for r in RECENT[-6:]) or "(none)"
+    prompt = (f"Exam topic: {domain['en']} / {sub_name} (topic {sid})\nDifficulty: {DIFF_EN.get(difficulty, 'medium')}\n"
+              f"Format: {kind}\nRecent questions (do not repeat):\n{recent}")
     data, model = gc.ask_json(SYS_QUESTION, prompt, Q_SCHEMA)
     choices = [str(c) for c in data.get("choices") or []][:4] if qtype == "mcq" else []
     if qtype == "mcq" and len(choices) != 4:
@@ -166,14 +176,14 @@ def grade_question(qid: str, user: str, owner: bool = True) -> dict:
         raise gc.GeminiError("문제를 찾을 수 없어요(서버를 다시 켰다면 새 문제를 받아 주세요).")
     fixed = ""
     if q["qtype"] == "mcq":
-        fixed = "정답" if user.strip().upper()[:1] == q["answer"].strip().upper()[:1] else "오답"
+        fixed = "correct" if user.strip().upper()[:1] == q["answer"].strip().upper()[:1] else "incorrect"
     choices = "\n".join(f"{'ABCD'[i]}. {c}" for i, c in enumerate(q["choices"]))
-    prompt = (f"문제:\n{q['question']}\n\n보기:\n{choices or '(주관식)'}\n\n"
-              f"정답: {q['answer']}\n학생의 답: {user}\n"
-              f"{'판정(이미 확정): ' + fixed if fixed else '주관식이므로 의미가 맞으면 정답, 일부만 맞으면 부분 정답.'}")
+    prompt = (f"Question:\n{q['question']}\n\nOptions:\n{choices or '(short answer)'}\n\n"
+              f"Correct answer: {q['answer']}\nStudent's answer: {user}\n"
+              f"{'Verdict (already decided): ' + fixed if fixed else 'Short answer: correct if the meaning matches, partial if only partly right.'}")
     res, model = gc.ask_json(SYS_GRADE, prompt, G_SCHEMA)
+    res["verdict"] = VERDICT_KO[fixed] if fixed else _norm_verdict(res.get("verdict"))
     if fixed:
-        res["verdict"] = fixed
         letter = q["answer"].strip().upper()[:1]
         if letter in "ABCD" and len(q["choices"]) == 4:
             res["correct_answer"] = f"{letter}. {q['choices']['ABCD'.index(letter)]}"
@@ -186,10 +196,11 @@ def grade_question(qid: str, user: str, owner: bool = True) -> dict:
 
 
 def explain_custom(question: str, user: str, sub: str, owner: bool = True) -> dict:
-    scope = f"{SUB_INDEX[sub][0]['en']} / {SUB_INDEX[sub][1]}" if sub in SUB_INDEX else "범위 지정 안 함"
-    prompt = (f"(학생이 직접 가져온 문제입니다. 정답은 주어지지 않았으니 직접 판단하세요.)\n"
-              f"범위: {scope}\n\n문제:\n{question}\n\n학생의 답: {user or '(답 없음 — 해설만 원함)'}")
+    scope = f"{SUB_INDEX[sub][0]['en']} / {SUB_INDEX[sub][1]}" if sub in SUB_INDEX else "not specified"
+    prompt = (f"(The student brought this question. No answer key is given; decide the correct answer yourself.)\n"
+              f"Topic: {scope}\n\nQuestion:\n{question}\n\nStudent's answer: {user or '(none - explanation only)'}")
     res, model = gc.ask_json(SYS_GRADE, prompt, G_SCHEMA)
+    res["verdict"] = _norm_verdict(res.get("verdict"))
     res["model"] = model
     if owner:
         log({"mode": "custom", "domain_id": SUB_INDEX[sub][0]["id"] if sub in SUB_INDEX else "",

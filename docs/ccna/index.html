@@ -147,6 +147,48 @@
   .connform { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; } .connform label { flex: 1 1 200px; }
   .connform label { display: grid; gap: 4px; font-size: 12.5px; color: var(--ink-2); min-width: 0; }
   .connform input { border: 1px solid var(--rule); background: var(--panel); border-radius: 9px; padding: 8px 10px; min-width: 0; }
+  /* ---- 게임: 레벨·XP·퀘스트·배지 */
+  .lv { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--rule); background: var(--panel); border-radius: 999px; padding: 3px 12px 3px 4px; cursor: pointer; color: var(--ink); white-space: nowrap; }
+  .lv .num { font-family: var(--mono); font-weight: 700; font-size: 12.5px; background: var(--accent); color: #fff; border-radius: 999px; padding: 2px 8px; }
+  :root[data-theme="dark"] .lv .num { color: #08201D; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .lv .num { color: #08201D; } }
+  .lv .ttl { font-size: 13px; font-weight: 600; }
+  .lv .bar { width: 64px; height: 5px; border-radius: 3px; background: var(--sunk); overflow: hidden; }
+  .lv .bar i { display: block; height: 100%; background: var(--accent); transition: width .5s; }
+  .xpgain { margin-left: auto; font-family: var(--mono); font-size: 14px; color: var(--accent); background: var(--accent-soft); padding: 2px 10px; border-radius: 999px; }
+  .verdict { width: 100%; }
+  .profile { padding: 0 16px 14px; display: grid; gap: 8px; }
+  .profile .who { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .profile .who b { font-size: 17px; }
+  .profile .who span { font-family: var(--mono); font-size: 12.5px; color: var(--ink-3); }
+  .bigbar { height: 8px; border-radius: 4px; background: var(--sunk); overflow: hidden; }
+  .bigbar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 60%, var(--ok))); transition: width .6s; }
+  .profile .meta { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-3); font-family: var(--mono); }
+  .quests { list-style: none; margin: 0; padding: 0 16px 14px; display: grid; gap: 10px; }
+  .quest { display: grid; grid-template-columns: 22px minmax(0,1fr) auto; gap: 8px; align-items: start; font-size: 13.5px; }
+  .quest .ck { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--ink-3); margin-top: 2px; display: grid; place-items: center; font-size: 12px; color: transparent; }
+  .quest.done .ck { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .quest.done .qt { color: var(--ink-3); text-decoration: line-through; }
+  .quest .rw { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+  .quest .qbar { grid-column: 2 / 4; height: 4px; border-radius: 2px; background: var(--sunk); overflow: hidden; }
+  .quest .qbar i { display: block; height: 100%; background: var(--accent); }
+  .quest.done .qbar i { background: var(--ok); }
+  .badges { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; padding: 0 16px 10px; }
+  .badge { text-align: center; font-size: 11.5px; color: var(--ink-2); line-height: 1.3; padding: 8px 4px; border-radius: 10px; background: var(--sunk); }
+  .badge .ic { font-size: 22px; display: block; margin-bottom: 4px; }
+  .badge.locked { opacity: .38; filter: grayscale(1); }
+  .reset { border: 0; background: none; color: var(--ink-3); font-size: 12px; cursor: pointer; padding: 0 16px 12px; text-decoration: underline; }
+  .levelup { position: fixed; inset: 0; display: grid; place-items: center; z-index: 30; background: color-mix(in srgb, var(--bg) 55%, transparent); backdrop-filter: blur(3px); }
+  .levelup .card { background: var(--panel); border: 2px solid var(--accent); border-radius: 18px; padding: 28px 36px; text-align: center; box-shadow: 0 20px 60px -20px rgba(0,0,0,.35); animation: pop .45s cubic-bezier(.2,1.4,.4,1); max-width: calc(100% - 32px); }
+  .levelup .k { font-family: var(--mono); color: var(--accent); letter-spacing: .2em; font-size: 13px; font-weight: 700; }
+  .levelup .l { font-size: 44px; font-weight: 700; line-height: 1.1; margin: 6px 0; }
+  .levelup .n { font-size: 18px; font-weight: 600; }
+  .levelup .s { font-size: 13px; color: var(--ink-2); margin-top: 8px; }
+  @keyframes pop { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .tabs button, .home, .conn { white-space: nowrap; }
+  @media (max-width: 1100px) { .lv .ttl { display: none; } .dday { display: none; } }
+  @media (max-width: 900px) { #connText { display: none; } .conn { padding: 6px; } }
+  @media (max-width: 760px) { .lv .ttl, .lv .bar { display: none; } .lv { padding-right: 4px; } }
   .toast { position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px; max-width: min(560px, calc(100% - 32px)); z-index: 20; }
   .spin { width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: s .8s linear infinite; }
   @keyframes s { to { transform: rotate(360deg); } }
@@ -169,6 +211,7 @@
       <span class="mk" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M2 4h12M2 8h12M2 12h12"/></svg></span>
       <span id="appName">TRACER</span><small>DY-003 · CCNA 200-301</small>
     </div>
+    <button class="lv" id="lvChip" type="button" aria-label="내 레벨과 퀘스트 보기"><span class="num" id="lvNum">Lv 1</span><span class="ttl" id="lvTtl">Cable Rookie</span><span class="bar"><i id="lvBar"></i></span></button>
     <nav class="tabs" role="tablist" aria-label="모드">
       <button role="tab" aria-selected="true" data-tab="practice" id="tab-practice">문제 풀기</button>
       <button role="tab" aria-selected="false" data-tab="custom" id="tab-custom">내 문제 해설</button>
@@ -244,6 +287,24 @@
   </main>
 
   <aside class="side" aria-label="진도">
+    <div class="panel" id="gamePanel">
+      <h2>내 레벨</h2>
+      <div class="profile">
+        <div class="who"><b id="pTitle">Cable Rookie</b><span id="pLv">Lv 1</span></div>
+        <div class="bigbar"><i id="pBar"></i></div>
+        <div class="meta"><span id="pXp">0 XP</span><span id="pNext">다음 레벨까지 100 XP</span></div>
+        <div class="meta"><span id="pStreak">연속 정답 0</span><span id="pTotal">푼 문제 0</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>오늘의 퀘스트</h2>
+      <ul class="quests" id="questList"></ul>
+    </div>
+    <div class="panel">
+      <h2>업적 배지</h2>
+      <div class="badges" id="badgeGrid"></div>
+      <button class="reset" id="resetGame" type="button">진행 초기화</button>
+    </div>
     <div class="panel">
       <h2>진도</h2>
       <div class="stat-top"><b id="sTotal">0</b><span id="sRate">아직 푼 문제가 없어요</span></div>
@@ -263,11 +324,128 @@
 </div>
 
 <div class="toast" id="toast" hidden role="status"></div>
+<div class="levelup" id="levelUp" hidden role="alert"><div class="card"><div class="k">LEVEL UP</div><div class="l" id="luLv">Lv 2</div><div class="n" id="luTitle"></div><div class="s">새 칭호를 얻었어요</div></div></div>
 
 <script>
+// ── 게임: XP·레벨·칭호·오늘의 퀘스트·업적. 각자 브라우저에만 저장(서버와 무관).
+var Game = (function () {
+  var KEY = 'tracer-game-v1';
+  var TITLES = ['Cable Rookie', 'Patch Panel Apprentice', 'MAC Learner', 'VLAN Wrangler', 'Subnet Slicer',
+                'Trunk Master', 'OSPF Navigator', 'ACL Gatekeeper', 'Packet Tracer', 'CCNA Ready'];
+  var DOMAINS = { '1': '네트워크 기초', '2': '네트워크 접근', '3': 'IP 연결', '4': 'IP 서비스', '5': '보안 기초', '6': '자동화' };
+  var BADGES = [
+    { id: 'first', ic: '📡', name: 'First Ping', how: '첫 정답' },
+    { id: 'streak5', ic: '🔗', name: 'Link Up', how: '5연속 정답' },
+    { id: 'streak10', ic: '⚡', name: 'Full Duplex', how: '10연속 정답' },
+    { id: 'hard10', ic: '🌲', name: 'STP Survivor', how: '어려움 정답 10개' },
+    { id: 'subnet25', ic: '🎯', name: 'Subnet Sniper', how: '서브넷 정답 25개' },
+    { id: 'n100', ic: '⏱️', name: 'Uptime 100', how: '100문제 풀기' },
+    { id: 'quest7', ic: '📅', name: 'Daily Driver', how: '퀘스트 7개 완료' },
+    { id: 'all6', ic: '🗺️', name: 'Full Topology', how: '6개 단원 모두 정답' }
+  ].concat(['1', '2', '3', '4', '5', '6'].map(function (d) {
+    return { id: 'dom' + d, ic: ['', '🧱', '🔌', '🧭', '🛎️', '🛡️', '🤖'][+d], name: DOMAINS[d] + ' 마스터', how: '단원 ' + d + ' 정답 10개' };
+  }));
+  function need(lv) { return 50 * lv * (lv - 1); }                 // Lv n 에 필요한 누적 XP
+  function levelOf(xp) { var l = 1; while (l < 10 && xp >= need(l + 1)) l++; return l; }
+  function blank() { return { xp: 0, streak: 0, best: 0, n: 0, ok: 0, hardOk: 0, subnetOk: 0, custom: 0, dom: {}, questsDone: 0, badges: [], day: null }; }
+  var S = (function () { try { return Object.assign(blank(), JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { return blank(); } })();
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+  // 오늘의 퀘스트: 날짜로 정해지는 3개
+  function today() { var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+  function rng(seed) { var x = 0; for (var i = 0; i < seed.length; i++) x = (x * 31 + seed.charCodeAt(i)) >>> 0; return function () { x = (x * 1664525 + 1013904223) >>> 0; return x / 4294967296; }; }
+  function makeQuests() {
+    var r = rng(today()), dom = String(1 + Math.floor(r() * 6));
+    var pool = [
+      { id: 'solve', text: '문제 5개 풀기', target: 5, reward: 40 },
+      { id: 'correct', text: '정답 3개 맞히기', target: 3, reward: 40 },
+      { id: 'streak', text: '3연속 정답', target: 3, reward: 60 },
+      { id: 'hard', text: '어려움 문제 1개 맞히기', target: 1, reward: 50 },
+      { id: 'subnet', text: '서브넷 계산 3개 맞히기', target: 3, reward: 40 },
+      { id: 'dom', dom: dom, text: DOMAINS[dom] + ' 단원 2개 맞히기', target: 2, reward: 50 },
+      { id: 'custom', text: '내 문제 해설 1번 받기', target: 1, reward: 30 }
+    ];
+    for (var i = pool.length - 1; i > 0; i--) { var j = Math.floor(r() * (i + 1)); var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp; }
+    return pool.slice(0, 3).map(function (q) { q.progress = 0; q.done = false; return q; });
+  }
+  function ensureDay() { if (!S.day || S.day.date !== today()) { S.day = { date: today(), quests: makeQuests() }; save(); } }
+
+  function bump(q, ev) {
+    if (q.done) return 0;
+    var hit = { solve: ev.solved, correct: ev.ok, hard: ev.ok && ev.diff === '어려움', subnet: ev.ok && ev.qtype === 'subnet',
+                dom: ev.ok && ev.dom === q.dom, custom: ev.custom }[q.id];
+    if (q.id === 'streak') q.progress = Math.min(q.target, S.streak);
+    else if (hit) q.progress = Math.min(q.target, q.progress + 1);
+    if (q.progress >= q.target) { q.done = true; S.questsDone++; return q.reward; }
+    return 0;
+  }
+  function checkBadges() {
+    var got = [], has = function (id) { return S.badges.indexOf(id) >= 0; };
+    var rules = { first: S.ok >= 1, streak5: S.best >= 5, streak10: S.best >= 10, hard10: S.hardOk >= 10, subnet25: S.subnetOk >= 25,
+                  n100: S.n >= 100, quest7: S.questsDone >= 7,
+                  all6: ['1', '2', '3', '4', '5', '6'].every(function (d) { return (S.dom[d] || 0) >= 1; }) };
+    ['1', '2', '3', '4', '5', '6'].forEach(function (d) { rules['dom' + d] = (S.dom[d] || 0) >= 10; });
+    Object.keys(rules).forEach(function (id) { if (rules[id] && !has(id)) { S.badges.push(id); got.push(id); } });
+    return got;
+  }
+  function apply(ev) {
+    ensureDay();
+    var before = levelOf(S.xp), xp = 0;
+    if (ev.solved) {
+      S.n++;
+      if (ev.ok) {
+        S.ok++; S.streak++; S.best = Math.max(S.best, S.streak);
+        if (ev.diff === '어려움') S.hardOk++;
+        if (ev.qtype === 'subnet') S.subnetOk++;
+        if (ev.dom) S.dom[ev.dom] = (S.dom[ev.dom] || 0) + 1;
+        xp += { '쉬움': 10, '보통': 15, '어려움': 25 }[ev.diff] || 15;
+        if (S.streak >= 3) xp += Math.min(10, 2 * (S.streak - 2));
+      } else if (ev.partial) { S.streak = 0; xp += 7; }
+      else { S.streak = 0; xp += 3; }
+    }
+    if (ev.custom) { S.custom++; xp += 5; }
+    var questXp = 0, finished = [];
+    S.day.quests.forEach(function (q) { var g = bump(q, ev); if (g) { questXp += g; finished.push(q.text); } });
+    S.xp += xp + questXp;
+    var badges = checkBadges(), after = levelOf(S.xp);
+    save(); render();
+    return { xp: xp + questXp, levelUp: after > before ? after : 0, badges: badges, quests: finished };
+  }
+  function render() {
+    ensureDay();
+    var lv = levelOf(S.xp), cur = need(lv), nxt = lv < 10 ? need(lv + 1) : null;
+    var pct = nxt ? Math.round((S.xp - cur) / (nxt - cur) * 100) : 100, title = TITLES[lv - 1];
+    var $ = function (id) { return document.getElementById(id); };
+    $('lvNum').textContent = 'Lv ' + lv; $('lvTtl').textContent = title; $('lvBar').style.width = pct + '%';
+    $('pTitle').textContent = title; $('pLv').textContent = 'Lv ' + lv + (lv === 10 ? ' · MAX' : '');
+    $('pBar').style.width = pct + '%'; $('pXp').textContent = S.xp + ' XP';
+    $('pNext').textContent = nxt ? '다음 레벨까지 ' + (nxt - S.xp) + ' XP' : '최고 레벨!';
+    $('pStreak').textContent = '연속 정답 ' + S.streak + ' (최고 ' + S.best + ')';
+    $('pTotal').textContent = '정답 ' + S.ok + ' / ' + S.n;
+    $('questList').innerHTML = S.day.quests.map(function (q) {
+      return '<li class="quest' + (q.done ? ' done' : '') + '"><span class="ck" aria-hidden="true">✓</span><span class="qt">' + q.text + '</span>' +
+        '<span class="rw">+' + q.reward + '</span><span class="qbar"><i style="width:' + Math.round(q.progress / q.target * 100) + '%"></i></span></li>';
+    }).join('');
+    $('badgeGrid').innerHTML = BADGES.map(function (b) {
+      var on = S.badges.indexOf(b.id) >= 0;
+      return '<div class="badge' + (on ? '' : ' locked') + '" title="' + b.how + '"><span class="ic" aria-hidden="true">' + b.ic + '</span>' + b.name + '</div>';
+    }).join('');
+  }
+  return {
+    result: function (verdict, q) {
+      return apply({ solved: true, ok: verdict === '정답', partial: verdict === '부분 정답', diff: q.difficulty, qtype: q.qtype, dom: q.domain_id || (q.qtype === 'subnet' ? '1' : '') });
+    },
+    custom: function () { return apply({ custom: true }); },
+    render: render,
+    reset: function () { S = blank(); save(); render(); },
+    title: function (lv) { return TITLES[lv - 1]; },
+    badgeName: function (id) { var b = BADGES.filter(function (x) { return x.id === id; })[0]; return b ? b.ic + ' ' + b.name : id; }
+  };
+})();
+
 // 서브넷 계산 문제: AI 없이 브라우저가 직접 만들고 채점한다 (AI가 틀리기 쉬운 계산이라)
 var Subnet = (function () {
-  var KINDS = { network: '네트워크 주소', broadcast: '브로드캐스트 주소', hosts: '사용 가능한 호스트 수', first: '첫 번째 사용 가능한 호스트 주소', last: '마지막 사용 가능한 호스트 주소', mask: '서브넷 마스크 (점 표기)' };
+  var KINDS = { network: 'network address', broadcast: 'broadcast address', hosts: 'number of usable host addresses', first: 'first usable host address', last: 'last usable host address', mask: 'subnet mask (dotted decimal)' };
   function r(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
   function toInt(ip) { return ip.split('.').reduce(function (a, o) { return a * 256 + Number(o); }, 0); }
   function toIp(n) { return [n >>> 24, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join('.'); }
@@ -280,7 +458,7 @@ var Subnet = (function () {
     var net = (toInt(ip) & mask) >>> 0, bc = (net + size - 1) >>> 0;
     var d = { network: toIp(net), broadcast: toIp(bc), mask: toIp(mask), prefix: p, block: size, hosts: String(Math.max(size - 2, 0)), first: toIp(net + 1), last: toIp(bc - 1) };
     var keys = Object.keys(KINDS), k = keys[r(0, keys.length - 1)];
-    return { id: 'local', qtype: 'subnet', question: '호스트 ' + ip + '/' + p + ' 가 속한 서브넷의 ' + KINDS[k] + '는 무엇인가요?', choices: [],
+    return { id: 'local', qtype: 'subnet', question: 'A host is configured with ' + ip + '/' + p + '. What is the ' + KINDS[k] + ' of its subnet?', choices: [],
       answer: d[k], kind: k, detail: d, sub: '1.6', sub_name: '서브넷 계산', domain: '네트워크 기초', difficulty: diff };
   }
   function grade(q, u) {
@@ -292,10 +470,10 @@ var Subnet = (function () {
   function explain(q, user) {
     var d = q.detail, ok = grade(q, user);
     return { verdict: ok ? '정답' : '오답', correct_answer: q.answer,
-      explanation: '/' + d.prefix + ' → 서브넷 크기(블록) = 2^' + (32 - d.prefix) + ' = ' + d.block + '개 주소, 마스크 ' + d.mask + '. 주소가 ' + d.block + ' 단위로 끊기므로 이 호스트가 속한 블록은 ' + d.network + ' ~ ' + d.broadcast + '입니다. 첫 주소는 네트워크 주소, 마지막 주소는 브로드캐스트라 쓸 수 있는 호스트는 ' + d.first + ' ~ ' + d.last + ', 모두 ' + d.hosts + '개입니다.',
-      why_wrong: ok ? '' : "입력하신 답 '" + user + "' 대신 " + q.answer + '입니다. 블록 크기로 범위를 먼저 구하면 실수가 줄어요.',
-      key_concept: '블록 크기 = 256 - (마지막 0이 아닌 마스크 옥텟). 네트워크 주소는 블록의 배수.', cli_example: '',
-      tip: '/25=128, /26=64, /27=32, /28=16, /29=8, /30=4 블록 크기를 외워 두면 빨라요.' };
+      explanation: '/' + d.prefix + ' gives a block size of 2^' + (32 - d.prefix) + ' = ' + d.block + ' addresses (mask ' + d.mask + '). Addresses are grouped in blocks of ' + d.block + ', so this host belongs to ' + d.network + ' - ' + d.broadcast + '. The first address is the network address and the last is the broadcast, so usable hosts are ' + d.first + ' - ' + d.last + ' (' + d.hosts + ' hosts).',
+      why_wrong: ok ? '' : "You answered '" + user + "', but the answer is " + q.answer + '. Find the block size first, then the block boundaries.',
+      key_concept: 'Block size = 256 - (last non-zero mask octet). Network addresses are multiples of the block size.', cli_example: 'R1(config-if)# ip address ' + d.first + ' ' + d.mask,
+      tip: 'Memorize block sizes: /25=128, /26=64, /27=32, /28=16, /29=8, /30=4.' };
   }
   return { make: make, grade: grade, explain: explain };
 })();
@@ -328,6 +506,18 @@ var Subnet = (function () {
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function toast(msg) { var t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(function () { t.hidden = true; }, 4500); }
+  function celebrate(gr) {
+    var msgs = [];
+    if (gr.quests.length) msgs.push('퀘스트 완료: ' + gr.quests.join(', '));
+    if (gr.badges.length) msgs.push('배지 획득: ' + gr.badges.map(Game.badgeName).join(', '));
+    if (msgs.length) toast('🎉 ' + msgs.join(' · '));
+    if (gr.levelUp) {
+      $('#luLv').textContent = 'Lv ' + gr.levelUp; $('#luTitle').textContent = Game.title(gr.levelUp);
+      var o = $('#levelUp'); o.hidden = false;
+      clearTimeout(celebrate._t); celebrate._t = setTimeout(function () { o.hidden = true; }, 2600);
+      o.onclick = function () { o.hidden = true; };
+    }
+  }
   function api(path, body) {
     var url = path.indexOf('/api/') === 0 ? API + path : path;
     var headers = { 'Content-Type': 'application/json' }; if (CODE) headers['X-Access-Code'] = CODE;
@@ -422,7 +612,7 @@ var Subnet = (function () {
         return '<button class="choice" aria-pressed="false" data-l="' + 'ABCD'[i] + '"><span class="ltr">' + 'ABCD'[i] + '</span><span>' + esc(c) + '</span></button>';
       }).join('') + '</div><div class="answer-row"><button class="btn primary" id="gradeBtn" disabled>채점하고 해설 받기</button></div>';
     } else {
-      body += '<div class="answer-row"><input id="ansIn" placeholder="' + (q.qtype === 'subnet' ? '예) 192.168.1.64 또는 62' : '답을 짧게 입력하세요') + '" aria-label="내 답">' +
+      body += '<div class="answer-row"><input id="ansIn" placeholder="' + (q.qtype === 'subnet' ? 'e.g. 192.168.1.64 or 62' : 'Type a short answer in English') + '" aria-label="내 답">' +
         '<button class="btn primary" id="gradeBtn">채점하고 해설 받기</button></div>';
     }
     $('#qCard').innerHTML = meta + body;
@@ -454,7 +644,9 @@ var Subnet = (function () {
             else if (x.dataset.l === state.choice) x.classList.add('wrong');
           });
         }
+        var gr = Game.result(r.verdict, q); r.xp = gr.xp;
         $('#expBox').innerHTML = renderExp(r, q.qtype === 'subnet');
+        celebrate(gr);
         g.dataset.label = '다음 문제'; busy(g, false); g.onclick = function () { $('#newQ').click(); };
         refreshStats();
       }).catch(function (e) { toast(e.message); busy(g, false); });
@@ -463,11 +655,12 @@ var Subnet = (function () {
 
   function renderExp(r, local) {
     var v = r.verdict || '오답', cls = v === '부분 정답' ? 'v-부분' : 'v-' + v;
-    var rows = [['정답', r.correct_answer], ['해설', r.explanation], ['틀린 이유', r.why_wrong], ['핵심 개념', r.key_concept], ['명령 예시', r.cli_example, 'cli'], ['기억 팁', r.tip]];
-    return '<div class="panel exp ' + cls + '"><div class="verdict"><span class="dot" aria-hidden="true"></span>' + esc(v) + '</div><dl>' +
+    var label = { '정답': 'Correct', '부분 정답': 'Partially correct', '오답': 'Incorrect' }[v] || v;
+    var rows = [['Answer', r.correct_answer], ['Explanation', r.explanation], ['Why it\'s wrong', r.why_wrong], ['Key concept', r.key_concept], ['IOS example', r.cli_example, 'cli'], ['Tip', r.tip]];
+    return '<div class="panel exp ' + cls + '"><div class="verdict"><span class="dot" aria-hidden="true"></span>' + esc(label) + (r.xp ? '<span class="xpgain">+' + r.xp + ' XP</span>' : '') + '</div><dl>' +
       rows.filter(function (x) { return x[1] && String(x[1]).trim(); }).map(function (x) {
         return '<dt>' + x[0] + '</dt><dd' + (x[2] ? ' class="cli"' : '') + '>' + esc(x[1]) + '</dd>';
-      }).join('') + '</dl><p class="foot">' + (local ? '코드가 직접 계산한 정답과 해설이에요.' : 'AI 해설은 틀릴 수 있어요. 헷갈리면 공식 문서로 확인하세요. · ' + esc(r.model || '')) + '</p></div>';
+      }).join('') + '</dl><p class="foot">' + (local ? 'Calculated by code, not AI.' : 'AI explanations can be wrong — check the official Cisco docs if unsure. · ' + esc(r.model || '')) + '</p></div>';
   }
 
   // ---- 내 문제 해설
@@ -477,9 +670,19 @@ var Subnet = (function () {
     if (!state.online) { toast('해설은 답변 서버에 연결해야 해요.'); $('#connHelp').hidden = false; return; }
     var btn = this; busy(btn, true, '제미나이가 해설 중');
     api('/api/explain', { question: q, answer: $('#cA').value.trim(), sub: Array.from(state.selected)[0] || '' })
-      .then(function (r) { $('#cExpBox').innerHTML = renderExp(r, false); refreshStats(); })
+      .then(function (r) { var gr = Game.custom(); r.xp = gr.xp; $('#cExpBox').innerHTML = renderExp(r, false); celebrate(gr); refreshStats(); })
       .catch(function (e) { toast(e.message); })
       .finally(function () { busy(btn, false); });
+  });
+
+  // ---- 게임 패널
+  Game.render();
+  $('#lvChip').addEventListener('click', function () { $('#gamePanel').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  $('#resetGame').addEventListener('click', function () {
+    var b = this;
+    if (b.dataset.armed) { Game.reset(); b.textContent = '진행 초기화'; delete b.dataset.armed; toast('레벨·퀘스트·배지를 초기화했어요.'); return; }
+    b.dataset.armed = '1'; b.textContent = '정말 초기화할까요? 한 번 더 누르세요';
+    setTimeout(function () { if (b.dataset.armed) { delete b.dataset.armed; b.textContent = '진행 초기화'; } }, 4000);
   });
 
   // ---- 탭
