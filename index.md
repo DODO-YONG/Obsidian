@@ -24,6 +24,11 @@
 
 - [[ccna-coach]] — 허브: CCNA 200-301 문제·해설 사이트. 화면은 GitHub Pages, 답변은 내 Mac 서버가 제미나이로(키는 로컬에만)
 
+# 📁 프로젝트: ccna
+
+- [[ccna]] — 허브: CCNA 200-301 공부 노트(개념 정리·자료 요약). 문제 연습은 ccna-coach
+- [[_ccna 도메인 메모]] — 시험 형식(120분·약 100문항)과 6개 출제 영역 비중
+
 # 🔗 공통 (shared)
 - [[나]] — 사용자 본인 페이지
 - [[에이전트 코드명]] — 007 스타일 코드명 목록: DY-001 SENTINEL · 002 MIRROR · 003 TRACER · 004 TWIN · 005 PRIMER, 본부 Q-BRANCH

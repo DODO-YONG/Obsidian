@@ -19,7 +19,7 @@
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261118135443';
+  var SITE_V = '20261118142302';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -41,6 +41,7 @@
     <nav class="nav" aria-label="섹션">
       <a href="#structure">구조</a>
       <a href="#agents">에이전트</a>
+      <a href="#how">TRACER 원리</a>
       <a href="#log">작업 기록</a>
       <a href="#rules">지키는 것</a>
       <a href="#next">다음</a>
@@ -202,6 +203,7 @@
             <span class="chip">초기 버전 · 공개</span>
             <div class="links">
               <a href="ccna/"><b>사이트 열기 →</b></a>
+              <a href="#how">작동 방식 보기 →</a>
               <a href="https://github.com/DODO-YONG/Obsidian/tree/main/agents/ccna-coach">코드 보기 →</a>
             </div>
           </div>
@@ -224,10 +226,144 @@
     </div>
   </section>
 
+  <section id="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="label"><span class="n">03</span>TRACER 원리</p>
+        <div>
+          <h2>TRACER는 이렇게 동작합니다</h2>
+          <p>화면은 누구나 여는 공개 웹사이트이고, AI 답변은 키가 있는 제 Mac이 만듭니다. 둘 사이는 무료 임시 터널이 이어 줍니다. 아래 버튼으로 제 Mac 서버를 켜고 끄면, 그때 무엇이 동작하는지 볼 수 있습니다.</p>
+        </div>
+      </div>
+
+      <div class="tr-switch-wrap">
+        <div class="tr-switch" role="group" aria-label="제 Mac 서버 상태">
+          <button type="button" id="trOn" aria-pressed="true">서버 켜짐</button>
+          <button type="button" id="trOff" aria-pressed="false">서버 꺼짐</button>
+        </div>
+        <p id="trHint">서버가 켜져 있으면 모든 기능을 씁니다.</p>
+      </div>
+
+      <div class="tr-map" id="trMap">
+        <article class="tr-node tr-web">
+          <header>
+            <span class="tr-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/></svg></span>
+            <h3>방문자의 브라우저<small>공개 화면 · GitHub Pages</small></h3>
+          </header>
+          <span class="tr-status"><span class="tr-onlyon">AI 연결됨</span><span class="tr-only">AI 꺼짐 · 서브넷만</span></span>
+          <ul>
+            <li>단원·범위를 고르고 문제를 풀어요</li>
+            <li><b>서브넷 계산 문제</b>는 화면이 직접 출제·채점 (AI 안 씀)</li>
+            <li><b>XP·레벨·배지</b>를 계산해 이 브라우저에 저장</li>
+          </ul>
+          <p class="tr-keep">🔓 키 없음 · 정답 없음. 화면 코드를 열어 봐도 안전</p>
+        </article>
+
+        <div class="tr-link tr-dim" aria-hidden="true">
+          <span class="go">문제·답</span>
+          <span class="back">문제·해설</span>
+        </div>
+
+        <article class="tr-node tr-tun tr-dim">
+          <header>
+            <span class="tr-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 8.5a4.5 4.5 0 0 1-.5 9.5z"/></svg></span>
+            <h3>임시 터널<small>Cloudflare · 무료</small></h3>
+          </header>
+          <ul>
+            <li>제 Mac에 잠깐 쓰는 공개 주소를 붙여 줌</li>
+            <li>켤 때마다 주소가 바뀜</li>
+          </ul>
+          <p class="tr-keep">가입·비용 없음</p>
+        </article>
+
+        <div class="tr-link tr-dim" aria-hidden="true">
+          <span class="go">전달</span>
+          <span class="back">전달</span>
+        </div>
+
+        <article class="tr-node tr-mac tr-dim">
+          <header>
+            <span class="tr-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/></svg></span>
+            <h3>제 Mac · 답변 서버<small>server.py</small></h3>
+          </header>
+          <ul>
+            <li>내 사이트에서 온 요청만 받음</li>
+            <li><b>사용량 제한</b>: 1명 시간당 30번, 전체 하루 300번</li>
+            <li><b>정답은 여기에만</b> 보관하고 채점</li>
+            <li>제가 푼 기록만 남겨 진도·약한 범위 계산</li>
+          </ul>
+          <p class="tr-keep">🔒 AI 키와 풀이 기록은 이 Mac 밖으로 안 나감</p>
+        </article>
+
+        <div class="tr-link tr-dim" aria-hidden="true">
+          <span class="go">요청</span>
+          <span class="back">답</span>
+        </div>
+
+        <article class="tr-node tr-ai tr-dim">
+          <header>
+            <span class="tr-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg></span>
+            <h3>제미나이<small>Google · 무료 등급</small></h3>
+          </header>
+          <ul>
+            <li>실제 시험처럼 <b>영어로</b> 문제를 내고 해설을 씀</li>
+            <li>바쁘면 다른 모델로 자동 전환 (3개)</li>
+          </ul>
+          <p class="tr-keep">단원·문제·답만 받음 · 개인정보 없음</p>
+        </article>
+      </div>
+
+      <div class="tr-board">
+        <span class="tag">주소 안내판</span>
+        <span>서버를 켜면 <code>start-public.sh</code>가 새 터널 주소를 <code>server.json</code>에 적어 GitHub에 올립니다. 화면은 이 파일을 읽고 <b>알아서 연결</b>합니다. 끄면 "꺼짐"으로 바뀝니다.</span>
+      </div>
+
+      <h3 class="tr-flow-title">문제 하나가 풀리는 순서</h3>
+      <p class="tr-flow-sub">객관식 한 문제를 예로 들면, 화면 → 서버 → 제미나이를 이렇게 오갑니다.</p>
+
+      <div class="tr-lanes" role="list">
+        <span></span>
+        <div class="tr-lane-h w">브라우저 (화면)</div>
+        <div class="tr-lane-h m">제 Mac 서버</div>
+        <div class="tr-lane-h a">제미나이</div>
+
+        <div class="tr-step" role="listitem"><span class="num">1</span>
+          <div class="tr-card w"><span class="who">브라우저</span>사이트를 열면 안내판에서 서버 주소를 찾아 연결<small>상단에 'AI 연결됨'</small></div></div>
+        <div class="tr-step" role="listitem"><span class="num">2</span>
+          <div class="tr-card w"><span class="who">브라우저</span>단원·세부 범위·난이도를 고르고 '문제 받기'</div></div>
+        <div class="tr-step" role="listitem"><span class="num">3</span>
+          <div class="tr-card m"><span class="who">제 Mac 서버</span>내 사이트에서 온 요청인지, 사용량이 남았는지 확인</div></div>
+        <div class="tr-step" role="listitem"><span class="num">4</span>
+          <div class="tr-card a"><span class="who">제미나이</span>영어 문제·보기 4개·정답을 만들어 돌려줌</div></div>
+        <div class="tr-step" role="listitem"><span class="num">5</span>
+          <div class="tr-card m"><span class="who">제 Mac 서버</span>정답은 서버에 두고, 문제·보기만 화면으로<small>화면에는 정답이 없음</small></div></div>
+        <div class="tr-step" role="listitem"><span class="num">6</span>
+          <div class="tr-card w"><span class="who">브라우저</span>답을 골라 제출</div></div>
+        <div class="tr-step" role="listitem"><span class="num">7</span>
+          <div class="tr-card m"><span class="who">제 Mac 서버</span>보관한 정답과 비교해 채점<small>객관식 정답 여부는 AI가 아니라 서버가 판정</small></div></div>
+        <div class="tr-step" role="listitem"><span class="num">8</span>
+          <div class="tr-card a"><span class="who">제미나이</span>왜 맞고 틀렸는지 영어 해설 작성</div></div>
+        <div class="tr-step" role="listitem"><span class="num">9</span>
+          <div class="tr-card w nb"><span class="who">브라우저</span>해설 표시 + XP·퀘스트·배지 갱신<small>게임 기록은 각자 브라우저에만 저장</small></div></div>
+      </div>
+      <p class="tr-legend">
+        <span><b>서브넷 문제</b>는 2 → 9를 화면이 혼자 처리합니다. 서버가 꺼져 있어도 풀 수 있습니다.</span>
+        <span><b>주관식</b>은 8에서 제미나이가 정답·부분 정답·오답까지 판정합니다.</span>
+      </p>
+
+      <div class="tr-why">
+        <div><span class="mono">KEY</span><h4>키는 Mac에만</h4><p>공개 화면에 키를 넣으면 누구나 볼 수 있어서, AI 호출은 서버만 합니다.</p></div>
+        <div><span class="mono">ANSWER</span><h4>정답은 서버에만</h4><p>화면 코드를 열어 봐도 답이 보이지 않게 했습니다.</p></div>
+        <div><span class="mono">NO AI</span><h4>계산은 코드로</h4><p>AI가 틀리기 쉬운 서브넷 계산은 화면이 직접 계산해 정확합니다.</p></div>
+        <div><span class="mono">₩0</span><h4>추가 비용 없음</h4><p>GitHub Pages, 무료 터널, 제미나이 무료 등급만 씁니다.</p></div>
+      </div>
+    </div>
+  </section>
+
   <section id="log">
     <div class="wrap">
       <div class="sec-head">
-        <p class="label"><span class="n">03</span>작업 기록</p>
+        <p class="label"><span class="n">04</span>작업 기록</p>
         <div>
           <h2>작업 기록</h2>
           <p>11월 17~18일, 이틀 동안 한 일입니다. 맥 터미널에서 따로 한 작업은 <a href="terminal.html">터미널 작업 기록</a>에 있습니다.</p>
@@ -288,7 +424,7 @@
   <section id="rules">
     <div class="wrap">
       <div class="sec-head">
-        <p class="label"><span class="n">04</span>지키는 것</p>
+        <p class="label"><span class="n">05</span>지키는 것</p>
         <div>
           <h2>작업하면서 지키는 것</h2>
           <ul class="plain">
@@ -304,7 +440,7 @@
   <section id="next">
     <div class="wrap">
       <div class="sec-head">
-        <p class="label"><span class="n">05</span>다음</p>
+        <p class="label"><span class="n">06</span>다음</p>
         <div>
           <h2>해 보고 싶은 것</h2>
         </div>
@@ -343,6 +479,16 @@
     sync();
   });
   mq.addEventListener && mq.addEventListener('change', sync);
+
+  // TRACER 작동 방식: 서버 켜짐/꺼짐 보기
+  var trMap = document.getElementById('trMap'), trOn = document.getElementById('trOn'), trOff = document.getElementById('trOff'), trHint = document.getElementById('trHint');
+  function trSet(on) {
+    trMap.classList.toggle('is-off', !on);
+    trOn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    trOff.setAttribute('aria-pressed', on ? 'false' : 'true');
+    trHint.textContent = on ? '서버가 켜져 있으면 모든 기능을 씁니다.' : '서버가 꺼져 있어도 서브넷 문제와 게임은 됩니다. AI 문제·해설만 쉬어요.';
+  }
+  if (trMap) { trOn.addEventListener('click', function () { trSet(true); }); trOff.addEventListener('click', function () { trSet(false); }); }
 
   // 지금 보고 있는 섹션을 상단 메뉴에 표시 (내용은 항상 보이고, 메뉴 강조만 바뀜)
   var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));

@@ -37,3 +37,7 @@
 ## [2026-11-18] output | 공개 사이트 자동 새 버전 확인(docs/version.json + scripts/bump-site-version.sh)
 
 ## [2026-11-18] output | README 갱신: TRACER(영어·누구나 접속·게임·소개), 공개 사이트 표, 스크립트 표, 비용 원칙
+
+## [2026-11-18] output | ccna 공부 프로젝트 생성 (wiki/projects/ccna 허브 + 도메인 메모, raw/projects/ccna)
+
+## [2026-11-18] output | 소개 페이지에 "TRACER 원리" 섹션(docs/index.html #how): 구조도(서버 켜짐/꺼짐 전환)·문제 하나 풀리는 순서(스윔레인)·설계 이유 4개
