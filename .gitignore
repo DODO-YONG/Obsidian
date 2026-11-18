@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Obsidian: 창 배치·최근 파일 (기기마다 다르고 자주 바뀜)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.trash/
+
+# Claude Code 개인 설정
+.claude/settings.local.json
