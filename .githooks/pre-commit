@@ -14,11 +14,15 @@ fi
 
 # 2) 새로 추가된 줄 안의 키 모양 문자열
 pattern='(sk-ant-[A-Za-z0-9_-]{20,}|sk-(proj-)?[A-Za-z0-9_-]{32,}|gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,}|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{35}|xox[abpr]-[A-Za-z0-9-]{10,}|-----BEGIN [A-Z ]*PRIVATE KEY-----)'
-hits=$(git diff --cached -U0 --diff-filter=ACMR -- . ':(exclude).githooks/*' \
-  | grep -E '^\+' | grep -vE '^\+\+\+' | grep -v 'allow-secret' | grep -E "$pattern")
+# 3) 형식을 모르는 키도: 이름이 KEY·SECRET·TOKEN·PASSWORD 인 변수에 긴 값이 대입된 줄
+assign='(api[_-]?key|_key|secret|token|password|passwd)["'"'"']?[[:space:]]*[:=][[:space:]]*["'"'"']?[A-Za-z0-9._/+=-]{20,}'
+added=$(git diff --cached -U0 --diff-filter=ACMR -- . ':(exclude).githooks/*' \
+  | grep -E '^\+' | grep -vE '^\+\+\+' | grep -v 'allow-secret')
+hits=$( { echo "$added" | grep -E "$pattern"; echo "$added" | grep -iE "$assign"; } | sort -u)
 if [ -n "$hits" ]; then
-  echo "🔒 커밋 차단: API 키·토큰으로 보이는 문자열 발견 →"
-  echo "$hits" | cut -c1-80 | sed 's/^/   /'
+  echo "🔒 커밋 차단: API 키·토큰으로 보이는 문자열 발견 (값은 가림) →"
+  # 키 값이 알림창·터미널에 그대로 찍히지 않도록 긴 문자열은 가린다
+  echo "$hits" | sed -E 's/[A-Za-z0-9._\/+=-]{16,}/<숨김>/g' | cut -c1-80 | sed 's/^/   /'
   fail=1
 fi
 
