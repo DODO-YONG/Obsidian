@@ -23,8 +23,8 @@ publish() {  # $1 = 주소 또는 빈 값(꺼짐). server.json 만 커밋·푸�
   ( cd "$VAULT" && git add docs/ccna/server.json \
     && git commit -q -m "TRACER 서버 주소 갱신: ${1:-꺼짐}" -- docs/ccna/server.json \
     && git push -q ) >/dev/null 2>&1 \
-    && echo "  (공개 화면에 서버 ${1:+주소를}${1:-꺼짐을} 알렸어요. 1~2분 뒤 반영)" \
-    || echo "  ⚠️ server.json을 GitHub에 올리지 못했어요. 손님은 아래 링크로 접속하게 해 주세요."
+    && echo "  (공개 화면에 서버가 $([ -n "$1" ] && echo 켜졌다고 || echo 꺼졌다고) 알렸어요. 1~2분 뒤 반영)" \
+    || echo "  ⚠️ server.json을 GitHub에 올리지 못했어요. 방문자에게는 위의 '바로 연결 링크'를 보내 주세요."
 }
 
 python3 server.py >"$SRV_LOG" 2>&1 &
