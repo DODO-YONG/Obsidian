@@ -3,7 +3,9 @@
 > LLM용 전체 카탈로그. 질문에 답할 때 이 파일을 먼저 읽고 관련 페이지로 진입한다.
 > 매 ingest마다 해당 프로젝트 섹션을 갱신한다. (페이지 링크 + 한 줄 요약)
 
-# 📁 프로젝트: <첫 프로젝트 이름>
+# 📁 프로젝트: security-agent
+
+- [[security-agent]] — 허브: 비침습 웹사이트 보안 점검 에이전트 (코드 `agents/security-agent/`)
 
 ## sources
 *(아직 없음 — 첫 ingest 때 추가)*

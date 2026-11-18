@@ -9,14 +9,20 @@ flowchart LR
   W["📚 Obsidian 위키<br/>설계·학습 메모"]
   T["🧩 _template<br/>새 프로젝트 틀"]
   W -.-> T
-  T -.->|복사해서 시작| N["➕ 첫 에이전트<br/>(준비 중)"]
+
+  subgraph SA["🛡️ security-agent · 웹사이트 보안 점검"]
+    direction TB
+    SA1["🔑 권한 확인<br/>authorize_target"] --> SA2["🔍 비침습 점검<br/>헤더·쿠키·TLS·본문"]
+    SA2 --> SA3["📝 리포트<br/>위험도·고치는 법"]
+  end
+  W --> SA
 
   classDef plan fill:#fff4d6,stroke:#d9a400,color:#5a4500
   classDef dev fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
   classDef done fill:#dcfce7,stroke:#16a34a,color:#14532d
   classDef base fill:#f3f4f6,stroke:#9ca3af,color:#374151
   class W,T base
-  class N plan
+  style SA fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
 ```
 
 <sub>색: 🟨 기획 · 🟦 개발중 · 🟩 완료</sub>
@@ -25,7 +31,7 @@ flowchart LR
 
 | 프로젝트 | 한 줄 설명 | 상태 | 코드 | 메모 |
 |---|---|---|---|---|
-| *(첫 프로젝트를 시작하면 여기에 추가)* | | | | |
+| 🛡️ security-agent | URL을 주면 공격 없이 응답만 읽어 보안 약점을 찾고, 위험도와 고치는 법을 리포트로 써 줌 | 🟦 개발중 | [agents/security-agent](agents/security-agent) | [위키](wiki/projects/security-agent/security-agent.md) · [소개 페이지](https://dodo-yong.github.io/security-agent/) |
 
 ## 📁 폴더 구조
 
