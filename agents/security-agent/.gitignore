@@ -1,0 +1,20 @@
+# 점검 리포트: 대상 사이트의 취약점 정보가 담겨 있으므로 절대 공개 저장소에 올리지 않음
+reports/
+
+# 비밀값
+.env
+.env.*
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+
+# 파이썬
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# 기타
+*.log
+.DS_Store

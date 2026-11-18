@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>나의 클라우드 작업실</title>
+<meta name="description" content="Windows PC 안의 Ubuntu에 암호화 작업 폴더를 만들고, GitHub 자동 푸시와 구글 드라이브 백업, 보안 점검 에이전트까지 연결한 과정을 정리한 페이지입니다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF9F5;
+    --surface: #FFFFFF;
+    --surface-2: #F0EEE6;
+    --text: #141413;
+    --muted: #5E5D59;
+    --faint: #8A8984;
+    --accent: #C96442;
+    --accent-strong: #A9502F;
+    --accent-soft: #F5E6DE;
+    --ok: #4F7A5A;
+    --ok-soft: #E3EEE5;
+    --warn: #A86B1E;
+    --warn-soft: #F6EAD6;
+    --border: #E6E3D8;
+    --shadow: 0 1px 2px rgba(20,20,19,.04), 0 4px 16px rgba(20,20,19,.04);
+    --radius: 14px;
+    --serif: "Noto Serif KR", "Iowan Old Style", Georgia, serif;
+    --sans: "Noto Sans KR", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1F1E1D; --surface: #262624; --surface-2: #30302E;
+      --text: #F3F2EC; --muted: #B4B2AA; --faint: #8C8A84;
+      --accent: #D97757; --accent-strong: #E58B6D; --accent-soft: #3B2A23;
+      --ok: #8DBB97; --ok-soft: #26332A; --warn: #DDA75F; --warn-soft: #3A2F1F;
+      --border: #3A3936; --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1F1E1D; --surface: #262624; --surface-2: #30302E;
+    --text: #F3F2EC; --muted: #B4B2AA; --faint: #8C8A84;
+    --accent: #D97757; --accent-strong: #E58B6D; --accent-soft: #3B2A23;
+    --ok: #8DBB97; --ok-soft: #26332A; --warn: #DDA75F; --warn-soft: #3A2F1F;
+    --border: #3A3936; --shadow: none;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: var(--sans); font-size: 16.5px; line-height: 1.75;
+    -webkit-font-smoothing: antialiased; word-break: keep-all; overflow-wrap: anywhere;
+  }
+  a { color: var(--accent-strong); text-underline-offset: 3px; }
+  code, pre { font-family: var(--mono); font-size: .88em; }
+  :not(pre) > code { background: var(--surface-2); padding: .1em .4em; border-radius: 6px; }
+
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 20px; }
+
+  /* 상단 바 */
+  .topbar {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: saturate(140%) blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar .wrap { display: flex; align-items: center; gap: 16px; height: 58px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; color: var(--text); white-space: nowrap; }
+  .spark { width: 22px; height: 22px; color: var(--accent); flex: none; }
+  .nav { display: flex; gap: 4px; margin-left: auto; overflow-x: auto; scrollbar-width: none; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { color: var(--muted); text-decoration: none; font-size: 14px; padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+  .nav a:hover { background: var(--surface-2); color: var(--text); }
+  .theme-btn {
+    flex: none; border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+    width: 34px; height: 34px; border-radius: 9px; cursor: pointer; font-size: 15px;
+  }
+
+  /* 히어로 */
+  .hero { padding: 72px 0 40px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 500;
+    color: var(--accent-strong); background: var(--accent-soft); padding: 4px 12px; border-radius: 999px;
+  }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 700; letter-spacing: -.01em; line-height: 1.3; }
+  h1 { font-size: clamp(32px, 5.4vw, 50px); margin: 18px 0 16px; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lead { font-size: 18.5px; color: var(--muted); max-width: 680px; margin: 0; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 36px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow); }
+  .stat b { display: block; font-family: var(--serif); font-size: 26px; color: var(--accent); line-height: 1.2; }
+  .stat span { font-size: 14px; color: var(--muted); }
+
+  section { padding: 56px 0 8px; scroll-margin-top: 70px; }
+  h2 { font-size: clamp(25px, 3.4vw, 32px); margin: 0 0 10px; }
+  .sub { color: var(--muted); margin: 0 0 26px; max-width: 700px; }
+  h3 { font-size: 19px; margin: 0 0 6px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; box-shadow: var(--shadow); }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .card p { margin: 6px 0 0; color: var(--muted); font-size: 15.5px; }
+  .icon { width: 38px; height: 38px; border-radius: 10px; background: var(--accent-soft); color: var(--accent-strong); display: grid; place-items: center; font-size: 19px; margin-bottom: 12px; }
+
+  /* 구조도 */
+  .diagram { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 26px; box-shadow: var(--shadow); }
+  .layer { border: 1.5px dashed var(--border); border-radius: 14px; padding: 16px 18px 18px; }
+  .layer + .layer { margin-top: 0; }
+  .layer-title { font-size: 13px; font-weight: 700; color: var(--faint); letter-spacing: .04em; margin-bottom: 12px; }
+  .layer.win { background: var(--surface-2); border-style: solid; }
+  .layer.ubu { background: var(--surface); margin-top: 6px; }
+  .layer.vault { background: var(--accent-soft); border: 1.5px solid color-mix(in srgb, var(--accent) 45%, transparent); margin-top: 6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font-size: 13.5px; background: var(--surface); border: 1px solid var(--border); padding: 5px 11px; border-radius: 999px; white-space: nowrap; }
+  .layer.ubu .chip { background: var(--surface-2); }
+  .project { margin-top: 12px; background: var(--surface); border-radius: 12px; padding: 14px 16px; border: 1px solid var(--border); }
+  .project b { font-family: var(--mono); font-size: 14.5px; }
+  .project small { display: block; color: var(--muted); font-size: 13.5px; margin-top: 2px; }
+  .flows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+  .flow { display: flex; gap: 12px; align-items: flex-start; border-radius: 12px; padding: 14px 16px; border: 1px solid var(--border); background: var(--bg); }
+  .flow .arrow { font-family: var(--mono); color: var(--accent); font-weight: 600; white-space: nowrap; padding-top: 1px; }
+  .flow b { display: block; font-size: 15.5px; }
+  .flow small { color: var(--muted); font-size: 13.5px; line-height: 1.6; display: block; }
+
+  /* 타임라인 */
+  .timeline { position: relative; margin: 0; padding: 0; list-style: none; }
+  .timeline::before { content: ""; position: absolute; left: 17px; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
+  .step { position: relative; padding: 0 0 26px 56px; }
+  .step:last-child { padding-bottom: 0; }
+  .dot {
+    position: absolute; left: 0; top: 0; width: 36px; height: 36px; border-radius: 50%;
+    display: grid; place-items: center; font-family: var(--serif); font-weight: 700; font-size: 15px;
+    background: var(--surface); border: 2px solid var(--accent); color: var(--accent-strong);
+  }
+  .step h3 { padding-top: 4px; }
+  .step p { margin: 4px 0 0; color: var(--muted); }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .tag { font-size: 12.5px; padding: 2px 9px; border-radius: 6px; background: var(--surface-2); color: var(--muted); }
+  .tag.ok { background: var(--ok-soft); color: var(--ok); }
+
+  /* 표 */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; min-width: 560px; }
+  th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-size: 13px; color: var(--faint); font-weight: 700; background: var(--surface-2); letter-spacing: .02em; }
+  tr:last-child td { border-bottom: 0; }
+  .sev { display: inline-block; font-size: 12.5px; font-weight: 700; padding: 2px 9px; border-radius: 6px; white-space: nowrap; }
+  .sev.high { background: var(--accent-soft); color: var(--accent-strong); }
+  .sev.mid { background: var(--warn-soft); color: var(--warn); }
+  .sev.low { background: var(--surface-2); color: var(--muted); }
+
+  /* 명령 카드 */
+  .cmds { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .cmd { min-width: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); }
+  .cmd .what { font-size: 14.5px; color: var(--muted); margin-bottom: 8px; }
+  .cmd-line { display: flex; align-items: center; gap: 10px; background: var(--surface-2); border-radius: 9px; padding: 8px 8px 8px 12px; }
+  .cmd-line code { background: none; padding: 0; flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; font-size: 13.5px; }
+  .copy {
+    flex: none; font: inherit; font-size: 12.5px; padding: 4px 10px; border-radius: 7px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+  }
+  .copy:hover { color: var(--accent-strong); border-color: var(--accent); }
+  .copy.done { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* 안내 상자 */
+  .note { display: flex; gap: 12px; padding: 16px 18px; border-radius: 12px; background: var(--accent-soft); color: var(--text); font-size: 15px; margin-top: 18px; }
+  .note b { color: var(--accent-strong); }
+  .check { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .check li { display: flex; gap: 10px; align-items: flex-start; }
+  .check li::before { content: "✓"; flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; background: var(--ok-soft); color: var(--ok); margin-top: 3px; }
+  .todo li::before { content: ""; border: 2px solid var(--border); background: transparent; width: 18px; height: 18px; margin: 5px 2px 0; }
+
+  footer { margin: 72px 0 0; padding: 28px 0 44px; border-top: 1px solid var(--border); color: var(--faint); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+
+  @media (max-width: 760px) {
+    body { font-size: 16px; }
+    .hero { padding-top: 48px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .grid-2, .grid-3, .cmds, .flows { grid-template-columns: minmax(0, 1fr); }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .chip { white-space: normal; }
+    .diagram { padding: 16px; }
+    .nav { display: none; }
+    .theme-btn { margin-left: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/><circle cx="19" cy="19" r="2" fill="currentColor"/></svg>
+      나의 클라우드 작업실
+    </a>
+    <nav class="nav" aria-label="목차">
+      <a href="#overview">한눈에</a>
+      <a href="#journey">만든 과정</a>
+      <a href="#agent">보안 에이전트</a>
+      <a href="#auto">자동화</a>
+      <a href="#safety">안전장치</a>
+      <a href="#daily">매일 쓰기</a>
+      <a href="#next">다음 할 일</a>
+    </nav>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="밝게/어둡게 전환">◐</button>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap">
+
+    <!-- 히어로 -->
+    <div class="hero">
+      <span class="eyebrow">✦ Claude Code와 함께 만든 작업 기록</span>
+      <h1>집에 있는 PC를<br><em>나만의 클라우드 작업실</em>로</h1>
+      <p class="lead">
+        Windows PC 안에 리눅스(Ubuntu)를 들이고, 비밀번호로 잠기는 작업 폴더를 만들었습니다.
+        그 안에서 개발하는 모든 것은 <b>GitHub</b>에 자동으로 올라가고 <b>구글 드라이브</b>에도 백업되며,
+        다른 PC에서도 그대로 다시 만들 수 있습니다. 첫 번째 입주자는 웹사이트 <b>보안 점검 에이전트</b>입니다.
+      </p>
+      <div class="stats">
+        <div class="stat"><b>10분</b><span>마다 GitHub 자동 저장</span></div>
+        <div class="stat"><b>매일</b><span>구글 드라이브 날짜별 백업</span></div>
+        <div class="stat"><b>암호화</b><span>비밀번호로 잠기는 작업 폴더</span></div>
+        <div class="stat"><b>7단계</b><span>새 PC 복원 안내</span></div>
+      </div>
+    </div>
+
+    <!-- 한눈에 보기 -->
+    <section id="overview">
+      <h2>한눈에 보기</h2>
+      <p class="sub">상자 안에 상자가 있는 구조입니다. 바깥은 평소 쓰는 Windows, 그 안에 Ubuntu, 그 안에 잠금 폴더, 그 안에 실제 프로젝트가 있습니다.</p>
+
+      <div class="diagram" role="img" aria-label="Windows PC 안에 WSL2 Ubuntu, 그 안에 암호화 폴더 ~/cloud, 그 안에 security-agent 프로젝트가 있고, 프로젝트는 GitHub와 구글 드라이브로 연결된 구조도">
+        <div class="layer win">
+          <div class="layer-title">WINDOWS PC</div>
+          <div class="chips">
+            <span class="chip">로그인하면 Ubuntu 자동 실행</span>
+            <span class="chip">WSL이 쉬어도 꺼지지 않게 설정</span>
+          </div>
+
+          <div class="layer ubu" style="margin-top:14px">
+            <div class="layer-title">UBUNTU (WSL2) · 사용자 mj</div>
+            <div class="chips">
+              <span class="chip">Python</span><span class="chip">Claude Code</span><span class="chip">git · GitHub CLI</span>
+              <span class="chip">rclone</span><span class="chip">gocryptfs</span><span class="chip">systemd 타이머</span>
+            </div>
+
+            <div class="layer vault" style="margin-top:14px">
+              <div class="layer-title">🔒 ~/cloud · 비밀번호로 잠기는 암호화 폴더</div>
+              <div class="project">
+                <b>security-agent/</b>
+                <small>웹사이트 보안 점검 에이전트 · 코드와 점검 리포트</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flows">
+          <div class="flow">
+            <span class="arrow">→ GitHub</span>
+            <div><b>코드와 변경 기록</b><small>10분마다 바뀐 게 있으면 자동 커밋·푸시. 점검 리포트와 비밀값은 올라가지 않음.</small></div>
+          </div>
+          <div class="flow">
+            <span class="arrow">→ Drive</span>
+            <div><b>프로젝트 + 복원 키트</b><small>1시간마다(바뀐 게 있을 때만), 매일 밤, 그리고 폴더를 잠그기 직전에 백업. 날짜별 폴더와 새 PC 복원 키트를 함께 보관.</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 만든 과정 -->
+    <section id="journey">
+      <h2>만든 과정</h2>
+      <p class="sub">한 번에 다 만든 게 아니라, 필요할 때마다 한 칸씩 쌓아 올렸습니다.</p>
+
+      <ol class="timeline">
+        <li class="step">
+          <span class="dot">1</span>
+          <h3>첫 웹페이지: 에이전트 소개 페이지</h3>
+          <p>"영어 공부 콘텐츠 제공 에이전트"를 소개하는 페이지를 만들고, 예시 요청을 한 번에 복사하는 버튼을 미니 기능으로 넣었습니다.</p>
+          <div class="tags"><span class="tag">HTML · CSS</span><span class="tag">복사 버튼</span></div>
+        </li>
+        <li class="step">
+          <span class="dot">2</span>
+          <h3>보안 점검 에이전트 만들기</h3>
+          <p>URL을 주면 응답 헤더·쿠키·인증서·페이지 본문을 살펴 취약점을 찾고, "왜 위험한지 · 어떻게 뚫릴 수 있는지 · 어떻게 고치는지"를 리포트로 써 주는 대화형 에이전트입니다.</p>
+          <div class="tags"><span class="tag">Claude Agent SDK</span><span class="tag">Python</span><span class="tag ok">공격 없는 비침습 점검</span></div>
+        </li>
+        <li class="step">
+          <span class="dot">3</span>
+          <h3>허가된 데모 사이트로 예시 점검</h3>
+          <p>테스트용으로 공개된 취약 데모 사이트를 점검해, 실제로 문제를 찾아내는지 확인하고 첫 리포트를 저장했습니다.</p>
+          <div class="tags"><span class="tag">데모 사이트</span><span class="tag ok">권한 없는 사이트 차단 확인</span></div>
+        </li>
+        <li class="step">
+          <span class="dot">4</span>
+          <h3>Windows 안에 Ubuntu 들이기</h3>
+          <p>WSL2로 Ubuntu를 설치하고 사용자 <code>mj</code>를 만들었습니다. Python, Claude Code를 Ubuntu 안에도 설치했습니다.</p>
+          <div class="tags"><span class="tag">WSL2</span><span class="tag">Ubuntu 26.04</span><span class="tag">Claude Code</span></div>
+        </li>
+        <li class="step">
+          <span class="dot">5</span>
+          <h3>GitHub와 연결하고 자동 저장</h3>
+          <p>GitHub에 로그인하고 저장소를 만든 뒤, 10분마다 바뀐 내용을 자동으로 올리는 타이머를 켰습니다. 커밋 작성자는 실제 이메일 대신 GitHub의 비공개 주소를 씁니다.</p>
+          <div class="tags"><span class="tag">gh CLI</span><span class="tag">systemd 타이머</span><span class="tag ok">비밀값 감지 시 푸시 중단</span></div>
+        </li>
+        <li class="step">
+          <span class="dot">6</span>
+          <h3>항상 켜져 있는 환경</h3>
+          <p>WSL은 원래 아무것도 안 하면 스스로 꺼집니다. 꺼지지 않게 설정하고, Windows에 로그인하면 Ubuntu가 화면 없이 자동으로 켜지게 했습니다.</p>
+          <div class="tags"><span class="tag">.wslconfig</span><span class="tag">시작 프로그램</span></div>
+        </li>
+        <li class="step">
+          <span class="dot">7</span>
+          <h3>비밀번호로 잠기는 "클라우드" 폴더</h3>
+          <p><code>~/cloud</code>를 암호화 폴더로 만들고 프로젝트를 그 안으로 옮겼습니다. 잠겨 있으면 디스크에는 알아볼 수 없는 암호문만 남습니다.</p>
+          <div class="tags"><span class="tag">gocryptfs</span><span class="tag">cloud-open / cloud-close</span></div>
+        </li>
+        <li class="step">
+          <span class="dot">8</span>
+          <h3>구글 드라이브 백업</h3>
+          <p>1시간마다(지난 백업 이후 바뀐 게 있을 때만), 그리고 매일 밤 23:50에 구글 드라이브로 백업합니다. 최신본과 함께 날짜별 마지막 상태를 따로 남깁니다.</p>
+          <div class="tags"><span class="tag">rclone</span><span class="tag">current / daily</span><span class="tag ok">드라이브 권한 최소화</span></div>
+        </li>
+        <li class="step">
+          <span class="dot">9</span>
+          <h3>다른 PC에서도 똑같이: 복원 키트</h3>
+          <p>자리를 옮겨도 같은 환경을 만들 수 있게, 안내서·설치 스크립트·설정·git 기록 전체를 담은 "복원 키트"를 백업할 때마다 드라이브에 함께 올립니다.</p>
+          <div class="tags"><span class="tag">git bundle</span><span class="tag">설치·복원 스크립트</span><span class="tag ok">복원 시험 통과</span></div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 보안 에이전트 -->
+    <section id="agent">
+      <h2>보안 점검 에이전트</h2>
+      <p class="sub">공격을 흉내 내지 않고, 웹사이트가 평소에 돌려주는 응답만 읽어서 약점을 찾습니다.</p>
+
+      <div class="grid-3">
+        <div class="card"><div class="icon">🧾</div><h3>응답 헤더·쿠키</h3><p>서버 버전 노출, 빠진 보안 헤더, 쿠키의 Secure·HttpOnly·SameSite 설정을 확인합니다.</p></div>
+        <div class="card"><div class="icon">🔐</div><h3>HTTPS·인증서</h3><p>암호화 연결이 되는지, 인증서가 만료되지 않았는지, 발급자는 누구인지 봅니다.</p></div>
+        <div class="card"><div class="icon">📄</div><h3>페이지 본문</h3><p>에러 메시지, 주석 속 정보, 디렉터리 목록처럼 밖으로 새어 나오면 안 되는 것을 찾습니다.</p></div>
+      </div>
+
+      <div class="note">
+        <span>⚠️</span>
+        <div><b>허락받은 사이트에만 씁니다.</b> 점검하기 전에 사이트마다 "이 사이트를 점검할 권한이 있나요?"라고 묻고, 확인된 곳만 점검합니다. 허락 없이 남의 사이트를 점검하는 것은 법에 어긋날 수 있습니다.</div>
+      </div>
+
+      <h3 style="margin-top:34px">예시 점검에서 찾은 것</h3>
+      <p class="sub" style="margin-bottom:14px">테스트용으로 공개된 취약 데모 사이트를 점검한 결과입니다.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>위험도</th><th>발견</th><th>쉽게 말하면</th><th>고치는 법</th></tr></thead>
+          <tbody>
+            <tr><td><span class="sev high">높음</span></td><td>암호화 안 된 HTTP, 만료된 인증서</td><td>같은 와이파이의 누군가가 로그인 정보를 엿볼 수 있음</td><td>HTTPS 전환, 인증서 갱신</td></tr>
+            <tr><td><span class="sev high">높음</span></td><td>로그인 쿠키에 Secure·SameSite 없음</td><td>쿠키를 가로채거나, 다른 사이트에서 몰래 요청을 보낼 수 있음</td><td>쿠키에 <code>Secure; SameSite=Lax</code></td></tr>
+            <tr><td><span class="sev mid">중간</span></td><td>보안 헤더 6개 모두 없음</td><td>투명한 창을 덮어 엉뚱한 버튼을 누르게 할 수 있음(클릭재킹)</td><td>CSP, X-Frame-Options 등 추가</td></tr>
+            <tr><td><span class="sev low">낮음</span></td><td>서버 종류·버전 노출</td><td>공격자가 알려진 약점을 고르기 쉬워짐</td><td>서버 정보 헤더 숨기기</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 자동화 -->
+    <section id="auto">
+      <h2>알아서 돌아가는 것들</h2>
+      <p class="sub">한 번 설정해 두면 신경 쓰지 않아도 됩니다. 단, 작업 폴더가 열려 있을 때만 움직입니다.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>언제</th><th>무엇을</th><th>어디로</th></tr></thead>
+          <tbody>
+            <tr><td><b>파일이 바뀌고 1분 뒤</b></td><td>커밋하고, GitHub 최신과 합친 뒤 푸시 (10분마다 예비 실행)</td><td>GitHub</td></tr>
+            <tr><td><b>1시간마다</b></td><td>바뀐 게 있으면 시각이 붙은 '사진'(git 기록 + 리포트)을 새로 쌓고 열람용 폴더 갱신 (없으면 건너뜀)</td><td>구글 드라이브</td></tr>
+            <tr><td><b>폴더를 잠글 때</b></td><td><code>cloud-close</code>가 GitHub 푸시와 드라이브 백업을 먼저 끝낸 뒤 잠금</td><td>GitHub · 구글 드라이브</td></tr>
+            <tr><td><b>매일 23:50</b></td><td>푸시가 없던 날에도 그날의 마지막 상태를 남김</td><td>구글 드라이브</td></tr>
+            <tr><td><b>Windows 로그인 시</b></td><td>Ubuntu를 화면 없이 켜서 위 작업들이 돌 수 있게 함</td><td>이 PC</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-2" style="margin-top:14px">
+        <div class="card">
+          <h3>구글 드라이브 폴더 구성</h3>
+<pre style="margin:10px 0 0;background:var(--surface-2);padding:14px 16px;border-radius:10px;overflow-x:auto;line-height:1.6">security-agent-backup/
+├─ snapshots/   시각별 사진 (덮어쓰지 않음)
+├─ current/     최신 상태 (열람용)
+├─ daily/       날짜별 마지막 상태 (열람용)
+└─ env/         새 PC 복원 키트</pre>
+        </div>
+        <div class="card">
+          <h3>새 PC로 옮길 때</h3>
+          <p>드라이브의 <code>env</code> 폴더를 내려받아 안내서 7단계를 따르면 됩니다. Windows 설정 → Ubuntu 설치 → 로그인 → 암호화 폴더 → 복원 순서이고, git 기록과 리포트까지 그대로 돌아옵니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 안전장치 -->
+    <section id="safety">
+      <h2>안전장치</h2>
+      <p class="sub">공개 저장소와 자동 업로드를 쓰는 만큼, 실수로 새어 나가지 않게 여러 겹으로 막았습니다.</p>
+      <div class="grid-2">
+        <div class="card">
+          <ul class="check">
+            <li><span>점검 리포트, <code>.env</code>, 키 파일은 GitHub에 올라가지 않음</span></li>
+            <li><span>API 키·토큰·개인키처럼 보이는 내용이 있으면 자동 푸시를 멈춤 (가짜 키로 시험 완료)</span></li>
+            <li><span>GitHub와 겹치면 강제로 덮어쓰지 않고, 이 PC 작업을 별도 브랜치에 안전하게 보관</span></li>
+            <li><span>푸시나 백업이 실패하면 Windows 알림</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <ul class="check">
+            <li><span>작업 폴더는 비밀번호로 잠기는 암호화 폴더</span></li>
+            <li><span>구글 드라이브 권한은 "백업 도구가 만든 파일만" 접근</span></li>
+            <li><span>드라이브 백업은 덮어쓰지 않고 쌓기만 함. 최근 7일은 전부, 90일까지 하루 1개 보관</span></li>
+            <li><span>복원 키트에는 로그인 정보를 넣지 않음. 새 PC에서 다시 로그인</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 매일 쓰기 -->
+    <section id="daily">
+      <h2>매일 쓰는 명령</h2>
+      <p class="sub">Ubuntu 창에서 입력합니다. 오른쪽 버튼으로 바로 복사할 수 있습니다.</p>
+      <div class="cmds">
+        <div class="cmd"><div class="what">① 작업 폴더 열기 (비밀번호 입력)</div><div class="cmd-line"><code>cloud-open</code><button class="copy" type="button">복사</button></div></div>
+        <div class="cmd"><div class="what">② 프로젝트에서 Claude Code 시작</div><div class="cmd-line"><code>cd ~/cloud/security-agent &amp;&amp; claude</code><button class="copy" type="button">복사</button></div></div>
+        <div class="cmd"><div class="what">보안 점검 에이전트 실행</div><div class="cmd-line"><code>~/run-security-agent.sh</code><button class="copy" type="button">복사</button></div></div>
+        <div class="cmd"><div class="what">지금 바로 드라이브 백업</div><div class="cmd-line"><code>~/bin/gdrive-backup.sh</code><button class="copy" type="button">복사</button></div></div>
+        <div class="cmd"><div class="what">자동 푸시 기록 보기</div><div class="cmd-line"><code>journalctl --user -u autopush.service -n 20</code><button class="copy" type="button">복사</button></div></div>
+        <div class="cmd"><div class="what">③ 끝나면 잠그기 — 푸시·백업 후 잠금 (claude 먼저 종료)</div><div class="cmd-line"><code>cloud-close</code><button class="copy" type="button">복사</button></div></div>
+      </div>
+    </section>
+
+    <!-- 다음 할 일 -->
+    <section id="next">
+      <h2>다음 할 일</h2>
+      <div class="card">
+        <ul class="check todo">
+          <li><span><b>밖에서 접속하기</b> — Tailscale로 맥북·폰에서 이 Ubuntu에 안전하게 접속 (설치까지 해 두었고, 로그인만 남음)</span></li>
+          <li><span><b>깨끗한 환경에서 복원 시험</b> — 빈 Ubuntu에 복원 키트를 처음부터 적용해 보기</span></li>
+          <li><span><b>더 많은 에이전트</b> — <code>~/cloud</code> 안에 새 에이전트 추가하기</span></li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Claude Code와 함께 만든 개인 작업 기록입니다.</span>
+    <a href="https://github.com/DODO-YONG/security-agent">GitHub 저장소 보기 →</a>
+  </div>
+</footer>
+
+<script>
+  // 복사 버튼
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+    return new Promise(function (resolve, reject) {
+      var a = document.createElement("textarea");
+      a.value = text; a.style.position = "fixed"; a.style.opacity = "0";
+      document.body.appendChild(a); a.select();
+      var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(a); ok ? resolve() : reject();
+    });
+  }
+  document.querySelectorAll(".copy").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var text = btn.parentElement.querySelector("code").textContent;
+      copyText(text).then(function () { btn.textContent = "복사됨"; btn.classList.add("done"); },
+                          function () { btn.textContent = "실패"; })
+        .then(function () { setTimeout(function () { btn.textContent = "복사"; btn.classList.remove("done"); }, 1400); });
+    });
+  });
+
+  // 밝게/어둡게
+  (function () {
+    var root = document.documentElement, key = "theme";
+    try { var saved = localStorage.getItem(key); if (saved) root.setAttribute("data-theme", saved); } catch (e) {}
+    document.getElementById("themeBtn").addEventListener("click", function () {
+      var cur = root.getAttribute("data-theme") ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      var next = cur === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem(key, next); } catch (e) {}
+    });
+  })();
+</script>
+</body>
+</html>
