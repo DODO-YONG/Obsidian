@@ -144,10 +144,9 @@
   .help { margin: 0 0 16px; padding: 14px 16px; border-radius: 12px; background: var(--part-soft); color: var(--ink); font-size: 14px; display: grid; gap: 6px; }
   .help code { background: var(--panel); padding: 2px 6px; border-radius: 6px; font-size: 13px; }
   .help b { color: var(--part); }
-  .connform { display: grid; grid-template-columns: minmax(0,2fr) minmax(0,1fr) auto; gap: 8px; align-items: end; }
+  .connform { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; } .connform label { flex: 1 1 200px; }
   .connform label { display: grid; gap: 4px; font-size: 12.5px; color: var(--ink-2); min-width: 0; }
   .connform input { border: 1px solid var(--rule); background: var(--panel); border-radius: 9px; padding: 8px 10px; min-width: 0; }
-  @media (max-width: 760px) { .connform { grid-template-columns: 1fr; } }
   .toast { position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px; max-width: min(560px, calc(100% - 32px)); z-index: 20; }
   .spin { width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: s .8s linear infinite; }
   @keyframes s { to { transform: rotate(360deg); } }
@@ -191,14 +190,13 @@
 
   <main>
     <div class="help" id="connHelp" hidden>
-      <div><b>AI 문제·해설은 답변 서버에 연결됐을 때 동작해요.</b> 서브넷 계산 문제는 연결 없이 누구나 풀 수 있어요.</div>
+      <div><b>지금은 AI 답변 서버가 꺼져 있어요.</b> 서버가 켜지면 이 화면이 자동으로 연결돼요(새로고침). 서브넷 계산 문제는 언제나 풀 수 있어요.</div>
       <form class="connform" id="connForm">
         <label>서버 주소<input id="srvIn" type="url" inputmode="url" placeholder="https://….trycloudflare.com" autocomplete="off"></label>
-        <label>접속 코드<input id="codeIn" type="password" placeholder="받은 코드" autocomplete="off"></label>
+        <label id="codeLbl" hidden>접속 코드<input id="codeIn" type="password" placeholder="받은 코드" autocomplete="off"></label>
         <button class="btn primary" type="submit">연결</button>
       </form>
-      <div class="note" style="margin:0">서버 주소와 접속 코드는 이 사이트 주인에게 받으세요. 주인은 자기 Mac에서 <code>./start-public.sh</code>로 서버를 켜면 주소와 코드가 나와요.
-        입력한 문제와 답은 구글 제미나이로 전송되니 개인정보는 넣지 마세요.</div>
+      <div class="note" style="margin:0">서버 주소를 직접 알고 있다면 위에 넣고 연결하세요. 입력한 문제와 답은 구글 제미나이로 전송되니 개인정보는 넣지 마세요.</div>
     </div>
     <!-- 문제 풀기 -->
     <section id="view-practice" aria-labelledby="tab-practice">
@@ -309,9 +307,22 @@ var Subnet = (function () {
   function lsGet(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
   function lsSet(k, v) { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch (e) {} }
   var fromHash = (location.hash.match(/server=([^&]+)/) || [])[1];
-  if (fromHash) { lsSet('ccna-server', decodeURIComponent(fromHash)); history.replaceState(null, '', location.pathname); }
-  var API = SERVED ? '' : (lsGet('ccna-server') || 'http://127.0.0.1:8765').replace(/\/+$/, '');
+  if (fromHash) history.replaceState(null, '', location.pathname);
+  var API = '';          // 아래 findServer()가 정한다
   var CODE = lsGet('ccna-code');
+  // 서버 찾기 순서: 이 화면을 준 서버 → 링크의 #server= → 공개된 현재 주소(server.json) → 직접 저장한 주소
+  function findServer() {
+    if (SERVED) { API = ''; return Promise.resolve(); }
+    if (fromHash) { API = decodeURIComponent(fromHash).replace(/\/+$/, ''); return Promise.resolve(); }
+    return fetch('server.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); })
+      .catch(function () { return {}; })
+      .then(function (s) {
+        var saved = lsGet('ccna-server');
+        if (s && s.url) API = s.url;
+        else if (saved && !/trycloudflare\.com/.test(saved)) API = saved;   // 지난 임시 주소는 이미 사라졌으니 쓰지 않음
+        else API = null;                                                     // 켜진 서버 없음
+      });
+  }
   var state = { topics: [], selected: new Set(), qtype: 'mcq', diff: '보통', q: null, choice: null, busy: false, online: false };
   try { var saved = JSON.parse(localStorage.getItem('ccna-sel') || '[]'); saved.forEach(function (s) { state.selected.add(s); }); } catch (e) {}
 
@@ -482,7 +493,7 @@ var Subnet = (function () {
   // ---- 진도
   function refreshStats() {
     if (!state.online) { renderScope(null); offlineStats(); return Promise.resolve(); }
-    if (state.guest) { renderScope(null); offlineStats('손님 모드: 풀이 기록은 저장하지 않아요'); return Promise.resolve(); }
+    if (state.guest) { renderScope(null); offlineStats('풀이 기록은 저장하지 않아요'); return Promise.resolve(); }
     return api('/api/stats').then(function (s) {
       state.lastStats = s; renderScope(s);
       $('#sTotal').textContent = s.total;
@@ -529,27 +540,29 @@ var Subnet = (function () {
   function setOnline(on, guest) {
     state.online = on; state.guest = !!guest;
     var c = $('#conn'); c.classList.toggle('on', on); c.classList.toggle('off', !on);
-    $('#connText').textContent = on ? (guest ? '손님으로 연결됨' : '내 서버 연결됨') : '연결 안 됨 · 서브넷만';
+    $('#connText').textContent = on ? (guest ? 'AI 연결됨' : '내 서버 연결됨') : 'AI 꺼짐 · 서브넷만';
     if (on && (!guest || CODE)) $('#connHelp').hidden = true;
   }
   function checkServer() {
+    if (API === null) { setOnline(false); refreshStats(); return Promise.resolve(); }
     return fetch(API + '/api/health').then(function (r) { return r.json(); })
-      .then(function (h) { setOnline(!!h.ok, h.guest); if (h.needs_code && !CODE) { $('#connHelp').hidden = false; } })
+      .then(function (h) { state.needsCode = !!h.needs_code; $('#codeLbl').hidden = !h.needs_code; setOnline(!!h.ok, h.guest); if (h.needs_code && !CODE) { $('#connHelp').hidden = false; } })
       .catch(function () { setOnline(false); })
       .then(refreshStats);
   }
-  $('#srvIn').value = SERVED ? location.origin : (lsGet('ccna-server') || '');
+  function fillForm() { $('#srvIn').value = SERVED ? location.origin : (API || ''); }
   $('#codeIn').value = CODE;
   $('#connForm').addEventListener('submit', function (e) {
     e.preventDefault();
     var s = $('#srvIn').value.trim().replace(/\/+$/, '');
-    if (!SERVED) { if (s && !/^https?:\/\//.test(s)) s = 'https://' + s; lsSet('ccna-server', s); API = s || 'http://127.0.0.1:8765'; }
+    if (!SERVED) { if (s && !/^https?:\/\//.test(s)) s = 'https://' + s; lsSet('ccna-server', s); API = s || null; }
     CODE = $('#codeIn').value.trim(); lsSet('ccna-code', CODE);
     checkServer().then(function () { toast(state.online ? (state.guest ? '연결됐어요. 손님 모드예요.' : '내 서버에 연결됐어요.') : '연결하지 못했어요. 주소를 확인해 주세요.'); });
   });
   $('#conn').addEventListener('click', function () { $('#connHelp').hidden = !$('#connHelp').hidden; });
   fetch('topics.json').then(function (r) { return r.json(); })
-    .then(function (t) { state.topics = t; renderScope(); return checkServer(); })
+    .then(function (t) { state.topics = t; renderScope(); return findServer(); })
+    .then(function () { fillForm(); return checkServer(); })
     .catch(function () { $('#scopeList').innerHTML = '<p class="muted">출제 범위를 불러오지 못했어요.</p>'; });
 })();
 </script>

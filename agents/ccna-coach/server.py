@@ -9,8 +9,8 @@
 - 이 서버로 직접 들어와도(http://127.0.0.1:8765) 같은 화면을 볼 수 있다.
 
 다른 사람에게 열 때(./start-public.sh → Cloudflare 임시 터널):
-- 터널로 들어온 요청은 '손님'이다. 접속 코드가 맞아야 AI 기능을 쓸 수 있다.
-- 손님은 사람당 시간당 횟수, 서버 전체는 하루 횟수가 제한된다(무료 한도 보호).
+- 터널로 들어온 요청은 '손님'이다. 누구나 쓸 수 있다(.env 에 CCNA_ACCESS_CODE 를 넣으면 코드가 필요해짐).
+- 손님은 사람당 시간당 횟수, 손님 전체는 하루 횟수가 제한된다(무료 한도 보호). 주인(내 Mac)은 제한 없음.
 - 손님에게는 내 진도·기록을 보여 주지 않고, 손님의 풀이도 내 기록에 남기지 않는다.
 
 실행: python3 server.py   (끄기: Ctrl+C)
@@ -19,7 +19,7 @@
 import hmac
 import json
 import random
-import secrets
+
 import threading
 import time
 from collections import defaultdict, deque
@@ -45,9 +45,9 @@ ALLOWED_ORIGINS = {
 }
 
 # ---- 손님(터널로 들어온 사람) 보호 장치 --------------------------------------
-ACCESS_CODE = gc._env("CCNA_ACCESS_CODE") or secrets.token_hex(3)   # 없으면 켤 때마다 새 코드
+ACCESS_CODE = gc._env("CCNA_ACCESS_CODE") or ""   # 비우면 누구나 사용 (넣으면 코드 필요)
 GUEST_PER_HOUR = int(gc._env("CCNA_GUEST_PER_HOUR") or 30)          # 손님 1명당 시간당 AI 요청
-DAILY_LIMIT = int(gc._env("CCNA_DAILY_LIMIT") or 300)               # 서버 전체 하루 AI 요청
+DAILY_LIMIT = int(gc._env("CCNA_DAILY_LIMIT") or 300)               # 손님 전체 하루 AI 요청
 _lock = threading.Lock()
 _hits: dict[str, deque] = defaultdict(deque)      # 손님별 최근 요청 시각
 _fails: dict[str, deque] = defaultdict(deque)     # 손님별 틀린 코드 시각
@@ -107,7 +107,8 @@ SYS_GRADE = """당신은 Cisco CCNA 200-301 강사입니다. 학생의 답을 �
 - 정답 여부를 먼저 판단하고(주어진 판정이 있으면 그것을 따름), 왜 그런지 설명합니다.
 - 틀렸으면 학생이 왜 그렇게 생각했을지 짚고 바로잡습니다.
 - 관련 IOS 명령 예시가 도움이 되면 cli_example에 넣고, 아니면 빈 문자열.
-- 확실하지 않은 내용은 단정하지 말고 "공식 문서로 확인"이라고 적습니다."""
+- 확실하지 않은 내용은 단정하지 말고 "공식 문서로 확인"이라고 적습니다.
+- 네트워크·CCNA와 관련 없는 질문이면 해설하지 말고, verdict는 "오답", explanation에 "CCNA 관련 문제만 해설할 수 있어요."라고만 적습니다."""
 
 Q_SCHEMA = {
     "type": "OBJECT",
@@ -248,15 +249,17 @@ class Handler(BaseHTTPRequestHandler):
 
     def guard(self) -> str | None:
         """AI 요청 전 검사. 문제가 있으면 오류 문장을, 통과하면 None."""
+        if not self.is_guest():
+            return None  # 주인(내 Mac)은 제한 없음
         now = time.time()
         with _lock:
             today = time.strftime("%Y-%m-%d")
             if _day["date"] != today:
                 _day.update(date=today, n=0)
             if _day["n"] >= DAILY_LIMIT:
-                return "오늘 쓸 수 있는 AI 요청을 모두 썼어요. 내일 다시 이용해 주세요."
-            if self.is_guest():
-                cid = self.client_id()
+                return "오늘 쓸 수 있는 AI 요청을 모두 썼어요. 내일 다시 이용해 주세요. (서브넷 계산은 계속 쓸 수 있어요)"
+            cid = self.client_id()
+            if ACCESS_CODE:
                 fails = _fails[cid]
                 while fails and now - fails[0] > 600:
                     fails.popleft()
@@ -265,12 +268,12 @@ class Handler(BaseHTTPRequestHandler):
                 if not hmac.compare_digest(self.headers.get("X-Access-Code", ""), ACCESS_CODE):
                     fails.append(now)
                     return "CODE"
-                hits = _hits[cid]
-                while hits and now - hits[0] > 3600:
-                    hits.popleft()
-                if len(hits) >= GUEST_PER_HOUR:
-                    return f"한 시간에 {GUEST_PER_HOUR}번까지 쓸 수 있어요. 잠시 뒤 다시 시도해 주세요."
-                hits.append(now)
+            hits = _hits[cid]
+            while hits and now - hits[0] > 3600:
+                hits.popleft()
+            if len(hits) >= GUEST_PER_HOUR:
+                return f"한 시간에 {GUEST_PER_HOUR}번까지 쓸 수 있어요. 잠시 뒤 다시 시도해 주세요."
+            hits.append(now)
             _day["n"] += 1
         return None
 
@@ -312,7 +315,7 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(403, {"error": "허용되지 않은 사이트"})
         if path == "/api/health":
             self._json(200, {"ok": True, "has_key": gc.has_key(), "guest": self.is_guest(),
-                             "needs_code": self.is_guest()})
+                             "needs_code": self.is_guest() and bool(ACCESS_CODE)})
         elif path == "/api/stats":
             if self.is_guest():  # 손님에게는 내 진도를 보여 주지 않는다
                 return self._json(200, {"guest": True})
@@ -373,7 +376,7 @@ def main():
     print("   화면: https://dodo-yong.github.io/Obsidian/ccna/  (또는 http://127.0.0.1:8765)")
     print(f"   키: {'있음' if gc.has_key() else '없음 (.env 에 GOOGLE_API_KEY)'} · 모델: {', '.join(gc.models())}")
     print(f"   기록: {LOG if PRIVATE_OK else '⚠️ 비공개 폴더가 아니라 저장하지 않음'}")
-    print(f"   손님 접속 코드: {ACCESS_CODE}   (손님: 1명당 시간당 {GUEST_PER_HOUR}번, 전체 하루 {DAILY_LIMIT}번)")
+    print(f"   손님: {'접속 코드 ' + ACCESS_CODE + ' 필요' if ACCESS_CODE else '누구나 사용'} · 1명당 시간당 {GUEST_PER_HOUR}번 · 손님 전체 하루 {DAILY_LIMIT}번")
     print("   끄기: Ctrl+C\n")
     try:
         server = ThreadingHTTPServer((HOST, PORT), Handler)
