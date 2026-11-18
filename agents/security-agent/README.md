@@ -42,12 +42,8 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-인증: Claude Code에 로그인되어 있으면 그대로 동작합니다.
-API 키를 쓰려면 환경 변수를 설정하세요.
-
-```powershell
-$env:ANTHROPIC_API_KEY = "sk-ant-..."
-```
+인증: **Claude 구독 로그인으로만** 실행합니다. 💸 추가 요금을 막기 위해 `ANTHROPIC_API_KEY`가
+설정돼 있으면 실행을 거부합니다. 화면의 "$" 금액은 API 요금 환산 참고치일 뿐 실제 청구가 아닙니다.
 
 ## 실행
 
@@ -89,5 +85,5 @@ python main.py
 - **역할·점검 방침 바꾸기**: `main.py`의 `SYSTEM_PROMPT` 수정.
 - **점검 항목 추가**: `@tool(...)`로 함수를 만들고 `create_sdk_mcp_server`의 `tools`와
   `allowed_tools`(`mcp__secrev__<도구이름>`)에 추가.
-- **모델 지정**: 기본값은 `claude-opus-5-5`(가장 똑똑함). 더 빠르고 저렴하게 쓰려면
-  `$env:AGENT_MODEL = "claude-sonnet-5-5"`처럼 환경변수로 바꾸세요.
+- **모델 지정**: 기본값은 `claude-opus-5-5`(가장 똑똑함). 구독 사용량을 아끼려면
+  `.env`에 `AGENT_MODEL=claude-sonnet-5-5`를 넣으세요.

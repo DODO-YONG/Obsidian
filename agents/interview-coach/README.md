@@ -35,7 +35,8 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt   # 처음 �
 ./run.sh
 ```
 - 시작하면 언어 모드(`ko` / `en` / `mix`)와 연습할 원칙(엔터 = 코치 추천)을 묻는다.
-- 인증: Claude에 로그인돼 있으면 그대로, 아니면 `.env.example`을 복사해 `.env`에 `ANTHROPIC_API_KEY`를 넣는다.
+- 💸 **추가 요금 없음**: Claude 구독 로그인으로만 실행한다. `ANTHROPIC_API_KEY`가 설정돼 있으면 실행을 거부한다.
+  화면의 "$" 금액은 API 요금 *환산* 참고치이고 실제 청구가 아니다(구독 사용량에서 차감).
 - 종료: `exit`
 
 ## 도구

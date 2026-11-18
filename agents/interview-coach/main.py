@@ -327,7 +327,7 @@ async def print_response(client: ClaudeSDKClient) -> None:
             if message.is_error:
                 print(f"\n(오류로 끝남: {message.subtype})")
             if message.total_cost_usd:
-                print(f"  (이번 응답 비용 약 ${message.total_cost_usd:.4f})")
+                print(f"  (사용량 참고: API 요금 환산 약 ${message.total_cost_usd:.2f} · 구독 로그인이라 실제 청구 없음)")
 
 
 BANNER = """🎤 AWS 리더십 원칙 면접 코치
@@ -337,8 +337,20 @@ BANNER = """🎤 AWS 리더십 원칙 면접 코치
 """
 
 
+def refuse_paid_billing() -> None:
+    """API 키가 있으면 사용량만큼 돈이 청구된다. 구독 로그인으로만 실행하도록 막는다."""
+    found = [v for v in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN") if os.environ.get(v)]
+    if found:
+        print(
+            f"⛔ {', '.join(found)} 가 설정돼 있어 실행하지 않습니다(추가 요금 방지).\n"
+            "   .env 나 환경 변수에서 지우고, Claude 구독 로그인으로 실행하세요."
+        )
+        sys.exit(1)
+
+
 async def main() -> None:
     global PRIVATE_OK
+    refuse_paid_billing()
     print(BANNER)
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     PRIVATE_OK = data_dir_is_private()
