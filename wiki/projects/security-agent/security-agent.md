@@ -15,7 +15,7 @@ URL을 주면 **비침습(공격 없는) 방식**으로 웹사이트를 점검�
 
 - **코드**: `agents/security-agent/` (Obsidian에선 숨김 — GitHub 또는 터미널에서 확인)
 - **기술**: Claude Agent SDK(Python), 커스텀 MCP 도구 7개, 기본 모델 `claude-opus-5-5`
-- **원래 저장소**: https://github.com/DODO-YONG/security-agent (2026-11-17 생성, 이 볼트로 이력째 이전)
+- **원래 저장소**: https://github.com/DODO-YONG/security-agent (2026-11-17 생성, 이 볼트로 이력째 이전, 2026-11-18 보관(Archive) — 읽기 전용)
 - **소개 페이지**: https://dodo-yong.github.io/security-agent/ (원래 저장소의 GitHub Pages)
 
 ## 점검 항목
