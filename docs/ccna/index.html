@@ -266,7 +266,7 @@
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261118144353';
+  var SITE_V = '20261118144627';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -275,7 +275,7 @@
   }).catch(function () {});
 })();
 </script>
-<link rel="stylesheet" href="../tracer-how.css?v=20261118144353">
+<link rel="stylesheet" href="../tracer-how.css?v=20261118144627">
 </head>
 <body>
 <header>
@@ -339,7 +339,7 @@
     </div>
   </div>
 
-  <div class="how2">
+  <div class="how2" id="how">
     <div class="eyebrow2">HOW IT WORKS</div>
     <h2>TRACER는 이렇게 동작해요</h2>
     <p>화면은 누구나 여는 공개 웹사이트이고, AI 문제·해설은 개인 컴퓨터 환경에서 운영하는 개인 서버가 만듭니다. <b>재생</b>을 누르면 문제 하나가 어떤 길로 오가는지 따라가 볼 수 있어요.</p>
@@ -844,6 +844,13 @@ var Subnet = (function () {
   }
   var introPref = lsGet('tracer-intro');   // 'open' | 'hidden' | '' (선택 안 함 → 문제를 풀어 봤으면 접기)
   setIntro(introPref ? introPref === 'open' : !Game.played(), false);
+  // 주소 끝이 #intro 또는 #how면 소개를 펼쳐서 그 위치를 보여 준다(접힘 설정은 바꾸지 않음)
+  (function () {
+    var m = location.hash.match(/^#(intro|how)$/); if (!m) return;
+    setIntro(true, false);
+    var t = document.getElementById(m[1]);
+    requestAnimationFrame(function () { window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 70, behavior: 'instant' }); });
+  })();
   $('#showIntro').addEventListener('click', function () { setIntro(true, true); $('#intro').scrollIntoView({ behavior: 'smooth' }); });
   $('#hideIntro').addEventListener('click', function () { setIntro(false, true); });
   $('#miniStart').addEventListener('click', goApp);
@@ -942,6 +949,6 @@ var Subnet = (function () {
     .catch(function () { $('#scopeList').innerHTML = '<p class="muted">출제 범위를 불러오지 못했어요.</p>'; });
 })();
 </script>
-<script src="../tracer-how.js?v=20261118144353" defer></script>
+<script src="../tracer-how.js?v=20261118144627" defer></script>
 </body>
 </html>
