@@ -16,11 +16,11 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="tracer-how.css?v=20261118152200">
+<link rel="stylesheet" href="tracer-how.css?v=20261118173617">
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261118152200';
+  var SITE_V = '20261118173617';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -88,8 +88,10 @@
           <li><span class="h">41c22e1</span><span class="t">13:23</span><span class="m">TRACER: 누구나 접속</span></li>
           <li><span class="h">98a3ff0</span><span class="t">13:36</span><span class="m">TRACER: 영어 출제 + 게임</span></li>
           <li><span class="h">ee5e5bf</span><span class="t">14:43</span><span class="m">TRACER 작동 방식 그림</span></li>
+          <li><span class="h">b50f113</span><span class="t">15:37</span><span class="m">DY-006 SWEEPER 첫 버전</span></li>
+          <li><span class="h">b7d3fb6</span><span class="t">17:28</span><span class="m">규칙서 요약: 토큰 −57%</span></li>
         </ol>
-        <div class="tail">54 commits · 2 days<span class="cursor" aria-hidden="true"></span></div>
+        <div class="tail">56 commits · 2 days<span class="cursor" aria-hidden="true"></span></div>
       </div>
     </figure>
   </div>
@@ -330,6 +332,9 @@
           <div class="ev"><time>15:20</time><div><h4>여섯 번째 에이전트: SWEEPER</h4>
             <p>작업 범위를 볼트 밖 홈 폴더로 넓혔습니다. 다운로드·데스크탑 정리, 문서 모으기, 폴더 정리부터 시작하고, 쓰기 작업은 사람이 직접 승인해야만 실행되게 했습니다.</p>
             <div class="tags"><span>Agent SDK</span><span>Safety</span></div></div></div>
+          <div class="ev"><time>17:28</time><div><h4>위키가 토큰을 아끼는지 재 보기</h4>
+            <p>같은 질문을 위키로·위키 없이 두 번 답하게 하는 A/B 측정 도구를 만들었습니다. 처음엔 위키 쪽이 오히려 56% 더 썼습니다. 원인은 매번 읽히는 규칙서(CLAUDE.md)와 "목차부터 읽기" 규칙이었습니다. 규칙서를 16KB에서 4.4KB로 줄이고 바로가기 표로 바꾸자 같은 질문의 토큰이 57% 줄었습니다.</p>
+            <div class="tags"><span>A/B test</span><span>Tokens</span></div></div></div>
         </div>
       </div>
     </div>
@@ -345,6 +350,7 @@
             <li>키와 개인 자료는 공개 저장소에 올리지 않는다.</li>
             <li>Claude 구독 말고 추가 비용은 쓰지 않는다.</li>
             <li>만든 것은 직접 돌려 보고, 확인 못 한 건 그렇다고 적는다.</li>
+            <li>매번 읽히는 규칙은 짧게, 자세한 규칙은 필요할 때만 읽게 한다. 효과는 숫자로 잰다.</li>
           </ul>
         </div>
       </div>
@@ -408,6 +414,6 @@
   }
 })();
 </script>
-<script src="tracer-how.js?v=20261118152200" defer></script>
+<script src="tracer-how.js?v=20261118173617" defer></script>
 </body>
 </html>

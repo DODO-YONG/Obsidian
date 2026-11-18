@@ -102,9 +102,11 @@ flowchart LR
 ```
 agents/<이름>/          에이전트 코드 (프로젝트 하나 = 폴더 하나)
 wiki/projects/<이름>/   설계·학습 메모 (Obsidian)
-wiki/shared/            여러 프로젝트 공통 (코드명 목록·백업 현황·나)
+wiki/shared/            여러 프로젝트 공통 (코드명 목록·백업 현황·위키 효과 측정·나)
+wiki/_규칙/             위키 상세 규칙 (작업·페이지 작성) — CLAUDE.md는 요약판, 필요할 때만 읽음
 docs/                   공개 사이트 (소개·TRACER·터미널 기록)
 scripts/                도구 스크립트 (아래 표)
+tools/                  분석 도구 (위키 A/B 측정)
 raw/                    원본 자료 (읽기 전용)
 private/                비공개 — 이 저장소에서 제외, 별도 비공개 저장소로 백업
 ```
@@ -114,6 +116,7 @@ private/                비공개 — 이 저장소에서 제외, 별도 비공�
 | `scripts/gemini.py` | DY-004 TWIN: 터미널에서 제미나이와 대화 |
 | `scripts/backup-private.sh` | `private/`를 비공개 저장소에 백업 (푸시 전 비공개 여부 확인) |
 | `scripts/bump-site-version.sh` | 공개 사이트 버전 올리기 (자동 새로고침용, `tracer-how.*?v=` 포함) |
+| `tools/wiki_ab_test.py` | 같은 질문을 위키로·위키 없이 답하게 해 토큰·시간 비교 (구독 사용량 듦, `--dry-run`은 0) → [결과](wiki/shared/위키%20효과%20측정.md) |
 
 ## 🔒 비밀 정보 다루는 법
 
