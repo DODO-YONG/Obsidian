@@ -6,7 +6,9 @@ project: ccna-coach
 date: 2026-11-18
 ---
 
-# 🧠 ccna-coach — CCNA 200-301 시험 대비 코치
+# 🧠 ccna-coach — DY-003 TRACER
+
+> 코드명: [[에이전트 코드명|DY-003 TRACER]] · CCNA 200-301 시험 대비 코치
 
 상위: [[00_홈]]
 

@@ -1,4 +1,4 @@
-# 🎤 interview-coach — AWS 리더십 원칙 면접 코치
+# 🎤 DY-002 MIRROR — AWS 리더십 원칙 면접 코치 (`interview-coach`)
 
 > AWS 인턴십 행동 면접(16 Leadership Principles)을 연습하는 대화형 에이전트.
 > 내 경험 은행을 읽고 **약한 원칙부터** 질문하고, **꼬리 질문으로 파고든 뒤** 평가한다.

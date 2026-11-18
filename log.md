@@ -21,3 +21,5 @@
 ## [2026-11-18] output | 터미널 작업 기록 페이지(docs/terminal.html) + 공용 스타일(docs/style.css)
 
 ## [2026-11-18] output | ccna-coach: CCNA 문제·해설 사이트(docs/ccna, GitHub Pages) + 내 Mac 답변 서버(agents/ccna-coach)
+
+## [2026-11-18] output | 에이전트 코드명(007 스타일) 적용: DY-001 SENTINEL · 002 MIRROR · 003 TRACER · 004 TWIN · 005 PRIMER, 본부 Q-BRANCH

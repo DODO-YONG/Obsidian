@@ -6,7 +6,9 @@ project: interview-coach
 date: 2026-11-18
 ---
 
-# 🎤 interview-coach — AWS 리더십 원칙 면접 코치
+# 🎤 interview-coach — DY-002 MIRROR
+
+> 코드명: [[에이전트 코드명|DY-002 MIRROR]] · AWS 리더십 원칙 면접 코치
 
 상위: [[00_홈]]
 

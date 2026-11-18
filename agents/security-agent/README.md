@@ -1,4 +1,4 @@
-# 웹사이트 보안 점검 에이전트
+# 🛡️ DY-001 SENTINEL — 웹사이트 보안 점검 에이전트
 
 > 📖 **소개 페이지**: https://dodo-yong.github.io/security-agent/
 

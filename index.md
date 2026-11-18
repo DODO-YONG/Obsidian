@@ -26,5 +26,6 @@
 
 # 🔗 공통 (shared)
 - [[나]] — 사용자 본인 페이지
+- [[에이전트 코드명]] — 007 스타일 코드명 목록: DY-001 SENTINEL · 002 MIRROR · 003 TRACER · 004 TWIN · 005 PRIMER, 본부 Q-BRANCH
 - [[백업 현황]] — 공개 저장소·비공개 저장소(private/)·드라이브(Windows 시절, 중단) 백업 범위, 다른 컴퓨터로 옮기는 법
 - [[gemini-chat]] — `scripts/gemini.py`: 터미널 제미나이 대화(키는 .env, 기록은 볼트 밖, 모델 자동 전환). 무료 등급, 민감정보 전송 금지

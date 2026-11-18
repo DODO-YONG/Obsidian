@@ -294,7 +294,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
-    print("🧠 CCNA 코치 답변 서버")
+    print("🧠 DY-003 TRACER · CCNA 코치 답변 서버")
     print("   화면: https://dodo-yong.github.io/Obsidian/ccna/  (또는 http://127.0.0.1:8765)")
     print(f"   키: {'있음' if gc.has_key() else '없음 (.env 에 GOOGLE_API_KEY)'} · 모델: {', '.join(gc.models())}")
     print(f"   기록: {LOG if PRIVATE_OK else '⚠️ 비공개 폴더가 아니라 저장하지 않음'}")

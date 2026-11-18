@@ -6,7 +6,9 @@ project: security-agent
 date: 2026-11-17
 ---
 
-# 🛡️ security-agent — 웹사이트 보안 점검 에이전트
+# 🛡️ security-agent — DY-001 SENTINEL
+
+> 코드명: [[에이전트 코드명|DY-001 SENTINEL]] · 웹사이트 보안 점검 에이전트
 
 상위: [[00_홈]]
 

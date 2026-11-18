@@ -395,7 +395,7 @@ async def print_response(client: ClaudeSDKClient) -> None:
                 print(f"  (사용량 참고: API 요금 환산 약 ${cost:.2f} · 구독 로그인이라 실제 청구 없음)")
 
 
-BANNER = """웹사이트 보안 점검 에이전트입니다.
+BANNER = """🛡️ DY-001 SENTINEL · 웹사이트 보안 점검 에이전트입니다.
 ⚠️  본인이 소유했거나 서면 허가를 받은 사이트에만 사용하세요.
     이 에이전트는 비침습 점검(응답 헤더/쿠키/노출 정보 분석)만 합니다.
 

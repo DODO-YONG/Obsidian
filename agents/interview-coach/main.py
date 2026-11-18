@@ -332,7 +332,7 @@ async def print_response(client: ClaudeSDKClient) -> None:
                 print(f"  (사용량 참고: API 요금 환산 약 ${message.total_cost_usd:.2f} · 구독 로그인이라 실제 청구 없음)")
 
 
-BANNER = """🎤 AWS 리더십 원칙 면접 코치
+BANNER = """🎤 DY-002 MIRROR · AWS 리더십 원칙 면접 코치
 - 약한 원칙부터 질문하고, 꼬리 질문으로 파고든 뒤 평가합니다.
 - 연습 기록은 private 폴더에만 저장됩니다(git 제외).
 종료: exit
