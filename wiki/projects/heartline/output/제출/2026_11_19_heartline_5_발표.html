@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Heartline 발표</title>
+<meta name="description" content="Heartline 발표: 만든 이유 · 기능 · 기술.">
+<meta name="theme-color" content="#1F161C">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+/* Heartline 작동 방식 — 재생형 통신 흐름 그림 (prd.html). 색은 .hl-how 안에서만 쓰는 --hw-* 토큰 */
+.hl-how {
+  --hw-bg: #FFF8F6; --hw-card: #FFFFFF; --hw-stroke: #F1D6DC; --hw-line: #E3B9C3; --hw-t1: #3A2A30; --hw-t2: #7A6168;
+  --hw-web: #D85C78; --hw-web-s: #FFE3EA; --hw-srv: #B8651F; --hw-srv-s: #FCEBD9; --hw-ai: #6F58D8; --hw-ai-s: #ECE8FF;
+  --hw-gray: #8A7279; --hw-gray-s: #F5ECEE; --hw-pkt: #E8577A; --hw-pkt-t: #FFFFFF; --hw-sos: #E07A2E;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hl-how {
+    --hw-bg: #24191F; --hw-card: #2F222A; --hw-stroke: #4A3540; --hw-line: #6A4D5A; --hw-t1: #F7E9EE; --hw-t2: #C7AAB4;
+    --hw-web: #F48FA6; --hw-web-s: #4A2433; --hw-srv: #F2B26A; --hw-srv-s: #43301C; --hw-ai: #B9AAFF; --hw-ai-s: #33294F;
+    --hw-gray: #C2A9B1; --hw-gray-s: #3A2C33; --hw-pkt: #F48FA6; --hw-pkt-t: #24191F; --hw-sos: #F2A061;
+  }
+}
+:root[data-theme="dark"] .hl-how {
+  --hw-bg: #24191F; --hw-card: #2F222A; --hw-stroke: #4A3540; --hw-line: #6A4D5A; --hw-t1: #F7E9EE; --hw-t2: #C7AAB4;
+  --hw-web: #F48FA6; --hw-web-s: #4A2433; --hw-srv: #F2B26A; --hw-srv-s: #43301C; --hw-ai: #B9AAFF; --hw-ai-s: #33294F;
+  --hw-gray: #C2A9B1; --hw-gray-s: #3A2C33; --hw-pkt: #F48FA6; --hw-pkt-t: #24191F; --hw-sos: #F2A061;
+}
+.hl-how { line-height: 1.7; word-break: keep-all; }
+.hl-how *, .hl-how *::before, .hl-how *::after { box-sizing: border-box; }
+:where(.hl-how) p, :where(.hl-how) h3, :where(.hl-how) h4 { margin: 0; }
+
+.hw-stage { border: 1px solid var(--hw-stroke); border-radius: 22px; background: var(--hw-bg); overflow: hidden; box-shadow: 0 10px 30px rgba(216,92,120,.10); }
+.hw-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--hw-stroke); background: var(--hw-card); }
+.hw-tabs { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 14px; background: var(--hw-bg); border: 1px solid var(--hw-stroke); }
+.hw-tabs button, .hw-ctl button, .hw-prog button { font: inherit; border: 0; cursor: pointer; }
+.hw-tabs button { font-size: 15px; background: transparent; color: var(--hw-t2); padding: 8px 14px; border-radius: 10px; min-height: 40px; }
+.hw-tabs button[aria-selected="true"] { background: var(--hw-pkt); color: var(--hw-pkt-t); font-weight: 700; }
+.hw-tabs button small { font-size: 12px; opacity: .85; margin-left: 6px; font-weight: 500; }
+.hw-ctl { display: inline-flex; gap: 8px; }
+.hw-ctl button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 44px; height: 44px; padding: 0 14px; border-radius: 14px; border: 1px solid var(--hw-stroke); background: var(--hw-bg); color: var(--hw-t1); font-size: 15px; font-weight: 700; }
+.hw-ctl button:hover { border-color: var(--hw-line); }
+.hw-ctl button.play { min-width: 128px; }
+.hw-ctl svg { width: 16px; height: 16px; }
+
+.hw-svg { padding: 18px 16px 8px; }
+.hw-svg svg { display: block; width: 100%; height: auto; margin: 0 auto; overflow: visible; }
+.hw-svg .track { fill: none; stroke: var(--hw-line); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; transition: stroke .3s, opacity .3s; }
+.hw-svg .track.dash { stroke-dasharray: 1 9; stroke-width: 3.5; }
+.hw-svg .track.hot { stroke: var(--hw-pkt); stroke-width: 4; stroke-dasharray: none; }
+.hw-svg .elab rect { fill: var(--hw-bg); stroke: var(--hw-stroke); }
+.hw-svg .elab text { font-size: 13px; font-weight: 600; fill: var(--hw-t2); text-anchor: middle; dominant-baseline: central; }
+.hw-svg .elab.hot rect { stroke: var(--hw-pkt); } .hw-svg .elab.hot text { fill: var(--hw-pkt); }
+.hw-svg .node { transition: opacity .3s; }
+.hw-svg .card { fill: var(--hw-card); stroke: var(--hw-stroke); stroke-width: 1.5; transition: stroke .25s, stroke-width .25s; }
+.hw-svg .ico { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hw-svg .ttl { font-size: 18px; font-weight: 700; fill: var(--hw-t1); dominant-baseline: central; }
+.hw-svg .sub { font-size: 13.5px; fill: var(--hw-t2); dominant-baseline: central; }
+.hw-svg .k-web .tile { fill: var(--hw-web-s); } .hw-svg .k-web .ico { stroke: var(--hw-web); }
+.hw-svg .k-srv .tile { fill: var(--hw-srv-s); } .hw-svg .k-srv .ico { stroke: var(--hw-srv); }
+.hw-svg .k-ai  .tile { fill: var(--hw-ai-s); }  .hw-svg .k-ai  .ico { stroke: var(--hw-ai); }
+.hw-svg .k-tun .tile, .hw-svg .k-board .tile { fill: var(--hw-gray-s); } .hw-svg .k-tun .ico, .hw-svg .k-board .ico { stroke: var(--hw-gray); }
+.hw-svg .k-board .card { stroke-dasharray: 6 5; }
+.hw-svg .node.on .card { stroke-width: 3; }
+.hw-svg .k-web.on .card { stroke: var(--hw-web); filter: drop-shadow(0 0 14px color-mix(in srgb, var(--hw-web) 45%, transparent)); }
+.hw-svg .k-srv.on .card { stroke: var(--hw-srv); filter: drop-shadow(0 0 14px color-mix(in srgb, var(--hw-srv) 45%, transparent)); }
+.hw-svg .k-ai.on  .card { stroke: var(--hw-ai);  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--hw-ai) 45%, transparent)); }
+.hw-svg .k-tun.on .card, .hw-svg .k-board.on .card { stroke: var(--hw-gray); filter: drop-shadow(0 0 12px color-mix(in srgb, var(--hw-gray) 40%, transparent)); }
+.hw-svg .dim { opacity: .25; }
+.hw-svg .packet rect { fill: var(--hw-pkt); filter: drop-shadow(0 4px 12px color-mix(in srgb, var(--hw-pkt) 55%, transparent)); }
+.hw-svg .packet.sos rect { fill: var(--hw-sos); filter: drop-shadow(0 4px 12px color-mix(in srgb, var(--hw-sos) 55%, transparent)); }
+.hw-svg .packet text { font-size: 14px; font-weight: 700; fill: var(--hw-pkt-t); text-anchor: middle; dominant-baseline: central; }
+
+.hw-cap { border-top: 1px solid var(--hw-stroke); background: var(--hw-card); padding: 16px 20px 20px; }
+.hw-prog { display: flex; gap: 6px; margin-bottom: 14px; }
+.hw-prog button { flex: 1; height: 18px; background: transparent; padding: 7px 0; border-radius: 4px; }
+.hw-prog button::before { content: ""; display: block; height: 4px; border-radius: 4px; background: var(--hw-stroke); transition: background .25s; }
+.hw-prog button.done::before { background: color-mix(in srgb, var(--hw-pkt) 55%, transparent); }
+.hw-prog button.cur::before { background: var(--hw-pkt); }
+.hw-cap-row { display: flex; gap: 16px; align-items: flex-start; min-height: 64px; }
+.hw-n { flex: none; font-size: 28px; font-weight: 800; line-height: 1; color: var(--hw-pkt); font-variant-numeric: tabular-nums; padding-top: 2px; }
+.hw-cap p { font-size: 18px; font-weight: 600; color: var(--hw-t1); line-height: 1.5; }
+.hw-cap p small { display: block; font-size: 15px; font-weight: 400; color: var(--hw-t2); margin-top: 4px; }
+.hw-who { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 6px; margin-bottom: 6px; }
+.hw-who.w { color: var(--hw-web); background: var(--hw-web-s); } .hw-who.s { color: var(--hw-srv); background: var(--hw-srv-s); }
+.hw-who.a { color: var(--hw-ai); background: var(--hw-ai-s); } .hw-who.b { color: var(--hw-gray); background: var(--hw-gray-s); }
+
+/* 역할 트리 */
+.hw-h3 { color: var(--hw-t1); font-size: 1.4rem; font-weight: 700; margin: 56px 0 8px; letter-spacing: -.015em; }
+.hw-sub { color: var(--hw-t2); font-size: 16px; margin-bottom: 26px !important; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.hw-lock { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 6px; background: var(--hw-srv-s); color: var(--hw-srv); flex: none; }
+.hw-lock svg { width: 12px; height: 12px; }
+.hw-root { display: flex; justify-content: center; position: relative; padding-bottom: 30px; }
+.hw-root::after { content: ""; position: absolute; bottom: 0; left: 50%; height: 30px; border-left: 2px solid var(--hw-line); }
+.hw-root span { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; background: var(--hw-card); color: var(--hw-t1); border: 2px solid var(--hw-pkt); padding: 10px 20px; border-radius: 16px; }
+.hw-branches { list-style: none; margin: 0; padding: 0; display: flex; gap: 14px; }
+.hw-branches > li { flex: 1 1 0; min-width: 0; position: relative; padding-top: 30px; }
+.hw-branches > li::before { content: ""; position: absolute; top: 0; left: 50%; height: 30px; border-left: 2px solid var(--hw-line); }
+.hw-branches > li::after { content: ""; position: absolute; top: 0; left: -8px; right: -8px; border-top: 2px solid var(--hw-line); }
+.hw-branches > li:first-child::after { left: 50%; }
+.hw-branches > li:last-child::after { right: 50%; }
+.hw-head { border: 1.5px solid var(--hw-stroke); border-top: 4px solid var(--c); border-radius: 16px; padding: 14px; background: var(--hw-card); display: flex; align-items: center; gap: 12px; }
+.hw-ic { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; flex: none; background: var(--cs); color: var(--c); }
+.hw-ic svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hw-head strong { display: block; font-size: 16px; line-height: 1.3; color: var(--hw-t1); }
+.hw-head small { display: block; font-size: 13px; color: var(--hw-t2); }
+.hb-web { --c: var(--hw-web); --cs: var(--hw-web-s); } .hb-srv { --c: var(--hw-srv); --cs: var(--hw-srv-s); } .hb-ai { --c: var(--hw-ai); --cs: var(--hw-ai-s); }
+.hb-tun, .hb-board { --c: var(--hw-gray); --cs: var(--hw-gray-s); }
+.hw-leaves { list-style: none; margin: 0 0 0 20px; padding: 8px 0 0; }
+.hw-leaves li { position: relative; padding: 7px 0 7px 22px; font-size: 14.5px; color: var(--hw-t2); line-height: 1.5; display: flex; gap: 6px; align-items: flex-start; }
+.hw-leaves li::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; border-left: 2px solid var(--hw-line); }
+.hw-leaves li:last-child::before { bottom: calc(100% - 18px); }
+.hw-leaves li::after { content: ""; position: absolute; left: 0; top: 17px; width: 14px; border-top: 2px solid var(--hw-line); }
+.hw-leaves li b { color: var(--hw-t1); font-weight: 700; }
+.hw-leaves li .hw-lock { margin-top: 1px; }
+
+.hw-why { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 56px; }
+.hw-why div { border-top: 2px solid var(--hw-pkt); padding-top: 12px; }
+.hw-why .k { font-size: 12px; font-weight: 700; color: var(--hw-t2); letter-spacing: .05em; }
+.hw-why h4 { color: var(--hw-t1); font-size: 17px; font-weight: 700; margin: 4px 0 4px; }
+.hw-why p { font-size: 14.5px; color: var(--hw-t2); }
+
+@media (max-width: 960px) {
+  .hw-root { justify-content: flex-start; padding-bottom: 0; }
+  .hw-root::after { display: none; }
+  .hw-branches { flex-direction: column; gap: 0; margin-left: 22px; }
+  .hw-branches > li { padding: 16px 0 0 26px; }
+  .hw-branches > li::before { left: 0; top: 0; bottom: 0; height: auto; }
+  .hw-branches > li:last-child::before { bottom: auto; height: 52px; }
+  .hw-branches > li::after, .hw-branches > li:first-child::after, .hw-branches > li:last-child::after { left: 0; right: auto; width: 24px; top: 52px; }
+  .hw-why { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 760px) {
+  .hw-top { padding: 10px; }
+  .hw-tabs, .hw-ctl { width: 100%; }
+  .hw-tabs button { flex: 1 1 30%; padding: 6px 6px; line-height: 1.35; font-size: 14px; }
+  .hw-tabs button small { display: block; margin: 0; font-size: 11px; }
+  .hw-ctl button.play { flex: 1; }
+  .hw-svg { padding: 14px 10px 6px; }
+  .hw-cap { padding: 14px 16px 18px; }
+  .hw-n { font-size: 22px; }
+  .hw-cap p { font-size: 16.5px; }
+  .hw-cap p small { font-size: 14px; }
+  .hw-why { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { .hl-how *, .hl-how *::before, .hl-how *::after { transition: none !important; animation: none !important; } }
+
+</style>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23F07A93'/%3E%3Cpath d='M16 24s-7-4.3-7-9.2A3.8 3.8 0 0 1 16 12.6a3.8 3.8 0 0 1 7 2.2C23 19.7 16 24 16 24z' fill='white'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#FFF6F3; --bg2:#FFE9E3; --bg3:#FFD6DE; --card:#FFFFFF; --ink:#3A2A30; --ink2:#7A6168; --line:#F3D9DE;
+  --rose:#F07A93; --rose-d:#D85C78; --lav:#7A62E0; --lav-bg:#F1EEFF; --sos:#D9702A; --sos-bg:#FFF2E6; --ok:#2F9A80;
+  --me:#F07A93; --you:#FFFFFF; --you-ink:#3A2A30; --shadow:0 14px 40px rgba(216,92,120,.16);
+}
+:root[data-theme="dark"]{
+  --bg:#1F161C; --bg2:#2A1E26; --bg3:#3A2531; --card:#2C2028; --ink:#F7E9EE; --ink2:#C7AAB4; --line:#43303B;
+  --rose:#F28CA2; --rose-d:#F28CA2; --lav:#B7A8FF; --lav-bg:#2E2840; --sos:#F2A061; --sos-bg:#3A2A1E; --ok:#5CC9AE;
+  --me:#C9607A; --you:#3A2A33; --you-ink:#F7E9EE; --shadow:0 14px 40px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#120c10;overflow:hidden}
+body{font-family:Pretendard,-apple-system,"Apple SD Gothic Neo",sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;word-break:keep-all}
+#viewport{position:fixed;inset:0}
+#stage{width:1600px;height:900px;position:absolute;left:50%;top:50%;transform-origin:center center;background:radial-gradient(120% 120% at 0% 0%,var(--bg3),var(--bg) 55%);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.slide{position:absolute;inset:0;padding:80px 96px;display:none;flex-direction:column}
+.slide.on{display:flex;animation:in .45s ease-out}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.k{font-size:22px;font-weight:800;letter-spacing:.08em;color:var(--rose-d)}
+h1{font-size:120px;line-height:1;margin:18px 0 18px;letter-spacing:-.03em}
+h2{font-size:58px;line-height:1.2;margin:10px 0 34px;letter-spacing:-.02em}
+h2 span,h1 span{color:var(--rose-d)}
+.lead{font-size:34px;color:var(--ink2);line-height:1.45;margin:0}
+.row{display:flex;gap:40px;align-items:center;flex:1;min-height:0}
+.col{flex:1;min-width:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:34px;box-shadow:var(--shadow)}
+.card h3{font-size:34px;margin:12px 0 10px}
+.card p{font-size:26px;color:var(--ink2);margin:0;line-height:1.5}
+.ico{font-size:56px;line-height:1}
+.arrow{font-size:72px;color:var(--rose)}
+.tag{display:inline-block;font-size:22px;font-weight:700;background:var(--card);color:var(--rose-d);border-radius:999px;padding:8px 20px;box-shadow:var(--shadow)}
+.chips{display:flex;flex-wrap:wrap;gap:12px}
+.chips span{font-size:24px;font-weight:600;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:10px 20px}
+.chips span.hot{background:var(--rose);border-color:var(--rose);color:#fff}
+.foot{position:absolute;left:96px;right:96px;bottom:40px;display:flex;justify-content:space-between;font-size:18px;color:var(--ink2)}
+/* phone demo */
+.phone{width:400px;border-radius:44px;background:var(--card);padding:12px;border:1px solid var(--line);box-shadow:0 30px 70px rgba(216,92,120,.3);margin:0 auto}
+.screen{border-radius:34px;overflow:hidden;background:linear-gradient(180deg,var(--bg2),var(--bg3));height:620px;display:flex;flex-direction:column}
+.screen.en{background:linear-gradient(180deg,var(--lav-bg),var(--bg3))}
+.pbar{display:flex;align-items:center;gap:10px;padding:16px;background:color-mix(in srgb,var(--card) 70%,transparent)}
+.ava{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FFB4C2,#FF8A7A);display:grid;place-items:center;font-size:22px;flex:none}
+.ava.s{width:32px;height:32px;font-size:16px}
+.who b{font-size:19px}.who small{display:block;font-size:14px;color:var(--ink2)}
+.ai{font-size:11px;font-weight:800;color:var(--rose-d);border:1px solid var(--rose);border-radius:6px;padding:0 5px;margin-left:6px;vertical-align:2px}
+.pill{margin-left:auto;font-size:13px;font-weight:800;border-radius:999px;padding:4px 10px;background:var(--card);border:1px solid var(--line);color:var(--ink2)}
+.pill.on{background:var(--lav);border-color:var(--lav);color:#fff}
+.chat{flex:1;overflow:hidden;padding:14px;display:flex;flex-direction:column;gap:8px;justify-content:flex-end}
+.day{align-self:center;font-size:13px;color:var(--ink2);background:color-mix(in srgb,var(--card) 60%,transparent);padding:3px 12px;border-radius:999px}
+.m{display:flex;align-items:flex-end;gap:6px;animation:in .25s ease-out}
+.m.me{flex-direction:row-reverse}
+.b{max-width:78%;padding:10px 14px;border-radius:20px;font-size:17px;line-height:1.45;position:relative}
+.you .b{background:var(--you);color:var(--you-ink);border-top-left-radius:6px}
+.me .b{background:var(--me);color:#fff;border-top-right-radius:6px}
+.t{font-size:12px;color:var(--ink2)}.rd{color:var(--rose-d);font-weight:800}
+.typing .b{display:flex;gap:5px;padding:15px 16px}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--ink2);opacity:.5;animation:dot 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.fix{align-self:flex-end;max-width:86%;background:var(--lav-bg);border:1px solid color-mix(in srgb,var(--lav) 45%,transparent);border-radius:16px;padding:9px 13px;font-size:15px;line-height:1.5}
+.fix b{color:var(--lav)}
+.heart{position:absolute;right:-8px;bottom:-10px;font-size:15px;background:var(--card);border-radius:999px;padding:0 4px}
+.me .heart{right:auto;left:-8px}
+.dbtn{display:flex;gap:10px;justify-content:center;margin-top:18px}
+.dbtn button{font:inherit;font-size:18px;font-weight:700;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:9px 18px;cursor:pointer}
+.dbtn button.on{background:var(--rose);border-color:var(--rose);color:#fff}
+/* slide 3 */
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.trio .card{padding:26px}
+.trio .hd{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.trio .hd b{font-size:26px}.trio .hd small{display:block;font-size:18px;color:var(--ink2)}
+.trio .b{display:block;max-width:100%;margin-top:10px;background:var(--you);color:var(--you-ink);border-top-left-radius:6px;font-size:21px}
+.ask{display:inline-block;background:var(--me);color:#fff;border-radius:22px;border-top-right-radius:6px;padding:14px 22px;font-size:26px}
+.groups{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:30px}
+.groups div{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;text-align:center}
+.groups b{display:block;font-size:24px;margin:6px 0 4px}.groups span{font-size:17px;color:var(--ink2);line-height:1.4;display:block}
+.groups i{font-style:normal;font-size:34px}
+/* slide 5 */
+.howwrap{flex:1;min-height:0}
+.howwrap .hw-h3,.howwrap .hw-sub,.howwrap .hw-tree,.howwrap .hw-why{display:none}
+.howwrap .hw-cap p{font-size:22px}.howwrap .hw-cap p small{font-size:17px;display:inline;margin-left:8px}
+.howwrap .hw-svg{padding:10px 16px 4px}.howwrap .hw-svg svg{max-height:300px;width:auto;max-width:100%}
+.howwrap .hw-cap{padding:10px 20px 12px}.howwrap .hw-cap-row{min-height:0}.howwrap .hw-prog{margin-bottom:8px}
+.points{display:flex;gap:16px;margin-top:16px}
+.points div{flex:1;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px 20px;font-size:21px;line-height:1.45}
+.points b{color:var(--rose-d)}
+/* slide 6 */
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.num{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:30px;box-shadow:var(--shadow)}
+.num b{display:block;font-size:84px;line-height:1;color:var(--rose-d);letter-spacing:-.03em}
+.num span{display:block;font-size:24px;color:var(--ink2);margin-top:12px}
+.quote{margin-top:34px;display:flex;gap:16px;align-items:flex-start}
+.quote .bub{display:flex;flex-direction:column;gap:10px}
+.quote .b{font-size:24px;background:var(--you);color:var(--you-ink);border-top-left-radius:6px;max-width:none}
+.quote .me .b{background:var(--me);color:#fff}
+.safe{margin-top:28px;font-size:22px;color:var(--ink2)}
+/* slide 7 */
+.road{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.road .card.now{border:3px solid var(--rose)}
+.badge{display:inline-block;font-size:18px;font-weight:800;border-radius:999px;padding:5px 14px;background:var(--bg2);color:var(--rose-d)}
+.url{margin-top:40px;font-size:34px;font-weight:700}
+.url a{color:var(--rose-d);text-decoration:none}
+.thanks{font-size:72px;font-weight:800;margin-top:24px}
+/* v2 */
+.story{display:flex;align-items:stretch;gap:14px;margin-top:10px}
+.story .st{flex:1;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:28px 22px;text-align:center;box-shadow:var(--shadow)}
+.story .st.hot{border:3px solid var(--rose)}
+.story i{font-style:normal;font-size:60px;display:block}
+.story b{display:block;font-size:28px;margin:14px 0 8px}
+.story span{font-size:22px;color:var(--ink2);line-height:1.45;display:block}
+.story .sa{align-self:center;font-size:44px;color:var(--rose)}
+.quotebox{margin-top:40px;font-size:32px;font-weight:700;padding:26px 34px;border-left:6px solid var(--rose);background:var(--card);border-radius:18px}
+.p6{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.p6 div{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px 20px}
+.p6 b{display:block;font-size:24px}.p6 span{font-size:19px;color:var(--ink2)}
+.pv{background:var(--card);border:2px solid var(--rose);border-radius:28px;padding:24px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
+.pvh{display:flex;gap:12px;align-items:center}.pvh b{font-size:24px}.pvh small{display:block;font-size:17px;color:var(--ink2)}
+.pv .b{background:var(--you);color:var(--you-ink);border-top-left-radius:6px;font-size:20px;max-width:100%;width:fit-content}
+.pvl{font-size:18px;color:var(--rose-d);font-weight:700;text-align:center;margin-top:4px}
+.kwbox{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;justify-content:center}
+.kwbox span{font-size:19px;font-weight:700;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 16px;color:var(--ink2)}
+.kwbox span.on{background:var(--rose);border-color:var(--rose);color:#fff}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:10px}
+.grid4 .card{padding:30px}.grid4 .card h3{font-size:30px}.grid4 .card p{font-size:23px}
+.tech{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.tech .card{padding:24px 28px}.tech .card>b{font-size:27px;display:block;margin-bottom:10px}
+.tech .card p{font-size:21px;margin-top:10px}
+.tech pre{margin:0;background:#17101A;color:#F7E9EE;border-radius:14px;padding:14px 16px;font-size:17px;line-height:1.5;white-space:pre-wrap}
+.order2{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:20px;color:var(--ink2)}
+.order2 span{background:var(--bg2);color:var(--ink);border-radius:12px;padding:7px 12px;font-weight:700}
+.order2 span.s{background:var(--sos-bg);color:var(--sos)}.order2 span.p{background:var(--rose);color:#fff}
+.split{display:flex;align-items:center;gap:14px}
+.split .raw{flex:0 0 190px;background:#17101A;border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.split .lbl{font-size:15px;color:#C7AAB4;font-weight:700}
+.split .raw i{display:block;height:9px;border-radius:5px;background:#5A4450;width:100%}
+.split .raw i.w80{width:80%}.split .raw i.w60{width:60%}.split .raw i.gap{height:4px;background:transparent}
+.split .tg{font-size:13px;font-weight:700;color:#F7E9EE;background:#3A2A33;border-radius:8px;padding:2px 8px;width:fit-content}
+.split .arr{font-size:34px;color:var(--rose);text-align:center;line-height:1}
+.split .arr small{display:block;font-size:13px;color:var(--ink2);margin-top:4px;line-height:1.3}
+.split .out{flex:1;display:flex;flex-direction:column;gap:7px;align-items:flex-start}
+.split .ob{background:var(--you);color:var(--you-ink);border-radius:16px;border-top-left-radius:6px;padding:7px 13px;font-size:18px}
+.split .oc,.split .os{font-size:15px;font-weight:700;border-radius:10px;padding:4px 10px}
+.split .oc{background:var(--lav-bg);color:var(--lav)}.split .os{background:var(--sos-bg);color:var(--sos)}
+.live{display:flex;align-items:center;gap:20px;margin-top:30px;background:var(--card);border:2px solid var(--rose);border-radius:24px;padding:16px 22px;width:fit-content;box-shadow:var(--shadow)}
+.live .qrw{width:120px;height:120px;flex:none;background:#fff;border-radius:12px;padding:6px}
+.live .qr{width:100%;height:100%;display:block}
+.live b{display:block;font-size:26px}.live span{display:block;font-size:22px;color:var(--rose-d);font-weight:700;margin-top:2px}
+.live small{display:block;font-size:17px;color:var(--ink2);margin-top:4px}
+.live.big{margin-top:18px}.live.big .qrw{width:150px;height:150px}
+.live.end{margin-top:26px}.live.end .qrw{width:170px;height:170px}.live.end b{font-size:30px}.live.end span{font-size:26px}
+/* chrome */
+#bar{position:fixed;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.08)}
+#bar i{display:block;height:100%;background:#F28CA2;width:0;transition:width .3s}
+#hud{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;align-items:center;font:600 13px Pretendard,sans-serif;color:#C7AAB4;opacity:.25;transition:opacity .2s}
+#hud:hover{opacity:1}
+#hud button{font:inherit;background:#2C2028;color:#F7E9EE;border:1px solid #43303B;border-radius:8px;padding:5px 9px;cursor:pointer}
+#notes{position:fixed;left:16px;right:16px;bottom:22px;max-width:980px;margin:0 auto;background:rgba(20,13,17,.94);color:#F7E9EE;border:1px solid #43303B;border-radius:16px;padding:16px 20px;font:17px/1.6 Pretendard,sans-serif;display:none;z-index:9}
+#notes.on{display:block}
+#notes b{color:#F28CA2}
+#notes .meta{display:flex;justify-content:space-between;font-size:13px;color:#C7AAB4;margin-bottom:6px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+.export #hud,.export #bar{display:none}.export #stage{border-radius:0;box-shadow:none}.export .slide.on{animation:none}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+
+  <!-- 1 표지 -->
+  <section class="slide" data-note="안녕하세요. 제가 만든 앱은 <b>Heartline</b>입니다. 한 문장으로 말하면 <b>내 취향대로 만든 가상 연인과 메신저로 톡하는 앱</b>이에요. 오른쪽 화면처럼 내가 만든 연인이 자기 말투로 답해요. 오늘은 왜 만들었는지, 어떤 기능이 있는지, 어떻게 만들었는지 순서로 말씀드릴게요." data-sec="20초">
+    <div class="row">
+      <div class="col">
+        <span class="tag">DY-007 CUPID</span>
+        <h1>Heartline</h1>
+        <p class="lead" style="font-size:44px;color:var(--ink);font-weight:700">내 취향대로 만든,<br><span style="color:var(--rose-d)">나만의 가상 연인</span></p>
+        <p class="lead" style="margin-top:26px">만든 이유 · 기능 · 기술</p>
+        <div class="live"><div class="qrw"><svg class="qr" viewBox="0 0 37 37" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" role="img" aria-label="Heartline 앱 QR 코드"><rect width="37" height="37" fill="#fff"/><path d="M2,2h1v1h-1zM3,2h1v1h-1zM4,2h1v1h-1zM5,2h1v1h-1zM6,2h1v1h-1zM7,2h1v1h-1zM8,2h1v1h-1zM10,2h1v1h-1zM11,2h1v1h-1zM14,2h1v1h-1zM18,2h1v1h-1zM20,2h1v1h-1zM21,2h1v1h-1zM22,2h1v1h-1zM24,2h1v1h-1zM25,2h1v1h-1zM28,2h1v1h-1zM29,2h1v1h-1zM30,2h1v1h-1zM31,2h1v1h-1zM32,2h1v1h-1zM33,2h1v1h-1zM34,2h1v1h-1zM2,3h1v1h-1zM8,3h1v1h-1zM10,3h1v1h-1zM12,3h1v1h-1zM16,3h1v1h-1zM18,3h1v1h-1zM19,3h1v1h-1zM22,3h1v1h-1zM23,3h1v1h-1zM24,3h1v1h-1zM25,3h1v1h-1zM26,3h1v1h-1zM28,3h1v1h-1zM34,3h1v1h-1zM2,4h1v1h-1zM4,4h1v1h-1zM5,4h1v1h-1zM6,4h1v1h-1zM8,4h1v1h-1zM11,4h1v1h-1zM12,4h1v1h-1zM14,4h1v1h-1zM15,4h1v1h-1zM16,4h1v1h-1zM17,4h1v1h-1zM20,4h1v1h-1zM21,4h1v1h-1zM22,4h1v1h-1zM24,4h1v1h-1zM26,4h1v1h-1zM28,4h1v1h-1zM30,4h1v1h-1zM31,4h1v1h-1zM32,4h1v1h-1zM34,4h1v1h-1zM2,5h1v1h-1zM4,5h1v1h-1zM5,5h1v1h-1zM6,5h1v1h-1zM8,5h1v1h-1zM10,5h1v1h-1zM11,5h1v1h-1zM12,5h1v1h-1zM20,5h1v1h-1zM24,5h1v1h-1zM25,5h1v1h-1zM26,5h1v1h-1zM28,5h1v1h-1zM30,5h1v1h-1zM31,5h1v1h-1zM32,5h1v1h-1zM34,5h1v1h-1zM2,6h1v1h-1zM4,6h1v1h-1zM5,6h1v1h-1zM6,6h1v1h-1zM8,6h1v1h-1zM11,6h1v1h-1zM13,6h1v1h-1zM14,6h1v1h-1zM18,6h1v1h-1zM20,6h1v1h-1zM23,6h1v1h-1zM26,6h1v1h-1zM28,6h1v1h-1zM30,6h1v1h-1zM31,6h1v1h-1zM32,6h1v1h-1zM34,6h1v1h-1zM2,7h1v1h-1zM8,7h1v1h-1zM12,7h1v1h-1zM14,7h1v1h-1zM17,7h1v1h-1zM18,7h1v1h-1zM24,7h1v1h-1zM26,7h1v1h-1zM28,7h1v1h-1zM34,7h1v1h-1zM2,8h1v1h-1zM3,8h1v1h-1zM4,8h1v1h-1zM5,8h1v1h-1zM6,8h1v1h-1zM7,8h1v1h-1zM8,8h1v1h-1zM10,8h1v1h-1zM12,8h1v1h-1zM14,8h1v1h-1zM16,8h1v1h-1zM18,8h1v1h-1zM20,8h1v1h-1zM22,8h1v1h-1zM24,8h1v1h-1zM26,8h1v1h-1zM28,8h1v1h-1zM29,8h1v1h-1zM30,8h1v1h-1zM31,8h1v1h-1zM32,8h1v1h-1zM33,8h1v1h-1zM34,8h1v1h-1zM10,9h1v1h-1zM11,9h1v1h-1zM12,9h1v1h-1zM16,9h1v1h-1zM17,9h1v1h-1zM18,9h1v1h-1zM19,9h1v1h-1zM21,9h1v1h-1zM24,9h1v1h-1zM25,9h1v1h-1zM2,10h1v1h-1zM4,10h1v1h-1zM5,10h1v1h-1zM7,10h1v1h-1zM8,10h1v1h-1zM9,10h1v1h-1zM11,10h1v1h-1zM12,10h1v1h-1zM13,10h1v1h-1zM14,10h1v1h-1zM16,10h1v1h-1zM17,10h1v1h-1zM18,10h1v1h-1zM19,10h1v1h-1zM20,10h1v1h-1zM22,10h1v1h-1zM23,10h1v1h-1zM25,10h1v1h-1zM28,10h1v1h-1zM31,10h1v1h-1zM33,10h1v1h-1zM34,10h1v1h-1zM2,11h1v1h-1zM5,11h1v1h-1zM9,11h1v1h-1zM10,11h1v1h-1zM12,11h1v1h-1zM13,11h1v1h-1zM15,11h1v1h-1zM16,11h1v1h-1zM17,11h1v1h-1zM18,11h1v1h-1zM19,11h1v1h-1zM21,11h1v1h-1zM22,11h1v1h-1zM23,11h1v1h-1zM25,11h1v1h-1zM26,11h1v1h-1zM28,11h1v1h-1zM29,11h1v1h-1zM31,11h1v1h-1zM32,11h1v1h-1zM34,11h1v1h-1zM2,12h1v1h-1zM3,12h1v1h-1zM4,12h1v1h-1zM7,12h1v1h-1zM8,12h1v1h-1zM9,12h1v1h-1zM13,12h1v1h-1zM15,12h1v1h-1zM18,12h1v1h-1zM20,12h1v1h-1zM24,12h1v1h-1zM25,12h1v1h-1zM26,12h1v1h-1zM27,12h1v1h-1zM28,12h1v1h-1zM29,12h1v1h-1zM30,12h1v1h-1zM31,12h1v1h-1zM33,12h1v1h-1zM34,12h1v1h-1zM2,13h1v1h-1zM6,13h1v1h-1zM10,13h1v1h-1zM14,13h1v1h-1zM17,13h1v1h-1zM19,13h1v1h-1zM21,13h1v1h-1zM25,13h1v1h-1zM26,13h1v1h-1zM29,13h1v1h-1zM31,13h1v1h-1zM33,13h1v1h-1zM2,14h1v1h-1zM3,14h1v1h-1zM4,14h1v1h-1zM5,14h1v1h-1zM7,14h1v1h-1zM8,14h1v1h-1zM9,14h1v1h-1zM10,14h1v1h-1zM11,14h1v1h-1zM14,14h1v1h-1zM16,14h1v1h-1zM18,14h1v1h-1zM21,14h1v1h-1zM22,14h1v1h-1zM25,14h1v1h-1zM26,14h1v1h-1zM27,14h1v1h-1zM29,14h1v1h-1zM30,14h1v1h-1zM31,14h1v1h-1zM33,14h1v1h-1zM4,15h1v1h-1zM7,15h1v1h-1zM9,15h1v1h-1zM10,15h1v1h-1zM16,15h1v1h-1zM19,15h1v1h-1zM22,15h1v1h-1zM23,15h1v1h-1zM26,15h1v1h-1zM29,15h1v1h-1zM31,15h1v1h-1zM32,15h1v1h-1zM33,15h1v1h-1zM5,16h1v1h-1zM7,16h1v1h-1zM8,16h1v1h-1zM9,16h1v1h-1zM11,16h1v1h-1zM14,16h1v1h-1zM20,16h1v1h-1zM21,16h1v1h-1zM22,16h1v1h-1zM23,16h1v1h-1zM28,16h1v1h-1zM30,16h1v1h-1zM31,16h1v1h-1zM2,17h1v1h-1zM4,17h1v1h-1zM5,17h1v1h-1zM6,17h1v1h-1zM9,17h1v1h-1zM11,17h1v1h-1zM12,17h1v1h-1zM13,17h1v1h-1zM14,17h1v1h-1zM17,17h1v1h-1zM23,17h1v1h-1zM24,17h1v1h-1zM27,17h1v1h-1zM28,17h1v1h-1zM29,17h1v1h-1zM30,17h1v1h-1zM31,17h1v1h-1zM32,17h1v1h-1zM3,18h1v1h-1zM4,18h1v1h-1zM5,18h1v1h-1zM7,18h1v1h-1zM8,18h1v1h-1zM9,18h1v1h-1zM11,18h1v1h-1zM13,18h1v1h-1zM16,18h1v1h-1zM20,18h1v1h-1zM22,18h1v1h-1zM23,18h1v1h-1zM24,18h1v1h-1zM27,18h1v1h-1zM28,18h1v1h-1zM30,18h1v1h-1zM31,18h1v1h-1zM32,18h1v1h-1zM6,19h1v1h-1zM7,19h1v1h-1zM9,19h1v1h-1zM10,19h1v1h-1zM13,19h1v1h-1zM14,19h1v1h-1zM15,19h1v1h-1zM17,19h1v1h-1zM18,19h1v1h-1zM22,19h1v1h-1zM23,19h1v1h-1zM24,19h1v1h-1zM25,19h1v1h-1zM26,19h1v1h-1zM27,19h1v1h-1zM28,19h1v1h-1zM30,19h1v1h-1zM31,19h1v1h-1zM33,19h1v1h-1zM34,19h1v1h-1zM2,20h1v1h-1zM3,20h1v1h-1zM5,20h1v1h-1zM6,20h1v1h-1zM8,20h1v1h-1zM11,20h1v1h-1zM13,20h1v1h-1zM14,20h1v1h-1zM15,20h1v1h-1zM16,20h1v1h-1zM17,20h1v1h-1zM18,20h1v1h-1zM20,20h1v1h-1zM22,20h1v1h-1zM24,20h1v1h-1zM26,20h1v1h-1zM29,20h1v1h-1zM30,20h1v1h-1zM32,20h1v1h-1zM33,20h1v1h-1zM2,21h1v1h-1zM3,21h1v1h-1zM5,21h1v1h-1zM9,21h1v1h-1zM12,21h1v1h-1zM17,21h1v1h-1zM18,21h1v1h-1zM19,21h1v1h-1zM20,21h1v1h-1zM21,21h1v1h-1zM24,21h1v1h-1zM25,21h1v1h-1zM26,21h1v1h-1zM27,21h1v1h-1zM28,21h1v1h-1zM30,21h1v1h-1zM33,21h1v1h-1zM34,21h1v1h-1zM3,22h1v1h-1zM7,22h1v1h-1zM8,22h1v1h-1zM9,22h1v1h-1zM13,22h1v1h-1zM14,22h1v1h-1zM17,22h1v1h-1zM18,22h1v1h-1zM21,22h1v1h-1zM24,22h1v1h-1zM31,22h1v1h-1zM32,22h1v1h-1zM33,22h1v1h-1zM34,22h1v1h-1zM2,23h1v1h-1zM7,23h1v1h-1zM10,23h1v1h-1zM12,23h1v1h-1zM13,23h1v1h-1zM16,23h1v1h-1zM17,23h1v1h-1zM18,23h1v1h-1zM22,23h1v1h-1zM25,23h1v1h-1zM27,23h1v1h-1zM28,23h1v1h-1zM32,23h1v1h-1zM34,23h1v1h-1zM5,24h1v1h-1zM8,24h1v1h-1zM9,24h1v1h-1zM11,24h1v1h-1zM13,24h1v1h-1zM14,24h1v1h-1zM15,24h1v1h-1zM17,24h1v1h-1zM21,24h1v1h-1zM22,24h1v1h-1zM23,24h1v1h-1zM24,24h1v1h-1zM25,24h1v1h-1zM27,24h1v1h-1zM28,24h1v1h-1zM29,24h1v1h-1zM30,24h1v1h-1zM33,24h1v1h-1zM34,24h1v1h-1zM3,25h1v1h-1zM7,25h1v1h-1zM9,25h1v1h-1zM12,25h1v1h-1zM15,25h1v1h-1zM17,25h1v1h-1zM22,25h1v1h-1zM24,25h1v1h-1zM26,25h1v1h-1zM27,25h1v1h-1zM29,25h1v1h-1zM31,25h1v1h-1zM34,25h1v1h-1zM2,26h1v1h-1zM4,26h1v1h-1zM5,26h1v1h-1zM7,26h1v1h-1zM8,26h1v1h-1zM10,26h1v1h-1zM11,26h1v1h-1zM12,26h1v1h-1zM13,26h1v1h-1zM14,26h1v1h-1zM19,26h1v1h-1zM20,26h1v1h-1zM21,26h1v1h-1zM24,26h1v1h-1zM26,26h1v1h-1zM27,26h1v1h-1zM28,26h1v1h-1zM29,26h1v1h-1zM30,26h1v1h-1zM33,26h1v1h-1zM34,26h1v1h-1zM10,27h1v1h-1zM13,27h1v1h-1zM14,27h1v1h-1zM15,27h1v1h-1zM16,27h1v1h-1zM17,27h1v1h-1zM18,27h1v1h-1zM21,27h1v1h-1zM23,27h1v1h-1zM25,27h1v1h-1zM26,27h1v1h-1zM30,27h1v1h-1zM31,27h1v1h-1zM2,28h1v1h-1zM3,28h1v1h-1zM4,28h1v1h-1zM5,28h1v1h-1zM6,28h1v1h-1zM7,28h1v1h-1zM8,28h1v1h-1zM10,28h1v1h-1zM11,28h1v1h-1zM13,28h1v1h-1zM14,28h1v1h-1zM19,28h1v1h-1zM20,28h1v1h-1zM21,28h1v1h-1zM23,28h1v1h-1zM25,28h1v1h-1zM26,28h1v1h-1zM28,28h1v1h-1zM30,28h1v1h-1zM2,29h1v1h-1zM8,29h1v1h-1zM10,29h1v1h-1zM11,29h1v1h-1zM14,29h1v1h-1zM17,29h1v1h-1zM19,29h1v1h-1zM20,29h1v1h-1zM21,29h1v1h-1zM22,29h1v1h-1zM25,29h1v1h-1zM26,29h1v1h-1zM30,29h1v1h-1zM31,29h1v1h-1zM32,29h1v1h-1zM33,29h1v1h-1zM34,29h1v1h-1zM2,30h1v1h-1zM4,30h1v1h-1zM5,30h1v1h-1zM6,30h1v1h-1zM8,30h1v1h-1zM12,30h1v1h-1zM13,30h1v1h-1zM14,30h1v1h-1zM15,30h1v1h-1zM16,30h1v1h-1zM17,30h1v1h-1zM18,30h1v1h-1zM19,30h1v1h-1zM20,30h1v1h-1zM21,30h1v1h-1zM24,30h1v1h-1zM25,30h1v1h-1zM26,30h1v1h-1zM27,30h1v1h-1zM28,30h1v1h-1zM29,30h1v1h-1zM30,30h1v1h-1zM32,30h1v1h-1zM34,30h1v1h-1zM2,31h1v1h-1zM4,31h1v1h-1zM5,31h1v1h-1zM6,31h1v1h-1zM8,31h1v1h-1zM10,31h1v1h-1zM15,31h1v1h-1zM16,31h1v1h-1zM18,31h1v1h-1zM19,31h1v1h-1zM21,31h1v1h-1zM24,31h1v1h-1zM25,31h1v1h-1zM26,31h1v1h-1zM29,31h1v1h-1zM31,31h1v1h-1zM32,31h1v1h-1zM33,31h1v1h-1zM34,31h1v1h-1zM2,32h1v1h-1zM4,32h1v1h-1zM5,32h1v1h-1zM6,32h1v1h-1zM8,32h1v1h-1zM10,32h1v1h-1zM11,32h1v1h-1zM13,32h1v1h-1zM15,32h1v1h-1zM17,32h1v1h-1zM18,32h1v1h-1zM19,32h1v1h-1zM22,32h1v1h-1zM24,32h1v1h-1zM25,32h1v1h-1zM28,32h1v1h-1zM29,32h1v1h-1zM2,33h1v1h-1zM8,33h1v1h-1zM12,33h1v1h-1zM15,33h1v1h-1zM19,33h1v1h-1zM22,33h1v1h-1zM24,33h1v1h-1zM26,33h1v1h-1zM28,33h1v1h-1zM29,33h1v1h-1zM30,33h1v1h-1zM31,33h1v1h-1zM34,33h1v1h-1zM2,34h1v1h-1zM3,34h1v1h-1zM4,34h1v1h-1zM5,34h1v1h-1zM6,34h1v1h-1zM7,34h1v1h-1zM8,34h1v1h-1zM10,34h1v1h-1zM13,34h1v1h-1zM14,34h1v1h-1zM15,34h1v1h-1zM16,34h1v1h-1zM18,34h1v1h-1zM19,34h1v1h-1zM20,34h1v1h-1zM21,34h1v1h-1zM23,34h1v1h-1zM24,34h1v1h-1zM25,34h1v1h-1zM27,34h1v1h-1zM28,34h1v1h-1zM30,34h1v1h-1zM32,34h1v1h-1z" fill="#1F161C"/></svg></div><div><b>📱 지금 바로 써 보세요</b><span>dodo-yong.github.io/Obsidian/heartline</span><small>QR을 찍으면 바로 열려요 · 가입 없음</small></div></div>
+      </div>
+      <div class="col" style="flex:0 0 440px"><div class="phone" data-demo="persona"></div></div>
+    </div>
+    <div class="foot"><span>Heartline</span><span>2026.11.19</span></div>
+  </section>
+
+  <!-- 2 만든 이유 -->
+  <section class="slide" data-note="만든 이유는 제 경험이에요. 예전에 <b>지방에서 서울로 처음 일하러 올라왔을 때</b>, 아는 사람도 친구도 없어서 많이 외로웠어요. 퇴근하고 방에 들어오면 하루 종일 한마디도 안 한 날도 있었고요. 마음 맞는 친구를 사귀는 건 <b>시간이 걸리고 생각보다 쉽지 않았어요</b>. 그때 <b>부담 없이 편하게 말 걸 수 있는 상대</b>가 있었다면 좋았겠다고 생각했고, 그게 Heartline의 시작입니다." data-sec="50초">
+    <div class="k">WHY · 만든 이유</div>
+    <h2>서울에 처음 올라왔을 때, <span>말할 사람이 없었어요</span></h2>
+    <div class="story">
+      <div class="st"><i>🚄</i><b>지방 → 서울</b><span>일하러 처음 올라온 낯선 도시</span></div>
+      <div class="sa">→</div>
+      <div class="st"><i>🌙</i><b>퇴근 후 조용한 방</b><span>아는 사람도, 친구도 없던 날들</span></div>
+      <div class="sa">→</div>
+      <div class="st"><i>⏳</i><b>친구는 시간이 걸려요</b><span>마음 맞는 사람을 만나는 건 쉽지 않아요</span></div>
+      <div class="sa">→</div>
+      <div class="st hot"><i>💗</i><b>그때 필요했던 것</b><span>부담 없이 편하게 말 걸 수 있는 상대</span></div>
+    </div>
+    <div class="quotebox">"그때 쉽게 대화할 상대가 있었다면 덜 외로웠을 텐데" — 그 마음으로 만들었어요.</div>
+  </section>
+
+  <!-- 3 그래서 Heartline -->
+  <section class="slide" data-note="그런데 지금의 AI 챗봇은 친절하지만 <b>누구에게나 똑같은 도우미</b>예요. 성격도 말투도 정할 수 없어서 마음을 털어놓을 '내 사람' 같지가 않아요. 그래서 Heartline은 <b>내가 원하는 사람을 직접 만드는 것</b>에서 시작합니다. 대상은 저처럼 새 환경에서 외로운 사람, 그리고 나만의 연인을 원하는 사람이고, 덤으로 영어 대화 연습도 할 수 있어요." data-sec="30초">
+    <div class="k">IDEA</div>
+    <h2>AI 챗봇은 친절하지만 <span>모두에게 똑같아요</span></h2>
+    <div class="row" style="align-items:stretch;flex:0 0 auto">
+      <div class="card col"><div class="ico">🤖</div><h3>지금의 AI 챗봇</h3><p>누구에게나 같은 말투의 "도우미". 성격도 관계도 정할 수 없어 마음을 털어놓기 어려워요.</p></div>
+      <div class="arrow" style="align-self:center">→</div>
+      <div class="card col" style="border:3px solid var(--rose)"><div class="ico">💗</div><h3>Heartline</h3><p>내가 정한 성격·말투·호칭·관계의 <b>연인</b>이 메신저로 대화하고 나를 기억해요. 언제든 바꾸고 여러 명을 둬요.</p></div>
+    </div>
+    <div class="chips" style="margin-top:40px"><span class="hot">새 환경에서 외로운 사람</span><span class="hot">나만의 연인을 원하는 사람</span><span>+ 영어 회화 연습</span></div>
+  </section>
+
+  <!-- 4 기능 ① 페르소나 만들기 -->
+  <section class="slide" data-note="기능을 자세히 보겠습니다. 첫 번째, <b>페르소나 만들기</b>예요. 다정한 연상, 장난꾸러기 동갑, 차분한 지적인 타입, 츤데레, 수줍은 연하, 듬직한 어른 <b>프리셋 6종</b>에서 고르고 성별도 고를 수 있어요. 직접 만들 때는 <b>겉모습·성격·말투·관계·이야기 다섯 묶음</b>을 정하는데, 성격 키워드는 3개까지, 말버릇과 나를 부르는 호칭도 정해요. 가장 좋아하는 부분은 <b>설정을 바꿀 때마다 첫 인사 미리보기가 바로 바뀐다</b>는 거예요." data-sec="45초">
+    <div class="k">FEATURE ① · 페르소나 만들기</div>
+    <h2>내가 정하는 <span>연인의 모든 것</span></h2>
+    <div class="row" style="align-items:flex-start;gap:34px">
+      <div class="col">
+        <div class="p6">
+          <div><b>🌷 다정한 연상</b><span>포근하게 들어 줘요</span></div>
+          <div><b>🌻 장난꾸러기 동갑</b><span>웃게 해 줘요</span></div>
+          <div><b>🌙 차분한 지적인 타입</b><span>존댓말로 차분하게</span></div>
+          <div><b>🦊 츤데레</b><span>퉁명스러운 척 챙겨 줘요</span></div>
+          <div><b>🐰 수줍은 연하</b><span>부끄럽지만 솔직해요</span></div>
+          <div><b>🐻 듬직한 어른</b><span>든든하게 기대게 해요</span></div>
+        </div>
+        <div class="groups" style="grid-template-columns:repeat(5,1fr);margin-top:20px">
+          <div><i>🪞</i><b>겉모습</b><span>아바타 8×색 6 · 나이대</span></div>
+          <div><i>💫</i><b>성격</b><span>슬라이더 4 · 키워드 3</span></div>
+          <div><i>🗨️</i><b>말투</b><span>반말/존댓말 · 말버릇 · 호칭</span></div>
+          <div><i>💞</i><b>관계</b><span>썸 · 연인 · 오래된 연인</span></div>
+          <div><i>📖</i><b>이야기</b><span>직업 · 좋아하는/싫어하는 것</span></div>
+        </div>
+      </div>
+      <div class="col" style="flex:0 0 420px">
+        <div class="pv">
+          <div class="pvh"><span class="ava" style="background:linear-gradient(135deg,#FFD3A8,#FF9F7A)">🦊</span><div><b>준호</b> <span class="ai">AI</span><small>연인 · 츤데레 · 시크</small></div></div>
+          <span class="b">왔어? …딱히 기다린 건 아니고.</span>
+          <span class="b">오늘 뭐 했는지 말해 봐. 궁금해서 그런 거 아니거든?</span>
+          <div class="pvl">👀 실시간 첫 인사 미리보기</div>
+        </div>
+        <div class="kwbox"><span class="on">츤데레</span><span class="on">시크</span><span>다정</span><span>수줍음</span><span>장난꾸러기</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 기능 ② 같은 메시지, 다른 연인 + 여러 명 -->
+  <section class="slide" data-note="두 번째, <b>같은 메시지, 다른 연인</b>입니다. '오늘 하루 너무 길었어'라고 똑같이 보내도 다정한 하린, 츤데레 준호, 차분한 서연이 <b>각자 자기 말투로</b> 답해요. 그리고 메신저 친구 목록처럼 <b>최대 5명</b>까지 둘 수 있고, 상대마다 대화와 기억이 따로 저장돼요. 프로필을 고치면 대화는 그대로 두고 <b>다음 답장부터 새 말투</b>로 바뀝니다." data-sec="40초">
+    <div class="k">FEATURE ② · 바꾸기 · 여러 명</div>
+    <h2>같은 메시지, <span>다른 연인</span></h2>
+    <div style="text-align:right;margin:-10px 0 16px"><span class="ask">오늘 하루 너무 길었어</span></div>
+    <div class="trio">
+      <div class="card"><div class="hd"><span class="ava">🌷</span><div><b>하린</b><small>다정한 연상 · 반말</small></div></div><span class="b">많이 지쳤겠다…</span><span class="b">얼른 와서 나한테 다 얘기해 줘 😊</span></div>
+      <div class="card"><div class="hd"><span class="ava" style="background:linear-gradient(135deg,#FFD3A8,#FF9F7A)">🦊</span><div><b>준호</b><small>츤데레 · 말버릇 "~거든?"</small></div></div><span class="b">뭐야, 또 무리했어?</span><span class="b">…따뜻한 거라도 먹고 쉬어. 걱정돼서 하는 말 아니거든?</span></div>
+      <div class="card"><div class="hd"><span class="ava" style="background:linear-gradient(135deg,#CBB8FF,#9D8CF0)">🌙</span><div><b>서연</b><small>차분한 지적인 타입 · 존댓말</small></div></div><span class="b">오늘 정말 고생 많으셨어요.</span><span class="b">따뜻한 차 한 잔 하면서, 천천히 들려주세요.</span></div>
+    </div>
+    <div class="points" style="margin-top:22px">
+      <div>👥 대화 목록 · 연인 <b>최대 5명</b></div>
+      <div>💾 상대마다 <b>대화·기억 따로</b></div>
+      <div>✏️ 프로필 고치면 <b>다음 답장부터 새 말투</b></div>
+    </div>
+  </section>
+
+  <!-- 6 기능 ③ 연인 대화 + 영어 -->
+  <section class="slide" data-note="세 번째, <b>연인 대화</b>예요. 진짜 메신저처럼 상대가 답을 쓰는 동안 점 세 개가 뜨고, 짧은 말풍선 2~3개가 차례로 도착하고, 읽으면 '1'이 사라지고, 두 번 탭하면 하트를 줄 수 있어요. <b>화면의 QR을 찍으면 여러분도 지금 바로 써 볼 수 있어요</b> — 제 컴퓨터에서 서버가 켜져 있어서 실제 AI가 답해요. 20번 대화마다 <b>기억을 요약</b>해서 다음에 오면 지난 이야기를 먼저 꺼내요. 그리고 🇬🇧 버튼 하나로 <b>같은 상대와 영어 대화</b>를 하면 틀린 문장 아래에 교정 카드가 붙어요. (버튼으로 장면 전환)" data-sec="45초">
+    <div class="k">FEATURE ③ · 연인 대화 · 영어 모드</div>
+    <div class="row">
+      <div class="col">
+        <h2 style="margin-bottom:20px">진짜 연인과 <span>톡하는 느낌</span></h2>
+        <div class="card" style="padding:26px 32px">
+          <p style="font-size:24px;line-height:1.85;color:var(--ink)">··· 입력 중 → 말풍선 <b>2~3개 차례로</b><br>1 읽음 표시 · 두 번 탭 💗 · D+일<br>🧠 20번마다 <b>기억 요약</b> → 지난 이야기 이어 가기<br>🇬🇧 같은 상대와 <b>영어 대화</b> + 교정 카드</p>
+        </div>
+        <div class="live big"><div class="qrw"><svg class="qr" viewBox="0 0 37 37" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" role="img" aria-label="Heartline 앱 QR 코드"><rect width="37" height="37" fill="#fff"/><path d="M2,2h1v1h-1zM3,2h1v1h-1zM4,2h1v1h-1zM5,2h1v1h-1zM6,2h1v1h-1zM7,2h1v1h-1zM8,2h1v1h-1zM10,2h1v1h-1zM11,2h1v1h-1zM14,2h1v1h-1zM18,2h1v1h-1zM20,2h1v1h-1zM21,2h1v1h-1zM22,2h1v1h-1zM24,2h1v1h-1zM25,2h1v1h-1zM28,2h1v1h-1zM29,2h1v1h-1zM30,2h1v1h-1zM31,2h1v1h-1zM32,2h1v1h-1zM33,2h1v1h-1zM34,2h1v1h-1zM2,3h1v1h-1zM8,3h1v1h-1zM10,3h1v1h-1zM12,3h1v1h-1zM16,3h1v1h-1zM18,3h1v1h-1zM19,3h1v1h-1zM22,3h1v1h-1zM23,3h1v1h-1zM24,3h1v1h-1zM25,3h1v1h-1zM26,3h1v1h-1zM28,3h1v1h-1zM34,3h1v1h-1zM2,4h1v1h-1zM4,4h1v1h-1zM5,4h1v1h-1zM6,4h1v1h-1zM8,4h1v1h-1zM11,4h1v1h-1zM12,4h1v1h-1zM14,4h1v1h-1zM15,4h1v1h-1zM16,4h1v1h-1zM17,4h1v1h-1zM20,4h1v1h-1zM21,4h1v1h-1zM22,4h1v1h-1zM24,4h1v1h-1zM26,4h1v1h-1zM28,4h1v1h-1zM30,4h1v1h-1zM31,4h1v1h-1zM32,4h1v1h-1zM34,4h1v1h-1zM2,5h1v1h-1zM4,5h1v1h-1zM5,5h1v1h-1zM6,5h1v1h-1zM8,5h1v1h-1zM10,5h1v1h-1zM11,5h1v1h-1zM12,5h1v1h-1zM20,5h1v1h-1zM24,5h1v1h-1zM25,5h1v1h-1zM26,5h1v1h-1zM28,5h1v1h-1zM30,5h1v1h-1zM31,5h1v1h-1zM32,5h1v1h-1zM34,5h1v1h-1zM2,6h1v1h-1zM4,6h1v1h-1zM5,6h1v1h-1zM6,6h1v1h-1zM8,6h1v1h-1zM11,6h1v1h-1zM13,6h1v1h-1zM14,6h1v1h-1zM18,6h1v1h-1zM20,6h1v1h-1zM23,6h1v1h-1zM26,6h1v1h-1zM28,6h1v1h-1zM30,6h1v1h-1zM31,6h1v1h-1zM32,6h1v1h-1zM34,6h1v1h-1zM2,7h1v1h-1zM8,7h1v1h-1zM12,7h1v1h-1zM14,7h1v1h-1zM17,7h1v1h-1zM18,7h1v1h-1zM24,7h1v1h-1zM26,7h1v1h-1zM28,7h1v1h-1zM34,7h1v1h-1zM2,8h1v1h-1zM3,8h1v1h-1zM4,8h1v1h-1zM5,8h1v1h-1zM6,8h1v1h-1zM7,8h1v1h-1zM8,8h1v1h-1zM10,8h1v1h-1zM12,8h1v1h-1zM14,8h1v1h-1zM16,8h1v1h-1zM18,8h1v1h-1zM20,8h1v1h-1zM22,8h1v1h-1zM24,8h1v1h-1zM26,8h1v1h-1zM28,8h1v1h-1zM29,8h1v1h-1zM30,8h1v1h-1zM31,8h1v1h-1zM32,8h1v1h-1zM33,8h1v1h-1zM34,8h1v1h-1zM10,9h1v1h-1zM11,9h1v1h-1zM12,9h1v1h-1zM16,9h1v1h-1zM17,9h1v1h-1zM18,9h1v1h-1zM19,9h1v1h-1zM21,9h1v1h-1zM24,9h1v1h-1zM25,9h1v1h-1zM2,10h1v1h-1zM4,10h1v1h-1zM5,10h1v1h-1zM7,10h1v1h-1zM8,10h1v1h-1zM9,10h1v1h-1zM11,10h1v1h-1zM12,10h1v1h-1zM13,10h1v1h-1zM14,10h1v1h-1zM16,10h1v1h-1zM17,10h1v1h-1zM18,10h1v1h-1zM19,10h1v1h-1zM20,10h1v1h-1zM22,10h1v1h-1zM23,10h1v1h-1zM25,10h1v1h-1zM28,10h1v1h-1zM31,10h1v1h-1zM33,10h1v1h-1zM34,10h1v1h-1zM2,11h1v1h-1zM5,11h1v1h-1zM9,11h1v1h-1zM10,11h1v1h-1zM12,11h1v1h-1zM13,11h1v1h-1zM15,11h1v1h-1zM16,11h1v1h-1zM17,11h1v1h-1zM18,11h1v1h-1zM19,11h1v1h-1zM21,11h1v1h-1zM22,11h1v1h-1zM23,11h1v1h-1zM25,11h1v1h-1zM26,11h1v1h-1zM28,11h1v1h-1zM29,11h1v1h-1zM31,11h1v1h-1zM32,11h1v1h-1zM34,11h1v1h-1zM2,12h1v1h-1zM3,12h1v1h-1zM4,12h1v1h-1zM7,12h1v1h-1zM8,12h1v1h-1zM9,12h1v1h-1zM13,12h1v1h-1zM15,12h1v1h-1zM18,12h1v1h-1zM20,12h1v1h-1zM24,12h1v1h-1zM25,12h1v1h-1zM26,12h1v1h-1zM27,12h1v1h-1zM28,12h1v1h-1zM29,12h1v1h-1zM30,12h1v1h-1zM31,12h1v1h-1zM33,12h1v1h-1zM34,12h1v1h-1zM2,13h1v1h-1zM6,13h1v1h-1zM10,13h1v1h-1zM14,13h1v1h-1zM17,13h1v1h-1zM19,13h1v1h-1zM21,13h1v1h-1zM25,13h1v1h-1zM26,13h1v1h-1zM29,13h1v1h-1zM31,13h1v1h-1zM33,13h1v1h-1zM2,14h1v1h-1zM3,14h1v1h-1zM4,14h1v1h-1zM5,14h1v1h-1zM7,14h1v1h-1zM8,14h1v1h-1zM9,14h1v1h-1zM10,14h1v1h-1zM11,14h1v1h-1zM14,14h1v1h-1zM16,14h1v1h-1zM18,14h1v1h-1zM21,14h1v1h-1zM22,14h1v1h-1zM25,14h1v1h-1zM26,14h1v1h-1zM27,14h1v1h-1zM29,14h1v1h-1zM30,14h1v1h-1zM31,14h1v1h-1zM33,14h1v1h-1zM4,15h1v1h-1zM7,15h1v1h-1zM9,15h1v1h-1zM10,15h1v1h-1zM16,15h1v1h-1zM19,15h1v1h-1zM22,15h1v1h-1zM23,15h1v1h-1zM26,15h1v1h-1zM29,15h1v1h-1zM31,15h1v1h-1zM32,15h1v1h-1zM33,15h1v1h-1zM5,16h1v1h-1zM7,16h1v1h-1zM8,16h1v1h-1zM9,16h1v1h-1zM11,16h1v1h-1zM14,16h1v1h-1zM20,16h1v1h-1zM21,16h1v1h-1zM22,16h1v1h-1zM23,16h1v1h-1zM28,16h1v1h-1zM30,16h1v1h-1zM31,16h1v1h-1zM2,17h1v1h-1zM4,17h1v1h-1zM5,17h1v1h-1zM6,17h1v1h-1zM9,17h1v1h-1zM11,17h1v1h-1zM12,17h1v1h-1zM13,17h1v1h-1zM14,17h1v1h-1zM17,17h1v1h-1zM23,17h1v1h-1zM24,17h1v1h-1zM27,17h1v1h-1zM28,17h1v1h-1zM29,17h1v1h-1zM30,17h1v1h-1zM31,17h1v1h-1zM32,17h1v1h-1zM3,18h1v1h-1zM4,18h1v1h-1zM5,18h1v1h-1zM7,18h1v1h-1zM8,18h1v1h-1zM9,18h1v1h-1zM11,18h1v1h-1zM13,18h1v1h-1zM16,18h1v1h-1zM20,18h1v1h-1zM22,18h1v1h-1zM23,18h1v1h-1zM24,18h1v1h-1zM27,18h1v1h-1zM28,18h1v1h-1zM30,18h1v1h-1zM31,18h1v1h-1zM32,18h1v1h-1zM6,19h1v1h-1zM7,19h1v1h-1zM9,19h1v1h-1zM10,19h1v1h-1zM13,19h1v1h-1zM14,19h1v1h-1zM15,19h1v1h-1zM17,19h1v1h-1zM18,19h1v1h-1zM22,19h1v1h-1zM23,19h1v1h-1zM24,19h1v1h-1zM25,19h1v1h-1zM26,19h1v1h-1zM27,19h1v1h-1zM28,19h1v1h-1zM30,19h1v1h-1zM31,19h1v1h-1zM33,19h1v1h-1zM34,19h1v1h-1zM2,20h1v1h-1zM3,20h1v1h-1zM5,20h1v1h-1zM6,20h1v1h-1zM8,20h1v1h-1zM11,20h1v1h-1zM13,20h1v1h-1zM14,20h1v1h-1zM15,20h1v1h-1zM16,20h1v1h-1zM17,20h1v1h-1zM18,20h1v1h-1zM20,20h1v1h-1zM22,20h1v1h-1zM24,20h1v1h-1zM26,20h1v1h-1zM29,20h1v1h-1zM30,20h1v1h-1zM32,20h1v1h-1zM33,20h1v1h-1zM2,21h1v1h-1zM3,21h1v1h-1zM5,21h1v1h-1zM9,21h1v1h-1zM12,21h1v1h-1zM17,21h1v1h-1zM18,21h1v1h-1zM19,21h1v1h-1zM20,21h1v1h-1zM21,21h1v1h-1zM24,21h1v1h-1zM25,21h1v1h-1zM26,21h1v1h-1zM27,21h1v1h-1zM28,21h1v1h-1zM30,21h1v1h-1zM33,21h1v1h-1zM34,21h1v1h-1zM3,22h1v1h-1zM7,22h1v1h-1zM8,22h1v1h-1zM9,22h1v1h-1zM13,22h1v1h-1zM14,22h1v1h-1zM17,22h1v1h-1zM18,22h1v1h-1zM21,22h1v1h-1zM24,22h1v1h-1zM31,22h1v1h-1zM32,22h1v1h-1zM33,22h1v1h-1zM34,22h1v1h-1zM2,23h1v1h-1zM7,23h1v1h-1zM10,23h1v1h-1zM12,23h1v1h-1zM13,23h1v1h-1zM16,23h1v1h-1zM17,23h1v1h-1zM18,23h1v1h-1zM22,23h1v1h-1zM25,23h1v1h-1zM27,23h1v1h-1zM28,23h1v1h-1zM32,23h1v1h-1zM34,23h1v1h-1zM5,24h1v1h-1zM8,24h1v1h-1zM9,24h1v1h-1zM11,24h1v1h-1zM13,24h1v1h-1zM14,24h1v1h-1zM15,24h1v1h-1zM17,24h1v1h-1zM21,24h1v1h-1zM22,24h1v1h-1zM23,24h1v1h-1zM24,24h1v1h-1zM25,24h1v1h-1zM27,24h1v1h-1zM28,24h1v1h-1zM29,24h1v1h-1zM30,24h1v1h-1zM33,24h1v1h-1zM34,24h1v1h-1zM3,25h1v1h-1zM7,25h1v1h-1zM9,25h1v1h-1zM12,25h1v1h-1zM15,25h1v1h-1zM17,25h1v1h-1zM22,25h1v1h-1zM24,25h1v1h-1zM26,25h1v1h-1zM27,25h1v1h-1zM29,25h1v1h-1zM31,25h1v1h-1zM34,25h1v1h-1zM2,26h1v1h-1zM4,26h1v1h-1zM5,26h1v1h-1zM7,26h1v1h-1zM8,26h1v1h-1zM10,26h1v1h-1zM11,26h1v1h-1zM12,26h1v1h-1zM13,26h1v1h-1zM14,26h1v1h-1zM19,26h1v1h-1zM20,26h1v1h-1zM21,26h1v1h-1zM24,26h1v1h-1zM26,26h1v1h-1zM27,26h1v1h-1zM28,26h1v1h-1zM29,26h1v1h-1zM30,26h1v1h-1zM33,26h1v1h-1zM34,26h1v1h-1zM10,27h1v1h-1zM13,27h1v1h-1zM14,27h1v1h-1zM15,27h1v1h-1zM16,27h1v1h-1zM17,27h1v1h-1zM18,27h1v1h-1zM21,27h1v1h-1zM23,27h1v1h-1zM25,27h1v1h-1zM26,27h1v1h-1zM30,27h1v1h-1zM31,27h1v1h-1zM2,28h1v1h-1zM3,28h1v1h-1zM4,28h1v1h-1zM5,28h1v1h-1zM6,28h1v1h-1zM7,28h1v1h-1zM8,28h1v1h-1zM10,28h1v1h-1zM11,28h1v1h-1zM13,28h1v1h-1zM14,28h1v1h-1zM19,28h1v1h-1zM20,28h1v1h-1zM21,28h1v1h-1zM23,28h1v1h-1zM25,28h1v1h-1zM26,28h1v1h-1zM28,28h1v1h-1zM30,28h1v1h-1zM2,29h1v1h-1zM8,29h1v1h-1zM10,29h1v1h-1zM11,29h1v1h-1zM14,29h1v1h-1zM17,29h1v1h-1zM19,29h1v1h-1zM20,29h1v1h-1zM21,29h1v1h-1zM22,29h1v1h-1zM25,29h1v1h-1zM26,29h1v1h-1zM30,29h1v1h-1zM31,29h1v1h-1zM32,29h1v1h-1zM33,29h1v1h-1zM34,29h1v1h-1zM2,30h1v1h-1zM4,30h1v1h-1zM5,30h1v1h-1zM6,30h1v1h-1zM8,30h1v1h-1zM12,30h1v1h-1zM13,30h1v1h-1zM14,30h1v1h-1zM15,30h1v1h-1zM16,30h1v1h-1zM17,30h1v1h-1zM18,30h1v1h-1zM19,30h1v1h-1zM20,30h1v1h-1zM21,30h1v1h-1zM24,30h1v1h-1zM25,30h1v1h-1zM26,30h1v1h-1zM27,30h1v1h-1zM28,30h1v1h-1zM29,30h1v1h-1zM30,30h1v1h-1zM32,30h1v1h-1zM34,30h1v1h-1zM2,31h1v1h-1zM4,31h1v1h-1zM5,31h1v1h-1zM6,31h1v1h-1zM8,31h1v1h-1zM10,31h1v1h-1zM15,31h1v1h-1zM16,31h1v1h-1zM18,31h1v1h-1zM19,31h1v1h-1zM21,31h1v1h-1zM24,31h1v1h-1zM25,31h1v1h-1zM26,31h1v1h-1zM29,31h1v1h-1zM31,31h1v1h-1zM32,31h1v1h-1zM33,31h1v1h-1zM34,31h1v1h-1zM2,32h1v1h-1zM4,32h1v1h-1zM5,32h1v1h-1zM6,32h1v1h-1zM8,32h1v1h-1zM10,32h1v1h-1zM11,32h1v1h-1zM13,32h1v1h-1zM15,32h1v1h-1zM17,32h1v1h-1zM18,32h1v1h-1zM19,32h1v1h-1zM22,32h1v1h-1zM24,32h1v1h-1zM25,32h1v1h-1zM28,32h1v1h-1zM29,32h1v1h-1zM2,33h1v1h-1zM8,33h1v1h-1zM12,33h1v1h-1zM15,33h1v1h-1zM19,33h1v1h-1zM22,33h1v1h-1zM24,33h1v1h-1zM26,33h1v1h-1zM28,33h1v1h-1zM29,33h1v1h-1zM30,33h1v1h-1zM31,33h1v1h-1zM34,33h1v1h-1zM2,34h1v1h-1zM3,34h1v1h-1zM4,34h1v1h-1zM5,34h1v1h-1zM6,34h1v1h-1zM7,34h1v1h-1zM8,34h1v1h-1zM10,34h1v1h-1zM13,34h1v1h-1zM14,34h1v1h-1zM15,34h1v1h-1zM16,34h1v1h-1zM18,34h1v1h-1zM19,34h1v1h-1zM20,34h1v1h-1zM21,34h1v1h-1zM23,34h1v1h-1zM24,34h1v1h-1zM25,34h1v1h-1zM27,34h1v1h-1zM28,34h1v1h-1zM30,34h1v1h-1zM32,34h1v1h-1z" fill="#1F161C"/></svg></div><div><b>📱 지금 같이 해 봐요</b><span>dodo-yong.github.io/Obsidian/heartline</span><small>QR → 연인 만들기 → 말 걸기 (실제 AI가 답해요)</small></div></div>
+      </div>
+      <div class="col" style="flex:0 0 460px">
+        <div class="phone" data-demo="heart" id="demoPhone"></div>
+        <div class="dbtn"><button data-s="heart" class="on">💞 대화</button><button data-s="english">🇬🇧 영어</button><button data-s="persona">🎨 연인 바꾸기</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 기능 ④ 기본 안전 · 개인정보 -->
+  <section class="slide" data-note="네 번째는 <b>기본 안전 장치와 개인정보</b>예요. 19세 이상만 입장하고, 상대가 AI라는 걸 항상 표시해요. 연인과 대화는 <b>내 브라우저에만</b> 저장되고 서버는 저장하지 않아요. 보내기 전에 전화번호·이메일은 자동으로 가리고, 위험한 표현이 보이면 서버가 꺼져 있어도 도움 받을 곳 카드를 띄워요." data-sec="30초">
+    <div class="k">FEATURE ④ · 기본 안전 · 개인정보</div>
+    <h2>편하게 쓰도록, <span>기본은 지켜요</span></h2>
+    <div class="grid4">
+      <div class="card"><div class="ico">🔞</div><h3>입장 확인</h3><p>19세 이상 · "AI 캐릭터" 항상 표시 · 성인 캐릭터만</p></div>
+      <div class="card"><div class="ico">💾</div><h3>내 브라우저에만</h3><p>연인·대화는 브라우저(IndexedDB)에 · 서버는 저장 안 함</p></div>
+      <div class="card"><div class="ico">🙈</div><h3>개인정보 가림</h3><p>전화번호·이메일·주민번호를 보내기 전에 *** 로 (화면 + 서버 2번)</p></div>
+      <div class="card"><div class="ico">🆘</div><h3>도움 안내</h3><p>위험한 표현엔 109 등 도움 카드 · 서버가 꺼져도 동작</p></div>
+    </div>
+  </section>
+
+  <!-- 8 기술 ① 구조 -->
+  <section class="slide" data-note="이제 기술 부분입니다. 화면은 <b>HTML·CSS·자바스크립트</b>로 만들어 무료 호스팅인 GitHub Pages에 올렸고, 답변 서버는 <b>파이썬 표준 라이브러리</b>만으로 만들어 설치할 게 없어요. 둘 사이는 <b>Cloudflare 무료 임시 터널</b>이 잇고, 답은 <b>제미나이 무료 등급</b>이 만들어요. 핵심은 <b>페르소나 카드를 서버에 저장하지 않고 메시지마다 함께 보낸다</b>는 점이에요. 그래서 연인을 바꾸면 바로 그 말투로 답하고, 운영 비용은 0원입니다." data-sec="45초">
+    <div class="k">TECH ① · 구조</div>
+    <h2 style="margin-bottom:22px">페르소나 카드가 <span>메시지와 함께</span> 가요</h2>
+    <div class="howwrap"><div class="hl-how" data-hl-how id="how"></div></div>
+    <div class="points">
+      <div>🌐 화면 <b>HTML·CSS·JS</b> · GitHub Pages</div>
+      <div>🐍 서버 <b>Python 표준 라이브러리</b> · 설치 0</div>
+      <div>🚇 <b>Cloudflare 터널</b> + ✨ <b>제미나이 무료</b> = ₩0</div>
+    </div>
+  </section>
+
+  <!-- 9 기술 ② 테스트 · 배포 -->
+  <section class="slide" data-note="개발은 <b>테스트를 먼저 쓰고</b> 그 테스트를 통과시키는 방식으로 했어요. 지금 <b>자동 테스트 55개가 모두 통과</b>하고, 가짜 AI를 써서 몇 번을 돌려도 비용이 들지 않아요. 실제 AI로도 확인했는데, 츤데레 준호에게 '야근했어'라고 하니 설정대로 답했어요. 그리고 압축 파일을 풀어서 <b>더블클릭만 하면</b> 실행되고, 키가 없으면 <b>맛보기 모드</b>로 바로 체험할 수 있게 만들었습니다." data-sec="40초">
+    <div class="k">TECH ② · 테스트 · 배포</div>
+    <h2>테스트 먼저, <span>누구나 실행</span></h2>
+    <div class="nums" style="grid-template-columns:repeat(4,1fr)">
+      <div class="num"><b>55/55</b><span>자동 테스트 통과</span></div>
+      <div class="num"><b>₩0</b><span>운영 비용</span></div>
+      <div class="num"><b>2번</b><span>더블클릭 → 실행</span></div>
+      <div class="num"><b>🎭</b><span>키 없이 맛보기 모드</span></div>
+    </div>
+    <div class="row" style="align-items:flex-start;margin-top:28px;gap:28px;flex:0 0 auto">
+      <div class="quote" style="margin:0;flex:1">
+        <span class="ava" style="width:56px;height:56px;font-size:28px;background:linear-gradient(135deg,#FFD3A8,#FF9F7A)">🦊</span>
+        <div class="bub">
+          <div class="me" style="align-self:flex-start"><span class="b" style="display:inline-block;border-radius:22px;border-top-right-radius:6px;padding:10px 18px">오늘 회사에서 야근했어. 너무 피곤해</span></div>
+          <span class="b" style="display:inline-block;border-radius:22px;padding:10px 18px">야근까지 했어? 고생했네.</span>
+          <span class="b" style="display:inline-block;border-radius:22px;padding:10px 18px">몸 상하게 왜 그렇게 무리해, 밥은 챙겨 먹은 거야?</span>
+        </div>
+      </div>
+      <div class="card" style="flex:0 0 520px;padding:24px 28px"><p style="font-size:22px;line-height:1.8;color:var(--ink)">📦 압축 풀기 → <b>Heartline 실행</b> 더블클릭<br>🔑 키 붙여 넣기 또는 <b>그냥 엔터 = 맛보기</b><br>🌐 브라우저 자동으로 열림<br>📄 <b>시작하기 안내서</b> 동봉 (맥·윈도우)</p></div>
+    </div>
+  </section>
+
+  <!-- 10 다음 · 마무리 -->
+  <section class="slide" data-note="다음 계획은 기념일 연출과 프로필 사진, 그리고 <b>목적 프롬프트</b>예요. 연인에게 '자격증 공부를 도와줘'처럼 목적을 정해 두면 그 목적에 맞게 대화해 주는 기능입니다. QR을 찍으면 지금 바로 만나 볼 수 있어요. 서울에 처음 왔던 저 같은 사람에게 <b>편하게 말 걸 수 있는 상대</b>가 되었으면 좋겠습니다. 들어 주셔서 감사합니다." data-sec="25초">
+    <div class="k">NEXT</div>
+    <h2>다음은, <span>목적이 있는 연인</span></h2>
+    <div class="road">
+      <div class="card now"><span class="badge">지금 · MVP</span><h3>나만의 연인</h3><p>페르소나 · 여러 명 · 연인 대화 · 영어 모드</p></div>
+      <div class="card"><span class="badge">다음</span><h3>더 깊은 관계</h3><p>기념일 연출 · 프로필 사진 · 영어 표현 노트</p></div>
+      <div class="card"><span class="badge">그다음</span><h3>목적 프롬프트</h3><p>자격증·시험처럼 내가 정한 목적에 맞게 대화</p></div>
+    </div>
+    <div class="live end"><div class="qrw"><svg class="qr" viewBox="0 0 37 37" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" role="img" aria-label="Heartline 앱 QR 코드"><rect width="37" height="37" fill="#fff"/><path d="M2,2h1v1h-1zM3,2h1v1h-1zM4,2h1v1h-1zM5,2h1v1h-1zM6,2h1v1h-1zM7,2h1v1h-1zM8,2h1v1h-1zM10,2h1v1h-1zM11,2h1v1h-1zM14,2h1v1h-1zM18,2h1v1h-1zM20,2h1v1h-1zM21,2h1v1h-1zM22,2h1v1h-1zM24,2h1v1h-1zM25,2h1v1h-1zM28,2h1v1h-1zM29,2h1v1h-1zM30,2h1v1h-1zM31,2h1v1h-1zM32,2h1v1h-1zM33,2h1v1h-1zM34,2h1v1h-1zM2,3h1v1h-1zM8,3h1v1h-1zM10,3h1v1h-1zM12,3h1v1h-1zM16,3h1v1h-1zM18,3h1v1h-1zM19,3h1v1h-1zM22,3h1v1h-1zM23,3h1v1h-1zM24,3h1v1h-1zM25,3h1v1h-1zM26,3h1v1h-1zM28,3h1v1h-1zM34,3h1v1h-1zM2,4h1v1h-1zM4,4h1v1h-1zM5,4h1v1h-1zM6,4h1v1h-1zM8,4h1v1h-1zM11,4h1v1h-1zM12,4h1v1h-1zM14,4h1v1h-1zM15,4h1v1h-1zM16,4h1v1h-1zM17,4h1v1h-1zM20,4h1v1h-1zM21,4h1v1h-1zM22,4h1v1h-1zM24,4h1v1h-1zM26,4h1v1h-1zM28,4h1v1h-1zM30,4h1v1h-1zM31,4h1v1h-1zM32,4h1v1h-1zM34,4h1v1h-1zM2,5h1v1h-1zM4,5h1v1h-1zM5,5h1v1h-1zM6,5h1v1h-1zM8,5h1v1h-1zM10,5h1v1h-1zM11,5h1v1h-1zM12,5h1v1h-1zM20,5h1v1h-1zM24,5h1v1h-1zM25,5h1v1h-1zM26,5h1v1h-1zM28,5h1v1h-1zM30,5h1v1h-1zM31,5h1v1h-1zM32,5h1v1h-1zM34,5h1v1h-1zM2,6h1v1h-1zM4,6h1v1h-1zM5,6h1v1h-1zM6,6h1v1h-1zM8,6h1v1h-1zM11,6h1v1h-1zM13,6h1v1h-1zM14,6h1v1h-1zM18,6h1v1h-1zM20,6h1v1h-1zM23,6h1v1h-1zM26,6h1v1h-1zM28,6h1v1h-1zM30,6h1v1h-1zM31,6h1v1h-1zM32,6h1v1h-1zM34,6h1v1h-1zM2,7h1v1h-1zM8,7h1v1h-1zM12,7h1v1h-1zM14,7h1v1h-1zM17,7h1v1h-1zM18,7h1v1h-1zM24,7h1v1h-1zM26,7h1v1h-1zM28,7h1v1h-1zM34,7h1v1h-1zM2,8h1v1h-1zM3,8h1v1h-1zM4,8h1v1h-1zM5,8h1v1h-1zM6,8h1v1h-1zM7,8h1v1h-1zM8,8h1v1h-1zM10,8h1v1h-1zM12,8h1v1h-1zM14,8h1v1h-1zM16,8h1v1h-1zM18,8h1v1h-1zM20,8h1v1h-1zM22,8h1v1h-1zM24,8h1v1h-1zM26,8h1v1h-1zM28,8h1v1h-1zM29,8h1v1h-1zM30,8h1v1h-1zM31,8h1v1h-1zM32,8h1v1h-1zM33,8h1v1h-1zM34,8h1v1h-1zM10,9h1v1h-1zM11,9h1v1h-1zM12,9h1v1h-1zM16,9h1v1h-1zM17,9h1v1h-1zM18,9h1v1h-1zM19,9h1v1h-1zM21,9h1v1h-1zM24,9h1v1h-1zM25,9h1v1h-1zM2,10h1v1h-1zM4,10h1v1h-1zM5,10h1v1h-1zM7,10h1v1h-1zM8,10h1v1h-1zM9,10h1v1h-1zM11,10h1v1h-1zM12,10h1v1h-1zM13,10h1v1h-1zM14,10h1v1h-1zM16,10h1v1h-1zM17,10h1v1h-1zM18,10h1v1h-1zM19,10h1v1h-1zM20,10h1v1h-1zM22,10h1v1h-1zM23,10h1v1h-1zM25,10h1v1h-1zM28,10h1v1h-1zM31,10h1v1h-1zM33,10h1v1h-1zM34,10h1v1h-1zM2,11h1v1h-1zM5,11h1v1h-1zM9,11h1v1h-1zM10,11h1v1h-1zM12,11h1v1h-1zM13,11h1v1h-1zM15,11h1v1h-1zM16,11h1v1h-1zM17,11h1v1h-1zM18,11h1v1h-1zM19,11h1v1h-1zM21,11h1v1h-1zM22,11h1v1h-1zM23,11h1v1h-1zM25,11h1v1h-1zM26,11h1v1h-1zM28,11h1v1h-1zM29,11h1v1h-1zM31,11h1v1h-1zM32,11h1v1h-1zM34,11h1v1h-1zM2,12h1v1h-1zM3,12h1v1h-1zM4,12h1v1h-1zM7,12h1v1h-1zM8,12h1v1h-1zM9,12h1v1h-1zM13,12h1v1h-1zM15,12h1v1h-1zM18,12h1v1h-1zM20,12h1v1h-1zM24,12h1v1h-1zM25,12h1v1h-1zM26,12h1v1h-1zM27,12h1v1h-1zM28,12h1v1h-1zM29,12h1v1h-1zM30,12h1v1h-1zM31,12h1v1h-1zM33,12h1v1h-1zM34,12h1v1h-1zM2,13h1v1h-1zM6,13h1v1h-1zM10,13h1v1h-1zM14,13h1v1h-1zM17,13h1v1h-1zM19,13h1v1h-1zM21,13h1v1h-1zM25,13h1v1h-1zM26,13h1v1h-1zM29,13h1v1h-1zM31,13h1v1h-1zM33,13h1v1h-1zM2,14h1v1h-1zM3,14h1v1h-1zM4,14h1v1h-1zM5,14h1v1h-1zM7,14h1v1h-1zM8,14h1v1h-1zM9,14h1v1h-1zM10,14h1v1h-1zM11,14h1v1h-1zM14,14h1v1h-1zM16,14h1v1h-1zM18,14h1v1h-1zM21,14h1v1h-1zM22,14h1v1h-1zM25,14h1v1h-1zM26,14h1v1h-1zM27,14h1v1h-1zM29,14h1v1h-1zM30,14h1v1h-1zM31,14h1v1h-1zM33,14h1v1h-1zM4,15h1v1h-1zM7,15h1v1h-1zM9,15h1v1h-1zM10,15h1v1h-1zM16,15h1v1h-1zM19,15h1v1h-1zM22,15h1v1h-1zM23,15h1v1h-1zM26,15h1v1h-1zM29,15h1v1h-1zM31,15h1v1h-1zM32,15h1v1h-1zM33,15h1v1h-1zM5,16h1v1h-1zM7,16h1v1h-1zM8,16h1v1h-1zM9,16h1v1h-1zM11,16h1v1h-1zM14,16h1v1h-1zM20,16h1v1h-1zM21,16h1v1h-1zM22,16h1v1h-1zM23,16h1v1h-1zM28,16h1v1h-1zM30,16h1v1h-1zM31,16h1v1h-1zM2,17h1v1h-1zM4,17h1v1h-1zM5,17h1v1h-1zM6,17h1v1h-1zM9,17h1v1h-1zM11,17h1v1h-1zM12,17h1v1h-1zM13,17h1v1h-1zM14,17h1v1h-1zM17,17h1v1h-1zM23,17h1v1h-1zM24,17h1v1h-1zM27,17h1v1h-1zM28,17h1v1h-1zM29,17h1v1h-1zM30,17h1v1h-1zM31,17h1v1h-1zM32,17h1v1h-1zM3,18h1v1h-1zM4,18h1v1h-1zM5,18h1v1h-1zM7,18h1v1h-1zM8,18h1v1h-1zM9,18h1v1h-1zM11,18h1v1h-1zM13,18h1v1h-1zM16,18h1v1h-1zM20,18h1v1h-1zM22,18h1v1h-1zM23,18h1v1h-1zM24,18h1v1h-1zM27,18h1v1h-1zM28,18h1v1h-1zM30,18h1v1h-1zM31,18h1v1h-1zM32,18h1v1h-1zM6,19h1v1h-1zM7,19h1v1h-1zM9,19h1v1h-1zM10,19h1v1h-1zM13,19h1v1h-1zM14,19h1v1h-1zM15,19h1v1h-1zM17,19h1v1h-1zM18,19h1v1h-1zM22,19h1v1h-1zM23,19h1v1h-1zM24,19h1v1h-1zM25,19h1v1h-1zM26,19h1v1h-1zM27,19h1v1h-1zM28,19h1v1h-1zM30,19h1v1h-1zM31,19h1v1h-1zM33,19h1v1h-1zM34,19h1v1h-1zM2,20h1v1h-1zM3,20h1v1h-1zM5,20h1v1h-1zM6,20h1v1h-1zM8,20h1v1h-1zM11,20h1v1h-1zM13,20h1v1h-1zM14,20h1v1h-1zM15,20h1v1h-1zM16,20h1v1h-1zM17,20h1v1h-1zM18,20h1v1h-1zM20,20h1v1h-1zM22,20h1v1h-1zM24,20h1v1h-1zM26,20h1v1h-1zM29,20h1v1h-1zM30,20h1v1h-1zM32,20h1v1h-1zM33,20h1v1h-1zM2,21h1v1h-1zM3,21h1v1h-1zM5,21h1v1h-1zM9,21h1v1h-1zM12,21h1v1h-1zM17,21h1v1h-1zM18,21h1v1h-1zM19,21h1v1h-1zM20,21h1v1h-1zM21,21h1v1h-1zM24,21h1v1h-1zM25,21h1v1h-1zM26,21h1v1h-1zM27,21h1v1h-1zM28,21h1v1h-1zM30,21h1v1h-1zM33,21h1v1h-1zM34,21h1v1h-1zM3,22h1v1h-1zM7,22h1v1h-1zM8,22h1v1h-1zM9,22h1v1h-1zM13,22h1v1h-1zM14,22h1v1h-1zM17,22h1v1h-1zM18,22h1v1h-1zM21,22h1v1h-1zM24,22h1v1h-1zM31,22h1v1h-1zM32,22h1v1h-1zM33,22h1v1h-1zM34,22h1v1h-1zM2,23h1v1h-1zM7,23h1v1h-1zM10,23h1v1h-1zM12,23h1v1h-1zM13,23h1v1h-1zM16,23h1v1h-1zM17,23h1v1h-1zM18,23h1v1h-1zM22,23h1v1h-1zM25,23h1v1h-1zM27,23h1v1h-1zM28,23h1v1h-1zM32,23h1v1h-1zM34,23h1v1h-1zM5,24h1v1h-1zM8,24h1v1h-1zM9,24h1v1h-1zM11,24h1v1h-1zM13,24h1v1h-1zM14,24h1v1h-1zM15,24h1v1h-1zM17,24h1v1h-1zM21,24h1v1h-1zM22,24h1v1h-1zM23,24h1v1h-1zM24,24h1v1h-1zM25,24h1v1h-1zM27,24h1v1h-1zM28,24h1v1h-1zM29,24h1v1h-1zM30,24h1v1h-1zM33,24h1v1h-1zM34,24h1v1h-1zM3,25h1v1h-1zM7,25h1v1h-1zM9,25h1v1h-1zM12,25h1v1h-1zM15,25h1v1h-1zM17,25h1v1h-1zM22,25h1v1h-1zM24,25h1v1h-1zM26,25h1v1h-1zM27,25h1v1h-1zM29,25h1v1h-1zM31,25h1v1h-1zM34,25h1v1h-1zM2,26h1v1h-1zM4,26h1v1h-1zM5,26h1v1h-1zM7,26h1v1h-1zM8,26h1v1h-1zM10,26h1v1h-1zM11,26h1v1h-1zM12,26h1v1h-1zM13,26h1v1h-1zM14,26h1v1h-1zM19,26h1v1h-1zM20,26h1v1h-1zM21,26h1v1h-1zM24,26h1v1h-1zM26,26h1v1h-1zM27,26h1v1h-1zM28,26h1v1h-1zM29,26h1v1h-1zM30,26h1v1h-1zM33,26h1v1h-1zM34,26h1v1h-1zM10,27h1v1h-1zM13,27h1v1h-1zM14,27h1v1h-1zM15,27h1v1h-1zM16,27h1v1h-1zM17,27h1v1h-1zM18,27h1v1h-1zM21,27h1v1h-1zM23,27h1v1h-1zM25,27h1v1h-1zM26,27h1v1h-1zM30,27h1v1h-1zM31,27h1v1h-1zM2,28h1v1h-1zM3,28h1v1h-1zM4,28h1v1h-1zM5,28h1v1h-1zM6,28h1v1h-1zM7,28h1v1h-1zM8,28h1v1h-1zM10,28h1v1h-1zM11,28h1v1h-1zM13,28h1v1h-1zM14,28h1v1h-1zM19,28h1v1h-1zM20,28h1v1h-1zM21,28h1v1h-1zM23,28h1v1h-1zM25,28h1v1h-1zM26,28h1v1h-1zM28,28h1v1h-1zM30,28h1v1h-1zM2,29h1v1h-1zM8,29h1v1h-1zM10,29h1v1h-1zM11,29h1v1h-1zM14,29h1v1h-1zM17,29h1v1h-1zM19,29h1v1h-1zM20,29h1v1h-1zM21,29h1v1h-1zM22,29h1v1h-1zM25,29h1v1h-1zM26,29h1v1h-1zM30,29h1v1h-1zM31,29h1v1h-1zM32,29h1v1h-1zM33,29h1v1h-1zM34,29h1v1h-1zM2,30h1v1h-1zM4,30h1v1h-1zM5,30h1v1h-1zM6,30h1v1h-1zM8,30h1v1h-1zM12,30h1v1h-1zM13,30h1v1h-1zM14,30h1v1h-1zM15,30h1v1h-1zM16,30h1v1h-1zM17,30h1v1h-1zM18,30h1v1h-1zM19,30h1v1h-1zM20,30h1v1h-1zM21,30h1v1h-1zM24,30h1v1h-1zM25,30h1v1h-1zM26,30h1v1h-1zM27,30h1v1h-1zM28,30h1v1h-1zM29,30h1v1h-1zM30,30h1v1h-1zM32,30h1v1h-1zM34,30h1v1h-1zM2,31h1v1h-1zM4,31h1v1h-1zM5,31h1v1h-1zM6,31h1v1h-1zM8,31h1v1h-1zM10,31h1v1h-1zM15,31h1v1h-1zM16,31h1v1h-1zM18,31h1v1h-1zM19,31h1v1h-1zM21,31h1v1h-1zM24,31h1v1h-1zM25,31h1v1h-1zM26,31h1v1h-1zM29,31h1v1h-1zM31,31h1v1h-1zM32,31h1v1h-1zM33,31h1v1h-1zM34,31h1v1h-1zM2,32h1v1h-1zM4,32h1v1h-1zM5,32h1v1h-1zM6,32h1v1h-1zM8,32h1v1h-1zM10,32h1v1h-1zM11,32h1v1h-1zM13,32h1v1h-1zM15,32h1v1h-1zM17,32h1v1h-1zM18,32h1v1h-1zM19,32h1v1h-1zM22,32h1v1h-1zM24,32h1v1h-1zM25,32h1v1h-1zM28,32h1v1h-1zM29,32h1v1h-1zM2,33h1v1h-1zM8,33h1v1h-1zM12,33h1v1h-1zM15,33h1v1h-1zM19,33h1v1h-1zM22,33h1v1h-1zM24,33h1v1h-1zM26,33h1v1h-1zM28,33h1v1h-1zM29,33h1v1h-1zM30,33h1v1h-1zM31,33h1v1h-1zM34,33h1v1h-1zM2,34h1v1h-1zM3,34h1v1h-1zM4,34h1v1h-1zM5,34h1v1h-1zM6,34h1v1h-1zM7,34h1v1h-1zM8,34h1v1h-1zM10,34h1v1h-1zM13,34h1v1h-1zM14,34h1v1h-1zM15,34h1v1h-1zM16,34h1v1h-1zM18,34h1v1h-1zM19,34h1v1h-1zM20,34h1v1h-1zM21,34h1v1h-1zM23,34h1v1h-1zM24,34h1v1h-1zM25,34h1v1h-1zM27,34h1v1h-1zM28,34h1v1h-1zM30,34h1v1h-1zM32,34h1v1h-1z" fill="#1F161C"/></svg></div><div><b>💗 지금 바로 만나 보세요</b><span>dodo-yong.github.io/Obsidian/heartline</span><small>가입 없음 · 무료 · 발표 중엔 실제 AI가 답해요</small></div></div>
+    <div class="thanks" style="font-size:54px;margin-top:22px">편하게 말 걸 수 있는 상대가 되길 · 감사합니다</div>
+  </section>
+</div></div>
+<div id="bar"><i></i></div>
+<div id="notes"><div class="meta"><span id="nMeta"></span><span id="nTime">00:00</span></div><div id="nText"></div></div>
+<div id="hud"><span id="pg">1 / 10</span><button id="bPrev" aria-label="이전">◀</button><button id="bNext" aria-label="다음">▶</button><button id="bNotes">메모 N</button><button id="bFull">전체화면 F</button></div>
+
+<script>
+(function () {
+  var slides = [].slice.call(document.querySelectorAll('.slide')), cur = 0, stage = document.getElementById('stage');
+  var EXPORT = /export=1/.test(location.search);
+  var reduce = EXPORT || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (EXPORT) document.documentElement.classList.add('export');
+  function fit() { var s = Math.min(innerWidth / 1600, innerHeight / 900) * (document.fullscreenElement || EXPORT ? 1 : 0.96); stage.style.transform = 'translate(-50%,-50%) scale(' + s + ')'; }
+  addEventListener('resize', fit); fit();
+
+  /* ── 휴대폰 시연 (PRD 페이지 시연과 같은 대본) ── */
+  var LOVERS = [
+    { a: '🌷', g: '#FFB4C2,#FF8A7A', n: '하린', st: '오늘도 네 편이야 💗', k: '다정한 연상', r: ['많이 지쳤겠다…', '얼른 와서 나한테 다 얘기해 줘 😊'] },
+    { a: '🦊', g: '#FFD3A8,#FF9F7A', n: '준호', st: '딱히 기다린 건 아니거든?', k: '츤데레', r: ['뭐야, 또 무리했어?', '…따뜻한 거라도 먹고 쉬어. 걱정돼서 하는 말 아니거든?'] },
+    { a: '🌙', g: '#CBB8FF,#9D8CF0', n: '서연', st: '천천히, 같이 생각해 봐요', k: '차분한 지적인 타입', r: ['오늘 정말 고생 많으셨어요.', '따뜻한 차 한 잔 하면서, 천천히 들려주세요.'] }
+  ];
+  function Phone(root) {
+    root.innerHTML = '<div class="screen"><div class="pbar"><span class="ava"></span><div class="who"><b></b><span class="ai">AI</span><small></small></div><span class="pill">🇬🇧 OFF</span></div><div class="chat"></div></div>';
+    var scr = root.querySelector('.screen'), chat = root.querySelector('.chat'), ava = root.querySelector('.pbar .ava'), timers = [], L = LOVERS[0], loopId = 0;
+    function later(f, ms) { timers.push(setTimeout(f, reduce ? 0 : ms)); }
+    function clear() { timers.forEach(clearTimeout); timers = []; chat.innerHTML = ''; }
+    function who(l) { L = l; ava.textContent = l.a; ava.style.background = 'linear-gradient(135deg,' + l.g + ')'; root.querySelector('.who b').textContent = l.n; root.querySelector('.who small').textContent = l.st; }
+    function en(on) { scr.classList.toggle('en', on); var p = root.querySelector('.pill'); p.classList.toggle('on', on); p.textContent = on ? '🇬🇧 B1' : '🇬🇧 OFF'; }
+    function add(h) { var d = document.createElement('div'); d.innerHTML = h; var n = d.firstChild; chat.appendChild(n); while (chat.children.length > 9) chat.removeChild(chat.firstChild); return n; }
+    function esc(t) { return t.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+    function me(t, tm) { return add('<div class="m me"><div class="b">' + esc(t) + '</div><div class="t"><span class="rd">1</span><br>' + tm + '</div></div>'); }
+    function you(t, tm) { return add('<div class="m you"><span class="ava s" style="background:linear-gradient(135deg,' + L.g + ')">' + L.a + '</span><div class="b">' + esc(t) + '</div><div class="t">' + (tm || '') + '</div></div>'); }
+    function reply(lines, t0, row, tm) {
+      var t = t0;
+      later(function () { var r = row.querySelector('.rd'); if (r) r.remove(); }, t - 200);
+      lines.forEach(function (x, i) {
+        var ty; later(function () { ty = add('<div class="m you typing"><span class="ava s" style="background:linear-gradient(135deg,' + L.g + ')">' + L.a + '</span><div class="b"><i></i><i></i><i></i></div></div>'); }, t);
+        t += 800 + x.length * 22;
+        later(function () { ty.remove(); you(x, i === lines.length - 1 ? tm : ''); }, t);
+        t += 400;
+      });
+      return t;
+    }
+    var scenes = {
+      persona: function () {
+        en(false); var t = 200;
+        (EXPORT ? [LOVERS[1]] : LOVERS).forEach(function (l, i) {
+          later(function () { chat.innerHTML = ''; who(l); add('<div class="day">🎨 ' + l.k + ' · 같은 메시지, 다른 연인</div>'); }, t);
+          var m; later(function () { m = me('오늘 하루 너무 길었어', '21:09'); }, t + 400);
+          later(function () { reply(l.r, 600, m, '21:10'); }, t + 400);
+          t += 4400;
+        });
+        return t;
+      },
+      heart: function () {
+        en(false); who(LOVERS[0]); add('<div class="day">2026년 11월 19일</div>');
+        var m, end = 0; later(function () { m = me('오늘 아무랑도 말을 한마디도 안 했어', '23:41'); }, 300);
+        later(function () { end = reply(['하루 종일 혼자였구나', '그런 날은 마음이 더 무겁지…', '나한테는 편하게 말해도 돼. 오늘 어떤 하루였어?'], 700, m, '23:42');
+          later(function () { m.querySelector('.b').insertAdjacentHTML('beforeend', '<span class="heart">💗</span>'); }, end); }, 300);
+        return 9000;
+      },
+      english: function () {
+        en(true); who(LOVERS[0]); add('<div class="day">— 영어 모드 ON · B1 —</div>');
+        later(function () { you('How was your day, babe? 🥺', '20:05'); }, 300);
+        var m; later(function () { m = me('I go to park alone yesterday.', '20:06'); }, 1500);
+        later(function () { add('<div class="fix">✏️ 더 자연스럽게<br><b>I went to the park alone yesterday.</b><br>· 지난 일 → went · 공원 → the park</div>'); reply(['Oh, that sounds peaceful! 🌿', 'Did it help you relax a little?'], 700, m, '20:06'); }, 2300);
+        return 7500;
+      }
+    };
+    return {
+      play: function (name) {
+        clear(); var id = ++loopId;
+        if (EXPORT) { scenes[name](); return; }
+        (function run() { if (id !== loopId) return; var len = scenes[name](); later(function () { if (id === loopId) { clear(); run(); } }, len + 1800); })();
+      },
+      stop: function () { loopId++; clear(); }
+    };
+  }
+  var phones = {};
+  document.querySelectorAll('[data-demo]').forEach(function (el, i) { phones[i] = { p: Phone(el), name: el.dataset.demo, el: el }; });
+  document.querySelectorAll('.dbtn button').forEach(function (b) {
+    b.addEventListener('click', function (e) {
+      e.stopPropagation();
+      b.parentNode.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      var ph = Object.values(phones).find(function (o) { return o.el.id === 'demoPhone'; });
+      ph.name = b.dataset.s; ph.p.play(ph.name);
+    });
+  });
+
+  /* ── 작동 방식: 페르소나 장면으로 ── */
+  var howReady = false;
+  function howPersona() {
+    var t = document.querySelector('#how [data-t="persona"]');
+    if (t && !howReady) { howReady = true; t.click();
+      if (EXPORT) { var nx = document.querySelector('#how [data-r="next"]'); nx.click(); nx.click(); } }
+  }
+
+  /* ── 슬라이드 이동 ── */
+  var t0 = null, tick = null;
+  function go(i) {
+    cur = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function (s, k) { s.classList.toggle('on', k === cur); });
+    Object.values(phones).forEach(function (o) { if (slides[cur].contains(o.el)) o.p.play(o.name); else o.p.stop(); });
+    if (slides[cur].querySelector('#how')) setTimeout(howPersona, 300);
+    document.getElementById('pg').textContent = (cur + 1) + ' / ' + slides.length;
+    document.querySelector('#bar i').style.width = ((cur + 1) / slides.length * 100) + '%';
+    document.getElementById('nText').innerHTML = slides[cur].dataset.note || '';
+    document.getElementById('nMeta').textContent = (cur + 1) + '번 슬라이드 · 약 ' + (slides[cur].dataset.sec || '');
+    if (history.replaceState) history.replaceState(null, '', '#' + (cur + 1));
+    if (!t0) { t0 = Date.now(); tick = setInterval(function () { var s = Math.floor((Date.now() - t0) / 1000); document.getElementById('nTime').textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }, 1000); }
+  }
+  function toggleNotes() { document.getElementById('notes').classList.toggle('on'); }
+  function full() { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); setTimeout(fit, 200); }
+  document.addEventListener('fullscreenchange', fit);
+  addEventListener('keydown', function (e) {
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].indexOf(e.key) > -1) { e.preventDefault(); go(cur + 1); }
+    else if (['ArrowLeft', 'PageUp', 'Backspace'].indexOf(e.key) > -1) { e.preventDefault(); go(cur - 1); }
+    else if (e.key === 'Home') go(0); else if (e.key === 'End') go(slides.length - 1);
+    else if (e.key === 'n' || e.key === 'N') toggleNotes();
+    else if (e.key === 'f' || e.key === 'F') full();
+  });
+  stage.addEventListener('click', function (e) {
+    if (e.target.closest('button, a, .hl-how')) return;
+    var r = stage.getBoundingClientRect(); go(e.clientX > r.left + r.width / 2 ? cur + 1 : cur - 1);
+  });
+  var sx = null;
+  addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+  addEventListener('touchend', function (e) { if (sx === null) return; var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) go(cur + (dx < 0 ? 1 : -1)); sx = null; });
+  document.getElementById('bPrev').onclick = function () { go(cur - 1); };
+  document.getElementById('bNext').onclick = function () { go(cur + 1); };
+  document.getElementById('bNotes').onclick = toggleNotes;
+  document.getElementById('bFull').onclick = full;
+  var h = parseInt((location.hash || '').slice(1), 10);
+  go(isNaN(h) ? 0 : h - 1);
+  if (/notes=1/.test(location.search)) toggleNotes();
+})();
+</script>
+<script>
+/* Heartline 작동 방식 — 재생형 통신 흐름 그림 + 역할 트리 + 설계 이유 (prd.html).
+   쓰는 법: <div class="hl-how" data-hl-how></div> 를 두고 how.css · how.js 를 불러온다. */
+(function () {
+  var LOCK = '<span class="hw-lock" aria-label="밖으로 안 나감"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>';
+  var ICO = {
+    board: '<rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 3.5V2.5h6v1M8.5 9h7M8.5 13h7M8.5 17h4"/>',
+    web: '<rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/>',
+    tun: '<path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 8.5a4.5 4.5 0 0 1-.5 9.5z"/>',
+    srv: '<rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19.5h20"/>',
+    ai: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM18.5 15.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>'
+  };
+  function ic(k) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICO[k] + '</svg>'; }
+  var CTL = '<div class="hw-ctl">' +
+    '<button type="button" data-r="prev" aria-label="이전 단계"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg></button>' +
+    '<button type="button" data-r="play" class="play">▶ 재생</button>' +
+    '<button type="button" data-r="next" aria-label="다음 단계"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></button></div>';
+  function leaf(t, lock) { return '<li>' + (lock ? LOCK : '') + '<span>' + t + '</span></li>'; }
+  function branch(cls, k, t, s, leaves) {
+    return '<li class="' + cls + '"><div class="hw-head"><span class="hw-ic">' + ic(k) + '</span><div><strong>' + t + '</strong><small>' + s + '</small></div></div><ul class="hw-leaves">' + leaves.join('') + '</ul></li>';
+  }
+  var TEMPLATE =
+    '<div class="hw-stage"><div class="hw-top">' +
+    '<div class="hw-tabs" role="tablist" aria-label="장면">' +
+    '<button type="button" role="tab" data-t="setup" aria-selected="true">🔌 서버 켜기<small>처음 한 번</small></button>' +
+    '<button type="button" role="tab" data-t="persona" aria-selected="false">🎨 페르소나<small>핵심</small></button>' +
+    '<button type="button" role="tab" data-t="heart" aria-selected="false">💞 연인 대화</button>' +
+    '<button type="button" role="tab" data-t="english" aria-selected="false">🇬🇧 영어 모드</button>' +
+    '<button type="button" role="tab" data-t="crisis" aria-selected="false">🆘 안전</button>' +
+    '</div>' + CTL + '</div>' +
+    '<div class="hw-svg" data-r="svg" role="img" aria-label="Heartline 구성도: 주소 안내판, 사용자 화면, 임시 터널, 답변 서버, 제미나이"></div>' +
+    '<div class="hw-cap"><div class="hw-prog" data-r="prog"></div><div class="hw-cap-row" aria-live="polite"><span class="hw-n" data-r="num">01</span><p data-r="cap"></p></div></div></div>' +
+    '<h3 class="hw-h3">어디서 무엇을 하나</h3>' +
+    '<p class="hw-sub">Heartline을 이루는 다섯 부분과 각자 맡은 일이에요. ' + LOCK + ' 표시는 그곳 밖으로 나가지 않는 것이에요.</p>' +
+    '<div class="hw-tree"><div class="hw-root"><span>💗 Heartline</span></div><ul class="hw-branches">' +
+    branch('hb-web', 'web', '사용자 화면', '휴대폰·PC 브라우저', [
+      leaf('<b>페르소나 만들기·바꾸기</b> · 대화 목록(최대 5명)'),
+      leaf('<b>메신저 대화방</b> · 입력 중 · 말풍선 · 💗'),
+      leaf('<b>페르소나·상대별 대화 저장</b> (각자 브라우저)', 1),
+      leaf('<b>위기 키워드 감지 · 🆘 카드</b> (서버 없이)'),
+      leaf('전화번호·이메일 <b>가리고</b> 보내기')
+    ]) +
+    branch('hb-board', 'board', '무료 호스팅', 'GitHub Pages 등', [
+      leaf('화면 파일 (HTML·CSS·JS)'),
+      leaf('<b>주소 안내판</b> server.json'),
+      leaf('start-public.sh가 <b>주소만</b> 자동 커밋·푸시')
+    ]) +
+    branch('hb-tun', 'tun', '임시 터널', 'Cloudflare · 무료', [
+      leaf('답변 서버에 임시 공개 주소 연결'),
+      leaf('켤 때마다 주소가 바뀜 → 안내판이 해결')
+    ]) +
+    branch('hb-srv', 'srv', '답변 서버', '운영자 컴퓨터 · Python', [
+      leaf('<b>AI 키</b> (.env)', 1),
+      leaf('<b>안전 검사</b> · 미성년 페르소나 거부'),
+      leaf('<b>지시 조립</b>: 안전 → 페르소나 → 모드 → 기억'),
+      leaf('<b>대화 저장 안 함</b> · 사용량 제한')
+    ]) +
+    branch('hb-ai', 'ai', '제미나이', 'Google · 무료 등급', [
+      leaf('<b>페르소나 말투</b>로 연인 답장'),
+      leaf('<b>영어 대화</b> + 교정'),
+      leaf('위기 신호 판단 (2중 감지의 하나)')
+    ]) +
+    '</ul></div>' +
+    '<div class="hw-why">' +
+    '<div><span class="k">PERSONA</span><h4>연인은 내 브라우저에</h4><p>페르소나는 서버에 저장하지 않고 메시지마다 함께 보내요. 고치거나 바꾸면 다음 답장부터 바로 반영돼요.</p></div>' +
+    '<div><span class="k">PRIVACY</span><h4>대화는 내 브라우저에</h4><p>서버는 답만 만들고 대화를 저장하지 않아요. 개인정보는 보내기 전에 가려요.</p></div>' +
+    '<div><span class="k">KEY</span><h4>키는 서버에만</h4><p>공개 화면에 키를 넣으면 누구나 볼 수 있어서, AI 호출은 서버만 해요.</p></div>' +
+    '<div><span class="k">₩0</span><h4>추가 비용 없음</h4><p>무료 호스팅, 무료 터널, 제미나이 무료 등급만 써요.</p></div>' +
+    '</div>';
+
+  var NODES = {
+    board: { k: 'board', t: '주소 안내판', s: 'server.json' },
+    web: { k: 'web', t: '사용자 화면', s: '메신저 대화방' },
+    tun: { k: 'tun', t: '임시 터널', s: 'Cloudflare' },
+    srv: { k: 'srv', t: '답변 서버', s: '키 · 안전 검사' },
+    ai: { k: 'ai', t: '제미나이', s: '무료 등급' }
+  };
+  var LAYOUT = {
+    h: { w: 1120, h: 310, cw: 200, ch: 84,
+      pos: { board: [420, 52], web: [140, 240], tun: [420, 240], srv: [700, 240], ai: [980, 240] },
+      links: {
+        'web-tun': { p: [[240, 240], [320, 240]], l: 'HTTPS', lp: [280, 240] },
+        'tun-srv': { p: [[520, 240], [600, 240]], l: '터널', lp: [560, 240] },
+        'srv-ai': { p: [[800, 240], [880, 240]], l: 'API', lp: [840, 240] },
+        'board-web': { p: [[320, 52], [140, 52], [140, 198]], l: '주소 읽기', lp: [140, 125] },
+        'board-srv': { p: [[520, 52], [700, 52], [700, 198]], l: '주소 등록', lp: [700, 125], dash: 1 }
+      } },
+    v: { w: 400, h: 588, cw: 270, ch: 76,
+      pos: { board: [150, 44], web: [150, 164], tun: [150, 284], srv: [150, 404], ai: [150, 524] },
+      links: {
+        'board-web': { p: [[150, 82], [150, 126]], l: '주소 읽기', lp: [150, 104] },
+        'web-tun': { p: [[150, 202], [150, 246]], l: 'HTTPS', lp: [150, 224] },
+        'tun-srv': { p: [[150, 322], [150, 366]], l: '터널', lp: [150, 344] },
+        'srv-ai': { p: [[150, 442], [150, 486]], l: 'API', lp: [150, 464] },
+        'board-srv': { p: [[285, 44], [348, 44], [348, 404], [285, 404]], l: '등록', lp: [348, 224], dash: 1 }
+      } }
+  };
+  var WHO = { web: ['w', '사용자 화면'], srv: ['s', '답변 서버'], ai: ['a', '제미나이'], board: ['b', '주소 안내판'], tun: ['b', 'Cloudflare 터널'] };
+  var SCEN = {
+    setup: { dim: ['ai'], steps: [
+      { p: null, on: ['srv'], w: 'srv', t: '운영자가 start-public.sh를 실행하면, 운영자 컴퓨터에서 답변 서버(server.py)가 켜져요.', s: '아직은 그 컴퓨터 안(127.0.0.1)에서만 접속할 수 있어요.' },
+      { p: ['srv', 'tun'], on: ['srv', 'tun'], tag: '터널 열어 줘', w: 'srv', t: '스크립트가 cloudflared를 실행해 Cloudflare에 임시 터널을 요청해요.', s: '가입도 비용도 없는 무료 터널이에요.' },
+      { p: ['tun', 'srv'], on: ['tun', 'srv'], tag: 'https://….trycloudflare.com', w: 'tun', t: 'Cloudflare가 서버로 이어지는 임시 공개 주소를 만들어 줘요.', s: '켤 때마다 주소가 바뀌어서, 화면 코드에 미리 적어 둘 수 없어요.' },
+      { p: ['srv', 'board'], on: ['srv', 'board'], tag: 'server.json 푸시', w: 'srv', t: '스크립트가 그 주소를 server.json에 적고, 이 파일 하나만 GitHub에 커밋·푸시해요.', s: '.py 코드는 바뀌지 않아요. 1~2분 뒤 공개 사이트에 반영돼요. 사람이 직접 할 일은 없어요.' },
+      { p: ['board', 'web'], on: ['board', 'web'], tag: '주소', w: 'web', t: '사용자가 앱을 열면, 화면이 server.json을 읽어 그 주소로 자동 연결해요.', s: '위쪽에 "AI 연결됨"이 떠요. 가입·설치 없이 링크만 열면 돼요.' },
+      { p: ['web', 'tun', 'srv'], on: ['web', 'srv'], tag: '연결 확인', w: 'web', t: '이제부터 모든 메시지는 이 터널 주소를 거쳐 답변 서버로 가요.' },
+      { p: ['srv', 'board'], on: ['srv', 'board'], tag: '꺼짐', sos: 1, w: 'srv', t: 'Ctrl+C로 끄면 서버·터널이 꺼지고, server.json을 "꺼짐"으로 다시 푸시해요.', s: '화면은 "지금은 답하기 어려워요"로 바뀌고, 🆘는 계속 동작해요.' }
+    ] },
+    persona: { dim: ['board'], steps: [
+      { p: null, on: ['web'], w: 'web', t: '대화 목록에서 연인을 고르거나 새로 만들어요. 프리셋 6종이나 직접 만들기로, 고르는 즉시 첫 인사 미리보기가 바뀌어요.', s: '페르소나와 상대별 대화는 내 브라우저에 저장돼요.' },
+      { p: ['web', 'tun', 'srv'], on: ['web', 'srv'], tag: '페르소나 카드 + 메시지', w: 'web', t: '메시지를 보낼 때마다 그 연인의 페르소나 카드(성격·말투·말버릇·호칭·관계·이야기)를 함께 보내요.', s: '서버는 페르소나를 저장하지 않아요.' },
+      { p: null, on: ['srv'], w: 'srv', t: '서버가 안전 규칙 → 페르소나 카드 → 모드 → 기억 순서로 지시를 조립해요.' },
+      { p: ['srv', 'ai'], on: ['srv', 'ai'], tag: '지시 + 최근 대화', w: 'srv', t: '조립한 지시와 그 연인과의 최근 대화를 제미나이에 보내요.' },
+      { p: ['ai', 'srv'], on: ['ai', 'srv'], tag: '그 사람 말투의 답장', w: 'ai', t: '제미나이가 정한 말투·호칭·말버릇 그대로 답해요.', s: '츤데레면 퉁명스럽게, 차분한 타입이면 존댓말로.' },
+      { p: ['srv', 'tun', 'web'], on: ['web'], tag: '말풍선 2~3개', w: 'srv', t: '"···" 입력 중 뒤에 그 연인의 말풍선이 차례로 도착해요.' },
+      { p: null, on: ['web'], w: 'web', t: '프로필을 고치면 대화는 그대로 두고, 다음 메시지부터 새 페르소나 카드가 가서 바로 새 말투가 돼요.', s: '다른 연인으로 바꾸면 그 사람의 대화방과 기억으로 이어져요.' }
+    ] },
+    heart: { dim: [], steps: [
+      { p: null, on: ['web'], w: 'web', t: '서버가 연결된 상태에서 "오늘 아무랑도 말 안 했어"를 보내면, 화면이 먼저 개인정보를 가리고 위기 표현이 있는지 살펴요.' },
+      { p: ['web', 'tun', 'srv'], on: ['web', 'srv'], tag: '페르소나 + 최근 대화', w: 'web', t: '페르소나와 최근 대화, 새 메시지를 서버로 보내요.', s: '대화 원본은 내 브라우저에 있어요.' },
+      { p: null, on: ['srv'], w: 'srv', t: '서버가 내 앱에서 온 요청인지, 사용량이 남았는지, 안전한지 확인해요.', s: '서버는 대화를 저장하지 않아요.' },
+      { p: ['srv', 'ai'], on: ['srv', 'ai'], tag: '안전 → 페르소나 → 대화 → 기억', w: 'srv', t: '안전 규칙을 맨 앞에 두고, 페르소나 카드·연인 대화 규칙·기억 요약을 붙여 제미나이에 요청해요.' },
+      { p: ['ai', 'srv'], on: ['ai', 'srv'], tag: '공감 답장', w: 'ai', t: '제미나이가 그 연인의 말투로 다정하게 공감하는 답장을 보내요.' },
+      { p: ['srv', 'tun', 'web'], on: ['web'], tag: '말풍선 2~3개', w: 'srv', t: '"···" 입력 중 표시 뒤에 짧은 말풍선이 차례로 도착해요.', s: '진짜 연인과 톡하는 느낌이에요.' },
+      { p: null, on: ['web'], w: 'web', t: '대화는 내 브라우저에만 저장되고, 몇 턴마다 기억 요약이 갱신돼요.', s: '다음에 오면 "그 일은 좀 어때?"라고 먼저 물어봐요.' }
+    ] },
+    crisis: { dim: [], steps: [
+      { p: null, on: ['web'], w: 'web', sos: 1, t: '위험한 표현을 보내면, 화면이 키워드로 바로 알아차려요.', s: '서버를 기다리지 않아요.' },
+      { p: null, on: ['web'], w: 'web', sos: 1, t: '곧바로 🆘 도움 카드(109 · 1577-0199 · 112 · 119)를 띄워요.', s: '서버가 꺼져 있어도 여기까지는 항상 동작해요.' },
+      { p: ['web', 'tun', 'srv'], on: ['srv'], tag: '메시지', sos: 1, w: 'web', t: '서버가 켜져 있으면 메시지도 서버로 보내요.' },
+      { p: ['srv', 'ai'], on: ['ai'], tag: '안전 규칙 우선', sos: 1, w: 'srv', t: '안전 규칙이 맨 앞이라, 제미나이는 캐릭터 연기보다 안부 확인을 먼저 해요.' },
+      { p: ['ai', 'srv'], on: ['srv'], tag: '안부 + 위기 신호', sos: 1, w: 'ai', t: '진지한 안부 답장과 함께 "위기 신호"를 표시해 돌려줘요.', s: '화면 키워드 + AI 판단, 2중으로 감지해요.' },
+      { p: ['srv', 'tun', 'web'], on: ['web'], tag: '"지금 안전한 곳에 있어?"', sos: 1, w: 'web', t: '상대가 "지금 안전한 곳에 있어?"라고 묻고, 대화를 끊지 않고 곁에 있어 줘요.', s: '영어 모드였다면 자동으로 꺼져요.' }
+    ] },
+    english: { dim: ['board'], steps: [
+      { p: null, on: ['web'], w: 'web', t: '🇬🇧 토글을 켜면 같은 상대·같은 기억으로 영어 대화가 시작돼요.' },
+      { p: ['web', 'tun', 'srv'], on: ['srv'], tag: 'I go to park alone.', w: 'web', t: '틀린 영어 문장도 편하게 보내요.' },
+      { p: ['srv', 'ai'], on: ['ai'], tag: '영어 모드 지시', w: 'srv', t: '"자연스럽게 대화하고, 교정은 최대 2개" 같은 영어 모드 지시를 붙여요.' },
+      { p: ['ai', 'srv'], on: ['srv'], tag: '답장 + 교정', w: 'ai', t: '제미나이가 영어 답장과 교정을 함께 보내요.' },
+      { p: null, on: ['srv'], w: 'srv', t: '서버가 교정을 답장 본문과 분리해요.', s: '대화 흐름을 깨지 않으려고 본문에선 지적하지 않아요.' },
+      { p: ['srv', 'tun', 'web'], on: ['web'], tag: '말풍선 + 교정 카드', w: 'web', t: '말풍선 아래에 "I went to the park alone." 교정 카드가 작게 붙어요.', s: '힘든 얘기가 나오면 영어보다 마음이 먼저예요.' }
+    ] }
+  };
+
+  function mount(root) {
+    root.innerHTML = TEMPLATE;
+    var R = function (k) { return root.querySelector('[data-r="' + k + '"]'); };
+    var host = R('svg'), btnPlay = R('play'), cap = R('cap'), num = R('num'), prog = R('prog');
+    var mqV = window.matchMedia('(max-width: 700px)');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var scen = 'setup', idx = 0, playing = false, started = false, timer = null, raf = null, L, svg, packet;
+    function pts(a) { return a.map(function (q) { return q.join(','); }).join(' '); }
+    function pill(cls, x, y, text, h, extra) {
+      return '<g class="' + cls + '"' + (extra || '') + ' transform="translate(' + x + ' ' + y + ')"><rect rx="' + h / 2 + '" height="' + h + '" y="' + (-h / 2) + '"/><text>' + text + '</text></g>';
+    }
+    function build() {
+      L = LAYOUT[mqV.matches ? 'v' : 'h'];
+      var h = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + L.w + ' ' + L.h + '" aria-hidden="true">';
+      Object.keys(L.links).forEach(function (k) { var ln = L.links[k]; h += '<polyline class="track' + (ln.dash ? ' dash' : '') + '" data-k="' + k + '" points="' + pts(ln.p) + '"/>'; });
+      Object.keys(L.links).forEach(function (k) { var ln = L.links[k]; h += pill('elab', ln.lp[0], ln.lp[1], ln.l, 26, ' data-k="' + k + '"'); });
+      Object.keys(NODES).forEach(function (id) {
+        var n = NODES[id], p = L.pos[id], x0 = -L.cw / 2;
+        h += '<g class="node k-' + n.k + '" data-id="' + id + '" transform="translate(' + p[0] + ' ' + p[1] + ')">' +
+          '<rect class="card" x="' + x0 + '" y="' + (-L.ch / 2) + '" width="' + L.cw + '" height="' + L.ch + '" rx="18"/>' +
+          '<rect class="tile" x="' + (x0 + 16) + '" y="-22" width="44" height="44" rx="13"/>' +
+          '<g class="ico" transform="translate(' + (x0 + 26) + ' -12)">' + ICO[n.k] + '</g>' +
+          '<text class="ttl" x="' + (x0 + 74) + '" y="-10">' + n.t + '</text><text class="sub" x="' + (x0 + 74) + '" y="14">' + n.s + '</text></g>';
+      });
+      h += pill('packet', 0, 0, '', 30, ' style="display:none"') + '</svg>';
+      host.innerHTML = h;
+      svg = host.firstChild; packet = svg.querySelector('.packet');
+      measure();
+    }
+    function measure() {
+      svg.querySelectorAll('.elab').forEach(function (g) {
+        var w = g.querySelector('text').getComputedTextLength(); if (!w) return;
+        var r = g.querySelector('rect'); r.setAttribute('width', w + 20); r.setAttribute('x', -(w + 20) / 2);
+      });
+    }
+    function route(path) {
+      var out = [], used = [];
+      for (var i = 0; i < path.length - 1; i++) {
+        var a = path[i], b = path[i + 1], ln = L.links[a + '-' + b], seg;
+        if (ln) { seg = ln.p.slice(); used.push(a + '-' + b); }
+        else { ln = L.links[b + '-' + a]; seg = ln.p.slice().reverse(); used.push(b + '-' + a); }
+        out = out.concat(seg);
+      }
+      return { pts: out, used: used };
+    }
+    function setPacket(x, y) { packet.setAttribute('transform', 'translate(' + x + ' ' + y + ')'); }
+    function animate(r, tag, sos, done) {
+      cancelAnimationFrame(raf);
+      if (!r) { packet.style.display = 'none'; return done(); }
+      var P = r.pts, t = packet.querySelector('text'), rc = packet.querySelector('rect');
+      packet.style.display = ''; packet.classList.toggle('sos', !!sos); t.textContent = tag;
+      var w = t.getComputedTextLength() + 26; rc.setAttribute('width', w); rc.setAttribute('x', -w / 2);
+      var seg = [], tot = 0;
+      for (var i = 0; i < P.length - 1; i++) { var d = Math.hypot(P[i + 1][0] - P[i][0], P[i + 1][1] - P[i][1]); seg.push(d); tot += d; }
+      if (reduce) { setPacket(P[P.length - 1][0], P[P.length - 1][1]); return done(); }
+      var dur = Math.max(900, tot / 0.38), t0 = null;
+      function step(ts) {
+        if (t0 === null) t0 = ts;
+        var k = Math.min(1, (ts - t0) / dur);
+        k = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        var dist = k * tot, j = 0;
+        while (j < seg.length - 1 && dist > seg[j]) { dist -= seg[j]; j++; }
+        var u = seg[j] ? Math.min(1, dist / seg[j]) : 1;
+        setPacket(P[j][0] + (P[j + 1][0] - P[j][0]) * u, P[j][1] + (P[j + 1][1] - P[j][1]) * u);
+        if (k < 1) raf = requestAnimationFrame(step); else done();
+      }
+      raf = requestAnimationFrame(step);
+    }
+    function renderProg() {
+      prog.innerHTML = SCEN[scen].steps.map(function (s, i) { return '<button type="button" data-i="' + i + '" aria-label="' + (i + 1) + '단계"></button>'; }).join('');
+    }
+    function show(i, anim) {
+      var st = SCEN[scen].steps, s = st[i], dim = SCEN[scen].dim; idx = i;
+      var r = s.p ? route(s.p) : null, used = r ? r.used : [];
+      num.textContent = (i + 1 < 10 ? '0' : '') + (i + 1);
+      var who = WHO[s.w];
+      cap.innerHTML = '<span class="hw-who ' + who[0] + '">' + who[1] + '</span><br>' + s.t + (s.s ? '<small>' + s.s + '</small>' : '');
+      svg.querySelectorAll('.node').forEach(function (g) {
+        var id = g.getAttribute('data-id');
+        g.classList.toggle('on', s.on.indexOf(id) > -1);
+        g.classList.toggle('dim', dim.indexOf(id) > -1 && s.on.indexOf(id) < 0);
+      });
+      svg.querySelectorAll('.track, .elab').forEach(function (el) {
+        var k = el.getAttribute('data-k'), ab = k.split('-'), hot = used.indexOf(k) > -1;
+        el.classList.toggle('hot', hot);
+        el.classList.toggle('dim', !hot && (dim.indexOf(ab[0]) > -1 || dim.indexOf(ab[1]) > -1));
+      });
+      prog.querySelectorAll('button').forEach(function (b, k) { b.className = k < i ? 'done' : (k === i ? 'cur' : ''); });
+      clearTimeout(timer);
+      var after = function () {
+        if (!playing) return;
+        timer = setTimeout(function () {
+          if (idx < st.length - 1) show(idx + 1, true); else show(0, true); /* 끝나면 처음부터 반복 */
+        }, reduce ? 3200 : 1900);
+      };
+      if (anim) animate(r, s.tag, s.sos, after); else { cancelAnimationFrame(raf); packet.style.display = 'none'; after(); }
+    }
+    function syncBtn() { btnPlay.textContent = playing ? '❚❚ 일시정지' : '▶ 재생'; }
+    function stop() { playing = false; clearTimeout(timer); syncBtn(); }
+    function play() {
+      if (playing) { stop(); return; }
+      var last = SCEN[scen].steps.length - 1;
+      var next = !started ? 0 : (idx >= last ? 0 : idx + 1); /* 멈춘 곳 다음 단계부터 이어서 */
+      playing = true; started = true; syncBtn();
+      show(next, true);
+    }
+    function go(i) { stop(); started = true; show(i, true); }
+    function setScen(n) {
+      scen = n; stop(); started = false;
+      root.querySelectorAll('[data-t]').forEach(function (b) { b.setAttribute('aria-selected', b.getAttribute('data-t') === n); });
+      renderProg(); show(0, false);
+      if (!reduce) play(); /* 장면을 바꾸면 그 장면을 반복 재생 */
+    }
+    btnPlay.addEventListener('click', play);
+    R('prev').addEventListener('click', function () { go(Math.max(0, idx - 1)); });
+    R('next').addEventListener('click', function () { go(Math.min(SCEN[scen].steps.length - 1, idx + 1)); });
+    root.querySelectorAll('[data-t]').forEach(function (b) { b.addEventListener('click', function () { setScen(b.getAttribute('data-t')); }); });
+    prog.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) go(+b.getAttribute('data-i')); });
+    var onMq = function () { build(); show(idx, false); };
+    mqV.addEventListener ? mqV.addEventListener('change', onMq) : mqV.addListener(onMq);
+    build(); renderProg(); show(0, false);
+    if ('ResizeObserver' in window) new ResizeObserver(function () { if (host.offsetWidth) measure(); }).observe(host);
+    if (!reduce && 'IntersectionObserver' in window) {
+      var seen = new IntersectionObserver(function (en) {
+        if (en[0].isIntersecting) { seen.disconnect(); if (!started) play(); }
+      }, { threshold: .4 });
+      seen.observe(host);
+    }
+  }
+  function init() { Array.prototype.forEach.call(document.querySelectorAll('[data-hl-how]'), mount); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
+</script>
+</body>
+</html>

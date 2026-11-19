@@ -1,4 +1,4 @@
-"""제출용: 공개 페이지(PRD·체크리스트·테스트)를 '파일 하나짜리 HTML'로 만든다.
+"""제출용: 공개 페이지(PRD·체크리스트·테스트·발표)를 '파일 하나짜리 HTML'로 만든다.
 
 - how.css / how.js 를 페이지 안에 넣는다(다른 파일 없이 더블클릭으로 열림, 인터넷 없이도 동작).
 - 사이트 버전 확인 스크립트는 뺀다(파일로 열면 필요 없음).
@@ -13,7 +13,7 @@ REPO = Path(__file__).resolve().parents[2]
 WEB = REPO / "docs" / "heartline"
 OUT = REPO / "wiki" / "projects" / "heartline" / "output" / "제출"
 SITE = "https://dodo-yong.github.io/Obsidian/heartline/"
-PAGES = {"prd.html": "1_PRD", "checklist.html": "2_체크리스트", "tests.html": "3_테스트목록"}
+PAGES = {"prd.html": "1_PRD", "checklist.html": "2_체크리스트", "tests.html": "3_테스트목록", "deck.html": "5_발표"}
 
 
 def build(name):

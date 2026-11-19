@@ -33,7 +33,7 @@ date: 2026-11-19
 | 2 | 체크리스트 | `2026_11_19_heartline_2_체크리스트.html` (+ `.md`) |
 | 3 | 테스트 목록 | `2026_11_19_heartline_3_테스트목록.html` (+ `.md`) |
 | 4 | 앱 압축 파일 | `2026_11_19_heartline_4_앱.zip` |
-| 5 | 발표 PPT (10장) | `2026_11_19_heartline_5_발표.pptx` |
+| 5 | 발표 PPT (10장) | `2026_11_19_heartline_5_발표.pptx` + `.html`(파일로 바로 발표, 시연·QR 동작) |
 | — | 전부 한 번에 | `2026_11_19_heartline_제출물_전체.zip` |
 
 HTML은 `agents/heartline/make-offline-docs.py`가 공개 페이지를 **파일 하나짜리**로 만든 것(더블클릭으로 열림, 인터넷 없이도 그림·시연 동작). PDF는 쪽이 잘려서 HTML로 바꿈(필요하면 공개 페이지를 `?print=1`로 인쇄).

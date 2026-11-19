@@ -115,3 +115,5 @@
 ## [2026-11-19] lint | Heartline output/ 중복 정리: 2026_11_19_heartline.zip·_발표.pptx 삭제(제출/ 4_앱.zip·5_발표.pptx와 동일), 링크·make-zip.sh 출력 위치를 제출/로
 
 ## [2026-11-19] output | Heartline 제출 문서 1~3을 PDF(쪽 잘림) → 파일 하나짜리 HTML로 교체(make-offline-docs.py, 더블클릭으로 열림·인터넷 없이 그림 동작), 전체 묶음 다시 만듦
+
+## [2026-11-19] output | Heartline 발표도 파일 하나짜리 HTML(2026_11_19_heartline_5_발표.html)로 제출 폴더에 추가, 전체 묶음 다시 만듦

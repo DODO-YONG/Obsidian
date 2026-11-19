@@ -46,6 +46,6 @@ cd agents/heartline/server && python3 -m unittest discover -s tests -v
 | `server/demo.py` | 맛보기 모드: 키 없을 때 페르소나 말투별 대본 답장·영어 교정·🆘 흐름 |
 | `start.py` · `Heartline 실행.command/.bat` | 실행기: 키 확인(없으면 맛보기) · 빈 포트 · 브라우저 열기 |
 | `make-zip.sh` · `guide/시작하기.*` | 배포용 압축 파일 만들기 · 받는 사람용 안내서 |
-| `make-offline-docs.py` | 제출용: PRD·체크리스트·테스트 페이지를 파일 하나짜리 HTML로 (`output/제출/`) |
+| `make-offline-docs.py` | 제출용: PRD·체크리스트·테스트·발표 페이지를 파일 하나짜리 HTML로 (`output/제출/`) |
 | `server/start-public.sh` | 서버 + 터널 + `server.json` 자동 갱신 |
 | `../../docs/heartline/index.html` · `app.js` · `app.css` | 앱 화면(입장·대화 목록·페르소나 편집기·대화방·설정) |
