@@ -222,18 +222,18 @@
       var after = function () {
         if (!playing) return;
         timer = setTimeout(function () {
-          if (idx < st.length - 1) show(idx + 1, true); else { playing = false; syncBtn(true); }
+          if (idx < st.length - 1) show(idx + 1, true); else show(0, true); /* 끝나면 처음부터 반복 */
         }, reduce ? 3200 : 1900);
       };
       if (anim) animate(r, s.tag, s.sos, after); else { cancelAnimationFrame(raf); packet.style.display = 'none'; after(); }
     }
-    function syncBtn(ended) { btnPlay.textContent = playing ? '❚❚ 일시정지' : (ended ? '↻ 다시 재생' : '▶ 재생'); }
-    function stop() { playing = false; clearTimeout(timer); syncBtn(false); }
+    function syncBtn() { btnPlay.textContent = playing ? '❚❚ 일시정지' : '▶ 재생'; }
+    function stop() { playing = false; clearTimeout(timer); syncBtn(); }
     function play() {
       if (playing) { stop(); return; }
       var last = SCEN[scen].steps.length - 1;
-      var next = !started ? 0 : (idx >= last ? 0 : idx + 1);
-      playing = true; started = true; syncBtn(false);
+      var next = !started ? 0 : (idx >= last ? 0 : idx + 1); /* 멈춘 곳 다음 단계부터 이어서 */
+      playing = true; started = true; syncBtn();
       show(next, true);
     }
     function go(i) { stop(); started = true; show(i, true); }
@@ -241,6 +241,7 @@
       scen = n; stop(); started = false;
       root.querySelectorAll('[data-t]').forEach(function (b) { b.setAttribute('aria-selected', b.getAttribute('data-t') === n); });
       renderProg(); show(0, false);
+      if (!reduce) play(); /* 장면을 바꾸면 그 장면을 반복 재생 */
     }
     btnPlay.addEventListener('click', play);
     R('prev').addEventListener('click', function () { go(Math.max(0, idx - 1)); });

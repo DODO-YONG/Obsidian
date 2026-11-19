@@ -87,3 +87,5 @@
 ## [2026-11-19] output | Heartline 2단계 체크리스트 → [[Heartline 체크리스트_261119]], 페이지 https://dodo-yong.github.io/Obsidian/heartline/checklist.html (진행률·안전만 보기, 체크는 브라우저 저장)
 
 ## [2026-11-19] output | Heartline 작동 방식에 '🔌 서버 켜기' 장면 추가: start-public.sh → 서버 켜기 → Cloudflare 임시 주소 받기 → server.json에 적어 그 파일만 푸시 → 화면이 읽어 연결 → 끄면 '꺼짐' 푸시
+
+## [2026-11-19] output | Heartline 작동 방식: 끝나면 처음부터 반복 재생, 장면 바꾸면 자동 재생, ◀ ▶·막대 누르면 멈추고 그 단계 보기
