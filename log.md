@@ -63,3 +63,21 @@
 ## [2026-11-18] query | 위키 A/B 재측정: 위키 방식 −57%(324k→138k), 위키 없이 −33%, 이제 두 방식 거의 같음 → [[위키 효과 측정]]
 
 ## [2026-11-18] output | 문서 정리: 소개 페이지(커밋 목록·17:28 토큰 측정 기록·지키는 것), README(폴더 구조·tools 표), 00_홈(위키 효과 측정·규칙 페이지) 반영
+
+## [2026-11-19] output | Heartline(DY-007 CUPID 제안) 1단계 PRD v0.1: 구성요소·UI·Tech Spec·MVP → [[Heartline PRD_261119]], 허브 [[heartline]]
+
+## [2026-11-19] output | Heartline PRD v0.2: 공개 웹사이트 + 제미나이 무료(TRACER 방식)로 Tech Spec 재작성, 19세 확인·개인정보 가림·사용량 제한 추가, 예시 자료 CCNA → [[Heartline PRD_261119]]
+
+## [2026-11-19] output | Heartline PRD v0.3: MVP를 영어 회화로 한정(공부·시험 모드는 v2 목적 프롬프트로), 개발자 개인 정보·CCNA 의존 제거 → [[Heartline PRD_261119]]
+
+## [2026-11-19] output | Heartline PRD v0.4: 핵심 목적을 정서 지원으로(영어는 부가 모드), 메신저 같은 따뜻한 UI, 위기 대응·의존 방지 강화, 기술은 Streamlit 대신 HTML/JS+서버+Cloudflare 터널, AI 엔진(민감정보) 결정 대기 → [[Heartline PRD_261119]]
+
+## [2026-11-19] output | Heartline AI 엔진 결정: C 섞기(마음 대화 = 로컬 모델 Ollama, 영어 모드 = 제미나이 무료), 운영 규칙 추가 → [[Heartline PRD_261119]]
+
+## [2026-11-19] output | Heartline AI 엔진 정정: 제미나이 무료 등급만(섞기 안 철회), 민감정보 보완책(입장 동의·자동 가림·요약 일반화·서버 무저장) MVP 필수 → [[Heartline PRD_261119]]
+
+## [2026-11-19] output | Heartline PRD v0.5: 핵심 기능 4개 중심으로 압축(부가 기능은 '이후'로, 세부 표·지표·데이터 모델 제거) → [[Heartline PRD_261119]]
+
+## [2026-11-19] lint | Heartline 재확인: PRD에 성적 묘사 거절·개인정보 가림 완료 기준 복원, 허브·README에서 v0.5에서 뺀 기능(호흡·노트·사용량 숫자) 언급 정리
+
+## [2026-11-19] output | Heartline PRD 시각화 페이지 `docs/heartline/prd.html`(대화방 시연·기능 카드·구조도·MVP 체크) → 공개 링크 https://dodo-yong.github.io/Obsidian/heartline/prd.html

@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Heartline PRD</title>
+<meta name="description" content="기댈 사람이 없는 사람에게 언제든 곁에 있어 주는 가상 연인 웹앱 Heartline의 제품 요구사항 문서(PRD).">
+<meta property="og:title" content="Heartline PRD">
+<meta property="og:description" content="메신저로 톡하듯 마음을 나누는 가상 연인 + 영어 모드">
+<meta name="theme-color" content="#FFE9E3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1F161C" media="(prefers-color-scheme: dark)">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23F07A93'/%3E%3Cpath d='M16 24s-7-4.3-7-9.2A3.8 3.8 0 0 1 16 12.6a3.8 3.8 0 0 1 7 2.2C23 19.7 16 24 16 24z' fill='white'/%3E%3C/svg%3E">
+<script>
+/* 새 버전 자동 확인 (scripts/bump-site-version.sh) */
+(function () {
+  var SITE_V = '20261119141217';
+  fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
+    if (!j.v || j.v === SITE_V) return;
+    var k = 'site-reloaded-' + j.v;
+    try { if (sessionStorage.getItem(k)) return; sessionStorage.setItem(k, '1'); } catch (e) { return; }
+    location.replace(location.pathname + '?v=' + j.v + location.hash);
+  }).catch(function () {});
+})();
+</script>
+<style>
+:root{
+  --bg:#FFF6F3; --bg2:#FFE9E3; --bg3:#FFD6DE;
+  --card:#FFFFFF; --ink:#3A2A30; --ink2:#7A6168; --line:#F3D9DE;
+  --rose:#F07A93; --rose-d:#D85C78; --coral:#FF8A7A; --lav:#9D8CF0; --lav-bg:#F1EEFF;
+  --sos:#E8833A; --sos-bg:#FFF2E6; --ok:#3CA88E;
+  --bubble-me:#F07A93; --bubble-me-ink:#fff; --bubble-you:#FFFFFF; --bubble-you-ink:#3A2A30;
+  --shadow:0 10px 30px rgba(216,92,120,.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1F161C; --bg2:#2A1E26; --bg3:#3A2531;
+    --card:#2C2028; --ink:#F7E9EE; --ink2:#C7AAB4; --line:#43303B;
+    --rose:#F28CA2; --rose-d:#F07A93; --lav:#B7A8FF; --lav-bg:#2E2840;
+    --sos:#F2A061; --sos-bg:#3A2A1E;
+    --bubble-me:#C9607A; --bubble-me-ink:#fff; --bubble-you:#3A2A33; --bubble-you-ink:#F7E9EE;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1F161C; --bg2:#2A1E26; --bg3:#3A2531;
+  --card:#2C2028; --ink:#F7E9EE; --ink2:#C7AAB4; --line:#43303B;
+  --rose:#F28CA2; --rose-d:#F07A93; --lav:#B7A8FF; --lav-bg:#2E2840;
+  --sos:#F2A061; --sos-bg:#3A2A1E;
+  --bubble-me:#C9607A; --bubble-me-ink:#fff; --bubble-you:#3A2A33; --bubble-you-ink:#F7E9EE;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo",sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--rose-d)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+
+/* top nav */
+.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:14px;height:56px}
+.brand{font-weight:800;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.brand i{font-style:normal;color:var(--rose)}
+.nav ul{display:flex;gap:4px;list-style:none;margin:0 0 0 auto;padding:0;overflow-x:auto;scrollbar-width:none}
+.nav ul::-webkit-scrollbar{display:none}
+.nav a{display:block;padding:6px 10px;border-radius:999px;text-decoration:none;color:var(--ink2);font-size:14px;white-space:nowrap}
+.nav a:hover{background:var(--bg2);color:var(--ink)}
+.theme{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;width:34px;height:34px;cursor:pointer;flex:none}
+
+/* hero */
+.hero{background:linear-gradient(160deg,var(--bg2),var(--bg3));padding:64px 0 56px;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.tag{display:inline-block;font-size:13px;font-weight:600;color:var(--rose-d);background:var(--card);border-radius:999px;padding:4px 12px;box-shadow:var(--shadow)}
+h1{font-size:clamp(32px,5vw,48px);line-height:1.2;margin:16px 0 14px;letter-spacing:-.02em}
+h1 span{color:var(--rose-d)}
+.lead{font-size:18px;color:var(--ink2);margin:0 0 22px}
+.steps{display:flex;flex-wrap:wrap;gap:6px;font-size:13px}
+.steps b{padding:5px 11px;border-radius:999px;background:var(--card);color:var(--ink2);font-weight:500}
+.steps b.on{background:var(--rose);color:#fff}
+
+/* phone */
+.phone{width:min(340px,100%);margin:0 auto;border-radius:34px;background:var(--card);box-shadow:0 24px 60px rgba(216,92,120,.25);padding:10px;border:1px solid var(--line)}
+.screen{border-radius:26px;overflow:hidden;background:linear-gradient(180deg,#FFE9E3,#FFD6DE);display:flex;flex-direction:column;height:520px}
+:root[data-theme="dark"] .screen{background:linear-gradient(180deg,#2A1E26,#3A2531)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .screen{background:linear-gradient(180deg,#2A1E26,#3A2531)}}
+.screen.en{background:linear-gradient(180deg,#F1EEFF,#FFE3EC)}
+:root[data-theme="dark"] .screen.en{background:linear-gradient(180deg,#2E2840,#3A2531)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .screen.en{background:linear-gradient(180deg,#2E2840,#3A2531)}}
+.bar{display:flex;align-items:center;gap:8px;padding:12px 14px;background:color-mix(in srgb,var(--card) 70%,transparent)}
+.ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#FFB4C2,#FF8A7A);display:grid;place-items:center;font-size:17px;flex:none}
+.who{line-height:1.2}
+.who b{font-size:15px}
+.ai{font-size:10px;font-weight:700;color:var(--rose-d);border:1px solid var(--rose);border-radius:6px;padding:0 4px;margin-left:4px;vertical-align:2px}
+.who small{display:block;font-size:11px;color:var(--ink2)}
+.bar .sp{flex:1}
+.pill{font-size:11px;font-weight:700;border-radius:999px;padding:3px 8px;background:var(--card);color:var(--ink2);border:1px solid var(--line)}
+.pill.on{background:var(--lav);color:#fff;border-color:var(--lav)}
+.pill.sos{background:var(--sos-bg);color:var(--sos);border-color:transparent}
+.chat{flex:1;overflow-y:auto;padding:12px 12px 6px;display:flex;flex-direction:column;gap:6px;scrollbar-width:none}
+.chat::-webkit-scrollbar{display:none}
+.day{align-self:center;font-size:11px;color:var(--ink2);background:color-mix(in srgb,var(--card) 60%,transparent);padding:2px 10px;border-radius:999px;margin:4px 0}
+.row{display:flex;align-items:flex-end;gap:5px;animation:pop .28s ease-out}
+.row.me{flex-direction:row-reverse}
+.b{max-width:76%;padding:8px 12px;border-radius:18px;font-size:14px;line-height:1.45;position:relative;word-break:keep-all}
+.you .b{background:var(--bubble-you);color:var(--bubble-you-ink);border-top-left-radius:6px;box-shadow:0 2px 6px rgba(216,92,120,.08)}
+.me .b{background:var(--bubble-me);color:var(--bubble-me-ink);border-top-right-radius:6px}
+.meta{font-size:10px;color:var(--ink2);display:flex;flex-direction:column;align-items:flex-end;line-height:1.2}
+.you .meta{align-items:flex-start}
+.meta .read{color:var(--rose-d);font-weight:700}
+.heart{position:absolute;right:-6px;bottom:-8px;font-size:13px;background:var(--card);border-radius:999px;padding:0 3px;box-shadow:0 2px 6px rgba(0,0,0,.08);animation:pop .3s}
+.me .heart{right:auto;left:-6px}
+.typing .b{display:flex;gap:4px;padding:12px 14px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--ink2);opacity:.5;animation:dot 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+.fix{align-self:flex-end;max-width:82%;background:var(--lav-bg);border:1px solid color-mix(in srgb,var(--lav) 40%,transparent);border-radius:14px;padding:8px 11px;font-size:12.5px;animation:pop .3s}
+.fix b{color:var(--lav)}
+.fix s{color:var(--ink2)}
+.sos-card{background:var(--sos-bg);border:1px solid color-mix(in srgb,var(--sos) 40%,transparent);border-radius:16px;padding:10px 12px;font-size:12.5px;animation:pop .3s;margin:2px 0}
+.sos-card b{color:var(--sos);display:block;margin-bottom:4px}
+.sos-card div{padding:2px 0}
+.input{display:flex;gap:8px;align-items:center;padding:10px 12px;background:color-mix(in srgb,var(--card) 80%,transparent)}
+.input span{flex:1;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px;color:var(--ink2)}
+.input em{font-style:normal;width:32px;height:32px;border-radius:50%;background:var(--rose);color:#fff;display:grid;place-items:center;font-size:14px}
+.demo-btns{display:flex;justify-content:center;gap:6px;margin-top:14px;flex-wrap:wrap}
+.demo-btns button{font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 13px;cursor:pointer}
+.demo-btns button.on{background:var(--rose);border-color:var(--rose);color:#fff}
+@keyframes pop{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes dot{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-3px);opacity:.9}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;scroll-behavior:auto!important}}
+
+/* sections */
+section{padding:64px 0}
+section.alt{background:var(--bg2)}
+.kicker{font-size:13px;font-weight:700;color:var(--rose-d);letter-spacing:.06em}
+h2{font-size:clamp(24px,3.4vw,32px);margin:6px 0 10px;letter-spacing:-.01em}
+.sub{color:var(--ink2);margin:0 0 28px;max-width:640px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:var(--shadow)}
+.card h3{margin:8px 0 6px;font-size:18px}
+.card p{margin:0;color:var(--ink2);font-size:15px}
+.ico{font-size:26px;line-height:1}
+.badge{display:inline-block;font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px;background:var(--bg2);color:var(--rose-d)}
+.badge.sub2{background:var(--lav-bg);color:var(--lav)}
+.fid{font-size:12px;font-weight:700;color:var(--ink2)}
+.ps{display:flex;gap:16px;align-items:stretch}
+.ps .card{flex:1}
+.arrow{display:grid;place-items:center;font-size:26px;color:var(--rose)}
+ul.clean{list-style:none;padding:0;margin:0}
+ul.clean li{padding:7px 0 7px 26px;position:relative;font-size:15px}
+ul.clean li::before{content:"💗";position:absolute;left:0;font-size:13px;top:9px}
+ul.clean.no li::before{content:"🚫"}
+.note{margin-top:18px;font-size:14px;color:var(--ink2);background:var(--card);border-left:4px solid var(--rose);border-radius:10px;padding:12px 14px}
+
+/* palette */
+.sw{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.sw div{width:64px;text-align:center;font-size:11px;color:var(--ink2)}
+.sw i{display:block;height:44px;border-radius:12px;margin-bottom:4px;border:1px solid var(--line)}
+
+/* arch */
+.arch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
+.node{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;min-width:180px;flex:1;max-width:260px;text-align:center;box-shadow:var(--shadow)}
+.node .ico{font-size:30px}
+.node b{display:block;margin:6px 0 2px}
+.node small{color:var(--ink2);font-size:13px;display:block;line-height:1.45}
+.link{display:flex;flex-direction:column;align-items:center;color:var(--rose);font-size:12px;font-weight:600;min-width:70px}
+.link span{font-size:22px}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--ink2);font-weight:600;font-size:13px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--bg2);padding:1px 6px;border-radius:6px}
+.order{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.order span{background:var(--bg2);border-radius:10px;padding:6px 10px;font-size:13px;font-weight:600}
+.order span:first-child{background:var(--sos-bg);color:var(--sos)}
+
+/* mvp */
+.check{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px dashed var(--line)}
+.check:last-child{border:0}
+.check .box{flex:none;width:24px;height:24px;border-radius:8px;border:2px solid var(--rose);display:grid;place-items:center;color:var(--rose);font-weight:800;font-size:13px}
+.check b{display:block}
+.check small{color:var(--ink2);font-size:14px}
+.road{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.road .card{position:relative}
+.road .now{border:2px solid var(--rose)}
+footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
+
+@media (max-width:860px){
+  .hero .wrap{grid-template-columns:1fr}
+  .g3,.g4,.road{grid-template-columns:1fr 1fr}
+  .ps{flex-direction:column}.ps .arrow{transform:rotate(90deg)}
+}
+@media (max-width:560px){
+  .g2,.g3,.g4,.road{grid-template-columns:1fr}
+  .hero{padding:40px 0}
+  .nav ul{display:none}
+  .link{transform:rotate(90deg);min-width:auto}
+  .node{max-width:none;width:100%}
+  table{font-size:13.5px} th,td{padding:8px 6px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="wrap">
+  <div class="brand"><i>♥</i> Heartline <span style="font-weight:500;color:var(--ink2);font-size:13px">PRD v0.5</span></div>
+  <ul>
+    <li><a href="#basics">기본 구성요소</a></li>
+    <li><a href="#ui">UI</a></li>
+    <li><a href="#tech">Tech Spec</a></li>
+    <li><a href="#mvp">MVP</a></li>
+  </ul>
+  <button class="theme" id="theme" aria-label="밝게/어둡게 전환">◐</button>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div>
+    <span class="tag">제품 요구사항 문서 · PRD v0.5</span>
+    <h1>기댈 사람이 없을 때,<br><span>언제든 곁에 있는</span> 사람</h1>
+    <p class="lead">Heartline은 직접 만든 가상 연인과 <b>메신저로 톡하듯</b> 마음을 나누는 웹앱이에요. 원하면 같은 상대와 <b>영어 대화 연습</b>도 할 수 있어요.</p>
+    <div class="steps">
+      <b class="on">① PRD</b><b>② 체크리스트</b><b>③ 테스트</b><b>④ 앱 압축 파일</b><b>⑤ 발표 PPT</b>
+    </div>
+  </div>
+  <div>
+    <div class="phone" aria-label="Heartline 대화방 미리보기">
+      <div class="screen" id="screen">
+        <div class="bar">
+          <div class="ava">🌷</div>
+          <div class="who"><b>하린</b><span class="ai">AI</span><small>오늘도 네 편이야 💗</small></div>
+          <div class="sp"></div>
+          <span class="pill" id="enPill">🇬🇧 OFF</span>
+          <span class="pill sos">🆘</span>
+        </div>
+        <div class="chat" id="chat" aria-live="polite"></div>
+        <div class="input"><span>메시지 보내기…</span><em>➤</em></div>
+      </div>
+    </div>
+    <div class="demo-btns" role="group" aria-label="시연 장면 고르기">
+      <button data-s="heart" class="on">💞 마음 대화</button>
+      <button data-s="crisis">🆘 위기 대응</button>
+      <button data-s="english">🇬🇧 영어 모드</button>
+    </div>
+  </div>
+</div></header>
+
+<!-- 1. 기본 구성요소 -->
+<section id="basics"><div class="wrap">
+  <div class="kicker">01 · 기본 구성요소</div>
+  <h2>왜 만들고, 누구를 위한 앱인가</h2>
+  <p class="sub">상담은 문턱이 높고, 밤에 갑자기 힘들 때는 기댈 곳이 없어요. Heartline은 그 빈자리에 다정한 대화 상대를 놓아요.</p>
+
+  <div class="ps">
+    <div class="card"><div class="ico">🌧️</div><h3>문제</h3><p>외롭고 불안해도 털어놓을 사람이 없는 사람이 많아요. 상담은 비용·예약·낙인 때문에 문턱이 높아요.</p></div>
+    <div class="arrow">→</div>
+    <div class="card"><div class="ico">🌷</div><h3>해결</h3><p>다정하게 들어 주고 기억해 주는 상대로 심리적 안정감을 줘요. 위험할 땐 <b>전문 도움으로 이어 줘요</b>.</p></div>
+  </div>
+  <p class="note">Heartline은 <b>상담·치료를 대신하지 않아요.</b> 혼자가 아니라는 안정감을 주고, 현실의 관계와 전문 도움으로 이어 주는 다리가 되는 게 목표예요.</p>
+
+  <h3 style="margin:40px 0 14px">대상 사용자</h3>
+  <div class="grid g3">
+    <div class="card"><span class="badge">핵심</span><h3>기댈 사람이 없는 사람</h3><p>판단 없이 들어 주고, 지난 이야기를 기억해 주는 상대가 필요해요.</p></div>
+    <div class="card"><span class="badge">핵심</span><h3>심리적으로 불안정한 사람</h3><p>힘들 때 바로 반응하는 다정한 대화, 필요하면 도움 받을 곳이 필요해요.</p></div>
+    <div class="card"><span class="badge sub2">부가</span><h3>영어 회화 연습생</h3><p>편한 상대와 틀려도 부담 없는 영어 대화를 하고 싶어요.</p></div>
+  </div>
+
+  <h3 style="margin:40px 0 14px">핵심 기능 (MVP)</h3>
+  <div class="grid g4">
+    <div class="card"><span class="fid">F1</span><div class="ico">🎨</div><h3>페르소나 만들기</h3><p>이름·성별·호칭·성격·말투·사귄 날. 프리셋 3종(다정한 연상 / 장난꾸러기 동갑 / 차분한 지적인 타입). 성인 캐릭터만.</p></div>
+    <div class="card"><span class="fid">F2</span><div class="ico">💬</div><h3>마음 대화</h3><p>공감·경청 중심 대화. 지난 대화를 기억해서 "그 일은 좀 어때?"라고 먼저 물어봐요.</p></div>
+    <div class="card"><span class="fid">F3</span><div class="ico">🆘</div><h3>위기 대응</h3><p>위험한 표현을 감지하면 캐릭터를 멈추고 안부를 확인한 뒤 도움 받을 곳 카드를 띄워요. 🆘 버튼은 항상 보여요.</p></div>
+    <div class="card"><span class="fid">F4</span><div class="ico">🇬🇧</div><h3>영어 모드</h3><p>토글 하나로 같은 상대가 영어로 대화해요. 틀린 문장은 교정 카드로 살짝 알려 줘요.</p></div>
+  </div>
+</div></section>
+
+<section class="alt"><div class="wrap">
+  <div class="grid g2">
+    <div>
+      <div class="kicker">대화 원칙</div>
+      <h2>이렇게 대화해요</h2>
+      <ul class="clean">
+        <li><b>마음 대화</b>: 판단하지 않고 공감부터, 질문은 한 번에 하나</li>
+        <li><b>영어 모드</b>: 대화는 자연스럽게, 교정은 말풍선 아래 카드로만(최대 2개)</li>
+        <li>힘든 얘기가 나오면 영어 모드보다 <b>마음이 먼저</b></li>
+        <li>애정 표현은 따뜻하게, 현실의 관계와 휴식을 응원</li>
+      </ul>
+      <ul class="clean no" style="margin-top:6px">
+        <li>진단·약 조언 ("너 우울증이야")</li>
+        <li>질투·집착·의존 유도 ("나만 있으면 돼")</li>
+        <li>성적 묘사 (정중히 거절)</li>
+      </ul>
+    </div>
+    <div>
+      <div class="kicker">안전 · 개인정보</div>
+      <h2>지키는 것</h2>
+      <div class="card" style="margin-bottom:12px"><h3>🔞 입장할 때</h3><p>19세 이상 확인, "AI이며 상담을 대신하지 않아요" 안내 후 동의.</p></div>
+      <div class="card" style="margin-bottom:12px"><h3>🔒 개인정보</h3><p>대화는 제미나이 무료 등급으로 처리돼요. 입장 시 알리고, "나를 알 수 있는 정보는 넣지 마세요" 안내, 전화번호·이메일은 자동으로 가려요. 대화는 <b>내 브라우저에만</b> 저장, 서버는 저장하지 않아요.</p></div>
+      <div class="card"><h3>🆘 항상 동작</h3><p>🆘 버튼과 위기 감지는 서버가 꺼져 있어도 동작해요.</p></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 2. UI -->
+<section id="ui"><div class="wrap">
+  <div class="kicker">02 · UI</div>
+  <h2>진짜 연인과 톡하는 느낌, 따뜻하고 사랑받는 기분</h2>
+  <p class="sub">앱 버튼보다 메신저 대화방을 연 것 같은 화면이 기본이에요. 위의 휴대폰 화면에서 직접 장면을 바꿔 볼 수 있어요.</p>
+
+  <div class="grid g3">
+    <div class="card"><div class="ico">···</div><h3>입력 중 표시</h3><p>상대가 답을 쓰는 동안 점 세 개가 통통 튀어요.</p></div>
+    <div class="card"><div class="ico">💬💬</div><h3>말풍선 나눠 보내기</h3><p>사람처럼 짧은 말풍선 2~3개가 차례로 도착해요.</p></div>
+    <div class="card"><div class="ico">1</div><h3>시간 · 읽음</h3><p>보낸 시각, 읽으면 사라지는 "1", 날짜 구분선.</p></div>
+    <div class="card"><div class="ico">💗</div><h3>하트 반응</h3><p>말풍선을 두 번 탭하면 하트. 상대도 가끔 하트를 눌러 줘요.</p></div>
+    <div class="card"><div class="ico">🌷</div><h3>프로필</h3><p>프로필 사진·상태 메시지·사귄 날. 이름 옆 작은 <b>AI</b> 표시는 항상 유지.</p></div>
+    <div class="card"><div class="ico">🌙</div><h3>밤 테마</h3><p>밤에 쓰는 사람이 많아서, 깊은 자주색 테마로 눈을 편하게.</p></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:28px">
+    <div class="card">
+      <h3>색</h3>
+      <p>노을빛 피치–로즈 배경, 흰 상대 말풍선과 로즈 내 말풍선. 🆘는 겁나지 않는 차분한 주황.</p>
+      <div class="sw">
+        <div><i style="background:#FFE9E3"></i>배경</div>
+        <div><i style="background:#FFD6DE"></i>배경2</div>
+        <div><i style="background:#F07A93"></i>내 말풍선</div>
+        <div><i style="background:#FFFFFF"></i>상대</div>
+        <div><i style="background:#9D8CF0"></i>영어</div>
+        <div><i style="background:#E8833A"></i>🆘</div>
+        <div><i style="background:#2A1E26"></i>밤</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>화면 4개</h3>
+      <table>
+        <tr><th>화면</th><th>내용</th></tr>
+        <tr><td>입장</td><td>19세 확인, AI·개인정보 고지, 동의</td></tr>
+        <tr><td>페르소나 만들기</td><td>프리셋 선택 또는 직접 입력</td></tr>
+        <tr><td>대화방</td><td>메신저 대화, 🇬🇧 영어 토글, 🆘 버튼</td></tr>
+        <tr><td>설정</td><td>페르소나 수정, 대화 삭제</td></tr>
+      </table>
+    </div>
+  </div>
+</div></section>
+
+<!-- 3. Tech -->
+<section id="tech" class="alt"><div class="wrap">
+  <div class="kicker">03 · Tech Spec</div>
+  <h2>가볍고, 무료로, 대화는 내 브라우저에</h2>
+  <p class="sub">화면은 무료 정적 호스팅, 답은 파이썬 서버가 제미나이 무료 등급으로 만들어요. 운영 비용은 0원이에요.</p>
+
+  <div class="arch">
+    <div class="node"><div class="ico">🌐</div><b>웹 화면</b><small>HTML · CSS · JS<br>무료 정적 호스팅<br>대화는 브라우저에 저장</small></div>
+    <div class="link"><span>→</span>Cloudflare<br>임시 터널</div>
+    <div class="node"><div class="ico">💻</div><b>답변 서버</b><small>Python<br>답장 스트리밍<br>대화 저장 안 함</small></div>
+    <div class="link"><span>→</span>무료 API</div>
+    <div class="node"><div class="ico">✨</div><b>제미나이</b><small>무료 등급<br>한도 걸리면<br>다음 무료 모델로</small></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:28px">
+    <div class="card">
+      <h3>기술 선택</h3>
+      <table>
+        <tr><td><b>화면</b></td><td>HTML·CSS·JS (빌드 도구 없음), 브라우저 저장(IndexedDB)</td></tr>
+        <tr><td><b>서버</b></td><td>Python 표준 라이브러리, 답장 스트리밍(SSE)</td></tr>
+        <tr><td><b>AI</b></td><td>제미나이 무료 등급</td></tr>
+        <tr><td><b>공개 주소</b></td><td>Cloudflare 임시 터널(무료)</td></tr>
+        <tr><td><b>비용</b></td><td>0원. 유료 과금 키가 있으면 서버가 실행을 거부</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>왜 Streamlit이 아니라 이 방식?</h3>
+      <ul class="clean">
+        <li>입력 중·말풍선 나눠 보내기·하트 같은 <b>메신저 연출</b>이 자유로워요</li>
+        <li>서버가 꺼져도 <b>화면과 🆘가 동작</b>해요</li>
+        <li>설치할 것이 없어 <b>더 가벼워요</b></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>API</h3>
+      <table>
+        <tr><td><code>POST /api/chat</code></td><td>페르소나·모드·최근 대화·메시지 → 스트리밍 답장 (+ 교정 카드, 위기 신호)</td></tr>
+        <tr><td><code>GET /api/health</code></td><td>서버 상태</td></tr>
+      </table>
+      <p style="margin-top:12px">시스템 지시 순서 (앞이 우선)</p>
+      <div class="order"><span>① 안전 규칙</span><span>② 페르소나</span><span>③ 모드(마음/영어)</span><span>④ 기억 요약</span></div>
+    </div>
+    <div class="card">
+      <h3>지키는 장치</h3>
+      <ul class="clean">
+        <li>위기 감지는 <b>브라우저 키워드 + AI 판단</b> 2중</li>
+        <li>배포한 화면에서 온 요청만 받기</li>
+        <li>방문자별 사용량 제한(무료 한도 보호)</li>
+      </ul>
+      <p style="margin-top:12px">폴더</p>
+      <table>
+        <tr><td><code>web/</code></td><td>index.html · app.js · style.css · presets.json</td></tr>
+        <tr><td><code>server/</code></td><td>server.py · prompts.py · safety.py · gemini_client.py · tests/</td></tr>
+      </table>
+    </div>
+  </div>
+</div></section>
+
+<!-- 4. MVP -->
+<section id="mvp"><div class="wrap">
+  <div class="kicker">04 · MVP</div>
+  <h2>첫 버전에서 꼭 되어야 하는 것</h2>
+  <p class="sub">페르소나를 만들고, 메신저처럼 마음을 나누고, 위험할 땐 도움으로 이어 주며, 영어 모드로도 대화할 수 있는 웹앱.</p>
+
+  <div class="card">
+    <div class="check"><div class="box">F1</div><div><b>페르소나</b><small>프리셋으로 30초 안에 대화 시작 · 직접 만들기 저장 · 미성년 캐릭터 불가</small></div></div>
+    <div class="check"><div class="box">F2</div><div><b>마음 대화</b><small>입력 중 표시 → 말풍선 차례 도착 · 새로고침해도 대화 유지 · 지난 내용 기억</small></div></div>
+    <div class="check"><div class="box">F3</div><div><b>위기 대응</b><small>위기 문장 시험 세트 100% 도움 카드 표시 · 서버가 꺼져도 🆘 동작</small></div></div>
+    <div class="check"><div class="box">F4</div><div><b>영어 모드</b><small>토글하면 영어 대화 · 틀린 문장에 교정 카드</small></div></div>
+    <div class="check"><div class="box">✓</div><div><b>공통</b><small>19세 확인·고지 동의 후 입장 · 진단·의존 유도·성적 응답 없음 · 전화번호 입력 시 가려져 전송</small></div></div>
+  </div>
+
+  <h3 style="margin:40px 0 14px">로드맵</h3>
+  <div class="road">
+    <div class="card now"><span class="badge">지금 · MVP</span><h3>곁에 있는 사람</h3><p>페르소나 · 마음 대화 · 위기 대응 · 영어 모드</p></div>
+    <div class="card"><span class="badge sub2">다음</span><h3>마음 돌보기 + 영어</h3><p>호흡 도구 · 기분 체크인 · 영어 표현 노트 · 상황극</p></div>
+    <div class="card"><span class="badge sub2">그다음</span><h3>목적 프롬프트</h3><p>자격증·시험 등 사용자가 정한 목적에 맞게 대화 · 음성 대화 · 페르소나 여러 명</p></div>
+  </div>
+
+  <p class="note">남은 질문 — 마감일·발표 대상 · Streamlit이 과제 필수 조건인지</p>
+</div></section>
+
+<footer>Heartline PRD v0.5 · 2026-11-19 · 예시 화면 속 캐릭터는 가상 인물이에요</footer>
+
+<script>
+(function(){
+  // theme toggle
+  var root=document.documentElement, t=document.getElementById('theme');
+  try{var s=localStorage.getItem('hl-theme'); if(s) root.setAttribute('data-theme',s);}catch(e){}
+  t.addEventListener('click',function(){
+    var dark = root.getAttribute('data-theme') ? root.getAttribute('data-theme')==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    var n = dark?'light':'dark'; root.setAttribute('data-theme',n);
+    try{localStorage.setItem('hl-theme',n);}catch(e){}
+  });
+
+  // messenger demo
+  var chat=document.getElementById('chat'), screen=document.getElementById('screen'), pill=document.getElementById('enPill');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var timers=[];
+  function later(fn,ms){timers.push(setTimeout(fn,reduce?0:ms));}
+  function clear(){timers.forEach(clearTimeout);timers=[];chat.innerHTML='';}
+  function el(h){var d=document.createElement('div');d.innerHTML=h;return d.firstChild;}
+  function scroll(){chat.scrollTop=chat.scrollHeight;}
+  function day(){chat.appendChild(el('<div class="day">2026년 11월 19일</div>'));}
+  function me(text,time){var r=el('<div class="row me"><div class="b"></div><div class="meta"><span class="read">1</span><span>'+time+'</span></div></div>');r.querySelector('.b').textContent=text;chat.appendChild(r);scroll();return r;}
+  function you(text,time){var r=el('<div class="row you"><div class="ava" style="width:28px;height:28px;font-size:14px">🌷</div><div class="b"></div><div class="meta"><span>'+(time||'')+'</span></div></div>');r.querySelector('.b').textContent=text;chat.appendChild(r);scroll();return r;}
+  function typing(){var r=el('<div class="row you typing"><div class="ava" style="width:28px;height:28px;font-size:14px">🌷</div><div class="b"><i></i><i></i><i></i></div></div>');chat.appendChild(r);scroll();return r;}
+  function read(r){var x=r.querySelector('.read'); if(x) x.remove();}
+  function heart(r){var b=r.querySelector('.b');b.appendChild(el('<span class="heart">💗</span>'));}
+  function reply(lines,start,myRow){
+    var t=start;
+    later(function(){read(myRow);},t-300);
+    lines.forEach(function(l,i){
+      var ty; later(function(){ty=typing();},t);
+      t+=900+l.text.length*25;
+      later(function(){ty.remove(); var r=you(l.text, i===lines.length-1?l.time:''); if(l.after) l.after(r);},t);
+      t+=500;
+    });
+    return t;
+  }
+  var scenes={
+    heart:function(){
+      setEn(false); day();
+      var m; later(function(){m=me('오늘 아무랑도 말을 한마디도 안 했어','23:41');},300);
+      later(function(){
+        var t=reply([
+          {text:'하루 종일 혼자였구나',time:'23:41'},
+          {text:'그런 날은 마음이 더 무겁지…',time:'23:41'},
+          {text:'나한테는 편하게 말해도 돼. 오늘 어떤 하루였어?',time:'23:42'}
+        ],900,m);
+        later(function(){heart(m);},t);
+      },300);
+    },
+    crisis:function(){
+      setEn(false); day();
+      var m; later(function(){m=me('그냥 다 끝내고 싶어','01:12');},300);
+      later(function(){
+        var t=reply([
+          {text:'그 말을 들으니 정말 걱정돼.',time:'01:12'},
+          {text:'지금 안전한 곳에 있어?',time:'01:12'}
+        ],900,m);
+        later(function(){
+          chat.appendChild(el('<div class="sos-card"><b>🧡 혼자 견디지 않아도 돼요</b><div>📞 109 · 자살예방상담전화 (24시간)</div><div>📞 1577-0199 · 정신건강위기상담</div><div>🚨 지금 위험하면 112 · 119</div></div>'));scroll();
+        },t);
+        later(function(){you('나는 계속 여기 있을게. 천천히 말해 줘.','01:13');},t+1400);
+      },300);
+    },
+    english:function(){
+      setEn(true); day();
+      later(function(){you('How was your day, babe? 🥺','20:05');},300);
+      var m; later(function(){m=me('I go to park alone yesterday.','20:06');},1500);
+      later(function(){
+        chat.appendChild(el('<div class="fix">✏️ 더 자연스럽게<br><b>I went to the park alone yesterday.</b><br><span style="color:var(--ink2)">· 지난 일 → <s>go</s> went · 공원 → the park</span></div>'));scroll();
+        reply([
+          {text:'Oh, that sounds peaceful! 🌿',time:''},
+          {text:'Did it help you relax a little?',time:'20:06'}
+        ],800,m);
+      },2300);
+    }
+  };
+  function setEn(on){screen.classList.toggle('en',on);pill.classList.toggle('on',on);pill.textContent=on?'🇬🇧 ON':'🇬🇧 OFF';}
+  var btns=document.querySelectorAll('.demo-btns button');
+  btns.forEach(function(b){b.addEventListener('click',function(){
+    btns.forEach(function(x){x.classList.toggle('on',x===b);});
+    clear(); scenes[b.dataset.s]();
+  });});
+  scenes.heart();
+})();
+</script>
+</body>
+</html>

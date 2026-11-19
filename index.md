@@ -33,6 +33,11 @@
 
 - [[laptop-helper]] — 허브: DY-006 SWEEPER. 홈 폴더 정리(다운로드·데스크탑 보고, 문서를 raw로 복사, 종류별 폴더 정리). 스캔은 코드, 승인은 터미널 y/N, 지우기는 휴지통만
 
+# 📁 프로젝트: heartline
+
+- [[heartline]] — 허브: DY-007 CUPID(제안) · 기댈 사람 없는 이를 위한 정서 지원 가상 연인 웹앱 Heartline(+영어 모드) (기획)
+- [[Heartline PRD_261119]] — PRD v0.5(핵심만): 정서 지원 가상 연인 + 영어 모드, 핵심 기능 4개(페르소나·마음 대화·위기 대응·영어 모드), 메신저 UI, HTML/JS + 서버 + 터널 + 제미나이 무료, MVP 완료 기준. 시각화 페이지: `docs/heartline/prd.html`
+
 # 🔗 공통 (shared)
 - [[나]] — 사용자 본인 페이지
 - [[에이전트 코드명]] — 007 스타일 코드명 목록: DY-001 SENTINEL · 002 MIRROR · 003 TRACER · 004 TWIN · 005 PRIMER, 본부 Q-BRANCH
