@@ -109,3 +109,5 @@
 ## [2026-11-19] output | Heartline 발표 9번 장(핵심 구현) 삭제 → 10장, pptx 다시 만듦
 
 ## [2026-11-19] output | Heartline 과제 제출 파일 5종을 output/제출/ 에 모음: PRD·체크리스트·테스트 목록 PDF(공개 페이지 인쇄용 모드)+md, 앱 zip, 발표 pptx, 전체 묶음 zip
+
+## [2026-11-19] output | Heartline 공개 시연: start-public.sh로 서버+Cloudflare 터널 켬(공개 링크에서 실제 AI 답장 확인), 발표 1·6·10번 장에 앱 링크+QR 추가, pptx·제출 묶음 다시 만듦
