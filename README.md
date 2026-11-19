@@ -52,10 +52,10 @@ flowchart LR
   end
   W --> LH
 
-  subgraph HL["DY-007 CUPID · Heartline 정서 지원 가상 연인"]
+  subgraph HL["DY-007 CUPID · Heartline 나만의 가상 연인"]
     direction TB
-    HL1["💗 페르소나 만들기<br/>성격·말투·관계"] --> HL2["💬 메신저처럼 마음 대화<br/>+ 🇬🇧 영어 모드"]
-    HL2 --> HL3["🆘 위기 감지 → 도움 연결<br/>(서버가 꺼져도 동작)"]
+    HL1["🎨 페르소나 만들기·바꾸기<br/>프리셋 6종 · 최대 5명"] --> HL2["💬 메신저처럼 연인 대화<br/>+ 🇬🇧 영어 모드"]
+    HL2 --> HL3["💾 연인·대화는 내 브라우저에<br/>🛡️ 기본 안전 장치"]
   end
   W --> HL
 
@@ -81,7 +81,7 @@ flowchart LR
 | 💬 DY-004 **TWIN** | 터미널에서 구글 제미나이와 대화 (키는 `.env`, 대화 기록은 볼트 밖) | 사용 중 | [scripts/gemini.py](scripts/gemini.py) | [위키](wiki/shared/gemini-chat.md) |
 | 📝 DY-005 **PRIMER** | 내 분야 초보자가 자주 묻는 질문 15개와 두 줄 답을 Gemini에게 한 번 받아 `answer.md`로 저장 | 🟦 초기 버전 | [agents/beginner-faq](agents/beginner-faq) | — |
 | 🧹 DY-006 **SWEEPER** | 홈 폴더 정리 도우미. 다운로드·데스크탑 현황과 휴지통 후보, 흩어진 문서를 위키 `raw/`로 모으기, 폴더를 종류별로 정리. 스캔은 코드(사용량 0), 옮기기·지우기는 터미널에서 직접 승인·휴지통만 | 🟦 초기 버전 | [agents/laptop-helper](agents/laptop-helper) | [위키](wiki/projects/laptop-helper/laptop-helper.md) |
-| 💗 DY-007 **CUPID** | Heartline: 기댈 사람이 없는 이에게 곁이 되어 주는 공개 웹앱. 직접 만든 가상 연인과 메신저처럼 톡하며 마음을 나누고, 위험 신호엔 도움 기관으로 연결. 부가로 영어 모드(교정 카드) | 🟦 초기 버전 | [agents/heartline](agents/heartline) · [**앱**](https://dodo-yong.github.io/Obsidian/heartline/) | [위키](wiki/projects/heartline/heartline.md) · [PRD](wiki/projects/heartline/topics/Heartline%20PRD_261119.md) · [**PRD 페이지**](https://dodo-yong.github.io/Obsidian/heartline/prd.html) · [체크리스트](https://dodo-yong.github.io/Obsidian/heartline/checklist.html) · [테스트](https://dodo-yong.github.io/Obsidian/heartline/tests.html) |
+| 💗 DY-007 **CUPID** | Heartline: 내 취향대로 만드는 나만의 가상 연인 웹앱. 성격·말투·호칭·관계를 정하고(프리셋 6종·실시간 미리보기), 최대 5명을 바꿔 가며 메신저처럼 톡해요. 부가로 영어 모드(교정 카드) | 🟦 초기 버전 | [agents/heartline](agents/heartline) · [**앱**](https://dodo-yong.github.io/Obsidian/heartline/) | [위키](wiki/projects/heartline/heartline.md) · [PRD](wiki/projects/heartline/topics/Heartline%20PRD_261119.md) · [**PRD 페이지**](https://dodo-yong.github.io/Obsidian/heartline/prd.html) · [체크리스트](https://dodo-yong.github.io/Obsidian/heartline/checklist.html) · [테스트](https://dodo-yong.github.io/Obsidian/heartline/tests.html) |
 
 ## 🧠 TRACER 쓰는 법
 

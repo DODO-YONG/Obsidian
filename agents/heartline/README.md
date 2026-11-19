@@ -1,8 +1,8 @@
 # 💗 DY-007 CUPID — Heartline (`heartline`)
 
-> 기댈 사람이 없는 사람에게 언제든 곁에 있어 주는 가상 연인 웹앱. 메신저로 톡하듯 마음을 나누고, 원하면 영어 모드로 대화한다.
+> 내 취향대로 만드는 나만의 가상 연인 웹앱. 성격·말투·호칭·관계를 정하고(프리셋 6종·실시간 미리보기), 최대 5명을 바꿔 가며 메신저처럼 톡한다. 원하면 영어 모드로도.
 
-- **상태**: 초기 버전 (자동 테스트 46/46 통과, 로컬에서 실제 AI로 확인)
+- **상태**: 초기 버전 (자동 테스트 50/50 통과, 로컬에서 실제 AI로 확인)
 - **앱**: https://dodo-yong.github.io/Obsidian/heartline/ (답변 서버가 켜져 있을 때 AI가 답함)
 - **문서**: [PRD](https://dodo-yong.github.io/Obsidian/heartline/prd.html) · [체크리스트](https://dodo-yong.github.io/Obsidian/heartline/checklist.html) · [테스트](https://dodo-yong.github.io/Obsidian/heartline/tests.html) · 위키 `wiki/projects/heartline/`
 
@@ -38,4 +38,4 @@ cd agents/heartline/server && python3 -m unittest discover -s tests -v
 | `server/safety.py` | 위기 감지(화면 `app.js`와 같은 목록), 개인정보 가림, 페르소나·메시지 검사 |
 | `server/gemini_client.py` | 제미나이 무료 등급 스트리밍, 바쁘면 다음 모델로 |
 | `server/start-public.sh` | 서버 + 터널 + `server.json` 자동 갱신 |
-| `../../docs/heartline/index.html` · `app.js` · `app.css` | 앱 화면(입장·페르소나·대화방·🆘·설정) |
+| `../../docs/heartline/index.html` · `app.js` · `app.css` | 앱 화면(입장·대화 목록·페르소나 편집기·대화방·설정) |

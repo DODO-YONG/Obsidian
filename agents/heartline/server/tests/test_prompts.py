@@ -41,6 +41,23 @@ class BuildSystemPrompt(unittest.TestCase):
         self.assertIn("하린", p)
         self.assertIn("자기야", p)
 
+    def test_persona_card_has_every_custom_field(self):
+        """페르소나가 1순위: 사용자가 정한 항목이 모두 지시에 들어가야 한다."""
+        part = self.build().split("### 페르소나")[1].split("### 모드")[0]
+        for word in ["다정", "어른스러움", "~거든?", "꽃집", "비 오는 날 산책", "거짓말", "연인", "반말"]:
+            with self.subTest(word=word):
+                self.assertIn(word, part)
+
+    def test_relationship_stage_changes_card(self):
+        some = prompts.build_system_prompt(dict(ADULT_PERSONA, relationshipStage="some"), "heart", {}, "")
+        long_ = prompts.build_system_prompt(dict(ADULT_PERSONA, relationshipStage="longterm"), "heart", {}, "")
+        self.assertIn("썸", some)
+        self.assertIn("오래된 연인", long_)
+
+    def test_persona_rule_comes_before_mode(self):
+        p = self.build()
+        self.assertIn("일관", p.split("### 모드")[0])
+
     def test_heart_mode_rules(self):
         mode_part = self.build("heart").split("### 모드")[1]
         self.assertIn("공감", mode_part)

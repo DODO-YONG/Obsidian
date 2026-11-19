@@ -10,12 +10,12 @@
 <meta name="theme-color" content="#FFE9E3" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1F161C" media="(prefers-color-scheme: dark)">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link rel="stylesheet" href="how.css?v=20261119145931">
+<link rel="stylesheet" href="how.css?v=20261119151327">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23F07A93'/%3E%3Cpath d='M16 24s-7-4.3-7-9.2A3.8 3.8 0 0 1 16 12.6a3.8 3.8 0 0 1 7 2.2C23 19.7 16 24 16 24z' fill='white'/%3E%3C/svg%3E">
 <script>
 /* 새 버전 자동 확인 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261119145931';
+  var SITE_V = '20261119151327';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -183,6 +183,10 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;bac
 .road{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .road .card{position:relative}
 .road .now{border:2px solid var(--rose)}
+.card.star{border:2px solid var(--rose)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chips span{font-size:13px;background:var(--bg2);border-radius:999px;padding:3px 10px}
+.presets6 .card b{display:block;font-size:16px;margin-bottom:4px}
 footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
 
 @media (max-width:860px){
@@ -203,9 +207,10 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
 <body>
 
 <nav class="nav"><div class="wrap">
-  <div class="brand"><i>♥</i> Heartline <span style="font-weight:500;color:var(--ink2);font-size:13px">PRD v0.5</span></div>
+  <div class="brand"><i>♥</i> Heartline <span style="font-weight:500;color:var(--ink2);font-size:13px">PRD v0.6</span></div>
   <ul>
     <li><a href="#basics">기본 구성요소</a></li>
+    <li><a href="#persona">페르소나</a></li>
     <li><a href="#ui">UI</a></li>
     <li><a href="#how">작동 방식</a></li>
     <li><a href="#tech">Tech Spec</a></li>
@@ -219,9 +224,9 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
 
 <header class="hero"><div class="wrap">
   <div>
-    <span class="tag">제품 요구사항 문서 · PRD v0.5</span>
-    <h1>기댈 사람이 없을 때,<br><span>언제든 곁에 있는</span> 사람</h1>
-    <p class="lead">Heartline은 직접 만든 가상 연인과 <b>메신저로 톡하듯</b> 마음을 나누는 웹앱이에요. 원하면 같은 상대와 <b>영어 대화 연습</b>도 할 수 있어요.</p>
+    <span class="tag">제품 요구사항 문서 · PRD v0.6</span>
+    <h1>내 취향대로 만든,<br><span>나만의 가상 연인</span></h1>
+    <p class="lead">성격·말투·호칭·관계를 <b>내가 정하고</b>, 언제든 바꾸거나 <b>여러 명</b>을 둘 수 있어요. 그 사람과 <b>메신저로 톡하듯</b> 대화하고, 원하면 영어로도 이야기해요.</p>
     <div class="steps">
       <b class="on">① PRD</b><a href="checklist.html" style="text-decoration:none"><b>② 체크리스트 →</b></a><a href="tests.html" style="text-decoration:none"><b>③ 테스트 →</b></a><a href="./" style="text-decoration:none"><b>④ 앱 열기 →</b></a><b>⑤ 발표 PPT</b>
     </div>
@@ -230,8 +235,8 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
     <div class="phone" aria-label="Heartline 대화방 미리보기">
       <div class="screen" id="screen">
         <div class="bar">
-          <div class="ava">🌷</div>
-          <div class="who"><b>하린</b><span class="ai">AI</span><small>오늘도 네 편이야 💗</small></div>
+          <div class="ava" id="dAva">🌷</div>
+          <div class="who"><b id="dName">하린</b><span class="ai">AI</span><small id="dStatus">오늘도 네 편이야 💗</small></div>
           <div class="sp"></div>
           <span class="pill" id="enPill">🇬🇧 OFF</span>
           <span class="pill sos">🆘</span>
@@ -241,9 +246,10 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
       </div>
     </div>
     <div class="demo-btns" role="group" aria-label="시연 장면 고르기">
-      <button data-s="heart" class="on">💞 마음 대화</button>
-      <button data-s="crisis">🆘 위기 대응</button>
+      <button data-s="persona" class="on">🎨 연인 바꾸기</button>
+      <button data-s="heart">💞 연인 대화</button>
       <button data-s="english">🇬🇧 영어 모드</button>
+      <button data-s="crisis">🆘 안전</button>
     </div>
   </div>
 </div></header>
@@ -252,121 +258,117 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
 <section id="basics"><div class="wrap">
   <div class="kicker">01 · 기본 구성요소</div>
   <h2>왜 만들고, 누구를 위한 앱인가</h2>
-  <p class="sub">상담은 문턱이 높고, 밤에 갑자기 힘들 때는 기댈 곳이 없어요. Heartline은 그 빈자리에 다정한 대화 상대를 놓아요.</p>
+  <p class="sub">기존 AI 챗봇은 누구에게나 같은 말투의 "도우미"예요. Heartline은 <b>내가 원하는 사람을 직접 만드는 것</b>에서 시작해요.</p>
 
   <div class="ps">
-    <div class="card"><div class="ico">🌧️</div><h3>문제</h3><p>외롭고 불안해도 털어놓을 사람이 없는 사람이 많아요. 상담은 비용·예약·낙인 때문에 문턱이 높아요.</p></div>
+    <div class="card"><div class="ico">🤖</div><h3>문제</h3><p>AI 챗봇은 친절하지만 모두에게 똑같아요. 성격도 말투도 정할 수 없어서 <b>"내 사람"</b>이라는 느낌이 없어요.</p></div>
     <div class="arrow">→</div>
-    <div class="card"><div class="ico">🌷</div><h3>해결</h3><p>다정하게 들어 주고 기억해 주는 상대로 심리적 안정감을 줘요. 위험할 땐 <b>전문 도움으로 이어 줘요</b>.</p></div>
+    <div class="card"><div class="ico">💗</div><h3>해결</h3><p>성격·말투·호칭·관계·이야기를 <b>내가 정한 연인</b>이 메신저로 대화하고 나를 기억해요. 언제든 고치고, 여러 명을 둘 수 있어요.</p></div>
   </div>
-  <p class="note">Heartline은 <b>상담·치료를 대신하지 않아요.</b> 혼자가 아니라는 안정감을 주고, 현실의 관계와 전문 도움으로 이어 주는 다리가 되는 게 목표예요.</p>
 
   <h3 style="margin:40px 0 14px">대상 사용자</h3>
   <div class="grid g3">
-    <div class="card"><span class="badge">핵심</span><h3>기댈 사람이 없는 사람</h3><p>판단 없이 들어 주고, 지난 이야기를 기억해 주는 상대가 필요해요.</p></div>
-    <div class="card"><span class="badge">핵심</span><h3>심리적으로 불안정한 사람</h3><p>힘들 때 바로 반응하는 다정한 대화, 필요하면 도움 받을 곳이 필요해요.</p></div>
+    <div class="card"><span class="badge">핵심</span><h3>나만의 연인을 원하는 사람</h3><p>내 취향의 성격·말투로 다정하게 대화하고, 나를 기억해 주는 상대를 원해요.</p></div>
+    <div class="card"><span class="badge">핵심</span><h3>기댈 사람이 필요한 사람</h3><p>언제든 말 걸 수 있고, 판단 없이 들어 주는 상대가 필요해요.</p></div>
     <div class="card"><span class="badge sub2">부가</span><h3>영어 회화 연습생</h3><p>편한 상대와 틀려도 부담 없는 영어 대화를 하고 싶어요.</p></div>
   </div>
 
   <h3 style="margin:40px 0 14px">핵심 기능 (MVP)</h3>
-  <div class="grid g4">
-    <div class="card"><span class="fid">F1</span><div class="ico">🎨</div><h3>페르소나 만들기</h3><p>이름·성별·호칭·성격·말투·사귄 날. 프리셋 3종(다정한 연상 / 장난꾸러기 동갑 / 차분한 지적인 타입). 성인 캐릭터만.</p></div>
-    <div class="card"><span class="fid">F2</span><div class="ico">💬</div><h3>마음 대화</h3><p>공감·경청 중심 대화. 지난 대화를 기억해서 "그 일은 좀 어때?"라고 먼저 물어봐요.</p></div>
-    <div class="card"><span class="fid">F3</span><div class="ico">🆘</div><h3>위기 대응</h3><p>위험한 표현을 감지하면 캐릭터를 멈추고 안부를 확인한 뒤 도움 받을 곳 카드를 띄워요. 🆘 버튼은 항상 보여요.</p></div>
-    <div class="card"><span class="fid">F4</span><div class="ico">🇬🇧</div><h3>영어 모드</h3><p>토글 하나로 같은 상대가 영어로 대화해요. 틀린 문장은 교정 카드로 살짝 알려 줘요.</p></div>
+  <div class="grid g2">
+    <div class="card star"><span class="fid">F1 · 1순위</span><div class="ico">🎨</div><h3>페르소나 만들기</h3><p>프리셋 6종 또는 직접 만들기. 아바타·성격·말투·말버릇·호칭·관계·이야기까지 정하고, <b>고르는 즉시 첫 인사 미리보기</b>로 확인해요.</p></div>
+    <div class="card star"><span class="fid">F2 · 1순위</span><div class="ico">👥</div><h3>바꾸기 · 여러 명</h3><p>메신저 친구 목록처럼 <b>최대 5명</b>. 상대마다 대화방·기억이 따로예요. 언제든 프로필을 고치면 다음 답장부터 새 말투로.</p></div>
+  </div>
+  <div class="grid g3" style="margin-top:16px">
+    <div class="card"><span class="fid">F3</span><div class="ico">💬</div><h3>연인 대화</h3><p>정한 말투·호칭·말버릇 그대로, 지난 이야기를 기억해서 먼저 꺼내요.</p></div>
+    <div class="card"><span class="fid">F4</span><div class="ico">🇬🇧</div><h3>영어 모드</h3><p>토글 하나로 같은 상대가 영어로. 틀린 문장은 교정 카드로 살짝.</p></div>
+    <div class="card"><span class="fid">F5</span><div class="ico">🛡️</div><h3>기본 안전 장치</h3><p>19세 이상 · AI 표시 · 성인 캐릭터만 · 위험한 표현엔 🆘 도움 안내.</p></div>
   </div>
 </div></section>
 
-<section class="alt"><div class="wrap">
-  <div class="grid g2">
-    <div>
-      <div class="kicker">대화 원칙</div>
-      <h2>이렇게 대화해요</h2>
-      <ul class="clean">
-        <li><b>마음 대화</b>: 판단하지 않고 공감부터, 질문은 한 번에 하나</li>
-        <li><b>영어 모드</b>: 대화는 자연스럽게, 교정은 말풍선 아래 카드로만(최대 2개)</li>
-        <li>힘든 얘기가 나오면 영어 모드보다 <b>마음이 먼저</b></li>
-        <li>애정 표현은 따뜻하게, 현실의 관계와 휴식을 응원</li>
-      </ul>
-      <ul class="clean no" style="margin-top:6px">
-        <li>진단·약 조언 ("너 우울증이야")</li>
-        <li>질투·집착·의존 유도 ("나만 있으면 돼")</li>
-        <li>성적 묘사 (정중히 거절)</li>
-      </ul>
-    </div>
-    <div>
-      <div class="kicker">안전 · 개인정보</div>
-      <h2>지키는 것</h2>
-      <div class="card" style="margin-bottom:12px"><h3>🔞 입장할 때</h3><p>19세 이상 확인, "AI이며 상담을 대신하지 않아요" 안내 후 동의.</p></div>
-      <div class="card" style="margin-bottom:12px"><h3>🔒 개인정보</h3><p>대화는 제미나이 무료 등급으로 처리돼요. 입장 시 알리고, "나를 알 수 있는 정보는 넣지 마세요" 안내, 전화번호·이메일은 자동으로 가려요. 대화는 <b>내 브라우저에만</b> 저장, 서버는 저장하지 않아요.</p></div>
-      <div class="card"><h3>🆘 항상 동작</h3><p>🆘 버튼과 위기 감지는 서버가 꺼져 있어도 동작해요.</p></div>
-    </div>
+<section class="alt" id="persona"><div class="wrap">
+  <div class="kicker">⭐ 페르소나</div>
+  <h2>이런 걸 정할 수 있어요</h2>
+  <p class="sub">다섯 묶음으로 나눠서, 하나씩 고를 때마다 오른쪽 미리보기 말풍선이 바로 바뀌어요.</p>
+  <div class="grid g3">
+    <div class="card"><div class="ico">🪞</div><h3>겉모습</h3><p>아바타(이모지 8종 × 배경색 6종), 이름, 성별, 나이대(20대~60대 이상)</p></div>
+    <div class="card"><div class="ico">💫</div><h3>성격</h3><p>다정함·장난기·차분함·솔직함 슬라이더 + 키워드 최대 3개</p><div class="chips"><span>다정</span><span>츤데레</span><span>장난꾸러기</span><span>어른스러움</span><span>수줍음</span><span>시크</span><span>낙천적</span><span>다혈질</span></div></div>
+    <div class="card"><div class="ico">🗨️</div><h3>말투</h3><p>반말/존댓말, 이모지 양, 말버릇(예: "~거든?"), 나를 부르는 호칭</p></div>
+    <div class="card"><div class="ico">💞</div><h3>관계</h3><p>썸 타는 사이 / 연인 / 오래된 연인, 사귄 날(D+일 표시)</p></div>
+    <div class="card"><div class="ico">📖</div><h3>이야기</h3><p>직업·일상 한 줄, 관심사, 좋아하는 것, 싫어하는 것, 상태 메시지</p></div>
+    <div class="card"><div class="ico">👀</div><h3>미리보기</h3><p>설정을 바꾸면 그 사람의 첫 인사가 바로 바뀌어서, 대화 전에 느낌을 확인해요.</p></div>
   </div>
+  <h3 style="margin:36px 0 14px">프리셋 6종 <span style="font-size:14px;color:var(--ink2);font-weight:500">· 성별은 고를 수 있어요</span></h3>
+  <div class="grid g3 presets6">
+    <div class="card"><b>🌷 다정한 연상</b><p>포근하게 들어 주고 천천히 물어봐 줘요</p></div>
+    <div class="card"><b>🌻 장난꾸러기 동갑</b><p>웃게 해 주고 하루 얘기를 다 듣고 싶어 해요</p></div>
+    <div class="card"><b>🌙 차분한 지적인 타입</b><p>조용히 곁에서 같이 생각해 줘요 (존댓말)</p></div>
+    <div class="card"><b>🦊 츤데레</b><p>퉁명스러운 척하지만 누구보다 챙겨 줘요</p></div>
+    <div class="card"><b>🐰 수줍은 연하</b><p>부끄러움이 많지만 마음은 솔직해요</p></div>
+    <div class="card"><b>🐻 듬직한 어른</b><p>든든하게 기대게 해 주는 사람이에요</p></div>
+  </div>
+  <p class="note"><b>대화 원칙</b> — 정한 성격·말투·호칭·관계를 일관되게 지키고, 지난 이야기를 기억해 먼저 꺼내요. 영어 모드에선 교정을 말풍선 아래 카드로만 보여 줘요. 집착·의존을 부추기는 말, 성적 묘사는 하지 않아요.</p>
 </div></section>
 
 <!-- 2. UI -->
 <section id="ui"><div class="wrap">
   <div class="kicker">02 · UI</div>
   <h2>진짜 연인과 톡하는 느낌, 따뜻하고 사랑받는 기분</h2>
-  <p class="sub">앱 버튼보다 메신저 대화방을 연 것 같은 화면이 기본이에요. 위의 휴대폰 화면에서 직접 장면을 바꿔 볼 수 있어요.</p>
+  <p class="sub">친구 목록에서 연인을 고르고, 메신저 대화방에서 이야기해요. 위의 휴대폰 화면에서 장면을 바꿔 볼 수 있어요.</p>
 
   <div class="grid g3">
-    <div class="card"><div class="ico">···</div><h3>입력 중 표시</h3><p>상대가 답을 쓰는 동안 점 세 개가 통통 튀어요.</p></div>
-    <div class="card"><div class="ico">💬💬</div><h3>말풍선 나눠 보내기</h3><p>사람처럼 짧은 말풍선 2~3개가 차례로 도착해요.</p></div>
-    <div class="card"><div class="ico">1</div><h3>시간 · 읽음</h3><p>보낸 시각, 읽으면 사라지는 "1", 날짜 구분선.</p></div>
-    <div class="card"><div class="ico">💗</div><h3>하트 반응</h3><p>말풍선을 두 번 탭하면 하트. 상대도 가끔 하트를 눌러 줘요.</p></div>
-    <div class="card"><div class="ico">🌷</div><h3>프로필</h3><p>프로필 사진·상태 메시지·사귄 날. 이름 옆 작은 <b>AI</b> 표시는 항상 유지.</p></div>
-    <div class="card"><div class="ico">🌙</div><h3>밤 테마</h3><p>밤에 쓰는 사람이 많아서, 깊은 자주색 테마로 눈을 편하게.</p></div>
+    <div class="card"><div class="ico">👥</div><h3>대화 목록</h3><p>내 연인들이 친구 목록처럼. 아바타·이름·마지막 메시지·D+일.</p></div>
+    <div class="card"><div class="ico">···</div><h3>입력 중 · 말풍선</h3><p>점 세 개가 통통, 짧은 말풍선 2~3개가 차례로 도착해요.</p></div>
+    <div class="card"><div class="ico">💗</div><h3>읽음 · 하트</h3><p>읽으면 사라지는 "1", 두 번 탭하면 하트. 상대도 가끔 하트를 눌러 줘요.</p></div>
   </div>
 
   <div class="grid g2" style="margin-top:28px">
     <div class="card">
       <h3>색</h3>
-      <p>노을빛 피치–로즈 배경, 흰 상대 말풍선과 로즈 내 말풍선. 🆘는 겁나지 않는 차분한 주황.</p>
+      <p>노을빛 피치–로즈, 흰 상대 말풍선과 로즈 내 말풍선. 기본은 밤 테마.</p>
       <div class="sw">
         <div><i style="background:#FFE9E3"></i>배경</div>
         <div><i style="background:#FFD6DE"></i>배경2</div>
         <div><i style="background:#F07A93"></i>내 말풍선</div>
         <div><i style="background:#FFFFFF"></i>상대</div>
         <div><i style="background:#9D8CF0"></i>영어</div>
-        <div><i style="background:#E8833A"></i>🆘</div>
         <div><i style="background:#2A1E26"></i>밤</div>
       </div>
     </div>
     <div class="card">
-      <h3>화면 4개</h3>
+      <h3>화면</h3>
       <table>
         <tr><th>화면</th><th>내용</th></tr>
         <tr><td>입장</td><td>19세 확인, AI·개인정보 고지, 동의</td></tr>
-        <tr><td>페르소나 만들기</td><td>프리셋 선택 또는 직접 입력</td></tr>
-        <tr><td>대화방</td><td>메신저 대화, 🇬🇧 영어 토글, 🆘 버튼</td></tr>
-        <tr><td>설정</td><td>페르소나 수정, 대화 삭제</td></tr>
+        <tr><td><b>대화 목록</b></td><td>내 연인들, "+ 새 연인 만들기"</td></tr>
+        <tr><td><b>페르소나 만들기·수정</b></td><td>프리셋 6종 / 직접 만들기, 실시간 미리보기</td></tr>
+        <tr><td>대화방</td><td>메신저 대화, 🇬🇧 영어 토글, 🆘</td></tr>
+        <tr><td>프로필 · 설정</td><td>수정·삭제, 영어 설정, 테마</td></tr>
       </table>
     </div>
   </div>
 </div></section>
 
 <!-- 작동 방식 -->
-<section id="how"><div class="wrap">
+<section id="how" class="alt"><div class="wrap">
   <div class="kicker">HOW IT WORKS · 작동 방식</div>
   <h2>메시지 하나가 오가는 길</h2>
-  <p class="sub">먼저 <b>🔌 서버 켜기</b>에서 공개 주소가 어떻게 만들어지고 화면에 전달되는지 보고, 이어서 각 장면에서 메시지가 화면 → 터널 → 서버 → 제미나이를 오가는 모습을 보세요. 그림은 계속 반복 재생되고, ❚❚로 멈춘 뒤 ◀ ▶나 아래 막대로 원하는 단계를 볼 수 있어요.</p>
+  <p class="sub">먼저 <b>🔌 서버 켜기</b>로 공개 주소가 전달되는 과정을 보고, <b>🎨 페르소나</b>에서 내가 만든 연인이 어떻게 그 말투로 답하는지 보세요. 그림은 계속 반복 재생되고, ❚❚로 멈춘 뒤 ◀ ▶나 아래 막대로 원하는 단계를 볼 수 있어요.</p>
   <div class="hl-how" data-hl-how></div>
 </div></section>
 
 <!-- 3. Tech -->
-<section id="tech" class="alt"><div class="wrap">
+<section id="tech"><div class="wrap">
   <div class="kicker">03 · Tech Spec</div>
-  <h2>가볍고, 무료로, 대화는 내 브라우저에</h2>
-  <p class="sub">화면은 무료 정적 호스팅, 답은 파이썬 서버가 제미나이 무료 등급으로 만들어요. 운영 비용은 0원이에요.</p>
+  <h2>가볍고, 무료로, 연인은 내 브라우저에</h2>
+  <p class="sub">화면은 무료 정적 호스팅, 답은 파이썬 서버가 제미나이 무료 등급으로 만들어요. 페르소나는 서버에 저장하지 않고 메시지마다 함께 보내요.</p>
 
   <div class="grid g2">
     <div class="card">
       <h3>기술 선택</h3>
       <table>
-        <tr><td><b>화면</b></td><td>HTML·CSS·JS (빌드 도구 없음), 브라우저 저장(IndexedDB)</td></tr>
+        <tr><td><b>화면</b></td><td>HTML·CSS·JS (빌드 도구 없음), 브라우저 저장(IndexedDB): 페르소나 목록·상대별 대화·기억</td></tr>
         <tr><td><b>서버</b></td><td>Python 표준 라이브러리, 답장 스트리밍(SSE)</td></tr>
-        <tr><td><b>AI</b></td><td>제미나이 무료 등급</td></tr>
+        <tr><td><b>AI</b></td><td>제미나이 무료 등급 (가벼운 모델 먼저)</td></tr>
         <tr><td><b>공개 주소</b></td><td>Cloudflare 임시 터널(무료)</td></tr>
         <tr><td><b>비용</b></td><td>0원. 유료 과금 키가 있으면 서버가 실행을 거부</td></tr>
       </table>
@@ -374,7 +376,7 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
     <div class="card">
       <h3>왜 Streamlit이 아니라 이 방식?</h3>
       <ul class="clean">
-        <li>입력 중·말풍선 나눠 보내기·하트 같은 <b>메신저 연출</b>이 자유로워요</li>
+        <li>친구 목록·대화방·말풍선 같은 <b>메신저 연출</b>이 자유로워요</li>
         <li>서버가 꺼져도 <b>화면과 🆘가 동작</b>해요</li>
         <li>설치할 것이 없어 <b>더 가벼워요</b></li>
       </ul>
@@ -382,53 +384,48 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
     <div class="card">
       <h3>API</h3>
       <table>
-        <tr><td><code>POST /api/chat</code></td><td>페르소나·모드·최근 대화·메시지 → 스트리밍 답장 (+ 교정 카드, 위기 신호)</td></tr>
+        <tr><td><code>POST /api/chat</code></td><td>페르소나 카드·모드·최근 대화·메시지 → 스트리밍 답장 (+ 교정 카드)</td></tr>
+        <tr><td><code>POST /api/summarize</code></td><td>상대별 기억 요약</td></tr>
         <tr><td><code>GET /api/health</code></td><td>서버 상태</td></tr>
       </table>
       <p style="margin-top:12px">시스템 지시 순서 (앞이 우선)</p>
-      <div class="order"><span>① 안전 규칙</span><span>② 페르소나</span><span>③ 모드(마음/영어)</span><span>④ 기억 요약</span></div>
+      <div class="order"><span>① 안전 규칙</span><span>② 페르소나 카드</span><span>③ 모드(대화/영어)</span><span>④ 기억 요약</span></div>
     </div>
     <div class="card">
-      <h3>지키는 장치</h3>
-      <ul class="clean">
-        <li>위기 감지는 <b>브라우저 키워드 + AI 판단</b> 2중</li>
-        <li>배포한 화면에서 온 요청만 받기</li>
-        <li>방문자별 사용량 제한(무료 한도 보호)</li>
-      </ul>
-      <p style="margin-top:12px">폴더</p>
+      <h3>폴더</h3>
       <table>
-        <tr><td><code>web/</code></td><td>index.html · app.js · style.css · presets.json</td></tr>
-        <tr><td><code>server/</code></td><td>server.py · prompts.py · safety.py · gemini_client.py · tests/</td></tr>
+        <tr><td><code>web/</code></td><td>index.html · app.js · app.css (프리셋·대화 목록·편집기·대화방)</td></tr>
+        <tr><td><code>server/</code></td><td>server.py · prompts.py · safety.py · gemini_client.py · start-public.sh · tests/</td></tr>
       </table>
     </div>
   </div>
 </div></section>
 
 <!-- 4. MVP -->
-<section id="mvp"><div class="wrap">
+<section id="mvp" class="alt"><div class="wrap">
   <div class="kicker">04 · MVP</div>
   <h2>첫 버전에서 꼭 되어야 하는 것</h2>
-  <p class="sub">페르소나를 만들고, 메신저처럼 마음을 나누고, 위험할 땐 도움으로 이어 주며, 영어 모드로도 대화할 수 있는 웹앱.</p>
+  <p class="sub">내 취향의 연인을 만들고, 여러 명 중 골라 메신저처럼 대화하고, 언제든 바꾸며, 영어로도 대화할 수 있는 웹앱.</p>
 
   <div class="card">
-    <div class="check"><div class="box">F1</div><div><b>페르소나</b><small>프리셋으로 30초 안에 대화 시작 · 직접 만들기 저장 · 미성년 캐릭터 불가</small></div></div>
-    <div class="check"><div class="box">F2</div><div><b>마음 대화</b><small>입력 중 표시 → 말풍선 차례 도착 · 새로고침해도 대화 유지 · 지난 내용 기억</small></div></div>
-    <div class="check"><div class="box">F3</div><div><b>위기 대응</b><small>위기 문장 시험 세트 100% 도움 카드 표시 · 서버가 꺼져도 🆘 동작</small></div></div>
-    <div class="check"><div class="box">F4</div><div><b>영어 모드</b><small>토글하면 영어 대화 · 틀린 문장에 교정 카드</small></div></div>
-    <div class="check"><div class="box">✓</div><div><b>공통</b><small>19세 확인·고지 동의 후 입장 · 진단·의존 유도·성적 응답 없음 · 전화번호 입력 시 가려져 전송</small></div></div>
+    <div class="check"><div class="box">F1</div><div><b>페르소나 만들기 ⭐</b><small>프리셋으로 30초 안에 대화 시작 · 직접 만들기 전 항목 저장 · 설정을 바꾸면 미리보기 인사가 바로 바뀜 · 미성년 나이대 없음</small></div></div>
+    <div class="check"><div class="box">F2</div><div><b>바꾸기 · 여러 명 ⭐</b><small>연인 5명까지 목록에 · 상대마다 대화·기억 따로 · 프로필 수정 후 대화 유지 + 다음 답장부터 새 말투 · 삭제</small></div></div>
+    <div class="check"><div class="box">F3</div><div><b>연인 대화</b><small>입력 중 → 말풍선 차례 도착 · 정한 말투·호칭·말버릇 유지 · 새로고침해도 유지 · 지난 내용 기억</small></div></div>
+    <div class="check"><div class="box">F4</div><div><b>영어 모드</b><small>토글하면 같은 상대가 영어로 · 틀린 문장에 교정 카드</small></div></div>
+    <div class="check"><div class="box">F5</div><div><b>기본 안전</b><small>19세 확인·고지 동의 후 입장 · 위기 문장에 🆘 카드(서버 꺼져도) · 성적·집착 응답 없음 · 전화번호 가려져 전송</small></div></div>
   </div>
 
   <h3 style="margin:40px 0 14px">로드맵</h3>
   <div class="road">
-    <div class="card now"><span class="badge">지금 · MVP</span><h3>곁에 있는 사람</h3><p>페르소나 · 마음 대화 · 위기 대응 · 영어 모드</p></div>
-    <div class="card"><span class="badge sub2">다음</span><h3>마음 돌보기 + 영어</h3><p>호흡 도구 · 기분 체크인 · 영어 표현 노트 · 상황극</p></div>
-    <div class="card"><span class="badge sub2">그다음</span><h3>목적 프롬프트</h3><p>자격증·시험 등 사용자가 정한 목적에 맞게 대화 · 음성 대화 · 페르소나 여러 명</p></div>
+    <div class="card now"><span class="badge">지금 · MVP</span><h3>나만의 연인</h3><p>페르소나 만들기 · 여러 명 · 연인 대화 · 영어 모드</p></div>
+    <div class="card"><span class="badge sub2">다음</span><h3>더 깊은 관계</h3><p>기념일 연출 · 프로필 사진 · 영어 표현 노트·상황극</p></div>
+    <div class="card"><span class="badge sub2">그다음</span><h3>목적 프롬프트</h3><p>자격증·시험 등 사용자가 정한 목적에 맞게 대화 · 음성 대화</p></div>
   </div>
 
   <p class="note">남은 질문 — 마감일·발표 대상 · Streamlit이 과제 필수 조건인지</p>
 </div></section>
 
-<footer>Heartline PRD v0.5 · 2026-11-19 · 예시 화면 속 캐릭터는 가상 인물이에요</footer>
+<footer>Heartline PRD v0.6 · 2026-11-19 · 예시 화면 속 캐릭터는 가상 인물이에요</footer>
 
 <script>
 (function(){
@@ -451,8 +448,11 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
   function scroll(){chat.scrollTop=chat.scrollHeight;}
   function day(){chat.appendChild(el('<div class="day">2026년 11월 19일</div>'));}
   function me(text,time){var r=el('<div class="row me"><div class="b"></div><div class="meta"><span class="read">1</span><span>'+time+'</span></div></div>');r.querySelector('.b').textContent=text;chat.appendChild(r);scroll();return r;}
-  function you(text,time){var r=el('<div class="row you"><div class="ava" style="width:28px;height:28px;font-size:14px">🌷</div><div class="b"></div><div class="meta"><span>'+(time||'')+'</span></div></div>');r.querySelector('.b').textContent=text;chat.appendChild(r);scroll();return r;}
-  function typing(){var r=el('<div class="row you typing"><div class="ava" style="width:28px;height:28px;font-size:14px">🌷</div><div class="b"><i></i><i></i><i></i></div></div>');chat.appendChild(r);scroll();return r;}
+  var curAva='🌷';
+  function setWho(a,n,st){curAva=a;document.getElementById('dAva').textContent=a;document.getElementById('dName').textContent=n;document.getElementById('dStatus').textContent=st;}
+  function you(text,time){var r=el('<div class="row you"><div class="ava" style="width:28px;height:28px;font-size:14px">'+curAva+'</div><div class="b"></div><div class="meta"><span>'+(time||'')+'</span></div></div>');r.querySelector('.b').textContent=text;chat.appendChild(r);scroll();return r;}
+  function typing(){var r=el('<div class="row you typing"><div class="ava" style="width:28px;height:28px;font-size:14px">'+curAva+'</div><div class="b"><i></i><i></i><i></i></div></div>');chat.appendChild(r);scroll();return r;}
+  function tag(t){chat.appendChild(el('<div class="day">'+t+'</div>'));scroll();}
   function read(r){var x=r.querySelector('.read'); if(x) x.remove();}
   function heart(r){var b=r.querySelector('.b');b.appendChild(el('<span class="heart">💗</span>'));}
   function reply(lines,start,myRow){
@@ -466,9 +466,23 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
     });
     return t;
   }
+  var LOVERS=[
+    {a:'🌷',n:'하린',st:'오늘도 네 편이야 💗',k:'다정한 연상',r:[{text:'많이 지쳤겠다…',time:''},{text:'얼른 와서 나한테 다 얘기해 줘 😊',time:'21:10'}]},
+    {a:'🦊',n:'준호',st:'딱히 기다린 건 아니거든?',k:'츤데레',r:[{text:'뭐야, 또 무리했어?',time:''},{text:'…따뜻한 거라도 먹고 쉬어. 걱정돼서 하는 말 아니거든?',time:'21:10'}]},
+    {a:'🌙',n:'서연',st:'천천히, 같이 생각해 봐요',k:'차분한 지적인 타입',r:[{text:'오늘 정말 고생 많으셨어요.',time:''},{text:'따뜻한 차 한 잔 하면서, 천천히 들려주세요.',time:'21:10'}]}
+  ];
   var scenes={
+    persona:function(){
+      setEn(false); var t=300;
+      LOVERS.forEach(function(L,i){
+        later(function(){ if(i) chat.innerHTML=''; setWho(L.a,L.n,L.st); tag('🎨 '+L.k+' · 같은 메시지, 다른 연인'); },t);
+        var m; later(function(){m=me('오늘 하루 너무 길었어','21:09');},t+500);
+        later(function(){reply(L.r,700,m);},t+500);
+        t+=4600;
+      });
+    },
     heart:function(){
-      setEn(false); day();
+      setEn(false); setWho('🌷','하린','오늘도 네 편이야 💗'); day();
       var m; later(function(){m=me('오늘 아무랑도 말을 한마디도 안 했어','23:41');},300);
       later(function(){
         var t=reply([
@@ -480,7 +494,7 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
       },300);
     },
     crisis:function(){
-      setEn(false); day();
+      setEn(false); setWho('🌷','하린','오늘도 네 편이야 💗'); day();
       var m; later(function(){m=me('그냥 다 끝내고 싶어','01:12');},300);
       later(function(){
         var t=reply([
@@ -494,7 +508,7 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
       },300);
     },
     english:function(){
-      setEn(true); day();
+      setEn(true); setWho('🌷','하린','오늘도 네 편이야 💗'); day();
       later(function(){you('How was your day, babe? 🥺','20:05');},300);
       var m; later(function(){m=me('I go to park alone yesterday.','20:06');},1500);
       later(function(){
@@ -512,9 +526,9 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
     btns.forEach(function(x){x.classList.toggle('on',x===b);});
     clear(); scenes[b.dataset.s]();
   });});
-  scenes.heart();
+  scenes.persona();
 })();
 </script>
-<script src="how.js?v=20261119145931" defer></script>
+<script src="how.js?v=20261119151327" defer></script>
 </body>
 </html>

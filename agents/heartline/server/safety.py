@@ -66,6 +66,9 @@ def validate_persona(p) -> tuple:
         return False, "이름이 너무 길어요"
     if str(p.get("ageGroup") or "") not in ADULT_AGE_GROUPS:
         return False, "성인 캐릭터만 만들 수 있어요"
+    kw = p.get("keywords") or []
+    if not isinstance(kw, list) or len(kw) > 3:
+        return False, "성격 키워드는 3개까지 고를 수 있어요"
     return True, None
 
 

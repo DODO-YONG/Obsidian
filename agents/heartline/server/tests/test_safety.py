@@ -77,6 +77,10 @@ class PersonaValidation(unittest.TestCase):
                 ok, _ = safety.validate_persona(dict(ADULT_PERSONA, ageGroup=age))
                 self.assertFalse(ok)
 
+    def test_too_many_keywords_rejected(self):
+        ok, _ = safety.validate_persona(dict(ADULT_PERSONA, keywords=["다정", "시크", "수줍음", "낙천적"]))
+        self.assertFalse(ok)
+
     def test_name_required(self):
         ok, _ = safety.validate_persona(dict(ADULT_PERSONA, name=""))
         self.assertFalse(ok)

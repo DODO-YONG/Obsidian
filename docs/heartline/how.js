@@ -22,9 +22,10 @@
     '<div class="hw-stage"><div class="hw-top">' +
     '<div class="hw-tabs" role="tablist" aria-label="장면">' +
     '<button type="button" role="tab" data-t="setup" aria-selected="true">🔌 서버 켜기<small>처음 한 번</small></button>' +
-    '<button type="button" role="tab" data-t="heart" aria-selected="false">💞 마음 대화</button>' +
-    '<button type="button" role="tab" data-t="crisis" aria-selected="false">🆘 위기 대응<small>서버 꺼져도 OK</small></button>' +
+    '<button type="button" role="tab" data-t="persona" aria-selected="false">🎨 페르소나<small>핵심</small></button>' +
+    '<button type="button" role="tab" data-t="heart" aria-selected="false">💞 연인 대화</button>' +
     '<button type="button" role="tab" data-t="english" aria-selected="false">🇬🇧 영어 모드</button>' +
+    '<button type="button" role="tab" data-t="crisis" aria-selected="false">🆘 안전</button>' +
     '</div>' + CTL + '</div>' +
     '<div class="hw-svg" data-r="svg" role="img" aria-label="Heartline 구성도: 주소 안내판, 사용자 화면, 임시 터널, 답변 서버, 제미나이"></div>' +
     '<div class="hw-cap"><div class="hw-prog" data-r="prog"></div><div class="hw-cap-row" aria-live="polite"><span class="hw-n" data-r="num">01</span><p data-r="cap"></p></div></div></div>' +
@@ -32,8 +33,9 @@
     '<p class="hw-sub">Heartline을 이루는 다섯 부분과 각자 맡은 일이에요. ' + LOCK + ' 표시는 그곳 밖으로 나가지 않는 것이에요.</p>' +
     '<div class="hw-tree"><div class="hw-root"><span>💗 Heartline</span></div><ul class="hw-branches">' +
     branch('hb-web', 'web', '사용자 화면', '휴대폰·PC 브라우저', [
+      leaf('<b>페르소나 만들기·바꾸기</b> · 대화 목록(최대 5명)'),
       leaf('<b>메신저 대화방</b> · 입력 중 · 말풍선 · 💗'),
-      leaf('<b>대화·페르소나 저장</b> (각자 브라우저)', 1),
+      leaf('<b>페르소나·상대별 대화 저장</b> (각자 브라우저)', 1),
       leaf('<b>위기 키워드 감지 · 🆘 카드</b> (서버 없이)'),
       leaf('전화번호·이메일 <b>가리고</b> 보내기')
     ]) +
@@ -53,13 +55,13 @@
       leaf('<b>대화 저장 안 함</b> · 사용량 제한')
     ]) +
     branch('hb-ai', 'ai', '제미나이', 'Google · 무료 등급', [
-      leaf('<b>마음 대화</b> 답장'),
+      leaf('<b>페르소나 말투</b>로 연인 답장'),
       leaf('<b>영어 대화</b> + 교정'),
       leaf('위기 신호 판단 (2중 감지의 하나)')
     ]) +
     '</ul></div>' +
     '<div class="hw-why">' +
-    '<div><span class="k">SOS</span><h4>🆘는 서버 없이</h4><p>위기 감지와 도움 카드는 화면 코드가 직접 해요. 서버가 꺼져 있어도 동작해요.</p></div>' +
+    '<div><span class="k">PERSONA</span><h4>연인은 내 브라우저에</h4><p>페르소나는 서버에 저장하지 않고 메시지마다 함께 보내요. 고치거나 바꾸면 다음 답장부터 바로 반영돼요.</p></div>' +
     '<div><span class="k">PRIVACY</span><h4>대화는 내 브라우저에</h4><p>서버는 답만 만들고 대화를 저장하지 않아요. 개인정보는 보내기 전에 가려요.</p></div>' +
     '<div><span class="k">KEY</span><h4>키는 서버에만</h4><p>공개 화면에 키를 넣으면 누구나 볼 수 있어서, AI 호출은 서버만 해요.</p></div>' +
     '<div><span class="k">₩0</span><h4>추가 비용 없음</h4><p>무료 호스팅, 무료 터널, 제미나이 무료 등급만 써요.</p></div>' +
@@ -103,12 +105,21 @@
       { p: ['web', 'tun', 'srv'], on: ['web', 'srv'], tag: '연결 확인', w: 'web', t: '이제부터 모든 메시지는 이 터널 주소를 거쳐 답변 서버로 가요.' },
       { p: ['srv', 'board'], on: ['srv', 'board'], tag: '꺼짐', sos: 1, w: 'srv', t: 'Ctrl+C로 끄면 서버·터널이 꺼지고, server.json을 "꺼짐"으로 다시 푸시해요.', s: '화면은 "지금은 답하기 어려워요"로 바뀌고, 🆘는 계속 동작해요.' }
     ] },
+    persona: { dim: ['board'], steps: [
+      { p: null, on: ['web'], w: 'web', t: '대화 목록에서 연인을 고르거나 새로 만들어요. 프리셋 6종이나 직접 만들기로, 고르는 즉시 첫 인사 미리보기가 바뀌어요.', s: '페르소나와 상대별 대화는 내 브라우저에 저장돼요.' },
+      { p: ['web', 'tun', 'srv'], on: ['web', 'srv'], tag: '페르소나 카드 + 메시지', w: 'web', t: '메시지를 보낼 때마다 그 연인의 페르소나 카드(성격·말투·말버릇·호칭·관계·이야기)를 함께 보내요.', s: '서버는 페르소나를 저장하지 않아요.' },
+      { p: null, on: ['srv'], w: 'srv', t: '서버가 안전 규칙 → 페르소나 카드 → 모드 → 기억 순서로 지시를 조립해요.' },
+      { p: ['srv', 'ai'], on: ['srv', 'ai'], tag: '지시 + 최근 대화', w: 'srv', t: '조립한 지시와 그 연인과의 최근 대화를 제미나이에 보내요.' },
+      { p: ['ai', 'srv'], on: ['ai', 'srv'], tag: '그 사람 말투의 답장', w: 'ai', t: '제미나이가 정한 말투·호칭·말버릇 그대로 답해요.', s: '츤데레면 퉁명스럽게, 차분한 타입이면 존댓말로.' },
+      { p: ['srv', 'tun', 'web'], on: ['web'], tag: '말풍선 2~3개', w: 'srv', t: '"···" 입력 중 뒤에 그 연인의 말풍선이 차례로 도착해요.' },
+      { p: null, on: ['web'], w: 'web', t: '프로필을 고치면 대화는 그대로 두고, 다음 메시지부터 새 페르소나 카드가 가서 바로 새 말투가 돼요.', s: '다른 연인으로 바꾸면 그 사람의 대화방과 기억으로 이어져요.' }
+    ] },
     heart: { dim: [], steps: [
       { p: null, on: ['web'], w: 'web', t: '서버가 연결된 상태에서 "오늘 아무랑도 말 안 했어"를 보내면, 화면이 먼저 개인정보를 가리고 위기 표현이 있는지 살펴요.' },
       { p: ['web', 'tun', 'srv'], on: ['web', 'srv'], tag: '페르소나 + 최근 대화', w: 'web', t: '페르소나와 최근 대화, 새 메시지를 서버로 보내요.', s: '대화 원본은 내 브라우저에 있어요.' },
       { p: null, on: ['srv'], w: 'srv', t: '서버가 내 앱에서 온 요청인지, 사용량이 남았는지, 안전한지 확인해요.', s: '서버는 대화를 저장하지 않아요.' },
-      { p: ['srv', 'ai'], on: ['srv', 'ai'], tag: '안전 → 페르소나 → 마음 → 기억', w: 'srv', t: '안전 규칙을 맨 앞에 두고, 페르소나·마음 대화 규칙·기억 요약을 붙여 제미나이에 요청해요.' },
-      { p: ['ai', 'srv'], on: ['ai', 'srv'], tag: '공감 답장', w: 'ai', t: '제미나이가 판단 없이 공감하는 답장을 글자 단위로 보내요.' },
+      { p: ['srv', 'ai'], on: ['srv', 'ai'], tag: '안전 → 페르소나 → 대화 → 기억', w: 'srv', t: '안전 규칙을 맨 앞에 두고, 페르소나 카드·연인 대화 규칙·기억 요약을 붙여 제미나이에 요청해요.' },
+      { p: ['ai', 'srv'], on: ['ai', 'srv'], tag: '공감 답장', w: 'ai', t: '제미나이가 그 연인의 말투로 다정하게 공감하는 답장을 보내요.' },
       { p: ['srv', 'tun', 'web'], on: ['web'], tag: '말풍선 2~3개', w: 'srv', t: '"···" 입력 중 표시 뒤에 짧은 말풍선이 차례로 도착해요.', s: '진짜 연인과 톡하는 느낌이에요.' },
       { p: null, on: ['web'], w: 'web', t: '대화는 내 브라우저에만 저장되고, 몇 턴마다 기억 요약이 갱신돼요.', s: '다음에 오면 "그 일은 좀 어때?"라고 먼저 물어봐요.' }
     ] },

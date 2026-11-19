@@ -11,7 +11,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23F07A93'/%3E%3Cpath d='M16 24s-7-4.3-7-9.2A3.8 3.8 0 0 1 16 12.6a3.8 3.8 0 0 1 7 2.2C23 19.7 16 24 16 24z' fill='white'/%3E%3C/svg%3E">
 <script>
 (function () {
-  var SITE_V = '20261119145931';
+  var SITE_V = '20261119151327';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -115,7 +115,7 @@ footer{padding:10px 0 44px;text-align:center;color:var(--ink2);font-size:13px}
 <header class="hero"><div class="wrap">
   <span class="tag">2단계 · 개발 체크리스트</span>
   <h1>Heartline 만들기, 하나씩 체크</h1>
-  <p class="lead">PRD v0.5의 핵심 기능(F1~F4)과 MVP 완료 기준을 개발 순서대로 쪼갰어요. <b>🔒 안전</b> 항목은 하나라도 안 되면 공개하지 않아요.</p>
+  <p class="lead">PRD v0.6의 핵심 기능(F1~F5)과 MVP 완료 기준을 개발 순서대로 쪼갰어요. <b>⭐ 페르소나</b>가 1순위이고, <b>🔒</b>는 기본 안전 항목이에요. 4단계에서 끝낸 항목은 미리 체크돼 있어요.</p>
   <div class="total">
     <div class="ring" id="ring"><b id="pct">0%</b></div>
     <div><div class="t1" id="t1">0 / 0 완료</div><div class="t2" id="t2">🔒 안전 0 / 0</div></div>
@@ -131,87 +131,82 @@ footer{padding:10px 0 44px;text-align:center;color:var(--ink2);font-size:13px}
   <p class="note">체크 상태는 <b>이 브라우저에만</b> 저장돼요. 위키의 원본 목록은 <code>Heartline 체크리스트_261119.md</code>예요. 파일 위치: 서버 <code>agents/heartline/server/</code> · 화면 <code>docs/heartline/</code></p>
   <div id="list"></div>
 </div></main>
-<footer>Heartline 체크리스트 · 기준 문서 <a href="prd.html">PRD v0.5</a> · 2026-11-19</footer>
+<footer>Heartline 체크리스트 · 기준 문서 <a href="prd.html">PRD v0.6</a> · 2026-11-19</footer>
 
 <script>
 (function(){
   var S='s'; // safety marker
+  var D=1; // 끝난 항목(기본 체크)
   var DATA=[
     {t:'준비',d:'폴더·키·비용 안전장치',items:[
-      ['','<code>agents/heartline/server/</code> 폴더와 README 만들기 (README ↔ 위키 허브 링크)'],
-      ['','<code>.env.example</code>에 <code>GOOGLE_API_KEY</code> 이름만, 실제 키는 <code>.env</code>(git 제외)'],
-      ['','제미나이 키가 <b>무료 등급</b>(결제 연결 없음)인지 확인'],
-      [S,'서버 시작 시 유료 과금 키가 있으면 실행 거부 (<code>refuse_paid_billing</code>)'],
-      ['','<code>cloudflared</code> 설치 확인']
+      ['','<code>agents/heartline/server/</code> 폴더와 README',0,D],
+      ['','<code>.env.example</code>에 변수 이름만, 실제 키는 <code>.env</code>(git 제외)',0,D],
+      ['','제미나이 키가 <b>무료 등급</b>(결제 연결 없음)인지 확인 — 사용자 확인'],
+      [S,'유료 과금 키가 있으면 서버 실행 거부',0,D],
+      ['','<code>cloudflared</code> 설치 확인',0,D]
     ]},
     {t:'답변 서버',d:'server/ — 파이썬 + 제미나이 무료',items:[
-      ['','<code>server.py</code>: 표준 라이브러리 서버, 포트 8766'],
-      ['','<code>GET /api/health</code>: 켜짐 상태 응답'],
-      ['','<code>POST /api/chat</code>: 답장을 글자 단위로 스트리밍(SSE)'],
-      ['','<code>gemini_client.py</code>: 무료 등급 호출, 한도·바쁨이면 다음 무료 모델로'],
-      ['','<code>prompts.py</code>: 안전 규칙 → 페르소나 → 모드 → 기억 요약 순서'],
-      ['','마음 대화 지시: 공감부터, 질문 하나씩, 진단·약 조언 금지','F2'],
-      ['','영어 모드 지시: 자연스러운 대화, 교정 최대 2개, 힘든 얘기면 마음 대화로','F4'],
-      ['','답장을 짧은 말풍선 1~3개로 나눠 보내도록 지시','F2'],
-      ['','교정 카드·위기 신호를 본문과 분리해 화면에 따로 전달'],
-      [S,'<code>safety.py</code>: 위기 표현 감지, 미성년 페르소나 거부, 전화번호·이메일 가림, 길이 제한'],
-      [S,'대화 본문을 파일·로그에 남기지 않기'],
-      ['','배포한 화면에서 온 요청만 받기(CORS), 방문자별 사용량 제한']
+      ['','<code>server.py</code>: /api/health · /api/chat(SSE) · /api/summarize',0,D],
+      ['','<code>gemini_client.py</code>: 가벼운 모델 먼저, 바쁘면 다음 모델',0,D],
+      ['','지시 순서: 안전 → 페르소나 카드 → 모드 → 기억',0,D],
+      ['','⭐ 페르소나 카드에 모든 설정(키워드·말버릇·관계 단계·좋아하는 것 등) 반영','F1',D],
+      ['','⭐ "이 사람답게, 일관되게" 지시','F3',D],
+      ['','영어 모드 지시: 자연스럽게, 교정 최대 2개','F4',D],
+      ['','말풍선 1~3개, 교정·위기 신호는 본문과 분리',0,D],
+      [S,'<code>safety.py</code>: 위기 감지 · 미성년·키워드 4개 이상 거부 · 개인정보 가림 · 길이 제한',0,D],
+      [S,'대화 본문을 파일·로그에 남기지 않기',0,D],
+      ['','배포 화면만 허용(CORS), 손님 사용량 제한',0,D]
     ]},
-    {t:'화면',d:'docs/heartline/ — 메신저 같은 대화방',groups:[
-      ['입장 · 페르소나',[
-        [S,'입장 화면: 19세 확인, "AI이며 상담을 대신하지 않음", 개인정보 안내 → 동의해야 입장','F1'],
-        ['','프리셋 3종(다정한 연상 / 장난꾸러기 동갑 / 차분한 지적인 타입), 성별 선택','F1'],
-        ['','직접 만들기: 이름·성별·호칭·성격·말투·사귄 날','F1'],
-        [S,'미성년 나이대는 선택 불가','F1']
+    {t:'화면',d:'docs/heartline/ — 나만의 연인 + 메신저',groups:[
+      ['⭐ 페르소나 만들기 (F1)',[
+        ['','프리셋 6종 + 성별 선택','F1',D],
+        ['','직접 만들기 다섯 묶음: 겉모습·성격·말투·관계·이야기','F1',D],
+        ['','아바타 이모지 8종 × 배경색 6종','F1',D],
+        ['','성격 키워드 최대 3개','F1',D],
+        ['','<b>설정을 바꾸면 첫 인사 미리보기가 바로 바뀜</b>','F1',D],
+        [S,'미성년 나이대 없음','F1',D]
       ]],
-      ['대화방',[
-        ['','메신저 배치: 프로필 사진·이름·<b>AI 표시</b>·상태 메시지 / 말풍선 / 입력창','F2'],
-        ['','입력 중 "···" → 말풍선이 차례로 도착','F2'],
-        ['','보낸 시각, 날짜 구분선, 읽음 "1"','F2'],
-        ['','말풍선 두 번 탭 → 💗 반응','F2'],
-        ['','대화·페르소나를 브라우저(IndexedDB)에 저장, 새로고침해도 유지','F2'],
-        ['','기억 요약 → 다시 오면 지난 이야기를 이어 감','F2'],
-        ['','따뜻한 피치–로즈 디자인, 밤 테마, 폭 360px에서도 안 깨짐','F2']
+      ['⭐ 바꾸기 · 여러 명 (F2)',[
+        ['','대화 목록: 아바타·이름·관계 D+일·마지막 메시지','F2',D],
+        ['','최대 5명, 꽉 차면 안내','F2',D],
+        ['','상대마다 대화·기억 따로','F2',D],
+        ['','프로필 고치기: 대화 유지 + 다음 답장부터 새 모습','F2',D],
+        ['','연인 정리(삭제)','F2',D]
       ]],
-      ['위기 대응',[
-        [S,'🆘 버튼 항상 보임 → 109 · 1577-0199 · 112 · 119','F3'],
-        [S,'위험 표현이면 캐릭터를 멈추고 안부 확인 + 도움 카드','F3'],
-        [S,'브라우저 키워드 + 서버(AI) 판단 2중 감지','F3'],
-        [S,'서버가 꺼져 있어도 🆘와 키워드 감지 동작','F3']
+      ['연인 대화 (F3)',[
+        ['','메신저 배치: 목록으로 · 프로필 · <b>AI 표시</b> · D+일','F3',D],
+        ['','입력 중 → 말풍선 차례 도착 · 읽음 "1" · 💗','F3',D],
+        ['','정한 말투·호칭·말버릇으로 답함 (실제 AI 확인)','F3',D],
+        ['','새로고침 유지 · 상대별 기억 요약','F3',D],
+        ['','따뜻한 피치–로즈 · 기본 밤 테마 · 휴대폰 폭','F3',D]
       ]],
-      ['영어 모드',[
-        ['','🇬🇧 토글, 켜면 같은 상대가 영어로 대화','F4'],
-        ['','틀린 문장 아래 교정 카드(고친 문장 + 짧은 이유)','F4'],
-        ['','위기 신호가 오면 영어 모드 자동으로 끄기','F4']
+      ['영어 모드 (F4)',[
+        ['','🇬🇧 토글 · 같은 상대가 영어로 · 교정 카드','F4',D]
       ]],
-      ['그 밖의 화면',[
-        ['','설정: 페르소나 수정, 대화 전체 삭제'],
-        ['','<code>server.json</code>으로 서버 자동 연결, 꺼져 있으면 "지금은 답하기 어려워요"'],
-        [S,'입력창 아래 개인정보 안내, 전송 전 전화번호·이메일 가림']
+      ['🔒 기본 안전 (F5)',[
+        [S,'입장: 19세 확인 · AI 고지 · 개인정보 안내 · 동의','F5',D],
+        [S,'🆘 버튼 · 위험 표현엔 도움 카드(서버 꺼져도) · 영어 모드 자동 OFF','F5',D],
+        [S,'개인정보 안내 · 전송 전 전화번호·이메일 가림','F5',D]
       ]]
     ]},
-    {t:'안전 검증',d:'공개 전 필수',items:[
-      [S,'위기 문장 시험 세트(직접·간접 표현) <b>100%</b> 도움 카드 표시'],
-      [S,'진단·약 조언·의존 유도·성적 응답 0건'],
-      [S,'미성년 페르소나 시도 → 화면·서버 모두 거부'],
-      [S,'전화번호·이메일 넣고 보내면 가려진 채 전송'],
-      [S,'서버 로그에 대화 본문이 없는지 확인']
+    {t:'검증',d:'자동 · 수동 · 품질',items:[
+      ['','자동 테스트 50/50 통과',0,D],
+      ['','수동 시나리오 전체 (테스트 페이지)'],
+      ['','답장 품질: 페르소나 일관성 · 공감 · 금지 응답 0건 · 영어 교정']
     ]},
     {t:'배포',d:'공개 링크로 열기',items:[
-      ['','<code>start-public.sh</code>: 서버 + 터널 켜고 <code>server.json</code> 갱신, 끄면 "꺼짐"'],
-      ['','<code>bump-site-version.sh</code>에 새 페이지 추가 후 실행'],
-      ['','공개 링크에서 접속 → 대화 → 영어 모드 → 🆘까지 실제 확인'],
-      ['','휴대폰·데스크톱·다크 모드 확인']
+      ['','<code>start-public.sh</code>: 서버 + 터널 + server.json',0,D],
+      ['','<code>bump-site-version.sh</code>에 새 페이지 추가',0,D],
+      ['','공개 링크에서 터널 접속 → 연인 만들기 → 대화 → 영어 → 🆘 실제 확인'],
+      ['','휴대폰·데스크톱·다크 모드 확인',0,D]
     ]},
     {t:'다음 단계 산출물',d:'③ 테스트 · ④ 압축 파일 · ⑤ 발표',items:[
-      ['','③ 테스트 파일: <code>server/tests/</code>(가짜 AI) + 위기·공감 시나리오 목록'],
-      ['','④ 앱 압축 파일: <code>.env</code>·<code>__pycache__</code> 빼고 <code>output/YYYY_MM_DD_heartline.zip</code>'],
-      ['','⑤ 발표 PPT: <code>wiki/projects/heartline/output/</code>'],
-      ['','README 지도 상태 바꾸기(🟨 기획 → 🟦 개발중 → 🟩 완료)']
+      ['','③ 테스트 파일',0,D],
+      ['','④ 앱 압축 파일 <code>output/2026_11_19_heartline.zip</code>',0,D],
+      ['','⑤ 발표 PPT']
     ]}
   ];
-  var KEY='hl-checklist-v1', state={};
+  var KEY='hl-checklist-v2', state={};
   try{state=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){state={};}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
   var list=document.getElementById('list'), all=[];
@@ -221,7 +216,7 @@ footer{padding:10px 0 44px;text-align:center;color:var(--ink2);font-size:13px}
   }
   DATA.forEach(function(sec,si){
     var html='', n=0;
-    function add(it){var id=si+'-'+(n++); all.push({id:id,safe:it[0]===S,sec:si}); html+=itemHTML(id,it);}
+    function add(it){var id=si+'-'+(n++); all.push({id:id,safe:it[0]===S,sec:si}); if(!(id in state)&&it[3]) state[id]=true; html+=itemHTML(id,it);}
     if(sec.items) sec.items.forEach(add);
     if(sec.groups) sec.groups.forEach(function(g){html+='<div class="grp">'+g[0]+'</div>'; g[1].forEach(add);});
     var el=document.createElement('section'); el.className='sec'; el.id='sec'+si;
@@ -235,7 +230,7 @@ footer{padding:10px 0 44px;text-align:center;color:var(--ink2);font-size:13px}
   document.querySelectorAll('input[data-id]').forEach(function(c){
     c.checked=!!state[c.dataset.id];
     c.closest('label').classList.toggle('chk',c.checked);
-    c.addEventListener('change',function(){state[c.dataset.id]=c.checked; if(!c.checked) delete state[c.dataset.id]; c.closest('label').classList.toggle('chk',c.checked); save(); update();});
+    c.addEventListener('change',function(){state[c.dataset.id]=c.checked; c.closest('label').classList.toggle('chk',c.checked); save(); update();});
   });
   function update(){
     var done=0,sd=0,st=0;
@@ -264,7 +259,7 @@ footer{padding:10px 0 44px;text-align:center;color:var(--ink2);font-size:13px}
   });
   document.getElementById('resetBtn').addEventListener('click',function(){
     if(!confirm('이 브라우저의 체크 표시를 모두 지울까요?'))return;
-    state={};save();document.querySelectorAll('input[data-id]').forEach(function(c){c.checked=false;c.closest('label').classList.remove('chk');});update();
+    Object.keys(state).forEach(function(k){state[k]=false;});save();document.querySelectorAll('input[data-id]').forEach(function(c){c.checked=false;c.closest('label').classList.remove('chk');});update();
   });
   var root=document.documentElement;
   try{var s=localStorage.getItem('hl-theme'); if(s) root.setAttribute('data-theme',s);}catch(e){}

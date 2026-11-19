@@ -31,6 +31,13 @@ TRAIT_WORDS = {
 }
 
 
+STAGES = {"some": "썸 타는 사이 (설레고 조심스러운 단계)", "lover": "연인", "longterm": "오래된 연인 (편안하고 깊은 사이)"}
+
+
+def _clip(v, n=80):
+    return str(v or "").strip()[:n]
+
+
 def _persona_block(p: dict) -> str:
     traits = p.get("traits") or {}
     t_desc = []
@@ -44,29 +51,35 @@ def _persona_block(p: dict) -> str:
         elif v <= 35:
             t_desc.append(f"{lo}에 가까움({v})")
     gender = {"female": "여성", "male": "남성"}.get(p.get("gender"), "")
+    stage = STAGES.get(p.get("relationshipStage"), "연인")
+    keywords = [_clip(k, 12) for k in (p.get("keywords") or []) if _clip(k, 12)][:3]
     lines = [
-        "### 페르소나",
-        f"- 너의 이름: {p.get('name', '')}" + (f" ({gender})" if gender else ""),
-        f"- 사용자를 부르는 말: {p.get('nicknameForUser') or '너'}",
-        f"- 관계: 사용자의 다정한 연인. 사귀기 시작한 날: {p.get('relationshipStart') or '최근'}",
-        f"- 말투: {p.get('speech') or '반말'}, 이모지 {p.get('emojiLevel') or '조금'}",
+        "### 페르소나 (사용자가 직접 만든 연인 — 이 설정을 대화 내내 일관되게 지킨다)",
+        f"- 너의 이름: {_clip(p.get('name'), 20)}" + (f" ({gender})" if gender else ""),
+        f"- 사용자를 부르는 말: {_clip(p.get('nicknameForUser'), 12) or '너'}",
+        f"- 관계: 사용자와 {stage}. 사귀기 시작한 날: {_clip(p.get('relationshipStart'), 10) or '최근'}",
+        f"- 말투: {_clip(p.get('speech'), 6) or '반말'}, 이모지 {_clip(p.get('emojiLevel'), 4) or '조금'}",
     ]
+    if keywords:
+        lines.append("- 성격 키워드: " + ", ".join(keywords))
     if t_desc:
-        lines.append("- 성격: " + ", ".join(t_desc))
-    if p.get("interests"):
-        lines.append(f"- 관심사: {p['interests']}")
-    if p.get("backstory"):
-        lines.append(f"- 배경: {p['backstory']}")
+        lines.append("- 성격 세부: " + ", ".join(t_desc))
+    if _clip(p.get("catchphrase"), 20):
+        lines.append(f"- 말버릇: \"{_clip(p.get('catchphrase'), 20)}\" (자연스럽게 가끔)")
+    for key, label in (("job", "직업·일상"), ("interests", "관심사"), ("likes", "좋아하는 것"),
+                       ("dislikes", "싫어하는 것"), ("backstory", "배경")):
+        if _clip(p.get(key)):
+            lines.append(f"- {label}: {_clip(p.get(key))}")
+    lines.append("- 이 사람답게 말한다: 성격 키워드·말버릇·호칭을 살리고, 일반적인 AI 도우미 말투를 쓰지 않는다.")
     return "\n".join(lines)
 
 
 def _mode_block(mode: str, s: dict) -> str:
     if mode == "heart":
-        return """### 모드: 마음 대화
-- 판단하지 말고 공감부터. 사용자의 감정을 말로 비춰 준다("많이 지쳤구나").
-- 서둘러 해결책을 주지 않는다. 질문은 한 번에 하나, 열린 질문으로. 대답을 강요하지 않는다.
-- 지난 대화(기억)를 자연스럽게 이어 간다.
-- 우선순위: 안전 > 공감 > 캐릭터 말투."""
+        return """### 모드: 연인 대화
+- 페르소나 설정 그대로, 메신저로 톡하는 연인처럼 대화한다. 일상을 묻고, 반응하고, 가끔 먼저 이야기를 꺼낸다.
+- 사용자가 힘든 이야기를 하면 판단하지 말고 공감부터(질문은 한 번에 하나, 해결책을 서두르지 않음).
+- 지난 대화(기억)를 자연스럽게 이어 간다."""
     level = s.get("level") or "B1"
     ratio = s.get("ratio") or "english"
     strength = s.get("strength") or "light"

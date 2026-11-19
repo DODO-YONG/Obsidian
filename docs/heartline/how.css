@@ -22,7 +22,7 @@
 
 .hw-stage { border: 1px solid var(--hw-stroke); border-radius: 22px; background: var(--hw-bg); overflow: hidden; box-shadow: 0 10px 30px rgba(216,92,120,.10); }
 .hw-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--hw-stroke); background: var(--hw-card); }
-.hw-tabs { display: inline-flex; gap: 4px; padding: 4px; border-radius: 14px; background: var(--hw-bg); border: 1px solid var(--hw-stroke); }
+.hw-tabs { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 14px; background: var(--hw-bg); border: 1px solid var(--hw-stroke); }
 .hw-tabs button, .hw-ctl button, .hw-prog button { font: inherit; border: 0; cursor: pointer; }
 .hw-tabs button { font-size: 15px; background: transparent; color: var(--hw-t2); padding: 8px 14px; border-radius: 10px; min-height: 40px; }
 .hw-tabs button[aria-selected="true"] { background: var(--hw-pkt); color: var(--hw-pkt-t); font-weight: 700; }
@@ -123,7 +123,7 @@
 @media (max-width: 760px) {
   .hw-top { padding: 10px; }
   .hw-tabs, .hw-ctl { width: 100%; }
-  .hw-tabs button { flex: 1; padding: 6px 6px; line-height: 1.35; font-size: 14px; }
+  .hw-tabs button { flex: 1 1 30%; padding: 6px 6px; line-height: 1.35; font-size: 14px; }
   .hw-tabs button small { display: block; margin: 0; font-size: 11px; }
   .hw-ctl button.play { flex: 1; }
   .hw-svg { padding: 14px 10px 6px; }
