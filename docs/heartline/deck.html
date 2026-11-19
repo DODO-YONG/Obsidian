@@ -7,11 +7,11 @@
 <meta name="description" content="Heartline 발표: 만든 이유 · 기능 · 기술.">
 <meta name="theme-color" content="#1F161C">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link rel="stylesheet" href="how.css?v=20261119154342">
+<link rel="stylesheet" href="how.css?v=20261119154600">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23F07A93'/%3E%3Cpath d='M16 24s-7-4.3-7-9.2A3.8 3.8 0 0 1 16 12.6a3.8 3.8 0 0 1 7 2.2C23 19.7 16 24 16 24z' fill='white'/%3E%3C/svg%3E">
 <script>
 (function () {
-  var SITE_V = '20261119154342';
+  var SITE_V = '20261119154600';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -315,31 +315,9 @@ h2 span,h1 span{color:var(--rose-d)}
     </div>
   </section>
 
-  <!-- 9 기술 ② 핵심 구현 -->
-  <section class="slide" data-note="핵심 구현 네 가지예요. 첫째, AI에게 주는 지시를 <b>안전 규칙 → 페르소나 카드 → 모드 → 기억</b> 순서로 조립해요. 둘째, 답장은 <b>스트리밍</b>으로 받고, AI가 보낸 한 덩어리 답장을 서버가 <b>빈 줄마다 말풍선으로 나누고</b>, 교정과 위기 신호는 따로 떼어 화면에 보내요. 셋째, 제미나이 무료 등급의 큰 모델이 자주 바빠서 <b>가벼운 모델을 먼저 쓰고, 15초 안에 답이 없으면 다음 모델로</b> 넘어가게 했어요. 넷째, 위험 표현은 <b>화면 키워드와 AI 판단 두 번</b> 확인해요." data-sec="50초">
-    <div class="k">TECH ② · 핵심 구현</div>
-    <h2>어떻게 <span>그 사람답게</span> 말하게 했나</h2>
-    <div class="tech">
-      <div class="card"><b>① 지시 조립 순서</b><div class="order2"><span class="s">안전 규칙</span>→<span class="p">페르소나 카드</span>→<span>모드(대화/영어)</span>→<span>기억 요약</span></div><p>페르소나 카드에 키워드·말버릇·호칭·관계·좋아하는 것까지 모두 넣고 "일관되게 지켜"</p></div>
-      <div class="card"><b>② 스트리밍 + 말풍선 나누기</b>
-        <div class="split">
-          <div class="raw"><span class="lbl">✨ AI 답장 한 덩어리</span><i></i><i class="w80"></i><i class="gap"></i><i class="w60"></i><span class="tg">✏️ 교정</span><span class="tg">🛡️ 신호</span></div>
-          <div class="arr">→<small>서버가<br>나눔</small></div>
-          <div class="out">
-            <span class="ob">그런 날은 마음이 더 무겁지…</span>
-            <span class="ob">나한테는 편하게 말해도 돼</span>
-            <span class="oc">✏️ 교정 카드</span><span class="os">🛡️ 위기 신호: 없음</span>
-          </div>
-        </div>
-        <p>빈 줄마다 말풍선 하나 · 교정과 위기 신호는 따로 떼어 화면에 전달</p></div>
-      <div class="card"><b>③ 무료 모델 자동 전환</b><p>3.1-flash-lite 먼저 → 15초 무응답·바쁨(503)이면 3.8 → 3.7 flash. 큰 모델이 무료 등급에서 30초 넘게 멈추던 문제를 해결</p></div>
-      <div class="card"><b>④ 2중 확인 · 무기록</b><p>위험 표현: 화면 키워드 + AI 판단 · 대화 본문은 서버 로그에도 안 남김 · 유료 과금 키가 있으면 서버 실행 거부</p></div>
-    </div>
-  </section>
-
-  <!-- 10 기술 ③ 테스트 · 배포 -->
+  <!-- 9 기술 ② 테스트 · 배포 -->
   <section class="slide" data-note="개발은 <b>테스트를 먼저 쓰고</b> 그 테스트를 통과시키는 방식으로 했어요. 지금 <b>자동 테스트 55개가 모두 통과</b>하고, 가짜 AI를 써서 몇 번을 돌려도 비용이 들지 않아요. 실제 AI로도 확인했는데, 츤데레 준호에게 '야근했어'라고 하니 설정대로 답했어요. 그리고 압축 파일을 풀어서 <b>더블클릭만 하면</b> 실행되고, 키가 없으면 <b>맛보기 모드</b>로 바로 체험할 수 있게 만들었습니다." data-sec="40초">
-    <div class="k">TECH ③ · 테스트 · 배포</div>
+    <div class="k">TECH ② · 테스트 · 배포</div>
     <h2>테스트 먼저, <span>누구나 실행</span></h2>
     <div class="nums" style="grid-template-columns:repeat(4,1fr)">
       <div class="num"><b>55/55</b><span>자동 테스트 통과</span></div>
@@ -360,7 +338,7 @@ h2 span,h1 span{color:var(--rose-d)}
     </div>
   </section>
 
-  <!-- 11 다음 · 마무리 -->
+  <!-- 10 다음 · 마무리 -->
   <section class="slide" data-note="다음 계획은 기념일 연출과 프로필 사진, 그리고 <b>목적 프롬프트</b>예요. 연인에게 '자격증 공부를 도와줘'처럼 목적을 정해 두면 그 목적에 맞게 대화해 주는 기능입니다. 서울에 처음 왔던 저 같은 사람에게 <b>편하게 말 걸 수 있는 상대</b>가 되었으면 좋겠습니다. 들어 주셔서 감사합니다." data-sec="25초">
     <div class="k">NEXT</div>
     <h2>다음은, <span>목적이 있는 연인</span></h2>
@@ -375,7 +353,7 @@ h2 span,h1 span{color:var(--rose-d)}
 </div></div>
 <div id="bar"><i></i></div>
 <div id="notes"><div class="meta"><span id="nMeta"></span><span id="nTime">00:00</span></div><div id="nText"></div></div>
-<div id="hud"><span id="pg">1 / 11</span><button id="bPrev" aria-label="이전">◀</button><button id="bNext" aria-label="다음">▶</button><button id="bNotes">메모 N</button><button id="bFull">전체화면 F</button></div>
+<div id="hud"><span id="pg">1 / 10</span><button id="bPrev" aria-label="이전">◀</button><button id="bNext" aria-label="다음">▶</button><button id="bNotes">메모 N</button><button id="bFull">전체화면 F</button></div>
 
 <script>
 (function () {
@@ -508,6 +486,6 @@ h2 span,h1 span{color:var(--rose-d)}
   if (/notes=1/.test(location.search)) toggleNotes();
 })();
 </script>
-<script src="how.js?v=20261119154342" defer></script>
+<script src="how.js?v=20261119154600" defer></script>
 </body>
 </html>

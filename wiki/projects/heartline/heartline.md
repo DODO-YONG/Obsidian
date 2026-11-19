@@ -24,7 +24,7 @@ date: 2026-11-19
 2. ✅ 체크리스트 (2026-11-19) — [[Heartline 체크리스트_261119]] · [보기 좋은 페이지](https://dodo-yong.github.io/Obsidian/heartline/checklist.html), 51개 항목(🔒 안전 15)
 3. ✅ 테스트 파일 (2026-11-19) — [[Heartline 테스트 계획_261119]] · [보기 좋은 페이지](https://dodo-yong.github.io/Obsidian/heartline/tests.html): 자동 테스트 46개(`agents/heartline/server/tests/`, 가짜 AI·설치 없음, 구현 전이라 skip) + 수동 시나리오
 4. ✅ 앱 + 압축 파일 (2026-11-19) — 앱 https://dodo-yong.github.io/Obsidian/heartline/ · `output/2026_11_19_heartline.zip` · 자동 테스트 55/55 통과
-5. ✅ 발표 (2026-11-19) — 11장(만든 이유 · 기능 4장 · 기술 3장), [발표 페이지](https://dodo-yong.github.io/Obsidian/heartline/deck.html)(시연·작동 방식 그대로 움직임, N=발표자 메모, F=전체화면) · `output/2026_11_19_heartline_발표.pptx`(슬라이드 이미지 + 메모)
+5. ✅ 발표 (2026-11-19) — 10장(만든 이유 · 기능 4장 · 기술 2장), [발표 페이지](https://dodo-yong.github.io/Obsidian/heartline/deck.html)(시연·작동 방식 그대로 움직임, N=발표자 메모, F=전체화면) · `output/2026_11_19_heartline_발표.pptx`(슬라이드 이미지 + 메모)
 
 ## 설계 결정
 - **공개 웹사이트**(사용자 결정, v0.2): 누구나 링크로 접속, 가입 없음. 대화·페르소나는 방문자 브라우저에만 저장, 서버는 무저장.
