@@ -20,7 +20,7 @@ date: 2026-11-19
 ---
 
 ## 0. 준비
-- [ ] `agents/heartline/server/` 폴더와 `README.md` 만들기 (README ↔ 위키 허브 서로 링크)
+- [x] `agents/heartline/server/` 폴더와 `README.md` 만들기 (README ↔ 위키 허브 서로 링크)
 - [ ] `.env.example`에 `GOOGLE_API_KEY` 이름만 적기, 실제 키는 `.env`(git 제외) 확인
 - [ ] 제미나이 키가 **무료 등급**(결제 연결 없음)인지 확인
 - [ ] 🔒 서버 시작 시 유료 과금 키(`ANTHROPIC_API_KEY` 등)가 있으면 실행 거부 (`refuse_paid_billing`)
@@ -86,7 +86,7 @@ date: 2026-11-19
 - [ ] 휴대폰·데스크톱·다크 모드 확인
 
 ## 5. 다음 단계 산출물
-- [ ] ③ 테스트 파일: `server/tests/` (가짜 AI로 서버 테스트) + 위기·공감 시나리오 목록
+- [x] ③ 테스트 파일: `server/tests/` (가짜 AI로 서버 테스트) + 위기·공감 시나리오 목록 → [[Heartline 테스트 계획_261119]]
 - [ ] ④ 앱 압축 파일: `.env`·`__pycache__` 빼고 `wiki/projects/heartline/output/YYYY_MM_DD_heartline.zip`
 - [ ] ⑤ 발표 PPT: `wiki/projects/heartline/output/`
 - [ ] 루트 `README.md` 지도에서 상태 바꾸기(🟨 기획 → 🟦 개발중 → 🟩 완료)

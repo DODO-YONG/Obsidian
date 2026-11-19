@@ -89,3 +89,5 @@
 ## [2026-11-19] output | Heartline 작동 방식에 '🔌 서버 켜기' 장면 추가: start-public.sh → 서버 켜기 → Cloudflare 임시 주소 받기 → server.json에 적어 그 파일만 푸시 → 화면이 읽어 연결 → 끄면 '꺼짐' 푸시
 
 ## [2026-11-19] output | Heartline 작동 방식: 끝나면 처음부터 반복 재생, 장면 바꾸면 자동 재생, ◀ ▶·막대 누르면 멈추고 그 단계 보기
+
+## [2026-11-19] output | Heartline 3단계 테스트: 자동 테스트 46개(agents/heartline/server/tests/, unittest·가짜 AI, 구현 전 skip) + 위기 30·일상 50·품질 시나리오 + 수동 시나리오 → [[Heartline 테스트 계획_261119]]

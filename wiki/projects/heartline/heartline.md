@@ -14,7 +14,7 @@ date: 2026-11-19
 
 일반 사용자가 쓰는 공개 앱. 핵심은 **정서적 지원**(기댈 사람이 없는, 심리적으로 불안정한 사람), 영어 대화는 부가 기능. 실제 메신저로 톡하는 듯한 따뜻한 UI. 이후 '목적 프롬프트'(자격증·시험 등)로 확장.
 
-- **코드**: 앱 폴더 `agents/heartline/`(`web/`·`server/`), 배포 시 화면은 `docs/heartline/`로 (예정)
+- **코드**: `agents/heartline/` ([README](../../../agents/heartline/README.md)) — 서버 `server/`(테스트 먼저 작성됨), 화면 `docs/heartline/`
 - **기술(예정)**: HTML/JS 정적 화면 + 파이썬 답변 서버 + Cloudflare 임시 터널 — [[ccna-coach|TRACER]]와 같은 방식(Streamlit 안 씀). AI 엔진은 제미나이 무료 등급만
 - **문서**: [[Heartline PRD_261119]] — 기본 구성요소·UI·Tech Spec·MVP
 - **PRD 보기 좋은 페이지**: [https://dodo-yong.github.io/Obsidian/heartline/prd.html](https://dodo-yong.github.io/Obsidian/heartline/prd.html) (코드 `docs/heartline/prd.html`, 대화방 시연 포함)
@@ -22,7 +22,7 @@ date: 2026-11-19
 ## 진행 단계
 1. ✅ PRD (2026-11-19 v0.5, 핵심만 남김)
 2. ✅ 체크리스트 (2026-11-19) — [[Heartline 체크리스트_261119]] · [보기 좋은 페이지](https://dodo-yong.github.io/Obsidian/heartline/checklist.html), 51개 항목(🔒 안전 15)
-3. ⏳ 테스트 파일
+3. ✅ 테스트 파일 (2026-11-19) — [[Heartline 테스트 계획_261119]]: 자동 테스트 46개(`agents/heartline/server/tests/`, 가짜 AI·설치 없음, 구현 전이라 skip) + 수동 시나리오
 4. ⏳ 앱 압축 파일 (`output/`)
 5. ⏳ 발표 PPT (`output/`)
 
