@@ -83,4 +83,4 @@ date: 2026-11-19
 ## 5. 다음 단계 산출물
 - [x] ③ 테스트 파일 → [[Heartline 테스트 계획_261119]]
 - [x] ④ 앱 압축 파일 `wiki/projects/heartline/output/2026_11_19_heartline.zip`
-- [ ] ⑤ 발표 PPT
+- [x] ⑤ 발표: 페이지 `docs/heartline/deck.html` + `output/2026_11_19_heartline_발표.pptx`

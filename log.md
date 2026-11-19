@@ -97,3 +97,5 @@
 ## [2026-11-19] output | Heartline 4단계: 서버(safety·prompts·gemini_client·server·start-public.sh)와 앱 화면(docs/heartline/index·app.js·app.css) 구현, 테스트 46/46, 로컬 실제 AI 확인, 압축 파일 output/2026_11_19_heartline.zip → 앱 https://dodo-yong.github.io/Obsidian/heartline/
 
 ## [2026-11-19] output | Heartline v0.6 재정렬: 1순위를 페르소나(나만의 연인 만들기·바꾸기·여러 명)로. PRD·PRD 페이지·작동 방식(🎨 페르소나 장면)·체크리스트·테스트(50개, 페르소나 카드 반영 4개 추가)·앱(대화 목록 최대 5명, 프리셋 6종, 다섯 묶음 편집기, 실시간 미리보기) 전부 손봄 → [[Heartline PRD_261119]]
+
+## [2026-11-19] output | Heartline 5단계 발표: deck.html 7장(표지·문제→해결·페르소나·시연·작동 방식·결과·다음), PRD 시연과 작동 방식 그림 재사용, 발표자 메모·타이머 + 2026_11_19_heartline_발표.pptx(이미지+메모) → https://dodo-yong.github.io/Obsidian/heartline/deck.html
