@@ -21,7 +21,8 @@
   var TEMPLATE =
     '<div class="hw-stage"><div class="hw-top">' +
     '<div class="hw-tabs" role="tablist" aria-label="장면">' +
-    '<button type="button" role="tab" data-t="heart" aria-selected="true">💞 마음 대화</button>' +
+    '<button type="button" role="tab" data-t="setup" aria-selected="true">🔌 서버 켜기<small>처음 한 번</small></button>' +
+    '<button type="button" role="tab" data-t="heart" aria-selected="false">💞 마음 대화</button>' +
     '<button type="button" role="tab" data-t="crisis" aria-selected="false">🆘 위기 대응<small>서버 꺼져도 OK</small></button>' +
     '<button type="button" role="tab" data-t="english" aria-selected="false">🇬🇧 영어 모드</button>' +
     '</div>' + CTL + '</div>' +
@@ -38,7 +39,8 @@
     ]) +
     branch('hb-board', 'board', '무료 호스팅', 'GitHub Pages 등', [
       leaf('화면 파일 (HTML·CSS·JS)'),
-      leaf('<b>주소 안내판</b> server.json')
+      leaf('<b>주소 안내판</b> server.json'),
+      leaf('start-public.sh가 <b>주소만</b> 자동 커밋·푸시')
     ]) +
     branch('hb-tun', 'tun', '임시 터널', 'Cloudflare · 무료', [
       leaf('답변 서버에 임시 공개 주소 연결'),
@@ -90,12 +92,19 @@
         'board-srv': { p: [[285, 44], [348, 44], [348, 404], [285, 404]], l: '등록', lp: [348, 224], dash: 1 }
       } }
   };
-  var WHO = { web: ['w', '사용자 화면'], srv: ['s', '답변 서버'], ai: ['a', '제미나이'], board: ['b', '주소 안내판'] };
+  var WHO = { web: ['w', '사용자 화면'], srv: ['s', '답변 서버'], ai: ['a', '제미나이'], board: ['b', '주소 안내판'], tun: ['b', 'Cloudflare 터널'] };
   var SCEN = {
+    setup: { dim: ['ai'], steps: [
+      { p: null, on: ['srv'], w: 'srv', t: '운영자가 start-public.sh를 실행하면, 운영자 컴퓨터에서 답변 서버(server.py)가 켜져요.', s: '아직은 그 컴퓨터 안(127.0.0.1)에서만 접속할 수 있어요.' },
+      { p: ['srv', 'tun'], on: ['srv', 'tun'], tag: '터널 열어 줘', w: 'srv', t: '스크립트가 cloudflared를 실행해 Cloudflare에 임시 터널을 요청해요.', s: '가입도 비용도 없는 무료 터널이에요.' },
+      { p: ['tun', 'srv'], on: ['tun', 'srv'], tag: 'https://….trycloudflare.com', w: 'tun', t: 'Cloudflare가 서버로 이어지는 임시 공개 주소를 만들어 줘요.', s: '켤 때마다 주소가 바뀌어서, 화면 코드에 미리 적어 둘 수 없어요.' },
+      { p: ['srv', 'board'], on: ['srv', 'board'], tag: 'server.json 푸시', w: 'srv', t: '스크립트가 그 주소를 server.json에 적고, 이 파일 하나만 GitHub에 커밋·푸시해요.', s: '.py 코드는 바뀌지 않아요. 1~2분 뒤 공개 사이트에 반영돼요. 사람이 직접 할 일은 없어요.' },
+      { p: ['board', 'web'], on: ['board', 'web'], tag: '주소', w: 'web', t: '사용자가 앱을 열면, 화면이 server.json을 읽어 그 주소로 자동 연결해요.', s: '위쪽에 "AI 연결됨"이 떠요. 가입·설치 없이 링크만 열면 돼요.' },
+      { p: ['web', 'tun', 'srv'], on: ['web', 'srv'], tag: '연결 확인', w: 'web', t: '이제부터 모든 메시지는 이 터널 주소를 거쳐 답변 서버로 가요.' },
+      { p: ['srv', 'board'], on: ['srv', 'board'], tag: '꺼짐', sos: 1, w: 'srv', t: 'Ctrl+C로 끄면 서버·터널이 꺼지고, server.json을 "꺼짐"으로 다시 푸시해요.', s: '화면은 "지금은 답하기 어려워요"로 바뀌고, 🆘는 계속 동작해요.' }
+    ] },
     heart: { dim: [], steps: [
-      { p: ['srv', 'board'], on: ['srv', 'board'], tag: '새 주소', w: 'srv', t: '운영자가 서버를 켜면 새 터널 주소를 안내판에 올려요.', s: 'start-public.sh가 server.json을 갱신해요.' },
-      { p: ['board', 'web'], on: ['web', 'board'], tag: '주소', w: 'web', t: '앱을 열면 안내판에서 서버 주소를 읽고 자동으로 연결해요.', s: '가입·설치 없이 링크만 열면 돼요.' },
-      { p: null, on: ['web'], w: 'web', t: '"오늘 아무랑도 말 안 했어"를 보내면, 화면이 먼저 개인정보를 가리고 위기 표현이 있는지 살펴요.' },
+      { p: null, on: ['web'], w: 'web', t: '서버가 연결된 상태에서 "오늘 아무랑도 말 안 했어"를 보내면, 화면이 먼저 개인정보를 가리고 위기 표현이 있는지 살펴요.' },
       { p: ['web', 'tun', 'srv'], on: ['web', 'srv'], tag: '페르소나 + 최근 대화', w: 'web', t: '페르소나와 최근 대화, 새 메시지를 서버로 보내요.', s: '대화 원본은 내 브라우저에 있어요.' },
       { p: null, on: ['srv'], w: 'srv', t: '서버가 내 앱에서 온 요청인지, 사용량이 남았는지, 안전한지 확인해요.', s: '서버는 대화를 저장하지 않아요.' },
       { p: ['srv', 'ai'], on: ['srv', 'ai'], tag: '안전 → 페르소나 → 마음 → 기억', w: 'srv', t: '안전 규칙을 맨 앞에 두고, 페르소나·마음 대화 규칙·기억 요약을 붙여 제미나이에 요청해요.' },
@@ -127,7 +136,7 @@
     var host = R('svg'), btnPlay = R('play'), cap = R('cap'), num = R('num'), prog = R('prog');
     var mqV = window.matchMedia('(max-width: 700px)');
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var scen = 'heart', idx = 0, playing = false, started = false, timer = null, raf = null, L, svg, packet;
+    var scen = 'setup', idx = 0, playing = false, started = false, timer = null, raf = null, L, svg, packet;
     function pts(a) { return a.map(function (q) { return q.join(','); }).join(' '); }
     function pill(cls, x, y, text, h, extra) {
       return '<g class="' + cls + '"' + (extra || '') + ' transform="translate(' + x + ' ' + y + ')"><rect rx="' + h / 2 + '" height="' + h + '" y="' + (-h / 2) + '"/><text>' + text + '</text></g>';
