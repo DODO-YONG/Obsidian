@@ -26,6 +26,18 @@ date: 2026-11-19
 4. ✅ 앱 + 압축 파일 (2026-11-19) — 앱 https://dodo-yong.github.io/Obsidian/heartline/ · `output/2026_11_19_heartline.zip` · 자동 테스트 55/55 통과
 5. ✅ 발표 (2026-11-19) — 10장(만든 이유 · 기능 4장 · 기술 2장), [발표 페이지](https://dodo-yong.github.io/Obsidian/heartline/deck.html)(시연·작동 방식 그대로 움직임, N=발표자 메모, F=전체화면) · `output/2026_11_19_heartline_발표.pptx`(슬라이드 이미지 + 메모)
 
+## 📦 과제 제출 파일 (`output/제출/`)
+| # | 요구사항 | 파일 |
+|---|---|---|
+| 1 | PRD (구성요소·UI·Tech Spec·MVP) | `2026_11_19_heartline_1_PRD.pdf` (+ `.md`) |
+| 2 | 체크리스트 | `2026_11_19_heartline_2_체크리스트.pdf` (+ `.md`) |
+| 3 | 테스트 목록 | `2026_11_19_heartline_3_테스트목록.pdf` (+ `.md`) |
+| 4 | 앱 압축 파일 | `2026_11_19_heartline_4_앱.zip` |
+| 5 | 발표 PPT (10장) | `2026_11_19_heartline_5_발표.pptx` |
+| — | 전부 한 번에 | `2026_11_19_heartline_제출물_전체.zip` |
+
+PDF는 공개 페이지를 `?print=1`(밝은 테마·모두 펼침)로 인쇄해 만든다.
+
 ## 설계 결정
 - **공개 웹사이트**(사용자 결정, v0.2): 누구나 링크로 접속, 가입 없음. 대화·페르소나는 방문자 브라우저에만 저장, 서버는 무저장.
 - **Claude 구독은 안 씀**: 개인 구독으로 공개 방문자에게 답하는 건 약관 위반 소지. `ANTHROPIC_API_KEY` 있으면 실행 거부.

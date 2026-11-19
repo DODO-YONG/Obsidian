@@ -11,7 +11,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23F07A93'/%3E%3Cpath d='M16 24s-7-4.3-7-9.2A3.8 3.8 0 0 1 16 12.6a3.8 3.8 0 0 1 7 2.2C23 19.7 16 24 16 24z' fill='white'/%3E%3C/svg%3E">
 <script>
 (function () {
-  var SITE_V = '20261119154600';
+  var SITE_V = '20261119154856';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -190,7 +190,7 @@ footer{padding:10px 0 44px;text-align:center;color:var(--ink2);font-size:13px}
       ]]
     ]},
     {t:'검증',d:'자동 · 수동 · 품질',items:[
-      ['','자동 테스트 50/50 통과',0,D],
+      ['','자동 테스트 55/55 통과 (맛보기 모드 포함)',0,D],
       ['','수동 시나리오 전체 (테스트 페이지)'],
       ['','답장 품질: 페르소나 일관성 · 공감 · 금지 응답 0건 · 영어 교정']
     ]},
@@ -269,5 +269,17 @@ footer{padding:10px 0 44px;text-align:center;color:var(--ink2);font-size:13px}
   });
 })();
 </script>
+<script>
+/* 인쇄용(PDF 제출): ?print=1 → 밝은 테마, 접힌 내용 모두 펼침, 메뉴 숨김 */
+(function(){ if(!/print=1/.test(location.search)) return; var r=document.documentElement;
+  r.setAttribute('data-theme','light'); r.classList.add('printing');
+  document.querySelectorAll('details').forEach(function(d){d.open=true;});
+  document.querySelectorAll('.sec.closed').forEach(function(s){s.classList.remove('closed');}); })();
+</script>
+<style>
+@page{size:A4;margin:12mm}
+@media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.nav,#hud,.theme,.demo-btns,.tools button,#mreset{display:none!important}.card,.check,.suite,.mrow,label.it,.node,.sec>header{break-inside:avoid}section{padding:28px 0!important}html{scroll-behavior:auto}}
+.printing .nav{display:none}
+</style>
 </body>
 </html>

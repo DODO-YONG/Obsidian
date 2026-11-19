@@ -40,6 +40,7 @@
 - [[Heartline 체크리스트_261119]] — 2단계 개발 체크리스트(v0.6): ⭐ 페르소나·여러 명 우선, 45개 중 40개 완료. 페이지 `docs/heartline/checklist.html`
 - [[Heartline 테스트 계획_261119]] — 3단계: 자동 테스트 50개(⭐ 페르소나 카드 반영 포함, 모두 통과) + 수동 시나리오 17개(페르소나 7·화면 6·안전 4). 페이지 `docs/heartline/tests.html`
 - 발표(5단계): `docs/heartline/deck.html` 10장 — 만든 이유(지방에서 서울로 올라와 외로웠던 경험) · 기능 4장 · 기술 2장(구조·테스트/배포), 발표자 메모 + `output/2026_11_19_heartline_발표.pptx`
+- 과제 제출 파일: `wiki/projects/heartline/output/제출/` — 1 PRD·2 체크리스트·3 테스트 목록(PDF+md)·4 앱 zip·5 발표 pptx + 전체 묶음 zip
 
 # 🔗 공통 (shared)
 - [[나]] — 사용자 본인 페이지
