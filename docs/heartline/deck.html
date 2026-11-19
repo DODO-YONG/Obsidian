@@ -7,11 +7,11 @@
 <meta name="description" content="Heartline 발표: 만든 이유 · 기능 · 기술.">
 <meta name="theme-color" content="#1F161C">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link rel="stylesheet" href="how.css?v=20261119153552">
+<link rel="stylesheet" href="how.css?v=20261119154342">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23F07A93'/%3E%3Cpath d='M16 24s-7-4.3-7-9.2A3.8 3.8 0 0 1 16 12.6a3.8 3.8 0 0 1 7 2.2C23 19.7 16 24 16 24z' fill='white'/%3E%3C/svg%3E">
 <script>
 (function () {
-  var SITE_V = '20261119153552';
+  var SITE_V = '20261119154342';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -152,6 +152,18 @@ h2 span,h1 span{color:var(--rose-d)}
 .order2{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:20px;color:var(--ink2)}
 .order2 span{background:var(--bg2);color:var(--ink);border-radius:12px;padding:7px 12px;font-weight:700}
 .order2 span.s{background:var(--sos-bg);color:var(--sos)}.order2 span.p{background:var(--rose);color:#fff}
+.split{display:flex;align-items:center;gap:14px}
+.split .raw{flex:0 0 190px;background:#17101A;border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.split .lbl{font-size:15px;color:#C7AAB4;font-weight:700}
+.split .raw i{display:block;height:9px;border-radius:5px;background:#5A4450;width:100%}
+.split .raw i.w80{width:80%}.split .raw i.w60{width:60%}.split .raw i.gap{height:4px;background:transparent}
+.split .tg{font-size:13px;font-weight:700;color:#F7E9EE;background:#3A2A33;border-radius:8px;padding:2px 8px;width:fit-content}
+.split .arr{font-size:34px;color:var(--rose);text-align:center;line-height:1}
+.split .arr small{display:block;font-size:13px;color:var(--ink2);margin-top:4px;line-height:1.3}
+.split .out{flex:1;display:flex;flex-direction:column;gap:7px;align-items:flex-start}
+.split .ob{background:var(--you);color:var(--you-ink);border-radius:16px;border-top-left-radius:6px;padding:7px 13px;font-size:18px}
+.split .oc,.split .os{font-size:15px;font-weight:700;border-radius:10px;padding:4px 10px}
+.split .oc{background:var(--lav-bg);color:var(--lav)}.split .os{background:var(--sos-bg);color:var(--sos)}
 /* chrome */
 #bar{position:fixed;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.08)}
 #bar i{display:block;height:100%;background:#F28CA2;width:0;transition:width .3s}
@@ -304,15 +316,22 @@ h2 span,h1 span{color:var(--rose-d)}
   </section>
 
   <!-- 9 기술 ② 핵심 구현 -->
-  <section class="slide" data-note="핵심 구현 네 가지예요. 첫째, AI에게 주는 지시를 <b>안전 규칙 → 페르소나 카드 → 모드 → 기억</b> 순서로 조립해요. 둘째, 답장은 <b>스트리밍</b>으로 받고, 답장 끝에 붙은 교정·위기 태그를 서버가 떼어 내서 말풍선과 교정 카드로 나눠 보내요. 셋째, 제미나이 무료 등급의 큰 모델이 자주 바빠서 <b>가벼운 모델을 먼저 쓰고, 15초 안에 답이 없으면 다음 모델로</b> 넘어가게 했어요. 넷째, 위험 표현은 <b>화면 키워드와 AI 판단 두 번</b> 확인해요." data-sec="50초">
+  <section class="slide" data-note="핵심 구현 네 가지예요. 첫째, AI에게 주는 지시를 <b>안전 규칙 → 페르소나 카드 → 모드 → 기억</b> 순서로 조립해요. 둘째, 답장은 <b>스트리밍</b>으로 받고, AI가 보낸 한 덩어리 답장을 서버가 <b>빈 줄마다 말풍선으로 나누고</b>, 교정과 위기 신호는 따로 떼어 화면에 보내요. 셋째, 제미나이 무료 등급의 큰 모델이 자주 바빠서 <b>가벼운 모델을 먼저 쓰고, 15초 안에 답이 없으면 다음 모델로</b> 넘어가게 했어요. 넷째, 위험 표현은 <b>화면 키워드와 AI 판단 두 번</b> 확인해요." data-sec="50초">
     <div class="k">TECH ② · 핵심 구현</div>
     <h2>어떻게 <span>그 사람답게</span> 말하게 했나</h2>
     <div class="tech">
       <div class="card"><b>① 지시 조립 순서</b><div class="order2"><span class="s">안전 규칙</span>→<span class="p">페르소나 카드</span>→<span>모드(대화/영어)</span>→<span>기억 요약</span></div><p>페르소나 카드에 키워드·말버릇·호칭·관계·좋아하는 것까지 모두 넣고 "일관되게 지켜"</p></div>
-      <div class="card"><b>② 스트리밍 + 말풍선 나누기</b><pre>그런 날은 마음이 더 무겁지…
-
-나한테는 편하게 말해도 돼
-&lt;correction&gt;[…]&lt;/correction&gt;&lt;risk level="none"/&gt;</pre><p>빈 줄 = 말풍선 경계 · 태그는 서버가 떼어 교정 카드·위기 신호로</p></div>
+      <div class="card"><b>② 스트리밍 + 말풍선 나누기</b>
+        <div class="split">
+          <div class="raw"><span class="lbl">✨ AI 답장 한 덩어리</span><i></i><i class="w80"></i><i class="gap"></i><i class="w60"></i><span class="tg">✏️ 교정</span><span class="tg">🛡️ 신호</span></div>
+          <div class="arr">→<small>서버가<br>나눔</small></div>
+          <div class="out">
+            <span class="ob">그런 날은 마음이 더 무겁지…</span>
+            <span class="ob">나한테는 편하게 말해도 돼</span>
+            <span class="oc">✏️ 교정 카드</span><span class="os">🛡️ 위기 신호: 없음</span>
+          </div>
+        </div>
+        <p>빈 줄마다 말풍선 하나 · 교정과 위기 신호는 따로 떼어 화면에 전달</p></div>
       <div class="card"><b>③ 무료 모델 자동 전환</b><p>3.1-flash-lite 먼저 → 15초 무응답·바쁨(503)이면 3.8 → 3.7 flash. 큰 모델이 무료 등급에서 30초 넘게 멈추던 문제를 해결</p></div>
       <div class="card"><b>④ 2중 확인 · 무기록</b><p>위험 표현: 화면 키워드 + AI 판단 · 대화 본문은 서버 로그에도 안 남김 · 유료 과금 키가 있으면 서버 실행 거부</p></div>
     </div>
@@ -489,6 +508,6 @@ h2 span,h1 span{color:var(--rose-d)}
   if (/notes=1/.test(location.search)) toggleNotes();
 })();
 </script>
-<script src="how.js?v=20261119153552" defer></script>
+<script src="how.js?v=20261119154342" defer></script>
 </body>
 </html>
