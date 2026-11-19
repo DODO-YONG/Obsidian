@@ -97,10 +97,11 @@ flowchart LR
 
 | 페이지 | 주소 | 파일 |
 |---|---|---|
-| 소개 (Q-BRANCH) | https://dodo-yong.github.io/Obsidian/ (TRACER 원리: `#how`) | `docs/index.html`, `style.css` |
+| 소개 (Q-BRANCH) | https://dodo-yong.github.io/Obsidian/ (TRACER 원리: `#how`) — 작업 기록은 하루 6개가 넘으면 핵심만 보이고 '더 보기'로 접힘 | `docs/index.html`, `style.css` |
 | TRACER (CCNA 코치) | https://dodo-yong.github.io/Obsidian/ccna/ (소개: `#intro`, 작동 방식: `#how`) | `docs/ccna/index.html`, `topics.json`, `server.json` |
 | TRACER 작동 방식 (공용) | 위 두 페이지에 함께 들어감 | `docs/tracer-how.js`, `docs/tracer-how.css` — 여기만 고치면 두 곳이 같이 바뀜 |
 | 터미널 작업 기록 | https://dodo-yong.github.io/Obsidian/terminal.html | `docs/terminal.html` |
+| Heartline (CUPID 앱) | https://dodo-yong.github.io/Obsidian/heartline/ (PRD `prd.html` · 체크리스트 `checklist.html` · 테스트 `tests.html` · 발표 `deck.html`) | `docs/heartline/` |
 
 - 사이트를 고친 뒤엔 `scripts/bump-site-version.sh`로 버전을 올린다 → 열린 페이지가 새 버전을 감지하면 한 번 자동 새로고침(브라우저 캐시 대응). 공용 파일 주소의 `?v=`도 함께 올린다.
 - 공개 문구는 "제 Mac" 대신 "개인 서버", "개인 컴퓨터 환경" 같은 공식 표현을 쓴다.
@@ -124,7 +125,8 @@ private/                비공개 — 이 저장소에서 제외, 별도 비공�
 |---|---|
 | `scripts/gemini.py` | DY-004 TWIN: 터미널에서 제미나이와 대화 |
 | `scripts/backup-private.sh` | `private/`를 비공개 저장소에 백업 (푸시 전 비공개 여부 확인) |
-| `scripts/bump-site-version.sh` | 공개 사이트 버전 올리기 (자동 새로고침용, `tracer-how.*?v=` 포함) |
+| `scripts/bump-site-version.sh` | 공개 사이트 버전 올리기 (자동 새로고침용, `tracer-how.*?v=` 포함) + 아래 git log 상자 갱신 |
+| `scripts/update-site-log.py` | 소개 페이지 맨 위 git log 상자를 실제 커밋으로 다시 만듦. 하루 커밋이 많으면 4개만 보이고 '외 N개'로 축약(서버 주소 갱신 등 잡음 제외, 최근 3일만 펼침). 먼저 보여 줄 커밋·문구는 `docs/gitlog-highlights.txt` |
 | `tools/wiki_ab_test.py` | 같은 질문을 위키로·위키 없이 답하게 해 토큰·시간 비교 (구독 사용량 듦, `--dry-run`은 0) → [결과](wiki/shared/위키%20효과%20측정.md) |
 
 ## 🔒 비밀 정보 다루는 법

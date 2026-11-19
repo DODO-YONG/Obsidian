@@ -1,0 +1,14 @@
+# 소개 페이지 맨 위 'git log' 상자에 먼저 보여 줄 커밋 (scripts/update-site-log.py가 읽음)
+# 형식: 커밋해시 짧은문구   — 하루에 여기 적힌 커밋이 있으면 그것부터 고르고, 문구도 이걸로 보여 준다
+2e39148 웹사이트 보안 점검 에이전트 첫 버전
+43499b8 작업 기록 소개 페이지 추가
+f68cc56 Obsidian 볼트 초기 설정
+ead6e95 interview-coach(MIRROR) 첫 버전
+59a9d46 ccna-coach(TRACER) 첫 버전
+41c22e1 TRACER: 누구나 접속
+b50f113 DY-006 SWEEPER 첫 버전
+b7d3fb6 규칙서 요약: 토큰 −57%
+4b602f3 DY-007 CUPID: Heartline PRD
+7e48fba Heartline: 테스트 먼저 46개
+2b4bd68 Heartline 서버·앱 구현
+d2339c9 Heartline 발표 (deck + pptx)

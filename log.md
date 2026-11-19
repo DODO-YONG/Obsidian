@@ -117,3 +117,5 @@
 ## [2026-11-19] output | Heartline 제출 문서 1~3을 PDF(쪽 잘림) → 파일 하나짜리 HTML로 교체(make-offline-docs.py, 더블클릭으로 열림·인터넷 없이 그림 동작), 전체 묶음 다시 만듦
 
 ## [2026-11-19] output | Heartline 발표도 파일 하나짜리 HTML(2026_11_19_heartline_5_발표.html)로 제출 폴더에 추가, 전체 묶음 다시 만듦
+
+## [2026-11-19] output | 소개 페이지 갱신: DY-007 CUPID 카드·3일차 작업 기록 추가, git log 상자 자동 생성(scripts/update-site-log.py, 하루 커밋 많으면 축약), 작업 기록 하루 6개 넘으면 핵심만 보이고 접기

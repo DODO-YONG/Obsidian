@@ -16,11 +16,11 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="tracer-how.css?v=20261119160001">
+<link rel="stylesheet" href="tracer-how.css?v=20261119170225">
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261119160001';
+  var SITE_V = '20261119170225';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -58,7 +58,7 @@
     <div>
       <p class="kicker"><span class="pulse" aria-hidden="true"></span>Agent DY · AWS 인턴십 과정 · 학습 기록</p>
       <h1>나에게 필요한 에이전트를<br><span class="hl">하나씩</span> 만들어 보는 중</h1>
-      <p class="lead">AWS 인턴십 과정에서 Claude Code를 써 가며 배우고 있습니다. 지금은 초기 버전 에이전트 네 개(SENTINEL · MIRROR · TRACER · SWEEPER)와, 메모와 코드를 함께 정리하는 Obsidian 위키가 있습니다.</p>
+      <p class="lead">AWS 인턴십 과정에서 Claude Code를 써 가며 배우고 있습니다. 지금은 초기 버전 에이전트 다섯 개(SENTINEL · MIRROR · TRACER · SWEEPER · CUPID)와, 메모와 코드를 함께 정리하는 Obsidian 위키가 있습니다.</p>
       <div class="cta">
         <a class="btn primary" href="#agents">만든 에이전트 보기
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
@@ -66,6 +66,7 @@
           <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 .2a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.81.06 1.23.83 1.23.83.72 1.22 1.88.87 2.34.67.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.66 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 8 .2z"/></svg>
           GitHub 저장소</a>
         <a class="btn" href="ccna/">🧠 CCNA 코치 써 보기</a>
+        <a class="btn" href="heartline/">💗 Heartline 써 보기</a>
       </div>
     </div>
 
@@ -73,25 +74,29 @@
       <div class="term-bar" aria-hidden="true"><i></i><i></i><i></i><span>~/Obsidian — git log</span></div>
       <div class="term-body">
         <div><span class="prompt">$</span> git log --oneline --reverse</div>
+        <!-- gitlog:start -->
         <ol>
-          <li class="day"># 1일차 · 11-17</li>
+          <li class="day"># 1일차 · 11-17 · 5 commits</li>
           <li><span class="h">2e39148</span><span class="t">11:57</span><span class="m">웹사이트 보안 점검 에이전트 첫 버전</span></li>
           <li><span class="h">43499b8</span><span class="t">13:17</span><span class="m">작업 기록 소개 페이지 추가</span></li>
-          <li class="day"># 2일차 · 11-18</li>
+          <li><span class="h">79d93d2</span><span class="t">13:19</span><span class="m">소개 페이지: 휴대폰 화면 가로 넘침 수정</span></li>
+          <li><span class="h">6ee4ee5</span><span class="t">13:32</span><span class="m">소개 페이지: 백업 주기(1시간마다)와 cloud-close 동작 반영</span></li>
+          <li class="more">… 외 1개 (잡음·작은 수정 포함)</li>
+          <li class="day"># 2일차 · 11-18 · 51 commits</li>
           <li><span class="h">f68cc56</span><span class="t">09:36</span><span class="m">Obsidian 볼트 초기 설정</span></li>
-          <li><span class="h">ca8cc31</span><span class="t">09:55</span><span class="m">에이전트 구조, 비밀정보 보호 추가</span></li>
-          <li><span class="h">ad2a415</span><span class="t">10:04</span><span class="m">security-agent를 이력째 가져옴</span></li>
-          <li><span class="h">ead6e95</span><span class="t">10:25</span><span class="m">interview-coach 첫 버전</span></li>
-          <li><span class="h">d89fc54</span><span class="t">10:28</span><span class="m">추가 요금 방지: API 키면 실행 거부</span></li>
+          <li><span class="h">ead6e95</span><span class="t">10:25</span><span class="m">interview-coach(MIRROR) 첫 버전</span></li>
           <li><span class="h">59a9d46</span><span class="t">11:23</span><span class="m">ccna-coach(TRACER) 첫 버전</span></li>
-          <li><span class="h">4be9b9c</span><span class="t">11:28</span><span class="m">에이전트 코드명(007 스타일)</span></li>
-          <li><span class="h">41c22e1</span><span class="t">13:23</span><span class="m">TRACER: 누구나 접속</span></li>
-          <li><span class="h">98a3ff0</span><span class="t">13:36</span><span class="m">TRACER: 영어 출제 + 게임</span></li>
-          <li><span class="h">ee5e5bf</span><span class="t">14:43</span><span class="m">TRACER 작동 방식 그림</span></li>
           <li><span class="h">b50f113</span><span class="t">15:37</span><span class="m">DY-006 SWEEPER 첫 버전</span></li>
-          <li><span class="h">b7d3fb6</span><span class="t">17:28</span><span class="m">규칙서 요약: 토큰 −57%</span></li>
+          <li class="more">… 외 47개 (잡음·작은 수정 포함)</li>
+          <li class="day"># 3일차 · 11-19 · 21 commits</li>
+          <li><span class="h">4b602f3</span><span class="t">14:12</span><span class="m">DY-007 CUPID: Heartline PRD</span></li>
+          <li><span class="h">7e48fba</span><span class="t">14:40</span><span class="m">Heartline: 테스트 먼저 46개</span></li>
+          <li><span class="h">2b4bd68</span><span class="t">14:59</span><span class="m">Heartline 서버·앱 구현</span></li>
+          <li><span class="h">d2339c9</span><span class="t">15:21</span><span class="m">Heartline 발표 (deck + pptx)</span></li>
+          <li class="more">… 외 17개 (잡음·작은 수정 포함)</li>
         </ol>
-        <div class="tail">56 commits · 2 days<span class="cursor" aria-hidden="true"></span></div>
+        <div class="tail">77 commits · 3 days<span class="cursor" aria-hidden="true"></span></div>
+        <!-- gitlog:end -->
       </div>
     </figure>
   </div>
@@ -116,7 +121,7 @@
             </div>
             <div class="zone">
               <h4><span class="dot" aria-hidden="true"></span>에이전트 (agents/)</h4>
-              <ul class="mono"><li>DY-001 SENTINEL</li><li>DY-002 MIRROR</li><li>DY-003 TRACER</li><li>DY-006 SWEEPER</li></ul>
+              <ul class="mono"><li>DY-001 SENTINEL</li><li>DY-002 MIRROR</li><li>DY-003 TRACER</li><li>DY-006 SWEEPER</li><li>DY-007 CUPID</li></ul>
             </div>
             <div class="zone private">
               <h4><span class="dot" aria-hidden="true"></span>비공개 구역 · 밖으로 나가지 않음</h4>
@@ -150,7 +155,7 @@
         <p class="label"><span class="n">02</span>에이전트</p>
         <div>
           <h2>지금까지 만든 에이전트</h2>
-          <p>007처럼 번호와 코드명을 붙였습니다. SENTINEL·MIRROR·SWEEPER는 Claude Agent SDK(Python), TRACER는 제미나이 API로 만든 초기 버전입니다.</p>
+          <p>007처럼 번호와 코드명을 붙였습니다. SENTINEL·MIRROR·SWEEPER는 Claude Agent SDK(Python), TRACER·CUPID는 제미나이 API(무료 등급)로 만든 초기 버전입니다.</p>
         </div>
       </div>
 
@@ -248,6 +253,32 @@
             </ul>
           </div>
         </article>
+
+        <article class="agent">
+          <div class="agent-id">
+            <span class="mono">DY-007 · agents/heartline</span>
+            <h3>CUPID</h3>
+            <span class="chip">초기 버전 · 공개</span>
+            <div class="links">
+              <a href="heartline/"><b>Heartline 열기 →</b></a>
+              <a href="heartline/prd.html">PRD 보기 →</a>
+              <a href="heartline/deck.html">발표 보기 →</a>
+              <a href="https://github.com/DODO-YONG/Obsidian/tree/main/agents/heartline">코드 보기 →</a>
+            </div>
+          </div>
+          <div class="agent-body">
+            <p>Heartline: 내 취향대로 만드는 나만의 가상 연인 웹앱. 성격·말투·호칭·관계를 정해 연인을 만들고, 메신저처럼 대화합니다. 부가로 영어 모드가 있습니다.</p>
+            <ol class="pipeline" aria-label="동작 순서">
+              <li><span>페르소나 만들기</span></li><li><span>메신저 대화</span></li><li><span>영어 모드 교정</span></li><li><span>내 브라우저에 저장</span></li>
+            </ol>
+            <ul class="points">
+              <li>프리셋 6종 + 직접 만들기, 실시간 미리보기. 최대 5명을 바꿔 가며 대화</li>
+              <li>입력 중 표시·여러 말풍선·읽음·하트 반응으로 실제 메신저 느낌</li>
+              <li>대화·페르소나는 방문자 브라우저에만, 서버는 저장하지 않음. AI 고지·성인 캐릭터만·위기 시 도움 안내</li>
+              <li>PRD → 체크리스트 → 테스트 먼저 → 구현 → 발표, 하루에 다섯 단계 (자동 테스트 55개 통과)</li>
+            </ul>
+          </div>
+        </article>
       </div>
       <p class="aside">그 밖에 <b>DY-004 TWIN</b>(<a href="https://github.com/DODO-YONG/Obsidian/blob/main/scripts/gemini.py"><code>scripts/gemini.py</code></a>, 터미널 제미나이 대화)과 <b>DY-005 PRIMER</b>(<code>agents/beginner-faq</code>, 초보자 FAQ 받기)가 있습니다.</p>
     </div>
@@ -273,7 +304,7 @@
         <p class="label"><span class="n">04</span>작업 기록</p>
         <div>
           <h2>작업 기록</h2>
-          <p>11월 17~18일, 이틀 동안 한 일입니다. 맥 터미널에서 따로 한 작업은 <a href="terminal.html">터미널 작업 기록</a>에 있습니다.</p>
+          <p>11월 17~19일, 사흘 동안 한 일입니다. 하루 기록이 길면 핵심만 보이고 나머지는 접혀 있습니다. 맥 터미널에서 따로 한 작업은 <a href="terminal.html">터미널 작업 기록</a>에 있습니다.</p>
         </div>
       </div>
       <div class="days">
@@ -291,7 +322,7 @@
         </div>
         <div class="day">
           <h3><b>2일차</b> · 2026-11-18 · Mac</h3>
-          <div class="ev"><time>09:36</time><div><h4>맥으로 옮기며 Obsidian으로 정리</h4>
+          <div class="ev key"><time>09:36</time><div><h4>맥으로 옮기며 Obsidian으로 정리</h4>
             <p>메모와 코드를 Obsidian 볼트 하나에 모으고, Claude Code가 정리 규칙(CLAUDE.md)을 따르게 했습니다.</p>
             <div class="tags"><span>Obsidian</span><span>CLAUDE.md</span></div></div></div>
           <div class="ev"><time>09:55</time><div><h4>키가 올라가지 않게 설정</h4>
@@ -300,7 +331,7 @@
           <div class="ev"><time>10:04</time><div><h4>Windows에서 만든 것을 맥으로</h4>
             <p>Windows에서 커밋해 둔 기록이 GitHub에 그대로 남아 있어서, 맥에서 이력째 가져와 바로 이어서 작업할 수 있었습니다. 원래 저장소는 읽기 전용으로 보관했습니다.</p>
             <div class="tags"><span>git subtree</span><span>Archive</span></div></div></div>
-          <div class="ev"><time>10:25</time><div><h4>두 번째 에이전트: 면접 코치</h4>
+          <div class="ev key"><time>10:25</time><div><h4>두 번째 에이전트: 면접 코치</h4>
             <p>작업 기록에서 면접용 경험을 뽑아 비공개 경험 은행을 만들고, 이를 읽어 연습시키는 코치를 만들었습니다.</p>
             <div class="tags"><span>16 LP</span><span>STAR</span></div></div></div>
           <div class="ev"><time>10:28</time><div><h4>API 키로는 실행 안 되게</h4>
@@ -312,12 +343,12 @@
           <div class="ev"><time>10:58</time><div><h4>비공개 자료는 비공개 저장소로</h4>
             <p>공개 저장소에서 빼 둔 개인 자료를 따로 비공개 저장소에 백업하게 했습니다.</p>
             <div class="tags"><span>private repo</span></div></div></div>
-          <div class="ev"><time>11:22</time><div><h4>세 번째 에이전트: TRACER</h4>
+          <div class="ev key"><time>11:22</time><div><h4>세 번째 에이전트: TRACER</h4>
             <p>CCNA 단원별 문제·해설 사이트. 화면은 공개하고, 답변은 키를 보관한 개인 서버가 맡습니다.</p>
             <div class="tags"><span>Gemini API</span><span>CORS</span></div></div></div>
           <div class="ev"><time>11:28</time><div><h4>에이전트 코드명</h4>
             <p>007처럼 번호와 코드명을 붙였습니다. SENTINEL, MIRROR, TRACER, TWIN, PRIMER.</p></div></div>
-          <div class="ev"><time>13:23</time><div><h4>TRACER를 누구나 쓰게</h4>
+          <div class="ev key"><time>13:23</time><div><h4>TRACER를 누구나 쓰게</h4>
             <p>무료 임시 터널로 개인 서버를 외부에 연결하고, 사이트가 현재 서버 주소를 알아서 찾게 했습니다. 방문자 사용량은 제한합니다.</p>
             <div class="tags"><span>Cloudflare Tunnel</span><span>rate limit</span></div></div></div>
           <div class="ev"><time>13:36</time><div><h4>영어 출제와 게임 요소</h4>
@@ -329,12 +360,32 @@
           <div class="ev"><time>14:43</time><div><h4>TRACER 사이트에도 같은 설명</h4>
             <p>그림을 공용 파일로 분리해 이 페이지와 TRACER 소개 화면이 함께 쓰게 했습니다. 바로가기 주소(#how)도 만들었습니다.</p>
             <div class="tags"><span>공용 컴포넌트</span></div></div></div>
-          <div class="ev"><time>15:20</time><div><h4>여섯 번째 에이전트: SWEEPER</h4>
+          <div class="ev key"><time>15:20</time><div><h4>여섯 번째 에이전트: SWEEPER</h4>
             <p>작업 범위를 볼트 밖 홈 폴더로 넓혔습니다. 다운로드·데스크탑 정리, 문서 모으기, 폴더 정리부터 시작하고, 쓰기 작업은 사람이 직접 승인해야만 실행되게 했습니다.</p>
             <div class="tags"><span>Agent SDK</span><span>Safety</span></div></div></div>
-          <div class="ev"><time>17:28</time><div><h4>위키가 토큰을 아끼는지 재 보기</h4>
+          <div class="ev key"><time>17:28</time><div><h4>위키가 토큰을 아끼는지 재 보기</h4>
             <p>같은 질문을 위키로·위키 없이 두 번 답하게 하는 A/B 측정 도구를 만들었습니다. 처음엔 위키 쪽이 오히려 56% 더 썼습니다. 원인은 매번 읽히는 규칙서(CLAUDE.md)와 "목차부터 읽기" 규칙이었습니다. 규칙서를 16KB에서 4.4KB로 줄이고 바로가기 표로 바꾸자 같은 질문의 토큰이 57% 줄었습니다.</p>
             <div class="tags"><span>A/B test</span><span>Tokens</span></div></div></div>
+        </div>
+        <div class="day">
+          <h3><b>3일차</b> · 2026-11-19 · Mac</h3>
+          <div class="ev key"><time>14:12</time><div><h4>일곱 번째 에이전트: CUPID (Heartline)</h4>
+            <p>나만의 가상 연인 웹앱을 기획했습니다. 기본 구성요소·화면·기술·MVP를 PRD로 정리하고, 보기 좋은 페이지로 만들었습니다.</p>
+            <div class="tags"><span>PRD</span></div></div></div>
+          <div class="ev"><time>14:25</time><div><h4>체크리스트와 테스트를 먼저</h4>
+            <p>개발 체크리스트를 만들고, 구현 전에 자동 테스트 46개와 수동 시나리오부터 썼습니다.</p>
+            <div class="tags"><span>Test first</span><span>pytest</span></div></div></div>
+          <div class="ev key"><time>14:59</time><div><h4>서버·앱 화면 구현</h4>
+            <p>메신저 같은 대화방과 파이썬 답변 서버를 만들었습니다. TRACER처럼 화면은 공개, AI는 키를 보관한 개인 서버가 제미나이로 답합니다.</p>
+            <div class="tags"><span>HTML/JS</span><span>Gemini API</span></div></div></div>
+          <div class="ev"><time>15:13</time><div><h4>페르소나를 1순위로</h4>
+            <p>연인 만들기·바꾸기·여러 명을 핵심 기능으로 재정렬했습니다. 프리셋 6종과 실시간 미리보기를 붙였습니다.</p></div></div>
+          <div class="ev key"><time>15:21</time><div><h4>3~5분 발표</h4>
+            <p>시연과 작동 방식이 그대로 움직이는 발표 페이지와 pptx를 만들고, 10장으로 다듬었습니다.</p>
+            <div class="tags"><span>deck.html</span><span>pptx</span></div></div></div>
+          <div class="ev"><time>15:48</time><div><h4>과제 제출 묶음</h4>
+            <p>PRD·체크리스트·테스트 목록·앱 압축 파일·발표를 모았습니다. 문서는 쪽이 잘리는 PDF 대신 더블클릭으로 열리는 파일 하나짜리 HTML로 바꿨습니다.</p>
+            <div class="tags"><span>Offline HTML</span></div></div></div>
         </div>
       </div>
     </div>
@@ -401,6 +452,26 @@
   mq.addEventListener && mq.addEventListener('change', sync);
 
 
+  // 작업 기록: 하루 기록이 FOLD_AT개를 넘으면 핵심(.key)만 남기고 나머지는 접기
+  var FOLD_AT = 6;
+  Array.prototype.forEach.call(document.querySelectorAll('#log .day'), function (day) {
+    var evs = Array.prototype.slice.call(day.querySelectorAll('.ev'));
+    if (evs.length <= FOLD_AT) return;
+    var keys = evs.filter(function (ev) { return ev.classList.contains('key'); });
+    var hide = keys.length ? evs.filter(function (ev) { return !ev.classList.contains('key'); }) : evs.slice(FOLD_AT - 1);
+    hide.forEach(function (ev) { ev.classList.add('folded'); });
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'ev-more'; b.setAttribute('aria-expanded', 'false');
+    var label = function (open) { b.textContent = open ? '접기' : '나머지 ' + hide.length + '개 더 보기 (전체 ' + evs.length + '개)'; };
+    label(false);
+    b.addEventListener('click', function () {
+      var open = b.getAttribute('aria-expanded') !== 'true';
+      hide.forEach(function (ev) { ev.classList.toggle('folded', !open); });
+      b.setAttribute('aria-expanded', open ? 'true' : 'false'); label(open);
+    });
+    day.appendChild(b);
+  });
+
   // 지금 보고 있는 섹션을 상단 메뉴에 표시 (내용은 항상 보이고, 메뉴 강조만 바뀜)
   var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
   if ('IntersectionObserver' in window) {
@@ -414,6 +485,6 @@
   }
 })();
 </script>
-<script src="tracer-how.js?v=20261119160001" defer></script>
+<script src="tracer-how.js?v=20261119170225" defer></script>
 </body>
 </html>

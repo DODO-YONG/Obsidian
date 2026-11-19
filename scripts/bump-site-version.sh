@@ -10,4 +10,6 @@ for f in docs/index.html docs/terminal.html docs/ccna/index.html docs/heartline/
   sed -i '' -E "s/([\"/])(how|app)\.(css|js)\?v=[0-9]+/\1\2.\3?v=$V/g" "$f"
 done
 printf '{"v": "%s"}\n' "$V" > docs/version.json
+# 소개 페이지 맨 위 git log 상자도 실제 커밋 기록으로 갱신 (하루 커밋이 많으면 축약)
+python3 scripts/update-site-log.py
 echo "사이트 버전: $V"
