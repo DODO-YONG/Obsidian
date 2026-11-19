@@ -81,3 +81,5 @@
 ## [2026-11-19] lint | Heartline 재확인: PRD에 성적 묘사 거절·개인정보 가림 완료 기준 복원, 허브·README에서 v0.5에서 뺀 기능(호흡·노트·사용량 숫자) 언급 정리
 
 ## [2026-11-19] output | Heartline PRD 시각화 페이지 `docs/heartline/prd.html`(대화방 시연·기능 카드·구조도·MVP 체크) → 공개 링크 https://dodo-yong.github.io/Obsidian/heartline/prd.html
+
+## [2026-11-19] output | Heartline PRD 페이지에 재생형 '작동 방식' 추가(마음 대화·위기 대응·영어 모드 통신 흐름 + 역할 트리 + 설계 이유, docs/heartline/how.*), 페이지 기본 다크 모드

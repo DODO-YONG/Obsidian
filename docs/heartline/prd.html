@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -10,11 +10,12 @@
 <meta name="theme-color" content="#FFE9E3" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1F161C" media="(prefers-color-scheme: dark)">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="how.css?v=20261119142209">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23F07A93'/%3E%3Cpath d='M16 24s-7-4.3-7-9.2A3.8 3.8 0 0 1 16 12.6a3.8 3.8 0 0 1 7 2.2C23 19.7 16 24 16 24z' fill='white'/%3E%3C/svg%3E">
 <script>
 /* 새 버전 자동 확인 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261119141217';
+  var SITE_V = '20261119142209';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -206,6 +207,7 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
   <ul>
     <li><a href="#basics">기본 구성요소</a></li>
     <li><a href="#ui">UI</a></li>
+    <li><a href="#how">작동 방식</a></li>
     <li><a href="#tech">Tech Spec</a></li>
     <li><a href="#mvp">MVP</a></li>
   </ul>
@@ -341,21 +343,21 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
   </div>
 </div></section>
 
+<!-- 작동 방식 -->
+<section id="how"><div class="wrap">
+  <div class="kicker">HOW IT WORKS · 작동 방식</div>
+  <h2>메시지 하나가 오가는 길</h2>
+  <p class="sub">장면을 고르고 ▶ 재생을 누르면, 메시지가 화면 → 터널 → 서버 → 제미나이를 오가는 모습을 단계별로 볼 수 있어요. ◀ ▶로 한 단계씩 넘길 수도 있어요.</p>
+  <div class="hl-how" data-hl-how></div>
+</div></section>
+
 <!-- 3. Tech -->
 <section id="tech" class="alt"><div class="wrap">
   <div class="kicker">03 · Tech Spec</div>
   <h2>가볍고, 무료로, 대화는 내 브라우저에</h2>
   <p class="sub">화면은 무료 정적 호스팅, 답은 파이썬 서버가 제미나이 무료 등급으로 만들어요. 운영 비용은 0원이에요.</p>
 
-  <div class="arch">
-    <div class="node"><div class="ico">🌐</div><b>웹 화면</b><small>HTML · CSS · JS<br>무료 정적 호스팅<br>대화는 브라우저에 저장</small></div>
-    <div class="link"><span>→</span>Cloudflare<br>임시 터널</div>
-    <div class="node"><div class="ico">💻</div><b>답변 서버</b><small>Python<br>답장 스트리밍<br>대화 저장 안 함</small></div>
-    <div class="link"><span>→</span>무료 API</div>
-    <div class="node"><div class="ico">✨</div><b>제미나이</b><small>무료 등급<br>한도 걸리면<br>다음 무료 모델로</small></div>
-  </div>
-
-  <div class="grid g2" style="margin-top:28px">
+  <div class="grid g2">
     <div class="card">
       <h3>기술 선택</h3>
       <table>
@@ -431,7 +433,7 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
   var root=document.documentElement, t=document.getElementById('theme');
   try{var s=localStorage.getItem('hl-theme'); if(s) root.setAttribute('data-theme',s);}catch(e){}
   t.addEventListener('click',function(){
-    var dark = root.getAttribute('data-theme') ? root.getAttribute('data-theme')==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    var dark = root.getAttribute('data-theme')!=='light';
     var n = dark?'light':'dark'; root.setAttribute('data-theme',n);
     try{localStorage.setItem('hl-theme',n);}catch(e){}
   });
@@ -510,5 +512,6 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
   scenes.heart();
 })();
 </script>
+<script src="how.js?v=20261119142209" defer></script>
 </body>
 </html>
