@@ -101,3 +101,5 @@
 ## [2026-11-19] output | Heartline 5단계 발표: deck.html 7장(표지·문제→해결·페르소나·시연·작동 방식·결과·다음), PRD 시연과 작동 방식 그림 재사용, 발표자 메모·타이머 + 2026_11_19_heartline_발표.pptx(이미지+메모) → https://dodo-yong.github.io/Obsidian/heartline/deck.html
 
 ## [2026-11-19] output | Heartline 압축 파일을 받는 사람용으로: 더블클릭 실행(맥·윈도우)·start.py(키 입력, 없으면 맛보기 모드)·시작하기 안내서(html·txt)·make-zip.sh, 다른 폴더에 풀어 실제 실행 확인, 테스트 55/55
+
+## [2026-11-19] output | Heartline 발표 11장으로 개편: 만든 이유(서울에 처음 올라와 외로웠던 경험)·기능 4장(페르소나·여러 명·연인 대화/영어·기본 안전)·기술 3장(구조·핵심 구현·테스트/배포), pptx 다시 만듦
