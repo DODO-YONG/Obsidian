@@ -15,7 +15,7 @@
 
 ## 다른 사람에게 주기 (압축 파일)
 ```bash
-./make-zip.sh     # → wiki/projects/heartline/output/YYYY_MM_DD_heartline.zip
+./make-zip.sh     # → wiki/projects/heartline/output/제출/YYYY_MM_DD_heartline_4_앱.zip
 ```
 - 압축을 풀면 `Heartline/` 폴더: **시작하기.html/.txt**(안내서) · **Heartline 실행.command**(맥) · **Heartline 실행.bat**(윈도우) · `start.py` · `server/` · `web/`
 - 받은 사람은 파이썬만 있으면 더블클릭 → 키를 물으면 붙여 넣거나 **그냥 엔터 = 맛보기 모드**(미리 써 둔 답장, 인터넷·비용 없음) → 브라우저 자동 열림.

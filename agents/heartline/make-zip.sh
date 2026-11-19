@@ -1,11 +1,11 @@
 #!/bin/sh
-# 다른 사람에게 줄 압축 파일 만들기 → wiki/projects/heartline/output/YYYY_MM_DD_heartline.zip
+# 다른 사람에게 줄 압축 파일 만들기 → wiki/projects/heartline/output/제출/YYYY_MM_DD_heartline_4_앱.zip
 # 구조: Heartline/ (시작하기 안내서 · 더블클릭 실행 파일 · start.py · server/ · web/)
 # 키(.env)·개인 설정·공개용 스크립트(start-public.sh)는 넣지 않는다.
 set -e
 cd "$(dirname "$0")"
 REPO="$(cd ../.. && pwd)"
-OUT="$REPO/wiki/projects/heartline/output/$(date +%Y_%m_%d)_heartline.zip"
+OUT="$REPO/wiki/projects/heartline/output/제출/$(date +%Y_%m_%d)_heartline_4_앱.zip"; mkdir -p "$(dirname "$OUT")"
 TMP="$(mktemp -d)"; D="$TMP/Heartline"
 mkdir -p "$D/server/tests/scenarios" "$D/web"
 cp guide/시작하기.html guide/시작하기.txt "Heartline 실행.command" "Heartline 실행.bat" start.py "$D/"
