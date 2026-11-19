@@ -4,8 +4,22 @@
     {
       "name": "docs",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8790", "--directory", "docs"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8790",
+        "--directory",
+        "docs"
+      ],
       "port": 8790
+    },
+    {
+      "name": "heartline-server",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "agents/heartline/server/server.py"
+      ],
+      "port": 8766
     }
   ]
 }

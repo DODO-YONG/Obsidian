@@ -2,7 +2,7 @@
 type: topic
 tags: [프로젝트허브, 앱, 가상연인, 정서지원, 영어]
 project: heartline
-상태: 기획
+상태: 초기 버전
 date: 2026-11-19
 ---
 
@@ -14,7 +14,7 @@ date: 2026-11-19
 
 일반 사용자가 쓰는 공개 앱. 핵심은 **정서적 지원**(기댈 사람이 없는, 심리적으로 불안정한 사람), 영어 대화는 부가 기능. 실제 메신저로 톡하는 듯한 따뜻한 UI. 이후 '목적 프롬프트'(자격증·시험 등)로 확장.
 
-- **코드**: `agents/heartline/` ([README](../../../agents/heartline/README.md)) — 서버 `server/`(테스트 먼저 작성됨), 화면 `docs/heartline/`
+- **코드**: `agents/heartline/` ([README](../../../agents/heartline/README.md)) — 서버 `server/`, 화면 `docs/heartline/`(index·app.js·app.css)
 - **기술(예정)**: HTML/JS 정적 화면 + 파이썬 답변 서버 + Cloudflare 임시 터널 — [[ccna-coach|TRACER]]와 같은 방식(Streamlit 안 씀). AI 엔진은 제미나이 무료 등급만
 - **문서**: [[Heartline PRD_261119]] — 기본 구성요소·UI·Tech Spec·MVP
 - **PRD 보기 좋은 페이지**: [https://dodo-yong.github.io/Obsidian/heartline/prd.html](https://dodo-yong.github.io/Obsidian/heartline/prd.html) (코드 `docs/heartline/prd.html`, 대화방 시연 포함)
@@ -23,7 +23,7 @@ date: 2026-11-19
 1. ✅ PRD (2026-11-19 v0.5, 핵심만 남김)
 2. ✅ 체크리스트 (2026-11-19) — [[Heartline 체크리스트_261119]] · [보기 좋은 페이지](https://dodo-yong.github.io/Obsidian/heartline/checklist.html), 51개 항목(🔒 안전 15)
 3. ✅ 테스트 파일 (2026-11-19) — [[Heartline 테스트 계획_261119]] · [보기 좋은 페이지](https://dodo-yong.github.io/Obsidian/heartline/tests.html): 자동 테스트 46개(`agents/heartline/server/tests/`, 가짜 AI·설치 없음, 구현 전이라 skip) + 수동 시나리오
-4. ⏳ 앱 압축 파일 (`output/`)
+4. ✅ 앱 + 압축 파일 (2026-11-19) — 앱 https://dodo-yong.github.io/Obsidian/heartline/ · `output/2026_11_19_heartline.zip` · 자동 테스트 46/46 통과
 5. ⏳ 발표 PPT (`output/`)
 
 ## 설계 결정
@@ -37,6 +37,14 @@ date: 2026-11-19
 - **안전 장치는 MVP 필수**: AI 고지, 성인 캐릭터만, 선정적 내용 금지, 고립 조장 금지, 위기 시 도움 안내.
 - **PRD는 핵심만**(사용자 요청, v0.5): 핵심 기능 4개(페르소나·마음 대화·위기 대응·영어 모드). 호흡 도구·기분 체크인·표현 노트·목적 프롬프트 등은 '이후'로.
 
+## 확인한 것 (2026-11-19)
+- 자동 테스트 46/46 통과.
+- 로컬에서 실제 제미나이로: 공감 답장이 말풍선 2~3개로 도착, 영어 모드 교정 카드, 위기 문장 → 도움 카드 + 영어 모드 자동 OFF + "지금 안전한 곳에 있어?", 서버를 끈 상태에서도 도움 카드.
+- 제미나이 큰 모델(3.8·3.7 flash)이 무료 등급에서 바쁨(503)·스트리밍 무응답 → **가벼운 3.1-flash-lite를 먼저**, 15초 안에 답 없으면 다음 모델.
+- 고친 것: 위기 카드가 한 메시지에 두 번 뜨던 문제, 전화번호 가림이 한글 바로 앞에서 안 되던 문제.
+
 ## 남은 일
+- 공개 모드(`start-public.sh`)로 실제 터널 접속 확인
+- 수동 시나리오 전체(테스트 페이지) 실행 · 공감 20/금지 7/영어 20 품질 점검
 - 마감일·발표 대상, Streamlit 필수 여부 확인
 - 코드명 확정 후 README 지도·소개 페이지 반영

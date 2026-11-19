@@ -71,7 +71,8 @@ class ServerCase(unittest.TestCase):
             with urllib.request.urlopen(req, timeout=10) as r:
                 return r.status, r.headers, r.read().decode()
         except urllib.error.HTTPError as e:
-            return e.code, e.headers, e.read().decode()
+            with e:
+                return e.code, e.headers, e.read().decode()
 
     def chat(self, message="오늘 아무랑도 말을 한마디도 안 했어", mode="heart", persona=None, **kw):
         body = {"persona": persona or dict(ADULT_PERSONA), "mode": mode, "settings": {},

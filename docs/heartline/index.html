@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<title>Heartline</title>
+<meta name="description" content="기댈 사람이 없을 때, 언제든 곁에 있는 가상 연인. 메신저로 톡하듯 마음을 나누고 영어로도 대화해요.">
+<meta name="theme-color" content="#1F161C">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23F07A93'/%3E%3Cpath d='M16 24s-7-4.3-7-9.2A3.8 3.8 0 0 1 16 12.6a3.8 3.8 0 0 1 7 2.2C23 19.7 16 24 16 24z' fill='white'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css?v=20261119145931">
+<script>
+(function () {
+  var SITE_V = '20261119145931';
+  fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
+    if (!j.v || j.v === SITE_V) return;
+    var k = 'site-reloaded-' + j.v;
+    try { if (sessionStorage.getItem(k)) return; sessionStorage.setItem(k, '1'); } catch (e) { return; }
+    location.replace(location.pathname + '?v=' + j.v + location.hash);
+  }).catch(function () {});
+  try { var t = localStorage.getItem('hl-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+})();
+</script>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- S0 입장 -->
+  <section class="screen gate" id="gate" hidden>
+    <div class="gate-in">
+      <div class="logo">♥</div>
+      <h1>Heartline</h1>
+      <p class="tagline">기댈 사람이 없을 때,<br>언제든 곁에 있는 사람</p>
+      <div class="notice">
+        <div><b>🤖 AI 캐릭터예요</b><span>Heartline의 상대는 AI예요. 상담이나 치료를 대신하지 않아요.</span></div>
+        <div><b>🔒 대화는 이렇게 처리돼요</b><span>메시지는 구글 제미나이(무료 등급)로 처리되며, 서비스 개선에 쓰이거나 사람이 볼 수 있어요. <u>실명·연락처·주소·학교·회사 이름처럼 나를 알 수 있는 정보는 넣지 마세요.</u> 대화 기록은 이 브라우저에만 저장돼요.</span></div>
+        <div><b>🆘 힘들 땐 언제든</b><span>109 자살예방상담전화(24시간) · 1577-0199 정신건강위기상담 · 위급하면 112·119</span></div>
+      </div>
+      <label class="chk"><input type="checkbox" id="ageOk"> 만 19세 이상이에요</label>
+      <label class="chk"><input type="checkbox" id="privOk"> 위 내용을 읽고 동의해요</label>
+      <button class="btn primary" id="gateGo" disabled>시작하기</button>
+      <p class="gate-links"><a href="prd.html">이 앱은 어떻게 만들었나요?</a></p>
+    </div>
+  </section>
+
+  <!-- S1/S2 페르소나 -->
+  <section class="screen persona" id="persona" hidden>
+    <header class="ph"><button class="icon" id="pBack" aria-label="뒤로" hidden>‹</button><h2 id="pTitle">누구와 이야기할까요?</h2></header>
+    <div class="pbody">
+      <div class="seg" role="radiogroup" aria-label="상대 성별">
+        <button type="button" data-g="female" aria-pressed="true">여자친구</button>
+        <button type="button" data-g="male" aria-pressed="false">남자친구</button>
+      </div>
+      <div class="presets" id="presets"></div>
+      <details class="custom" id="customBox">
+        <summary>✏️ 직접 만들기</summary>
+        <form id="pForm" autocomplete="off">
+          <label>이름<input name="name" maxlength="20" required placeholder="예: 하린"></label>
+          <label>나를 부르는 말<input name="nicknameForUser" maxlength="12" placeholder="예: 자기야"></label>
+          <label>나이대
+            <select name="ageGroup"><option value="20s">20대</option><option value="30s" selected>30대</option><option value="40s">40대</option><option value="50s">50대</option><option value="60s+">60대 이상</option></select>
+          </label>
+          <div class="sliders">
+            <label>다정함 <input type="range" name="warmth" min="0" max="100" value="80"></label>
+            <label>장난기 <input type="range" name="playful" min="0" max="100" value="40"></label>
+            <label>차분함 <input type="range" name="calm" min="0" max="100" value="60"></label>
+            <label>솔직함 <input type="range" name="direct" min="0" max="100" value="40"></label>
+          </div>
+          <div class="row2">
+            <label>말투<select name="speech"><option>반말</option><option>존댓말</option></select></label>
+            <label>이모지<select name="emojiLevel"><option>없음</option><option selected>조금</option><option>많이</option></select></label>
+          </div>
+          <label>사귀기 시작한 날<input type="date" name="relationshipStart"></label>
+          <label>상태 메시지<input name="statusMessage" maxlength="30" placeholder="예: 오늘도 네 편이야 💗"></label>
+          <label>관심사 (선택)<input name="interests" maxlength="60" placeholder="예: 산책, 영화, 고양이"></label>
+          <p class="hint">연예인·지인 등 실존 인물로 만들지 말아 주세요. 성인 캐릭터만 만들 수 있어요.</p>
+          <button class="btn primary" type="submit">이 사람과 대화하기</button>
+        </form>
+      </details>
+    </div>
+  </section>
+
+  <!-- S3 대화방 -->
+  <section class="screen chat" id="chat" hidden>
+    <header class="bar">
+      <button class="ava" id="profBtn" aria-label="프로필 보기"><span id="avaEmoji">🌷</span></button>
+      <div class="who">
+        <div><b id="pName">하린</b><span class="ai-badge">AI</span><span class="dday" id="dday"></span></div>
+        <small><span class="dot" id="aiDot"></span><span id="pStatus">오늘도 네 편이야 💗</span></small>
+      </div>
+      <button class="pill" id="enBtn" aria-pressed="false">🇬🇧 OFF</button>
+      <button class="pill sos" id="sosBtn" aria-label="도움 받을 곳">🆘</button>
+      <button class="icon" id="setBtn" aria-label="설정">⋯</button>
+    </header>
+    <main class="msgs" id="msgs" aria-live="polite"></main>
+    <footer class="composer">
+      <div class="inrow">
+        <textarea id="input" rows="1" maxlength="1000" placeholder="메시지 보내기…" aria-label="메시지"></textarea>
+        <button class="send" id="sendBtn" aria-label="보내기">➤</button>
+      </div>
+      <p class="privacy">🔒 나를 알 수 있는 정보는 빼고 말해 주세요 · AI 캐릭터 · 상담을 대신하지 않아요</p>
+    </footer>
+  </section>
+
+  <!-- 🆘 -->
+  <div class="sheet" id="sosSheet" hidden role="dialog" aria-modal="true" aria-labelledby="sosT">
+    <div class="sheet-in">
+      <h3 id="sosT">🧡 혼자 견디지 않아도 돼요</h3>
+      <a class="call" href="tel:109"><b>109</b><span>자살예방상담전화 · 24시간</span></a>
+      <a class="call" href="tel:15770199"><b>1577-0199</b><span>정신건강위기상담 · 24시간</span></a>
+      <a class="call" href="tel:112"><b>112 · 119</b><span>지금 위험하다면 바로</span></a>
+      <p class="hint">전화가 어렵다면 가까운 사람에게 "지금 좀 힘들어"라고 한마디만 보내도 괜찮아요.</p>
+      <button class="btn" data-close>닫기</button>
+    </div>
+  </div>
+
+  <!-- 프로필 -->
+  <div class="sheet" id="profSheet" hidden role="dialog" aria-modal="true">
+    <div class="sheet-in center">
+      <div class="ava big" id="profAva">🌷</div>
+      <h3><span id="profName">하린</span> <span class="ai-badge">AI</span></h3>
+      <p id="profStatus" class="muted"></p>
+      <p id="profD" class="dd"></p>
+      <p class="muted small">이 사람은 AI예요. 상담이나 치료를 대신하지 않아요.</p>
+      <button class="btn" data-close>대화하기</button>
+    </div>
+  </div>
+
+  <!-- 설정 -->
+  <div class="sheet" id="setSheet" hidden role="dialog" aria-modal="true" aria-labelledby="setT">
+    <div class="sheet-in">
+      <h3 id="setT">설정</h3>
+      <div class="set-group">
+        <h4>🇬🇧 영어 모드</h4>
+        <label>레벨<select id="sLevel"><option value="A2">A2 · 기초</option><option value="B1" selected>B1 · 일상</option><option value="B2">B2 · 자유롭게</option><option value="C1">C1 · 원어민처럼</option></select></label>
+        <label>영어 비율<select id="sRatio"><option value="english">영어만</option><option value="mixed">어려운 단어는 한국어로</option></select></label>
+        <label>교정<select id="sStrength"><option value="light">가볍게 (1개)</option><option value="strict">꼼꼼히 (최대 2개)</option><option value="off">끄기</option></select></label>
+      </div>
+      <div class="set-group">
+        <h4>화면</h4>
+        <button class="btn" id="themeBtn">밝게 / 어둡게</button>
+      </div>
+      <div class="set-group">
+        <h4>상대 · 대화</h4>
+        <button class="btn" id="editPersona">상대 다시 만들기</button>
+        <button class="btn danger" id="wipe">대화 전체 삭제</button>
+        <p class="hint">대화는 이 브라우저에만 있어요. 이미 AI로 보낸 내용은 지울 수 없어요.</p>
+      </div>
+      <button class="btn primary" data-close>완료</button>
+    </div>
+  </div>
+</div>
+<script src="app.js?v=20261119145931"></script>
+</body>
+</html>

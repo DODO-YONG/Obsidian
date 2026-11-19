@@ -87,6 +87,6 @@ date: 2026-11-19
 
 ## 5. 다음 단계 산출물
 - [x] ③ 테스트 파일: `server/tests/` (가짜 AI로 서버 테스트) + 위기·공감 시나리오 목록 → [[Heartline 테스트 계획_261119]]
-- [ ] ④ 앱 압축 파일: `.env`·`__pycache__` 빼고 `wiki/projects/heartline/output/YYYY_MM_DD_heartline.zip`
+- [x] ④ 앱 압축 파일: `.env`·`__pycache__` 빼고 `wiki/projects/heartline/output/YYYY_MM_DD_heartline.zip`
 - [ ] ⑤ 발표 PPT: `wiki/projects/heartline/output/`
 - [ ] 루트 `README.md` 지도에서 상태 바꾸기(🟨 기획 → 🟦 개발중 → 🟩 완료)
