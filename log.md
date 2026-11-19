@@ -113,3 +113,5 @@
 ## [2026-11-19] output | Heartline 공개 시연: start-public.sh로 서버+Cloudflare 터널 켬(공개 링크에서 실제 AI 답장 확인), 발표 1·6·10번 장에 앱 링크+QR 추가, pptx·제출 묶음 다시 만듦
 
 ## [2026-11-19] lint | Heartline output/ 중복 정리: 2026_11_19_heartline.zip·_발표.pptx 삭제(제출/ 4_앱.zip·5_발표.pptx와 동일), 링크·make-zip.sh 출력 위치를 제출/로
+
+## [2026-11-19] output | Heartline 제출 문서 1~3을 PDF(쪽 잘림) → 파일 하나짜리 HTML로 교체(make-offline-docs.py, 더블클릭으로 열림·인터넷 없이 그림 동작), 전체 묶음 다시 만듦

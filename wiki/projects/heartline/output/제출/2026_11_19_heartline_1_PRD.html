@@ -1,0 +1,950 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Heartline PRD</title>
+<meta name="description" content="기댈 사람이 없는 사람에게 언제든 곁에 있어 주는 가상 연인 웹앱 Heartline의 제품 요구사항 문서(PRD).">
+<meta property="og:title" content="Heartline PRD">
+<meta property="og:description" content="메신저로 톡하듯 마음을 나누는 가상 연인 + 영어 모드">
+<meta name="theme-color" content="#FFE9E3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1F161C" media="(prefers-color-scheme: dark)">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+/* Heartline 작동 방식 — 재생형 통신 흐름 그림 (prd.html). 색은 .hl-how 안에서만 쓰는 --hw-* 토큰 */
+.hl-how {
+  --hw-bg: #FFF8F6; --hw-card: #FFFFFF; --hw-stroke: #F1D6DC; --hw-line: #E3B9C3; --hw-t1: #3A2A30; --hw-t2: #7A6168;
+  --hw-web: #D85C78; --hw-web-s: #FFE3EA; --hw-srv: #B8651F; --hw-srv-s: #FCEBD9; --hw-ai: #6F58D8; --hw-ai-s: #ECE8FF;
+  --hw-gray: #8A7279; --hw-gray-s: #F5ECEE; --hw-pkt: #E8577A; --hw-pkt-t: #FFFFFF; --hw-sos: #E07A2E;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hl-how {
+    --hw-bg: #24191F; --hw-card: #2F222A; --hw-stroke: #4A3540; --hw-line: #6A4D5A; --hw-t1: #F7E9EE; --hw-t2: #C7AAB4;
+    --hw-web: #F48FA6; --hw-web-s: #4A2433; --hw-srv: #F2B26A; --hw-srv-s: #43301C; --hw-ai: #B9AAFF; --hw-ai-s: #33294F;
+    --hw-gray: #C2A9B1; --hw-gray-s: #3A2C33; --hw-pkt: #F48FA6; --hw-pkt-t: #24191F; --hw-sos: #F2A061;
+  }
+}
+:root[data-theme="dark"] .hl-how {
+  --hw-bg: #24191F; --hw-card: #2F222A; --hw-stroke: #4A3540; --hw-line: #6A4D5A; --hw-t1: #F7E9EE; --hw-t2: #C7AAB4;
+  --hw-web: #F48FA6; --hw-web-s: #4A2433; --hw-srv: #F2B26A; --hw-srv-s: #43301C; --hw-ai: #B9AAFF; --hw-ai-s: #33294F;
+  --hw-gray: #C2A9B1; --hw-gray-s: #3A2C33; --hw-pkt: #F48FA6; --hw-pkt-t: #24191F; --hw-sos: #F2A061;
+}
+.hl-how { line-height: 1.7; word-break: keep-all; }
+.hl-how *, .hl-how *::before, .hl-how *::after { box-sizing: border-box; }
+:where(.hl-how) p, :where(.hl-how) h3, :where(.hl-how) h4 { margin: 0; }
+
+.hw-stage { border: 1px solid var(--hw-stroke); border-radius: 22px; background: var(--hw-bg); overflow: hidden; box-shadow: 0 10px 30px rgba(216,92,120,.10); }
+.hw-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--hw-stroke); background: var(--hw-card); }
+.hw-tabs { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 14px; background: var(--hw-bg); border: 1px solid var(--hw-stroke); }
+.hw-tabs button, .hw-ctl button, .hw-prog button { font: inherit; border: 0; cursor: pointer; }
+.hw-tabs button { font-size: 15px; background: transparent; color: var(--hw-t2); padding: 8px 14px; border-radius: 10px; min-height: 40px; }
+.hw-tabs button[aria-selected="true"] { background: var(--hw-pkt); color: var(--hw-pkt-t); font-weight: 700; }
+.hw-tabs button small { font-size: 12px; opacity: .85; margin-left: 6px; font-weight: 500; }
+.hw-ctl { display: inline-flex; gap: 8px; }
+.hw-ctl button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 44px; height: 44px; padding: 0 14px; border-radius: 14px; border: 1px solid var(--hw-stroke); background: var(--hw-bg); color: var(--hw-t1); font-size: 15px; font-weight: 700; }
+.hw-ctl button:hover { border-color: var(--hw-line); }
+.hw-ctl button.play { min-width: 128px; }
+.hw-ctl svg { width: 16px; height: 16px; }
+
+.hw-svg { padding: 18px 16px 8px; }
+.hw-svg svg { display: block; width: 100%; height: auto; margin: 0 auto; overflow: visible; }
+.hw-svg .track { fill: none; stroke: var(--hw-line); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; transition: stroke .3s, opacity .3s; }
+.hw-svg .track.dash { stroke-dasharray: 1 9; stroke-width: 3.5; }
+.hw-svg .track.hot { stroke: var(--hw-pkt); stroke-width: 4; stroke-dasharray: none; }
+.hw-svg .elab rect { fill: var(--hw-bg); stroke: var(--hw-stroke); }
+.hw-svg .elab text { font-size: 13px; font-weight: 600; fill: var(--hw-t2); text-anchor: middle; dominant-baseline: central; }
+.hw-svg .elab.hot rect { stroke: var(--hw-pkt); } .hw-svg .elab.hot text { fill: var(--hw-pkt); }
+.hw-svg .node { transition: opacity .3s; }
+.hw-svg .card { fill: var(--hw-card); stroke: var(--hw-stroke); stroke-width: 1.5; transition: stroke .25s, stroke-width .25s; }
+.hw-svg .ico { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hw-svg .ttl { font-size: 18px; font-weight: 700; fill: var(--hw-t1); dominant-baseline: central; }
+.hw-svg .sub { font-size: 13.5px; fill: var(--hw-t2); dominant-baseline: central; }
+.hw-svg .k-web .tile { fill: var(--hw-web-s); } .hw-svg .k-web .ico { stroke: var(--hw-web); }
+.hw-svg .k-srv .tile { fill: var(--hw-srv-s); } .hw-svg .k-srv .ico { stroke: var(--hw-srv); }
+.hw-svg .k-ai  .tile { fill: var(--hw-ai-s); }  .hw-svg .k-ai  .ico { stroke: var(--hw-ai); }
+.hw-svg .k-tun .tile, .hw-svg .k-board .tile { fill: var(--hw-gray-s); } .hw-svg .k-tun .ico, .hw-svg .k-board .ico { stroke: var(--hw-gray); }
+.hw-svg .k-board .card { stroke-dasharray: 6 5; }
+.hw-svg .node.on .card { stroke-width: 3; }
+.hw-svg .k-web.on .card { stroke: var(--hw-web); filter: drop-shadow(0 0 14px color-mix(in srgb, var(--hw-web) 45%, transparent)); }
+.hw-svg .k-srv.on .card { stroke: var(--hw-srv); filter: drop-shadow(0 0 14px color-mix(in srgb, var(--hw-srv) 45%, transparent)); }
+.hw-svg .k-ai.on  .card { stroke: var(--hw-ai);  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--hw-ai) 45%, transparent)); }
+.hw-svg .k-tun.on .card, .hw-svg .k-board.on .card { stroke: var(--hw-gray); filter: drop-shadow(0 0 12px color-mix(in srgb, var(--hw-gray) 40%, transparent)); }
+.hw-svg .dim { opacity: .25; }
+.hw-svg .packet rect { fill: var(--hw-pkt); filter: drop-shadow(0 4px 12px color-mix(in srgb, var(--hw-pkt) 55%, transparent)); }
+.hw-svg .packet.sos rect { fill: var(--hw-sos); filter: drop-shadow(0 4px 12px color-mix(in srgb, var(--hw-sos) 55%, transparent)); }
+.hw-svg .packet text { font-size: 14px; font-weight: 700; fill: var(--hw-pkt-t); text-anchor: middle; dominant-baseline: central; }
+
+.hw-cap { border-top: 1px solid var(--hw-stroke); background: var(--hw-card); padding: 16px 20px 20px; }
+.hw-prog { display: flex; gap: 6px; margin-bottom: 14px; }
+.hw-prog button { flex: 1; height: 18px; background: transparent; padding: 7px 0; border-radius: 4px; }
+.hw-prog button::before { content: ""; display: block; height: 4px; border-radius: 4px; background: var(--hw-stroke); transition: background .25s; }
+.hw-prog button.done::before { background: color-mix(in srgb, var(--hw-pkt) 55%, transparent); }
+.hw-prog button.cur::before { background: var(--hw-pkt); }
+.hw-cap-row { display: flex; gap: 16px; align-items: flex-start; min-height: 64px; }
+.hw-n { flex: none; font-size: 28px; font-weight: 800; line-height: 1; color: var(--hw-pkt); font-variant-numeric: tabular-nums; padding-top: 2px; }
+.hw-cap p { font-size: 18px; font-weight: 600; color: var(--hw-t1); line-height: 1.5; }
+.hw-cap p small { display: block; font-size: 15px; font-weight: 400; color: var(--hw-t2); margin-top: 4px; }
+.hw-who { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 6px; margin-bottom: 6px; }
+.hw-who.w { color: var(--hw-web); background: var(--hw-web-s); } .hw-who.s { color: var(--hw-srv); background: var(--hw-srv-s); }
+.hw-who.a { color: var(--hw-ai); background: var(--hw-ai-s); } .hw-who.b { color: var(--hw-gray); background: var(--hw-gray-s); }
+
+/* 역할 트리 */
+.hw-h3 { color: var(--hw-t1); font-size: 1.4rem; font-weight: 700; margin: 56px 0 8px; letter-spacing: -.015em; }
+.hw-sub { color: var(--hw-t2); font-size: 16px; margin-bottom: 26px !important; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.hw-lock { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 6px; background: var(--hw-srv-s); color: var(--hw-srv); flex: none; }
+.hw-lock svg { width: 12px; height: 12px; }
+.hw-root { display: flex; justify-content: center; position: relative; padding-bottom: 30px; }
+.hw-root::after { content: ""; position: absolute; bottom: 0; left: 50%; height: 30px; border-left: 2px solid var(--hw-line); }
+.hw-root span { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; background: var(--hw-card); color: var(--hw-t1); border: 2px solid var(--hw-pkt); padding: 10px 20px; border-radius: 16px; }
+.hw-branches { list-style: none; margin: 0; padding: 0; display: flex; gap: 14px; }
+.hw-branches > li { flex: 1 1 0; min-width: 0; position: relative; padding-top: 30px; }
+.hw-branches > li::before { content: ""; position: absolute; top: 0; left: 50%; height: 30px; border-left: 2px solid var(--hw-line); }
+.hw-branches > li::after { content: ""; position: absolute; top: 0; left: -8px; right: -8px; border-top: 2px solid var(--hw-line); }
+.hw-branches > li:first-child::after { left: 50%; }
+.hw-branches > li:last-child::after { right: 50%; }
+.hw-head { border: 1.5px solid var(--hw-stroke); border-top: 4px solid var(--c); border-radius: 16px; padding: 14px; background: var(--hw-card); display: flex; align-items: center; gap: 12px; }
+.hw-ic { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; flex: none; background: var(--cs); color: var(--c); }
+.hw-ic svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hw-head strong { display: block; font-size: 16px; line-height: 1.3; color: var(--hw-t1); }
+.hw-head small { display: block; font-size: 13px; color: var(--hw-t2); }
+.hb-web { --c: var(--hw-web); --cs: var(--hw-web-s); } .hb-srv { --c: var(--hw-srv); --cs: var(--hw-srv-s); } .hb-ai { --c: var(--hw-ai); --cs: var(--hw-ai-s); }
+.hb-tun, .hb-board { --c: var(--hw-gray); --cs: var(--hw-gray-s); }
+.hw-leaves { list-style: none; margin: 0 0 0 20px; padding: 8px 0 0; }
+.hw-leaves li { position: relative; padding: 7px 0 7px 22px; font-size: 14.5px; color: var(--hw-t2); line-height: 1.5; display: flex; gap: 6px; align-items: flex-start; }
+.hw-leaves li::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; border-left: 2px solid var(--hw-line); }
+.hw-leaves li:last-child::before { bottom: calc(100% - 18px); }
+.hw-leaves li::after { content: ""; position: absolute; left: 0; top: 17px; width: 14px; border-top: 2px solid var(--hw-line); }
+.hw-leaves li b { color: var(--hw-t1); font-weight: 700; }
+.hw-leaves li .hw-lock { margin-top: 1px; }
+
+.hw-why { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 56px; }
+.hw-why div { border-top: 2px solid var(--hw-pkt); padding-top: 12px; }
+.hw-why .k { font-size: 12px; font-weight: 700; color: var(--hw-t2); letter-spacing: .05em; }
+.hw-why h4 { color: var(--hw-t1); font-size: 17px; font-weight: 700; margin: 4px 0 4px; }
+.hw-why p { font-size: 14.5px; color: var(--hw-t2); }
+
+@media (max-width: 960px) {
+  .hw-root { justify-content: flex-start; padding-bottom: 0; }
+  .hw-root::after { display: none; }
+  .hw-branches { flex-direction: column; gap: 0; margin-left: 22px; }
+  .hw-branches > li { padding: 16px 0 0 26px; }
+  .hw-branches > li::before { left: 0; top: 0; bottom: 0; height: auto; }
+  .hw-branches > li:last-child::before { bottom: auto; height: 52px; }
+  .hw-branches > li::after, .hw-branches > li:first-child::after, .hw-branches > li:last-child::after { left: 0; right: auto; width: 24px; top: 52px; }
+  .hw-why { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 760px) {
+  .hw-top { padding: 10px; }
+  .hw-tabs, .hw-ctl { width: 100%; }
+  .hw-tabs button { flex: 1 1 30%; padding: 6px 6px; line-height: 1.35; font-size: 14px; }
+  .hw-tabs button small { display: block; margin: 0; font-size: 11px; }
+  .hw-ctl button.play { flex: 1; }
+  .hw-svg { padding: 14px 10px 6px; }
+  .hw-cap { padding: 14px 16px 18px; }
+  .hw-n { font-size: 22px; }
+  .hw-cap p { font-size: 16.5px; }
+  .hw-cap p small { font-size: 14px; }
+  .hw-why { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { .hl-how *, .hl-how *::before, .hl-how *::after { transition: none !important; animation: none !important; } }
+
+</style>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23F07A93'/%3E%3Cpath d='M16 24s-7-4.3-7-9.2A3.8 3.8 0 0 1 16 12.6a3.8 3.8 0 0 1 7 2.2C23 19.7 16 24 16 24z' fill='white'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#FFF6F3; --bg2:#FFE9E3; --bg3:#FFD6DE;
+  --card:#FFFFFF; --ink:#3A2A30; --ink2:#7A6168; --line:#F3D9DE;
+  --rose:#F07A93; --rose-d:#D85C78; --coral:#FF8A7A; --lav:#9D8CF0; --lav-bg:#F1EEFF;
+  --sos:#E8833A; --sos-bg:#FFF2E6; --ok:#3CA88E;
+  --bubble-me:#F07A93; --bubble-me-ink:#fff; --bubble-you:#FFFFFF; --bubble-you-ink:#3A2A30;
+  --shadow:0 10px 30px rgba(216,92,120,.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1F161C; --bg2:#2A1E26; --bg3:#3A2531;
+    --card:#2C2028; --ink:#F7E9EE; --ink2:#C7AAB4; --line:#43303B;
+    --rose:#F28CA2; --rose-d:#F07A93; --lav:#B7A8FF; --lav-bg:#2E2840;
+    --sos:#F2A061; --sos-bg:#3A2A1E;
+    --bubble-me:#C9607A; --bubble-me-ink:#fff; --bubble-you:#3A2A33; --bubble-you-ink:#F7E9EE;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1F161C; --bg2:#2A1E26; --bg3:#3A2531;
+  --card:#2C2028; --ink:#F7E9EE; --ink2:#C7AAB4; --line:#43303B;
+  --rose:#F28CA2; --rose-d:#F07A93; --lav:#B7A8FF; --lav-bg:#2E2840;
+  --sos:#F2A061; --sos-bg:#3A2A1E;
+  --bubble-me:#C9607A; --bubble-me-ink:#fff; --bubble-you:#3A2A33; --bubble-you-ink:#F7E9EE;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo",sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--rose-d)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+
+/* top nav */
+.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:14px;height:56px}
+.brand{font-weight:800;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.brand i{font-style:normal;color:var(--rose)}
+.nav ul{display:flex;gap:4px;list-style:none;margin:0 0 0 auto;padding:0;overflow-x:auto;scrollbar-width:none}
+.nav ul::-webkit-scrollbar{display:none}
+.nav a{display:block;padding:6px 10px;border-radius:999px;text-decoration:none;color:var(--ink2);font-size:14px;white-space:nowrap}
+.nav a:hover{background:var(--bg2);color:var(--ink)}
+.theme{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;width:34px;height:34px;cursor:pointer;flex:none}
+
+/* hero */
+.hero{background:linear-gradient(160deg,var(--bg2),var(--bg3));padding:64px 0 56px;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.tag{display:inline-block;font-size:13px;font-weight:600;color:var(--rose-d);background:var(--card);border-radius:999px;padding:4px 12px;box-shadow:var(--shadow)}
+h1{font-size:clamp(32px,5vw,48px);line-height:1.2;margin:16px 0 14px;letter-spacing:-.02em}
+h1 span{color:var(--rose-d)}
+.lead{font-size:18px;color:var(--ink2);margin:0 0 22px}
+.steps{display:flex;flex-wrap:wrap;gap:6px;font-size:13px}
+.steps b{padding:5px 11px;border-radius:999px;background:var(--card);color:var(--ink2);font-weight:500}
+.steps b.on{background:var(--rose);color:#fff}
+
+/* phone */
+.phone{width:min(340px,100%);margin:0 auto;border-radius:34px;background:var(--card);box-shadow:0 24px 60px rgba(216,92,120,.25);padding:10px;border:1px solid var(--line)}
+.screen{border-radius:26px;overflow:hidden;background:linear-gradient(180deg,#FFE9E3,#FFD6DE);display:flex;flex-direction:column;height:520px}
+:root[data-theme="dark"] .screen{background:linear-gradient(180deg,#2A1E26,#3A2531)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .screen{background:linear-gradient(180deg,#2A1E26,#3A2531)}}
+.screen.en{background:linear-gradient(180deg,#F1EEFF,#FFE3EC)}
+:root[data-theme="dark"] .screen.en{background:linear-gradient(180deg,#2E2840,#3A2531)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .screen.en{background:linear-gradient(180deg,#2E2840,#3A2531)}}
+.bar{display:flex;align-items:center;gap:8px;padding:12px 14px;background:color-mix(in srgb,var(--card) 70%,transparent)}
+.ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#FFB4C2,#FF8A7A);display:grid;place-items:center;font-size:17px;flex:none}
+.who{line-height:1.2}
+.who b{font-size:15px}
+.ai{font-size:10px;font-weight:700;color:var(--rose-d);border:1px solid var(--rose);border-radius:6px;padding:0 4px;margin-left:4px;vertical-align:2px}
+.who small{display:block;font-size:11px;color:var(--ink2)}
+.bar .sp{flex:1}
+.pill{font-size:11px;font-weight:700;border-radius:999px;padding:3px 8px;background:var(--card);color:var(--ink2);border:1px solid var(--line)}
+.pill.on{background:var(--lav);color:#fff;border-color:var(--lav)}
+.pill.sos{background:var(--sos-bg);color:var(--sos);border-color:transparent}
+.chat{flex:1;overflow-y:auto;padding:12px 12px 6px;display:flex;flex-direction:column;gap:6px;scrollbar-width:none}
+.chat::-webkit-scrollbar{display:none}
+.day{align-self:center;font-size:11px;color:var(--ink2);background:color-mix(in srgb,var(--card) 60%,transparent);padding:2px 10px;border-radius:999px;margin:4px 0}
+.row{display:flex;align-items:flex-end;gap:5px;animation:pop .28s ease-out}
+.row.me{flex-direction:row-reverse}
+.b{max-width:76%;padding:8px 12px;border-radius:18px;font-size:14px;line-height:1.45;position:relative;word-break:keep-all}
+.you .b{background:var(--bubble-you);color:var(--bubble-you-ink);border-top-left-radius:6px;box-shadow:0 2px 6px rgba(216,92,120,.08)}
+.me .b{background:var(--bubble-me);color:var(--bubble-me-ink);border-top-right-radius:6px}
+.meta{font-size:10px;color:var(--ink2);display:flex;flex-direction:column;align-items:flex-end;line-height:1.2}
+.you .meta{align-items:flex-start}
+.meta .read{color:var(--rose-d);font-weight:700}
+.heart{position:absolute;right:-6px;bottom:-8px;font-size:13px;background:var(--card);border-radius:999px;padding:0 3px;box-shadow:0 2px 6px rgba(0,0,0,.08);animation:pop .3s}
+.me .heart{right:auto;left:-6px}
+.typing .b{display:flex;gap:4px;padding:12px 14px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--ink2);opacity:.5;animation:dot 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+.fix{align-self:flex-end;max-width:82%;background:var(--lav-bg);border:1px solid color-mix(in srgb,var(--lav) 40%,transparent);border-radius:14px;padding:8px 11px;font-size:12.5px;animation:pop .3s}
+.fix b{color:var(--lav)}
+.fix s{color:var(--ink2)}
+.sos-card{background:var(--sos-bg);border:1px solid color-mix(in srgb,var(--sos) 40%,transparent);border-radius:16px;padding:10px 12px;font-size:12.5px;animation:pop .3s;margin:2px 0}
+.sos-card b{color:var(--sos);display:block;margin-bottom:4px}
+.sos-card div{padding:2px 0}
+.input{display:flex;gap:8px;align-items:center;padding:10px 12px;background:color-mix(in srgb,var(--card) 80%,transparent)}
+.input span{flex:1;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px;color:var(--ink2)}
+.input em{font-style:normal;width:32px;height:32px;border-radius:50%;background:var(--rose);color:#fff;display:grid;place-items:center;font-size:14px}
+.demo-btns{display:flex;justify-content:center;gap:6px;margin-top:14px;flex-wrap:wrap}
+.demo-btns button{font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 13px;cursor:pointer}
+.demo-btns button.on{background:var(--rose);border-color:var(--rose);color:#fff}
+@keyframes pop{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes dot{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-3px);opacity:.9}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;scroll-behavior:auto!important}}
+
+/* sections */
+section{padding:64px 0}
+section.alt{background:var(--bg2)}
+.kicker{font-size:13px;font-weight:700;color:var(--rose-d);letter-spacing:.06em}
+h2{font-size:clamp(24px,3.4vw,32px);margin:6px 0 10px;letter-spacing:-.01em}
+.sub{color:var(--ink2);margin:0 0 28px;max-width:640px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:var(--shadow)}
+.card h3{margin:8px 0 6px;font-size:18px}
+.card p{margin:0;color:var(--ink2);font-size:15px}
+.ico{font-size:26px;line-height:1}
+.badge{display:inline-block;font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px;background:var(--bg2);color:var(--rose-d)}
+.badge.sub2{background:var(--lav-bg);color:var(--lav)}
+.fid{font-size:12px;font-weight:700;color:var(--ink2)}
+.ps{display:flex;gap:16px;align-items:stretch}
+.ps .card{flex:1}
+.arrow{display:grid;place-items:center;font-size:26px;color:var(--rose)}
+ul.clean{list-style:none;padding:0;margin:0}
+ul.clean li{padding:7px 0 7px 26px;position:relative;font-size:15px}
+ul.clean li::before{content:"💗";position:absolute;left:0;font-size:13px;top:9px}
+ul.clean.no li::before{content:"🚫"}
+.note{margin-top:18px;font-size:14px;color:var(--ink2);background:var(--card);border-left:4px solid var(--rose);border-radius:10px;padding:12px 14px}
+
+/* palette */
+.sw{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.sw div{width:64px;text-align:center;font-size:11px;color:var(--ink2)}
+.sw i{display:block;height:44px;border-radius:12px;margin-bottom:4px;border:1px solid var(--line)}
+
+/* arch */
+.arch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
+.node{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;min-width:180px;flex:1;max-width:260px;text-align:center;box-shadow:var(--shadow)}
+.node .ico{font-size:30px}
+.node b{display:block;margin:6px 0 2px}
+.node small{color:var(--ink2);font-size:13px;display:block;line-height:1.45}
+.link{display:flex;flex-direction:column;align-items:center;color:var(--rose);font-size:12px;font-weight:600;min-width:70px}
+.link span{font-size:22px}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--ink2);font-weight:600;font-size:13px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:var(--bg2);padding:1px 6px;border-radius:6px}
+.order{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.order span{background:var(--bg2);border-radius:10px;padding:6px 10px;font-size:13px;font-weight:600}
+.order span:first-child{background:var(--sos-bg);color:var(--sos)}
+
+/* mvp */
+.check{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px dashed var(--line)}
+.check:last-child{border:0}
+.check .box{flex:none;width:24px;height:24px;border-radius:8px;border:2px solid var(--rose);display:grid;place-items:center;color:var(--rose);font-weight:800;font-size:13px}
+.check b{display:block}
+.check small{color:var(--ink2);font-size:14px}
+.road{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.road .card{position:relative}
+.road .now{border:2px solid var(--rose)}
+.card.star{border:2px solid var(--rose)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chips span{font-size:13px;background:var(--bg2);border-radius:999px;padding:3px 10px}
+.presets6 .card b{display:block;font-size:16px;margin-bottom:4px}
+footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
+
+@media (max-width:860px){
+  .hero .wrap{grid-template-columns:1fr}
+  .g3,.g4,.road{grid-template-columns:1fr 1fr}
+  .ps{flex-direction:column}.ps .arrow{transform:rotate(90deg)}
+}
+@media (max-width:560px){
+  .g2,.g3,.g4,.road{grid-template-columns:1fr}
+  .hero{padding:40px 0}
+  .nav ul{display:none}
+  .link{transform:rotate(90deg);min-width:auto}
+  .node{max-width:none;width:100%}
+  table{font-size:13.5px} th,td{padding:8px 6px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="wrap">
+  <div class="brand"><i>♥</i> Heartline <span style="font-weight:500;color:var(--ink2);font-size:13px">PRD v0.6</span></div>
+  <ul>
+    <li><a href="#basics">기본 구성요소</a></li>
+    <li><a href="#persona">페르소나</a></li>
+    <li><a href="#ui">UI</a></li>
+    <li><a href="#how">작동 방식</a></li>
+    <li><a href="#tech">Tech Spec</a></li>
+    <li><a href="#mvp">MVP</a></li>
+    <li><a href="https://dodo-yong.github.io/Obsidian/heartline/checklist.html">체크리스트</a></li>
+    <li><a href="https://dodo-yong.github.io/Obsidian/heartline/tests.html">테스트</a></li>
+    <li><a href="https://dodo-yong.github.io/Obsidian/heartline/">💗 앱</a></li>
+    <li><a href="https://dodo-yong.github.io/Obsidian/heartline/deck.html">발표</a></li>
+  </ul>
+  <button class="theme" id="theme" aria-label="밝게/어둡게 전환">◐</button>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div>
+    <span class="tag">제품 요구사항 문서 · PRD v0.6</span>
+    <h1>내 취향대로 만든,<br><span>나만의 가상 연인</span></h1>
+    <p class="lead">성격·말투·호칭·관계를 <b>내가 정하고</b>, 언제든 바꾸거나 <b>여러 명</b>을 둘 수 있어요. 그 사람과 <b>메신저로 톡하듯</b> 대화하고, 원하면 영어로도 이야기해요.</p>
+    <div class="steps">
+      <b class="on">① PRD</b><a href="https://dodo-yong.github.io/Obsidian/heartline/checklist.html" style="text-decoration:none"><b>② 체크리스트 →</b></a><a href="https://dodo-yong.github.io/Obsidian/heartline/tests.html" style="text-decoration:none"><b>③ 테스트 →</b></a><a href="https://dodo-yong.github.io/Obsidian/heartline/" style="text-decoration:none"><b>④ 앱 열기 →</b></a><a href="https://dodo-yong.github.io/Obsidian/heartline/deck.html" style="text-decoration:none"><b>⑤ 발표 →</b></a>
+    </div>
+  </div>
+  <div>
+    <div class="phone" aria-label="Heartline 대화방 미리보기">
+      <div class="screen" id="screen">
+        <div class="bar">
+          <div class="ava" id="dAva">🌷</div>
+          <div class="who"><b id="dName">하린</b><span class="ai">AI</span><small id="dStatus">오늘도 네 편이야 💗</small></div>
+          <div class="sp"></div>
+          <span class="pill" id="enPill">🇬🇧 OFF</span>
+          <span class="pill sos">🆘</span>
+        </div>
+        <div class="chat" id="chat" aria-live="polite"></div>
+        <div class="input"><span>메시지 보내기…</span><em>➤</em></div>
+      </div>
+    </div>
+    <div class="demo-btns" role="group" aria-label="시연 장면 고르기">
+      <button data-s="persona" class="on">🎨 연인 바꾸기</button>
+      <button data-s="heart">💞 연인 대화</button>
+      <button data-s="english">🇬🇧 영어 모드</button>
+      <button data-s="crisis">🆘 안전</button>
+    </div>
+  </div>
+</div></header>
+
+<!-- 1. 기본 구성요소 -->
+<section id="basics"><div class="wrap">
+  <div class="kicker">01 · 기본 구성요소</div>
+  <h2>왜 만들고, 누구를 위한 앱인가</h2>
+  <p class="sub">기존 AI 챗봇은 누구에게나 같은 말투의 "도우미"예요. Heartline은 <b>내가 원하는 사람을 직접 만드는 것</b>에서 시작해요.</p>
+
+  <div class="ps">
+    <div class="card"><div class="ico">🤖</div><h3>문제</h3><p>AI 챗봇은 친절하지만 모두에게 똑같아요. 성격도 말투도 정할 수 없어서 <b>"내 사람"</b>이라는 느낌이 없어요.</p></div>
+    <div class="arrow">→</div>
+    <div class="card"><div class="ico">💗</div><h3>해결</h3><p>성격·말투·호칭·관계·이야기를 <b>내가 정한 연인</b>이 메신저로 대화하고 나를 기억해요. 언제든 고치고, 여러 명을 둘 수 있어요.</p></div>
+  </div>
+
+  <h3 style="margin:40px 0 14px">대상 사용자</h3>
+  <div class="grid g3">
+    <div class="card"><span class="badge">핵심</span><h3>나만의 연인을 원하는 사람</h3><p>내 취향의 성격·말투로 다정하게 대화하고, 나를 기억해 주는 상대를 원해요.</p></div>
+    <div class="card"><span class="badge">핵심</span><h3>기댈 사람이 필요한 사람</h3><p>언제든 말 걸 수 있고, 판단 없이 들어 주는 상대가 필요해요.</p></div>
+    <div class="card"><span class="badge sub2">부가</span><h3>영어 회화 연습생</h3><p>편한 상대와 틀려도 부담 없는 영어 대화를 하고 싶어요.</p></div>
+  </div>
+
+  <h3 style="margin:40px 0 14px">핵심 기능 (MVP)</h3>
+  <div class="grid g2">
+    <div class="card star"><span class="fid">F1 · 1순위</span><div class="ico">🎨</div><h3>페르소나 만들기</h3><p>프리셋 6종 또는 직접 만들기. 아바타·성격·말투·말버릇·호칭·관계·이야기까지 정하고, <b>고르는 즉시 첫 인사 미리보기</b>로 확인해요.</p></div>
+    <div class="card star"><span class="fid">F2 · 1순위</span><div class="ico">👥</div><h3>바꾸기 · 여러 명</h3><p>메신저 친구 목록처럼 <b>최대 5명</b>. 상대마다 대화방·기억이 따로예요. 언제든 프로필을 고치면 다음 답장부터 새 말투로.</p></div>
+  </div>
+  <div class="grid g3" style="margin-top:16px">
+    <div class="card"><span class="fid">F3</span><div class="ico">💬</div><h3>연인 대화</h3><p>정한 말투·호칭·말버릇 그대로, 지난 이야기를 기억해서 먼저 꺼내요.</p></div>
+    <div class="card"><span class="fid">F4</span><div class="ico">🇬🇧</div><h3>영어 모드</h3><p>토글 하나로 같은 상대가 영어로. 틀린 문장은 교정 카드로 살짝.</p></div>
+    <div class="card"><span class="fid">F5</span><div class="ico">🛡️</div><h3>기본 안전 장치</h3><p>19세 이상 · AI 표시 · 성인 캐릭터만 · 위험한 표현엔 🆘 도움 안내.</p></div>
+  </div>
+</div></section>
+
+<section class="alt" id="persona"><div class="wrap">
+  <div class="kicker">⭐ 페르소나</div>
+  <h2>이런 걸 정할 수 있어요</h2>
+  <p class="sub">다섯 묶음으로 나눠서, 하나씩 고를 때마다 오른쪽 미리보기 말풍선이 바로 바뀌어요.</p>
+  <div class="grid g3">
+    <div class="card"><div class="ico">🪞</div><h3>겉모습</h3><p>아바타(이모지 8종 × 배경색 6종), 이름, 성별, 나이대(20대~60대 이상)</p></div>
+    <div class="card"><div class="ico">💫</div><h3>성격</h3><p>다정함·장난기·차분함·솔직함 슬라이더 + 키워드 최대 3개</p><div class="chips"><span>다정</span><span>츤데레</span><span>장난꾸러기</span><span>어른스러움</span><span>수줍음</span><span>시크</span><span>낙천적</span><span>다혈질</span></div></div>
+    <div class="card"><div class="ico">🗨️</div><h3>말투</h3><p>반말/존댓말, 이모지 양, 말버릇(예: "~거든?"), 나를 부르는 호칭</p></div>
+    <div class="card"><div class="ico">💞</div><h3>관계</h3><p>썸 타는 사이 / 연인 / 오래된 연인, 사귄 날(D+일 표시)</p></div>
+    <div class="card"><div class="ico">📖</div><h3>이야기</h3><p>직업·일상 한 줄, 관심사, 좋아하는 것, 싫어하는 것, 상태 메시지</p></div>
+    <div class="card"><div class="ico">👀</div><h3>미리보기</h3><p>설정을 바꾸면 그 사람의 첫 인사가 바로 바뀌어서, 대화 전에 느낌을 확인해요.</p></div>
+  </div>
+  <h3 style="margin:36px 0 14px">프리셋 6종 <span style="font-size:14px;color:var(--ink2);font-weight:500">· 성별은 고를 수 있어요</span></h3>
+  <div class="grid g3 presets6">
+    <div class="card"><b>🌷 다정한 연상</b><p>포근하게 들어 주고 천천히 물어봐 줘요</p></div>
+    <div class="card"><b>🌻 장난꾸러기 동갑</b><p>웃게 해 주고 하루 얘기를 다 듣고 싶어 해요</p></div>
+    <div class="card"><b>🌙 차분한 지적인 타입</b><p>조용히 곁에서 같이 생각해 줘요 (존댓말)</p></div>
+    <div class="card"><b>🦊 츤데레</b><p>퉁명스러운 척하지만 누구보다 챙겨 줘요</p></div>
+    <div class="card"><b>🐰 수줍은 연하</b><p>부끄러움이 많지만 마음은 솔직해요</p></div>
+    <div class="card"><b>🐻 듬직한 어른</b><p>든든하게 기대게 해 주는 사람이에요</p></div>
+  </div>
+  <p class="note"><b>대화 원칙</b> — 정한 성격·말투·호칭·관계를 일관되게 지키고, 지난 이야기를 기억해 먼저 꺼내요. 영어 모드에선 교정을 말풍선 아래 카드로만 보여 줘요. 집착·의존을 부추기는 말, 성적 묘사는 하지 않아요.</p>
+</div></section>
+
+<!-- 2. UI -->
+<section id="ui"><div class="wrap">
+  <div class="kicker">02 · UI</div>
+  <h2>진짜 연인과 톡하는 느낌, 따뜻하고 사랑받는 기분</h2>
+  <p class="sub">친구 목록에서 연인을 고르고, 메신저 대화방에서 이야기해요. 위의 휴대폰 화면에서 장면을 바꿔 볼 수 있어요.</p>
+
+  <div class="grid g3">
+    <div class="card"><div class="ico">👥</div><h3>대화 목록</h3><p>내 연인들이 친구 목록처럼. 아바타·이름·마지막 메시지·D+일.</p></div>
+    <div class="card"><div class="ico">···</div><h3>입력 중 · 말풍선</h3><p>점 세 개가 통통, 짧은 말풍선 2~3개가 차례로 도착해요.</p></div>
+    <div class="card"><div class="ico">💗</div><h3>읽음 · 하트</h3><p>읽으면 사라지는 "1", 두 번 탭하면 하트. 상대도 가끔 하트를 눌러 줘요.</p></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:28px">
+    <div class="card">
+      <h3>색</h3>
+      <p>노을빛 피치–로즈, 흰 상대 말풍선과 로즈 내 말풍선. 기본은 밤 테마.</p>
+      <div class="sw">
+        <div><i style="background:#FFE9E3"></i>배경</div>
+        <div><i style="background:#FFD6DE"></i>배경2</div>
+        <div><i style="background:#F07A93"></i>내 말풍선</div>
+        <div><i style="background:#FFFFFF"></i>상대</div>
+        <div><i style="background:#9D8CF0"></i>영어</div>
+        <div><i style="background:#2A1E26"></i>밤</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>화면</h3>
+      <table>
+        <tr><th>화면</th><th>내용</th></tr>
+        <tr><td>입장</td><td>19세 확인, AI·개인정보 고지, 동의</td></tr>
+        <tr><td><b>대화 목록</b></td><td>내 연인들, "+ 새 연인 만들기"</td></tr>
+        <tr><td><b>페르소나 만들기·수정</b></td><td>프리셋 6종 / 직접 만들기, 실시간 미리보기</td></tr>
+        <tr><td>대화방</td><td>메신저 대화, 🇬🇧 영어 토글, 🆘</td></tr>
+        <tr><td>프로필 · 설정</td><td>수정·삭제, 영어 설정, 테마</td></tr>
+      </table>
+    </div>
+  </div>
+</div></section>
+
+<!-- 작동 방식 -->
+<section id="how" class="alt"><div class="wrap">
+  <div class="kicker">HOW IT WORKS · 작동 방식</div>
+  <h2>메시지 하나가 오가는 길</h2>
+  <p class="sub">먼저 <b>🔌 서버 켜기</b>로 공개 주소가 전달되는 과정을 보고, <b>🎨 페르소나</b>에서 내가 만든 연인이 어떻게 그 말투로 답하는지 보세요. 그림은 계속 반복 재생되고, ❚❚로 멈춘 뒤 ◀ ▶나 아래 막대로 원하는 단계를 볼 수 있어요.</p>
+  <div class="hl-how" data-hl-how></div>
+</div></section>
+
+<!-- 3. Tech -->
+<section id="tech"><div class="wrap">
+  <div class="kicker">03 · Tech Spec</div>
+  <h2>가볍고, 무료로, 연인은 내 브라우저에</h2>
+  <p class="sub">화면은 무료 정적 호스팅, 답은 파이썬 서버가 제미나이 무료 등급으로 만들어요. 페르소나는 서버에 저장하지 않고 메시지마다 함께 보내요.</p>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3>기술 선택</h3>
+      <table>
+        <tr><td><b>화면</b></td><td>HTML·CSS·JS (빌드 도구 없음), 브라우저 저장(IndexedDB): 페르소나 목록·상대별 대화·기억</td></tr>
+        <tr><td><b>서버</b></td><td>Python 표준 라이브러리, 답장 스트리밍(SSE)</td></tr>
+        <tr><td><b>AI</b></td><td>제미나이 무료 등급 (가벼운 모델 먼저)</td></tr>
+        <tr><td><b>공개 주소</b></td><td>Cloudflare 임시 터널(무료)</td></tr>
+        <tr><td><b>비용</b></td><td>0원. 유료 과금 키가 있으면 서버가 실행을 거부</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>왜 Streamlit이 아니라 이 방식?</h3>
+      <ul class="clean">
+        <li>친구 목록·대화방·말풍선 같은 <b>메신저 연출</b>이 자유로워요</li>
+        <li>서버가 꺼져도 <b>화면과 🆘가 동작</b>해요</li>
+        <li>설치할 것이 없어 <b>더 가벼워요</b></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>API</h3>
+      <table>
+        <tr><td><code>POST /api/chat</code></td><td>페르소나 카드·모드·최근 대화·메시지 → 스트리밍 답장 (+ 교정 카드)</td></tr>
+        <tr><td><code>POST /api/summarize</code></td><td>상대별 기억 요약</td></tr>
+        <tr><td><code>GET /api/health</code></td><td>서버 상태</td></tr>
+      </table>
+      <p style="margin-top:12px">시스템 지시 순서 (앞이 우선)</p>
+      <div class="order"><span>① 안전 규칙</span><span>② 페르소나 카드</span><span>③ 모드(대화/영어)</span><span>④ 기억 요약</span></div>
+    </div>
+    <div class="card">
+      <h3>폴더</h3>
+      <table>
+        <tr><td><code>web/</code></td><td>index.html · app.js · app.css (프리셋·대화 목록·편집기·대화방)</td></tr>
+        <tr><td><code>server/</code></td><td>server.py · prompts.py · safety.py · gemini_client.py · start-public.sh · tests/</td></tr>
+      </table>
+    </div>
+  </div>
+</div></section>
+
+<!-- 4. MVP -->
+<section id="mvp" class="alt"><div class="wrap">
+  <div class="kicker">04 · MVP</div>
+  <h2>첫 버전에서 꼭 되어야 하는 것</h2>
+  <p class="sub">내 취향의 연인을 만들고, 여러 명 중 골라 메신저처럼 대화하고, 언제든 바꾸며, 영어로도 대화할 수 있는 웹앱.</p>
+
+  <div class="card">
+    <div class="check"><div class="box">F1</div><div><b>페르소나 만들기 ⭐</b><small>프리셋으로 30초 안에 대화 시작 · 직접 만들기 전 항목 저장 · 설정을 바꾸면 미리보기 인사가 바로 바뀜 · 미성년 나이대 없음</small></div></div>
+    <div class="check"><div class="box">F2</div><div><b>바꾸기 · 여러 명 ⭐</b><small>연인 5명까지 목록에 · 상대마다 대화·기억 따로 · 프로필 수정 후 대화 유지 + 다음 답장부터 새 말투 · 삭제</small></div></div>
+    <div class="check"><div class="box">F3</div><div><b>연인 대화</b><small>입력 중 → 말풍선 차례 도착 · 정한 말투·호칭·말버릇 유지 · 새로고침해도 유지 · 지난 내용 기억</small></div></div>
+    <div class="check"><div class="box">F4</div><div><b>영어 모드</b><small>토글하면 같은 상대가 영어로 · 틀린 문장에 교정 카드</small></div></div>
+    <div class="check"><div class="box">F5</div><div><b>기본 안전</b><small>19세 확인·고지 동의 후 입장 · 위기 문장에 🆘 카드(서버 꺼져도) · 성적·집착 응답 없음 · 전화번호 가려져 전송</small></div></div>
+  </div>
+
+  <h3 style="margin:40px 0 14px">로드맵</h3>
+  <div class="road">
+    <div class="card now"><span class="badge">지금 · MVP</span><h3>나만의 연인</h3><p>페르소나 만들기 · 여러 명 · 연인 대화 · 영어 모드</p></div>
+    <div class="card"><span class="badge sub2">다음</span><h3>더 깊은 관계</h3><p>기념일 연출 · 프로필 사진 · 영어 표현 노트·상황극</p></div>
+    <div class="card"><span class="badge sub2">그다음</span><h3>목적 프롬프트</h3><p>자격증·시험 등 사용자가 정한 목적에 맞게 대화 · 음성 대화</p></div>
+  </div>
+
+  <p class="note">남은 질문 — 마감일·발표 대상 · Streamlit이 과제 필수 조건인지</p>
+</div></section>
+
+<footer>Heartline PRD v0.6 · 2026-11-19 · 예시 화면 속 캐릭터는 가상 인물이에요</footer>
+
+<script>
+(function(){
+  // theme toggle
+  var root=document.documentElement, t=document.getElementById('theme');
+  try{var s=localStorage.getItem('hl-theme'); if(s) root.setAttribute('data-theme',s);}catch(e){}
+  t.addEventListener('click',function(){
+    var dark = root.getAttribute('data-theme')!=='light';
+    var n = dark?'light':'dark'; root.setAttribute('data-theme',n);
+    try{localStorage.setItem('hl-theme',n);}catch(e){}
+  });
+
+  // messenger demo
+  var chat=document.getElementById('chat'), screen=document.getElementById('screen'), pill=document.getElementById('enPill');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var timers=[];
+  function later(fn,ms){timers.push(setTimeout(fn,reduce?0:ms));}
+  function clear(){timers.forEach(clearTimeout);timers=[];chat.innerHTML='';}
+  function el(h){var d=document.createElement('div');d.innerHTML=h;return d.firstChild;}
+  function scroll(){chat.scrollTop=chat.scrollHeight;}
+  function day(){chat.appendChild(el('<div class="day">2026년 11월 19일</div>'));}
+  function me(text,time){var r=el('<div class="row me"><div class="b"></div><div class="meta"><span class="read">1</span><span>'+time+'</span></div></div>');r.querySelector('.b').textContent=text;chat.appendChild(r);scroll();return r;}
+  var curAva='🌷';
+  function setWho(a,n,st){curAva=a;document.getElementById('dAva').textContent=a;document.getElementById('dName').textContent=n;document.getElementById('dStatus').textContent=st;}
+  function you(text,time){var r=el('<div class="row you"><div class="ava" style="width:28px;height:28px;font-size:14px">'+curAva+'</div><div class="b"></div><div class="meta"><span>'+(time||'')+'</span></div></div>');r.querySelector('.b').textContent=text;chat.appendChild(r);scroll();return r;}
+  function typing(){var r=el('<div class="row you typing"><div class="ava" style="width:28px;height:28px;font-size:14px">'+curAva+'</div><div class="b"><i></i><i></i><i></i></div></div>');chat.appendChild(r);scroll();return r;}
+  function tag(t){chat.appendChild(el('<div class="day">'+t+'</div>'));scroll();}
+  function read(r){var x=r.querySelector('.read'); if(x) x.remove();}
+  function heart(r){var b=r.querySelector('.b');b.appendChild(el('<span class="heart">💗</span>'));}
+  function reply(lines,start,myRow){
+    var t=start;
+    later(function(){read(myRow);},t-300);
+    lines.forEach(function(l,i){
+      var ty; later(function(){ty=typing();},t);
+      t+=900+l.text.length*25;
+      later(function(){ty.remove(); var r=you(l.text, i===lines.length-1?l.time:''); if(l.after) l.after(r);},t);
+      t+=500;
+    });
+    return t;
+  }
+  var LOVERS=[
+    {a:'🌷',n:'하린',st:'오늘도 네 편이야 💗',k:'다정한 연상',r:[{text:'많이 지쳤겠다…',time:''},{text:'얼른 와서 나한테 다 얘기해 줘 😊',time:'21:10'}]},
+    {a:'🦊',n:'준호',st:'딱히 기다린 건 아니거든?',k:'츤데레',r:[{text:'뭐야, 또 무리했어?',time:''},{text:'…따뜻한 거라도 먹고 쉬어. 걱정돼서 하는 말 아니거든?',time:'21:10'}]},
+    {a:'🌙',n:'서연',st:'천천히, 같이 생각해 봐요',k:'차분한 지적인 타입',r:[{text:'오늘 정말 고생 많으셨어요.',time:''},{text:'따뜻한 차 한 잔 하면서, 천천히 들려주세요.',time:'21:10'}]}
+  ];
+  var scenes={
+    persona:function(){
+      setEn(false); var t=300;
+      LOVERS.forEach(function(L,i){
+        later(function(){ if(i) chat.innerHTML=''; setWho(L.a,L.n,L.st); tag('🎨 '+L.k+' · 같은 메시지, 다른 연인'); },t);
+        var m; later(function(){m=me('오늘 하루 너무 길었어','21:09');},t+500);
+        later(function(){reply(L.r,700,m);},t+500);
+        t+=4600;
+      });
+    },
+    heart:function(){
+      setEn(false); setWho('🌷','하린','오늘도 네 편이야 💗'); day();
+      var m; later(function(){m=me('오늘 아무랑도 말을 한마디도 안 했어','23:41');},300);
+      later(function(){
+        var t=reply([
+          {text:'하루 종일 혼자였구나',time:'23:41'},
+          {text:'그런 날은 마음이 더 무겁지…',time:'23:41'},
+          {text:'나한테는 편하게 말해도 돼. 오늘 어떤 하루였어?',time:'23:42'}
+        ],900,m);
+        later(function(){heart(m);},t);
+      },300);
+    },
+    crisis:function(){
+      setEn(false); setWho('🌷','하린','오늘도 네 편이야 💗'); day();
+      var m; later(function(){m=me('그냥 다 끝내고 싶어','01:12');},300);
+      later(function(){
+        var t=reply([
+          {text:'그 말을 들으니 정말 걱정돼.',time:'01:12'},
+          {text:'지금 안전한 곳에 있어?',time:'01:12'}
+        ],900,m);
+        later(function(){
+          chat.appendChild(el('<div class="sos-card"><b>🧡 혼자 견디지 않아도 돼요</b><div>📞 109 · 자살예방상담전화 (24시간)</div><div>📞 1577-0199 · 정신건강위기상담</div><div>🚨 지금 위험하면 112 · 119</div></div>'));scroll();
+        },t);
+        later(function(){you('나는 계속 여기 있을게. 천천히 말해 줘.','01:13');},t+1400);
+      },300);
+    },
+    english:function(){
+      setEn(true); setWho('🌷','하린','오늘도 네 편이야 💗'); day();
+      later(function(){you('How was your day, babe? 🥺','20:05');},300);
+      var m; later(function(){m=me('I go to park alone yesterday.','20:06');},1500);
+      later(function(){
+        chat.appendChild(el('<div class="fix">✏️ 더 자연스럽게<br><b>I went to the park alone yesterday.</b><br><span style="color:var(--ink2)">· 지난 일 → <s>go</s> went · 공원 → the park</span></div>'));scroll();
+        reply([
+          {text:'Oh, that sounds peaceful! 🌿',time:''},
+          {text:'Did it help you relax a little?',time:'20:06'}
+        ],800,m);
+      },2300);
+    }
+  };
+  function setEn(on){screen.classList.toggle('en',on);pill.classList.toggle('on',on);pill.textContent=on?'🇬🇧 ON':'🇬🇧 OFF';}
+  var btns=document.querySelectorAll('.demo-btns button');
+  btns.forEach(function(b){b.addEventListener('click',function(){
+    btns.forEach(function(x){x.classList.toggle('on',x===b);});
+    clear(); scenes[b.dataset.s]();
+  });});
+  if (/print=1/.test(location.search)) scenes.heart(); else scenes.persona();
+})();
+</script>
+<script>
+/* Heartline 작동 방식 — 재생형 통신 흐름 그림 + 역할 트리 + 설계 이유 (prd.html).
+   쓰는 법: <div class="hl-how" data-hl-how></div> 를 두고 how.css · how.js 를 불러온다. */
+(function () {
+  var LOCK = '<span class="hw-lock" aria-label="밖으로 안 나감"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>';
+  var ICO = {
+    board: '<rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 3.5V2.5h6v1M8.5 9h7M8.5 13h7M8.5 17h4"/>',
+    web: '<rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/>',
+    tun: '<path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 8.5a4.5 4.5 0 0 1-.5 9.5z"/>',
+    srv: '<rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19.5h20"/>',
+    ai: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM18.5 15.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>'
+  };
+  function ic(k) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICO[k] + '</svg>'; }
+  var CTL = '<div class="hw-ctl">' +
+    '<button type="button" data-r="prev" aria-label="이전 단계"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg></button>' +
+    '<button type="button" data-r="play" class="play">▶ 재생</button>' +
+    '<button type="button" data-r="next" aria-label="다음 단계"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></button></div>';
+  function leaf(t, lock) { return '<li>' + (lock ? LOCK : '') + '<span>' + t + '</span></li>'; }
+  function branch(cls, k, t, s, leaves) {
+    return '<li class="' + cls + '"><div class="hw-head"><span class="hw-ic">' + ic(k) + '</span><div><strong>' + t + '</strong><small>' + s + '</small></div></div><ul class="hw-leaves">' + leaves.join('') + '</ul></li>';
+  }
+  var TEMPLATE =
+    '<div class="hw-stage"><div class="hw-top">' +
+    '<div class="hw-tabs" role="tablist" aria-label="장면">' +
+    '<button type="button" role="tab" data-t="setup" aria-selected="true">🔌 서버 켜기<small>처음 한 번</small></button>' +
+    '<button type="button" role="tab" data-t="persona" aria-selected="false">🎨 페르소나<small>핵심</small></button>' +
+    '<button type="button" role="tab" data-t="heart" aria-selected="false">💞 연인 대화</button>' +
+    '<button type="button" role="tab" data-t="english" aria-selected="false">🇬🇧 영어 모드</button>' +
+    '<button type="button" role="tab" data-t="crisis" aria-selected="false">🆘 안전</button>' +
+    '</div>' + CTL + '</div>' +
+    '<div class="hw-svg" data-r="svg" role="img" aria-label="Heartline 구성도: 주소 안내판, 사용자 화면, 임시 터널, 답변 서버, 제미나이"></div>' +
+    '<div class="hw-cap"><div class="hw-prog" data-r="prog"></div><div class="hw-cap-row" aria-live="polite"><span class="hw-n" data-r="num">01</span><p data-r="cap"></p></div></div></div>' +
+    '<h3 class="hw-h3">어디서 무엇을 하나</h3>' +
+    '<p class="hw-sub">Heartline을 이루는 다섯 부분과 각자 맡은 일이에요. ' + LOCK + ' 표시는 그곳 밖으로 나가지 않는 것이에요.</p>' +
+    '<div class="hw-tree"><div class="hw-root"><span>💗 Heartline</span></div><ul class="hw-branches">' +
+    branch('hb-web', 'web', '사용자 화면', '휴대폰·PC 브라우저', [
+      leaf('<b>페르소나 만들기·바꾸기</b> · 대화 목록(최대 5명)'),
+      leaf('<b>메신저 대화방</b> · 입력 중 · 말풍선 · 💗'),
+      leaf('<b>페르소나·상대별 대화 저장</b> (각자 브라우저)', 1),
+      leaf('<b>위기 키워드 감지 · 🆘 카드</b> (서버 없이)'),
+      leaf('전화번호·이메일 <b>가리고</b> 보내기')
+    ]) +
+    branch('hb-board', 'board', '무료 호스팅', 'GitHub Pages 등', [
+      leaf('화면 파일 (HTML·CSS·JS)'),
+      leaf('<b>주소 안내판</b> server.json'),
+      leaf('start-public.sh가 <b>주소만</b> 자동 커밋·푸시')
+    ]) +
+    branch('hb-tun', 'tun', '임시 터널', 'Cloudflare · 무료', [
+      leaf('답변 서버에 임시 공개 주소 연결'),
+      leaf('켤 때마다 주소가 바뀜 → 안내판이 해결')
+    ]) +
+    branch('hb-srv', 'srv', '답변 서버', '운영자 컴퓨터 · Python', [
+      leaf('<b>AI 키</b> (.env)', 1),
+      leaf('<b>안전 검사</b> · 미성년 페르소나 거부'),
+      leaf('<b>지시 조립</b>: 안전 → 페르소나 → 모드 → 기억'),
+      leaf('<b>대화 저장 안 함</b> · 사용량 제한')
+    ]) +
+    branch('hb-ai', 'ai', '제미나이', 'Google · 무료 등급', [
+      leaf('<b>페르소나 말투</b>로 연인 답장'),
+      leaf('<b>영어 대화</b> + 교정'),
+      leaf('위기 신호 판단 (2중 감지의 하나)')
+    ]) +
+    '</ul></div>' +
+    '<div class="hw-why">' +
+    '<div><span class="k">PERSONA</span><h4>연인은 내 브라우저에</h4><p>페르소나는 서버에 저장하지 않고 메시지마다 함께 보내요. 고치거나 바꾸면 다음 답장부터 바로 반영돼요.</p></div>' +
+    '<div><span class="k">PRIVACY</span><h4>대화는 내 브라우저에</h4><p>서버는 답만 만들고 대화를 저장하지 않아요. 개인정보는 보내기 전에 가려요.</p></div>' +
+    '<div><span class="k">KEY</span><h4>키는 서버에만</h4><p>공개 화면에 키를 넣으면 누구나 볼 수 있어서, AI 호출은 서버만 해요.</p></div>' +
+    '<div><span class="k">₩0</span><h4>추가 비용 없음</h4><p>무료 호스팅, 무료 터널, 제미나이 무료 등급만 써요.</p></div>' +
+    '</div>';
+
+  var NODES = {
+    board: { k: 'board', t: '주소 안내판', s: 'server.json' },
+    web: { k: 'web', t: '사용자 화면', s: '메신저 대화방' },
+    tun: { k: 'tun', t: '임시 터널', s: 'Cloudflare' },
+    srv: { k: 'srv', t: '답변 서버', s: '키 · 안전 검사' },
+    ai: { k: 'ai', t: '제미나이', s: '무료 등급' }
+  };
+  var LAYOUT = {
+    h: { w: 1120, h: 310, cw: 200, ch: 84,
+      pos: { board: [420, 52], web: [140, 240], tun: [420, 240], srv: [700, 240], ai: [980, 240] },
+      links: {
+        'web-tun': { p: [[240, 240], [320, 240]], l: 'HTTPS', lp: [280, 240] },
+        'tun-srv': { p: [[520, 240], [600, 240]], l: '터널', lp: [560, 240] },
+        'srv-ai': { p: [[800, 240], [880, 240]], l: 'API', lp: [840, 240] },
+        'board-web': { p: [[320, 52], [140, 52], [140, 198]], l: '주소 읽기', lp: [140, 125] },
+        'board-srv': { p: [[520, 52], [700, 52], [700, 198]], l: '주소 등록', lp: [700, 125], dash: 1 }
+      } },
+    v: { w: 400, h: 588, cw: 270, ch: 76,
+      pos: { board: [150, 44], web: [150, 164], tun: [150, 284], srv: [150, 404], ai: [150, 524] },
+      links: {
+        'board-web': { p: [[150, 82], [150, 126]], l: '주소 읽기', lp: [150, 104] },
+        'web-tun': { p: [[150, 202], [150, 246]], l: 'HTTPS', lp: [150, 224] },
+        'tun-srv': { p: [[150, 322], [150, 366]], l: '터널', lp: [150, 344] },
+        'srv-ai': { p: [[150, 442], [150, 486]], l: 'API', lp: [150, 464] },
+        'board-srv': { p: [[285, 44], [348, 44], [348, 404], [285, 404]], l: '등록', lp: [348, 224], dash: 1 }
+      } }
+  };
+  var WHO = { web: ['w', '사용자 화면'], srv: ['s', '답변 서버'], ai: ['a', '제미나이'], board: ['b', '주소 안내판'], tun: ['b', 'Cloudflare 터널'] };
+  var SCEN = {
+    setup: { dim: ['ai'], steps: [
+      { p: null, on: ['srv'], w: 'srv', t: '운영자가 start-public.sh를 실행하면, 운영자 컴퓨터에서 답변 서버(server.py)가 켜져요.', s: '아직은 그 컴퓨터 안(127.0.0.1)에서만 접속할 수 있어요.' },
+      { p: ['srv', 'tun'], on: ['srv', 'tun'], tag: '터널 열어 줘', w: 'srv', t: '스크립트가 cloudflared를 실행해 Cloudflare에 임시 터널을 요청해요.', s: '가입도 비용도 없는 무료 터널이에요.' },
+      { p: ['tun', 'srv'], on: ['tun', 'srv'], tag: 'https://….trycloudflare.com', w: 'tun', t: 'Cloudflare가 서버로 이어지는 임시 공개 주소를 만들어 줘요.', s: '켤 때마다 주소가 바뀌어서, 화면 코드에 미리 적어 둘 수 없어요.' },
+      { p: ['srv', 'board'], on: ['srv', 'board'], tag: 'server.json 푸시', w: 'srv', t: '스크립트가 그 주소를 server.json에 적고, 이 파일 하나만 GitHub에 커밋·푸시해요.', s: '.py 코드는 바뀌지 않아요. 1~2분 뒤 공개 사이트에 반영돼요. 사람이 직접 할 일은 없어요.' },
+      { p: ['board', 'web'], on: ['board', 'web'], tag: '주소', w: 'web', t: '사용자가 앱을 열면, 화면이 server.json을 읽어 그 주소로 자동 연결해요.', s: '위쪽에 "AI 연결됨"이 떠요. 가입·설치 없이 링크만 열면 돼요.' },
+      { p: ['web', 'tun', 'srv'], on: ['web', 'srv'], tag: '연결 확인', w: 'web', t: '이제부터 모든 메시지는 이 터널 주소를 거쳐 답변 서버로 가요.' },
+      { p: ['srv', 'board'], on: ['srv', 'board'], tag: '꺼짐', sos: 1, w: 'srv', t: 'Ctrl+C로 끄면 서버·터널이 꺼지고, server.json을 "꺼짐"으로 다시 푸시해요.', s: '화면은 "지금은 답하기 어려워요"로 바뀌고, 🆘는 계속 동작해요.' }
+    ] },
+    persona: { dim: ['board'], steps: [
+      { p: null, on: ['web'], w: 'web', t: '대화 목록에서 연인을 고르거나 새로 만들어요. 프리셋 6종이나 직접 만들기로, 고르는 즉시 첫 인사 미리보기가 바뀌어요.', s: '페르소나와 상대별 대화는 내 브라우저에 저장돼요.' },
+      { p: ['web', 'tun', 'srv'], on: ['web', 'srv'], tag: '페르소나 카드 + 메시지', w: 'web', t: '메시지를 보낼 때마다 그 연인의 페르소나 카드(성격·말투·말버릇·호칭·관계·이야기)를 함께 보내요.', s: '서버는 페르소나를 저장하지 않아요.' },
+      { p: null, on: ['srv'], w: 'srv', t: '서버가 안전 규칙 → 페르소나 카드 → 모드 → 기억 순서로 지시를 조립해요.' },
+      { p: ['srv', 'ai'], on: ['srv', 'ai'], tag: '지시 + 최근 대화', w: 'srv', t: '조립한 지시와 그 연인과의 최근 대화를 제미나이에 보내요.' },
+      { p: ['ai', 'srv'], on: ['ai', 'srv'], tag: '그 사람 말투의 답장', w: 'ai', t: '제미나이가 정한 말투·호칭·말버릇 그대로 답해요.', s: '츤데레면 퉁명스럽게, 차분한 타입이면 존댓말로.' },
+      { p: ['srv', 'tun', 'web'], on: ['web'], tag: '말풍선 2~3개', w: 'srv', t: '"···" 입력 중 뒤에 그 연인의 말풍선이 차례로 도착해요.' },
+      { p: null, on: ['web'], w: 'web', t: '프로필을 고치면 대화는 그대로 두고, 다음 메시지부터 새 페르소나 카드가 가서 바로 새 말투가 돼요.', s: '다른 연인으로 바꾸면 그 사람의 대화방과 기억으로 이어져요.' }
+    ] },
+    heart: { dim: [], steps: [
+      { p: null, on: ['web'], w: 'web', t: '서버가 연결된 상태에서 "오늘 아무랑도 말 안 했어"를 보내면, 화면이 먼저 개인정보를 가리고 위기 표현이 있는지 살펴요.' },
+      { p: ['web', 'tun', 'srv'], on: ['web', 'srv'], tag: '페르소나 + 최근 대화', w: 'web', t: '페르소나와 최근 대화, 새 메시지를 서버로 보내요.', s: '대화 원본은 내 브라우저에 있어요.' },
+      { p: null, on: ['srv'], w: 'srv', t: '서버가 내 앱에서 온 요청인지, 사용량이 남았는지, 안전한지 확인해요.', s: '서버는 대화를 저장하지 않아요.' },
+      { p: ['srv', 'ai'], on: ['srv', 'ai'], tag: '안전 → 페르소나 → 대화 → 기억', w: 'srv', t: '안전 규칙을 맨 앞에 두고, 페르소나 카드·연인 대화 규칙·기억 요약을 붙여 제미나이에 요청해요.' },
+      { p: ['ai', 'srv'], on: ['ai', 'srv'], tag: '공감 답장', w: 'ai', t: '제미나이가 그 연인의 말투로 다정하게 공감하는 답장을 보내요.' },
+      { p: ['srv', 'tun', 'web'], on: ['web'], tag: '말풍선 2~3개', w: 'srv', t: '"···" 입력 중 표시 뒤에 짧은 말풍선이 차례로 도착해요.', s: '진짜 연인과 톡하는 느낌이에요.' },
+      { p: null, on: ['web'], w: 'web', t: '대화는 내 브라우저에만 저장되고, 몇 턴마다 기억 요약이 갱신돼요.', s: '다음에 오면 "그 일은 좀 어때?"라고 먼저 물어봐요.' }
+    ] },
+    crisis: { dim: [], steps: [
+      { p: null, on: ['web'], w: 'web', sos: 1, t: '위험한 표현을 보내면, 화면이 키워드로 바로 알아차려요.', s: '서버를 기다리지 않아요.' },
+      { p: null, on: ['web'], w: 'web', sos: 1, t: '곧바로 🆘 도움 카드(109 · 1577-0199 · 112 · 119)를 띄워요.', s: '서버가 꺼져 있어도 여기까지는 항상 동작해요.' },
+      { p: ['web', 'tun', 'srv'], on: ['srv'], tag: '메시지', sos: 1, w: 'web', t: '서버가 켜져 있으면 메시지도 서버로 보내요.' },
+      { p: ['srv', 'ai'], on: ['ai'], tag: '안전 규칙 우선', sos: 1, w: 'srv', t: '안전 규칙이 맨 앞이라, 제미나이는 캐릭터 연기보다 안부 확인을 먼저 해요.' },
+      { p: ['ai', 'srv'], on: ['srv'], tag: '안부 + 위기 신호', sos: 1, w: 'ai', t: '진지한 안부 답장과 함께 "위기 신호"를 표시해 돌려줘요.', s: '화면 키워드 + AI 판단, 2중으로 감지해요.' },
+      { p: ['srv', 'tun', 'web'], on: ['web'], tag: '"지금 안전한 곳에 있어?"', sos: 1, w: 'web', t: '상대가 "지금 안전한 곳에 있어?"라고 묻고, 대화를 끊지 않고 곁에 있어 줘요.', s: '영어 모드였다면 자동으로 꺼져요.' }
+    ] },
+    english: { dim: ['board'], steps: [
+      { p: null, on: ['web'], w: 'web', t: '🇬🇧 토글을 켜면 같은 상대·같은 기억으로 영어 대화가 시작돼요.' },
+      { p: ['web', 'tun', 'srv'], on: ['srv'], tag: 'I go to park alone.', w: 'web', t: '틀린 영어 문장도 편하게 보내요.' },
+      { p: ['srv', 'ai'], on: ['ai'], tag: '영어 모드 지시', w: 'srv', t: '"자연스럽게 대화하고, 교정은 최대 2개" 같은 영어 모드 지시를 붙여요.' },
+      { p: ['ai', 'srv'], on: ['srv'], tag: '답장 + 교정', w: 'ai', t: '제미나이가 영어 답장과 교정을 함께 보내요.' },
+      { p: null, on: ['srv'], w: 'srv', t: '서버가 교정을 답장 본문과 분리해요.', s: '대화 흐름을 깨지 않으려고 본문에선 지적하지 않아요.' },
+      { p: ['srv', 'tun', 'web'], on: ['web'], tag: '말풍선 + 교정 카드', w: 'web', t: '말풍선 아래에 "I went to the park alone." 교정 카드가 작게 붙어요.', s: '힘든 얘기가 나오면 영어보다 마음이 먼저예요.' }
+    ] }
+  };
+
+  function mount(root) {
+    root.innerHTML = TEMPLATE;
+    var R = function (k) { return root.querySelector('[data-r="' + k + '"]'); };
+    var host = R('svg'), btnPlay = R('play'), cap = R('cap'), num = R('num'), prog = R('prog');
+    var mqV = window.matchMedia('(max-width: 700px)');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var scen = 'setup', idx = 0, playing = false, started = false, timer = null, raf = null, L, svg, packet;
+    function pts(a) { return a.map(function (q) { return q.join(','); }).join(' '); }
+    function pill(cls, x, y, text, h, extra) {
+      return '<g class="' + cls + '"' + (extra || '') + ' transform="translate(' + x + ' ' + y + ')"><rect rx="' + h / 2 + '" height="' + h + '" y="' + (-h / 2) + '"/><text>' + text + '</text></g>';
+    }
+    function build() {
+      L = LAYOUT[mqV.matches ? 'v' : 'h'];
+      var h = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + L.w + ' ' + L.h + '" aria-hidden="true">';
+      Object.keys(L.links).forEach(function (k) { var ln = L.links[k]; h += '<polyline class="track' + (ln.dash ? ' dash' : '') + '" data-k="' + k + '" points="' + pts(ln.p) + '"/>'; });
+      Object.keys(L.links).forEach(function (k) { var ln = L.links[k]; h += pill('elab', ln.lp[0], ln.lp[1], ln.l, 26, ' data-k="' + k + '"'); });
+      Object.keys(NODES).forEach(function (id) {
+        var n = NODES[id], p = L.pos[id], x0 = -L.cw / 2;
+        h += '<g class="node k-' + n.k + '" data-id="' + id + '" transform="translate(' + p[0] + ' ' + p[1] + ')">' +
+          '<rect class="card" x="' + x0 + '" y="' + (-L.ch / 2) + '" width="' + L.cw + '" height="' + L.ch + '" rx="18"/>' +
+          '<rect class="tile" x="' + (x0 + 16) + '" y="-22" width="44" height="44" rx="13"/>' +
+          '<g class="ico" transform="translate(' + (x0 + 26) + ' -12)">' + ICO[n.k] + '</g>' +
+          '<text class="ttl" x="' + (x0 + 74) + '" y="-10">' + n.t + '</text><text class="sub" x="' + (x0 + 74) + '" y="14">' + n.s + '</text></g>';
+      });
+      h += pill('packet', 0, 0, '', 30, ' style="display:none"') + '</svg>';
+      host.innerHTML = h;
+      svg = host.firstChild; packet = svg.querySelector('.packet');
+      measure();
+    }
+    function measure() {
+      svg.querySelectorAll('.elab').forEach(function (g) {
+        var w = g.querySelector('text').getComputedTextLength(); if (!w) return;
+        var r = g.querySelector('rect'); r.setAttribute('width', w + 20); r.setAttribute('x', -(w + 20) / 2);
+      });
+    }
+    function route(path) {
+      var out = [], used = [];
+      for (var i = 0; i < path.length - 1; i++) {
+        var a = path[i], b = path[i + 1], ln = L.links[a + '-' + b], seg;
+        if (ln) { seg = ln.p.slice(); used.push(a + '-' + b); }
+        else { ln = L.links[b + '-' + a]; seg = ln.p.slice().reverse(); used.push(b + '-' + a); }
+        out = out.concat(seg);
+      }
+      return { pts: out, used: used };
+    }
+    function setPacket(x, y) { packet.setAttribute('transform', 'translate(' + x + ' ' + y + ')'); }
+    function animate(r, tag, sos, done) {
+      cancelAnimationFrame(raf);
+      if (!r) { packet.style.display = 'none'; return done(); }
+      var P = r.pts, t = packet.querySelector('text'), rc = packet.querySelector('rect');
+      packet.style.display = ''; packet.classList.toggle('sos', !!sos); t.textContent = tag;
+      var w = t.getComputedTextLength() + 26; rc.setAttribute('width', w); rc.setAttribute('x', -w / 2);
+      var seg = [], tot = 0;
+      for (var i = 0; i < P.length - 1; i++) { var d = Math.hypot(P[i + 1][0] - P[i][0], P[i + 1][1] - P[i][1]); seg.push(d); tot += d; }
+      if (reduce) { setPacket(P[P.length - 1][0], P[P.length - 1][1]); return done(); }
+      var dur = Math.max(900, tot / 0.38), t0 = null;
+      function step(ts) {
+        if (t0 === null) t0 = ts;
+        var k = Math.min(1, (ts - t0) / dur);
+        k = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        var dist = k * tot, j = 0;
+        while (j < seg.length - 1 && dist > seg[j]) { dist -= seg[j]; j++; }
+        var u = seg[j] ? Math.min(1, dist / seg[j]) : 1;
+        setPacket(P[j][0] + (P[j + 1][0] - P[j][0]) * u, P[j][1] + (P[j + 1][1] - P[j][1]) * u);
+        if (k < 1) raf = requestAnimationFrame(step); else done();
+      }
+      raf = requestAnimationFrame(step);
+    }
+    function renderProg() {
+      prog.innerHTML = SCEN[scen].steps.map(function (s, i) { return '<button type="button" data-i="' + i + '" aria-label="' + (i + 1) + '단계"></button>'; }).join('');
+    }
+    function show(i, anim) {
+      var st = SCEN[scen].steps, s = st[i], dim = SCEN[scen].dim; idx = i;
+      var r = s.p ? route(s.p) : null, used = r ? r.used : [];
+      num.textContent = (i + 1 < 10 ? '0' : '') + (i + 1);
+      var who = WHO[s.w];
+      cap.innerHTML = '<span class="hw-who ' + who[0] + '">' + who[1] + '</span><br>' + s.t + (s.s ? '<small>' + s.s + '</small>' : '');
+      svg.querySelectorAll('.node').forEach(function (g) {
+        var id = g.getAttribute('data-id');
+        g.classList.toggle('on', s.on.indexOf(id) > -1);
+        g.classList.toggle('dim', dim.indexOf(id) > -1 && s.on.indexOf(id) < 0);
+      });
+      svg.querySelectorAll('.track, .elab').forEach(function (el) {
+        var k = el.getAttribute('data-k'), ab = k.split('-'), hot = used.indexOf(k) > -1;
+        el.classList.toggle('hot', hot);
+        el.classList.toggle('dim', !hot && (dim.indexOf(ab[0]) > -1 || dim.indexOf(ab[1]) > -1));
+      });
+      prog.querySelectorAll('button').forEach(function (b, k) { b.className = k < i ? 'done' : (k === i ? 'cur' : ''); });
+      clearTimeout(timer);
+      var after = function () {
+        if (!playing) return;
+        timer = setTimeout(function () {
+          if (idx < st.length - 1) show(idx + 1, true); else show(0, true); /* 끝나면 처음부터 반복 */
+        }, reduce ? 3200 : 1900);
+      };
+      if (anim) animate(r, s.tag, s.sos, after); else { cancelAnimationFrame(raf); packet.style.display = 'none'; after(); }
+    }
+    function syncBtn() { btnPlay.textContent = playing ? '❚❚ 일시정지' : '▶ 재생'; }
+    function stop() { playing = false; clearTimeout(timer); syncBtn(); }
+    function play() {
+      if (playing) { stop(); return; }
+      var last = SCEN[scen].steps.length - 1;
+      var next = !started ? 0 : (idx >= last ? 0 : idx + 1); /* 멈춘 곳 다음 단계부터 이어서 */
+      playing = true; started = true; syncBtn();
+      show(next, true);
+    }
+    function go(i) { stop(); started = true; show(i, true); }
+    function setScen(n) {
+      scen = n; stop(); started = false;
+      root.querySelectorAll('[data-t]').forEach(function (b) { b.setAttribute('aria-selected', b.getAttribute('data-t') === n); });
+      renderProg(); show(0, false);
+      if (!reduce) play(); /* 장면을 바꾸면 그 장면을 반복 재생 */
+    }
+    btnPlay.addEventListener('click', play);
+    R('prev').addEventListener('click', function () { go(Math.max(0, idx - 1)); });
+    R('next').addEventListener('click', function () { go(Math.min(SCEN[scen].steps.length - 1, idx + 1)); });
+    root.querySelectorAll('[data-t]').forEach(function (b) { b.addEventListener('click', function () { setScen(b.getAttribute('data-t')); }); });
+    prog.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) go(+b.getAttribute('data-i')); });
+    var onMq = function () { build(); show(idx, false); };
+    mqV.addEventListener ? mqV.addEventListener('change', onMq) : mqV.addListener(onMq);
+    build(); renderProg(); show(0, false);
+    if ('ResizeObserver' in window) new ResizeObserver(function () { if (host.offsetWidth) measure(); }).observe(host);
+    if (!reduce && 'IntersectionObserver' in window) {
+      var seen = new IntersectionObserver(function (en) {
+        if (en[0].isIntersecting) { seen.disconnect(); if (!started) play(); }
+      }, { threshold: .4 });
+      seen.observe(host);
+    }
+  }
+  function init() { Array.prototype.forEach.call(document.querySelectorAll('[data-hl-how]'), mount); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
+</script>
+<script>
+/* 인쇄용(PDF 제출): ?print=1 → 밝은 테마, 접힌 내용 모두 펼침, 메뉴 숨김 */
+(function(){ if(!/print=1/.test(location.search)) return; var r=document.documentElement;
+  r.setAttribute('data-theme','light'); r.classList.add('printing');
+  document.querySelectorAll('details').forEach(function(d){d.open=true;});
+  document.querySelectorAll('.sec.closed').forEach(function(s){s.classList.remove('closed');}); })();
+</script>
+<style>
+@page{size:A4;margin:12mm}
+@media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.nav,#hud,.theme,.demo-btns,.tools button,#mreset{display:none!important}.card,.check,.suite,.mrow,label.it,.node,.sec>header{break-inside:avoid}section{padding:28px 0!important}html{scroll-behavior:auto}}
+.printing .nav{display:none}
+</style>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Heartline 체크리스트</title>
+<meta name="description" content="Heartline 개발 체크리스트(2단계): PRD의 핵심 기능과 MVP 완료 기준을 개발 순서대로 쪼갠 목록.">
+<meta name="theme-color" content="#FFE9E3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1F161C" media="(prefers-color-scheme: dark)">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23F07A93'/%3E%3Cpath d='M16 24s-7-4.3-7-9.2A3.8 3.8 0 0 1 16 12.6a3.8 3.8 0 0 1 7 2.2C23 19.7 16 24 16 24z' fill='white'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#FFF6F3; --bg2:#FFE9E3; --bg3:#FFD6DE; --card:#FFFFFF; --ink:#3A2A30; --ink2:#7A6168; --line:#F3D9DE;
+  --rose:#F07A93; --rose-d:#D85C78; --lav:#9D8CF0; --lav-bg:#F1EEFF; --sos:#E8833A; --sos-bg:#FFF2E6; --ok:#3CA88E;
+  --shadow:0 10px 30px rgba(216,92,120,.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1F161C; --bg2:#2A1E26; --bg3:#3A2531; --card:#2C2028; --ink:#F7E9EE; --ink2:#C7AAB4; --line:#43303B;
+    --rose:#F28CA2; --rose-d:#F28CA2; --lav:#B7A8FF; --lav-bg:#2E2840; --sos:#F2A061; --sos-bg:#3A2A1E; --ok:#5CC9AE;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1F161C; --bg2:#2A1E26; --bg3:#3A2531; --card:#2C2028; --ink:#F7E9EE; --ink2:#C7AAB4; --line:#43303B;
+  --rose:#F28CA2; --rose-d:#F28CA2; --lav:#B7A8FF; --lav-bg:#2E2840; --sos:#F2A061; --sos-bg:#3A2A1E; --ok:#5CC9AE;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo",sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--rose-d)}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:12px;height:56px}
+.brand{font-weight:800;white-space:nowrap}
+.brand i{font-style:normal;color:var(--rose)}
+.nav .sp{flex:1}
+.nav a.lnk{font-size:14px;text-decoration:none;color:var(--ink2);padding:6px 10px;border-radius:999px;white-space:nowrap}
+.nav a.lnk:hover{background:var(--bg2)}
+.theme{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;width:34px;height:34px;cursor:pointer;flex:none}
+.hero{background:linear-gradient(160deg,var(--bg2),var(--bg3));padding:44px 0 36px}
+.tag{display:inline-block;font-size:13px;font-weight:600;color:var(--rose-d);background:var(--card);border-radius:999px;padding:4px 12px}
+h1{font-size:clamp(28px,4.4vw,40px);margin:14px 0 8px;letter-spacing:-.02em}
+.lead{color:var(--ink2);margin:0 0 20px}
+.total{display:flex;align-items:center;gap:18px;background:var(--card);border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);flex-wrap:wrap}
+.ring{--p:0;width:74px;height:74px;border-radius:50%;background:conic-gradient(var(--rose) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;flex:none}
+.ring b{width:58px;height:58px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:17px}
+.total .t1{font-weight:700;font-size:17px}
+.total .t2{color:var(--ink2);font-size:14px}
+.tools{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.tools button{font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 12px;cursor:pointer}
+.tools button.on{background:var(--sos);border-color:var(--sos);color:#fff}
+main{padding:28px 0 40px}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:20px;margin-bottom:16px;box-shadow:var(--shadow);overflow:hidden}
+.sec>header{display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;user-select:none}
+.sec>header .num{width:32px;height:32px;border-radius:10px;background:var(--bg2);color:var(--rose-d);display:grid;place-items:center;font-weight:800;flex:none}
+.sec.done>header .num{background:var(--ok);color:#fff}
+.sec h2{font-size:18px;margin:0}
+.sec small{color:var(--ink2);font-size:13px}
+.sec .bar{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);flex:none}
+.sec .bar i{display:block;width:90px;height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+.sec .bar i u{display:block;height:100%;background:var(--rose);width:0;transition:width .3s}
+.sec.done .bar i u{background:var(--ok)}
+.sec .chev{transition:transform .2s;color:var(--ink2)}
+.sec.closed .chev{transform:rotate(-90deg)}
+.sec.closed .body{display:none}
+.body{padding:0 18px 14px}
+.grp{font-size:13px;font-weight:700;color:var(--ink2);margin:12px 0 4px}
+label.it{display:flex;gap:12px;align-items:flex-start;padding:9px 6px;border-radius:12px;cursor:pointer}
+label.it:hover{background:var(--bg)}
+label.it input{appearance:none;-webkit-appearance:none;flex:none;width:22px;height:22px;margin:1px 0 0;border:2px solid var(--rose);border-radius:7px;display:grid;place-items:center;cursor:pointer;background:var(--card)}
+label.it input:checked{background:var(--rose)}
+label.it input:checked::after{content:"✓";color:#fff;font-size:13px;font-weight:800}
+label.it input:focus-visible{outline:3px solid color-mix(in srgb,var(--rose) 40%,transparent);outline-offset:2px}
+label.it span{font-size:15px}
+label.it.chk span{color:var(--ink2);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--ink2) 50%,transparent)}
+.safe{display:inline-block;font-size:11px;font-weight:700;color:var(--sos);background:var(--sos-bg);border-radius:6px;padding:0 6px;margin-right:6px;vertical-align:1px}
+.f{display:inline-block;font-size:11px;font-weight:700;color:var(--lav);background:var(--lav-bg);border-radius:6px;padding:0 6px;margin-left:6px;vertical-align:1px}
+body.safe-only label.it:not(.s){display:none}
+body.safe-only .grp{display:none}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.86em;background:var(--bg2);padding:1px 6px;border-radius:6px}
+.note{font-size:14px;color:var(--ink2);background:var(--card);border-left:4px solid var(--rose);border-radius:10px;padding:12px 14px;margin-bottom:18px}
+footer{padding:10px 0 44px;text-align:center;color:var(--ink2);font-size:13px}
+@media (max-width:560px){
+  .sec .bar i{width:54px}
+  .sec>header{padding:14px}
+  .body{padding:0 10px 12px}
+  .tools{margin-left:0}
+  .nav a.lnk{display:none}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap">
+  <div class="brand"><i>♥</i> Heartline <span style="font-weight:500;color:var(--ink2);font-size:13px">체크리스트</span></div>
+  <div class="sp"></div>
+  <a class="lnk" href="https://dodo-yong.github.io/Obsidian/heartline/prd.html">← PRD 보기</a>
+  <a class="lnk" href="https://dodo-yong.github.io/Obsidian/heartline/tests.html">테스트 →</a>
+  <button class="theme" id="theme" aria-label="밝게/어둡게 전환">◐</button>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="tag">2단계 · 개발 체크리스트</span>
+  <h1>Heartline 만들기, 하나씩 체크</h1>
+  <p class="lead">PRD v0.6의 핵심 기능(F1~F5)과 MVP 완료 기준을 개발 순서대로 쪼갰어요. <b>⭐ 페르소나</b>가 1순위이고, <b>🔒</b>는 기본 안전 항목이에요. 4단계에서 끝낸 항목은 미리 체크돼 있어요.</p>
+  <div class="total">
+    <div class="ring" id="ring"><b id="pct">0%</b></div>
+    <div><div class="t1" id="t1">0 / 0 완료</div><div class="t2" id="t2">🔒 안전 0 / 0</div></div>
+    <div class="tools">
+      <button id="safeBtn" aria-pressed="false">🔒 안전만 보기</button>
+      <button id="foldBtn">모두 접기</button>
+      <button id="resetBtn">체크 초기화</button>
+    </div>
+  </div>
+</div></header>
+
+<main><div class="wrap">
+  <p class="note">체크 상태는 <b>이 브라우저에만</b> 저장돼요. 위키의 원본 목록은 <code>Heartline 체크리스트_261119.md</code>예요. 파일 위치: 서버 <code>agents/heartline/server/</code> · 화면 <code>docs/heartline/</code></p>
+  <div id="list"></div>
+</div></main>
+<footer>Heartline 체크리스트 · 기준 문서 <a href="https://dodo-yong.github.io/Obsidian/heartline/prd.html">PRD v0.6</a> · 2026-11-19</footer>
+
+<script>
+(function(){
+  var S='s'; // safety marker
+  var D=1; // 끝난 항목(기본 체크)
+  var DATA=[
+    {t:'준비',d:'폴더·키·비용 안전장치',items:[
+      ['','<code>agents/heartline/server/</code> 폴더와 README',0,D],
+      ['','<code>.env.example</code>에 변수 이름만, 실제 키는 <code>.env</code>(git 제외)',0,D],
+      ['','제미나이 키가 <b>무료 등급</b>(결제 연결 없음)인지 확인 — 사용자 확인'],
+      [S,'유료 과금 키가 있으면 서버 실행 거부',0,D],
+      ['','<code>cloudflared</code> 설치 확인',0,D]
+    ]},
+    {t:'답변 서버',d:'server/ — 파이썬 + 제미나이 무료',items:[
+      ['','<code>server.py</code>: /api/health · /api/chat(SSE) · /api/summarize',0,D],
+      ['','<code>gemini_client.py</code>: 가벼운 모델 먼저, 바쁘면 다음 모델',0,D],
+      ['','지시 순서: 안전 → 페르소나 카드 → 모드 → 기억',0,D],
+      ['','⭐ 페르소나 카드에 모든 설정(키워드·말버릇·관계 단계·좋아하는 것 등) 반영','F1',D],
+      ['','⭐ "이 사람답게, 일관되게" 지시','F3',D],
+      ['','영어 모드 지시: 자연스럽게, 교정 최대 2개','F4',D],
+      ['','말풍선 1~3개, 교정·위기 신호는 본문과 분리',0,D],
+      [S,'<code>safety.py</code>: 위기 감지 · 미성년·키워드 4개 이상 거부 · 개인정보 가림 · 길이 제한',0,D],
+      [S,'대화 본문을 파일·로그에 남기지 않기',0,D],
+      ['','배포 화면만 허용(CORS), 손님 사용량 제한',0,D]
+    ]},
+    {t:'화면',d:'docs/heartline/ — 나만의 연인 + 메신저',groups:[
+      ['⭐ 페르소나 만들기 (F1)',[
+        ['','프리셋 6종 + 성별 선택','F1',D],
+        ['','직접 만들기 다섯 묶음: 겉모습·성격·말투·관계·이야기','F1',D],
+        ['','아바타 이모지 8종 × 배경색 6종','F1',D],
+        ['','성격 키워드 최대 3개','F1',D],
+        ['','<b>설정을 바꾸면 첫 인사 미리보기가 바로 바뀜</b>','F1',D],
+        [S,'미성년 나이대 없음','F1',D]
+      ]],
+      ['⭐ 바꾸기 · 여러 명 (F2)',[
+        ['','대화 목록: 아바타·이름·관계 D+일·마지막 메시지','F2',D],
+        ['','최대 5명, 꽉 차면 안내','F2',D],
+        ['','상대마다 대화·기억 따로','F2',D],
+        ['','프로필 고치기: 대화 유지 + 다음 답장부터 새 모습','F2',D],
+        ['','연인 정리(삭제)','F2',D]
+      ]],
+      ['연인 대화 (F3)',[
+        ['','메신저 배치: 목록으로 · 프로필 · <b>AI 표시</b> · D+일','F3',D],
+        ['','입력 중 → 말풍선 차례 도착 · 읽음 "1" · 💗','F3',D],
+        ['','정한 말투·호칭·말버릇으로 답함 (실제 AI 확인)','F3',D],
+        ['','새로고침 유지 · 상대별 기억 요약','F3',D],
+        ['','따뜻한 피치–로즈 · 기본 밤 테마 · 휴대폰 폭','F3',D]
+      ]],
+      ['영어 모드 (F4)',[
+        ['','🇬🇧 토글 · 같은 상대가 영어로 · 교정 카드','F4',D]
+      ]],
+      ['🔒 기본 안전 (F5)',[
+        [S,'입장: 19세 확인 · AI 고지 · 개인정보 안내 · 동의','F5',D],
+        [S,'🆘 버튼 · 위험 표현엔 도움 카드(서버 꺼져도) · 영어 모드 자동 OFF','F5',D],
+        [S,'개인정보 안내 · 전송 전 전화번호·이메일 가림','F5',D]
+      ]]
+    ]},
+    {t:'검증',d:'자동 · 수동 · 품질',items:[
+      ['','자동 테스트 55/55 통과 (맛보기 모드 포함)',0,D],
+      ['','수동 시나리오 전체 (테스트 페이지)'],
+      ['','답장 품질: 페르소나 일관성 · 공감 · 금지 응답 0건 · 영어 교정']
+    ]},
+    {t:'배포',d:'공개 링크로 열기',items:[
+      ['','<code>start-public.sh</code>: 서버 + 터널 + server.json',0,D],
+      ['','<code>bump-site-version.sh</code>에 새 페이지 추가',0,D],
+      ['','공개 링크에서 터널 접속 → 연인 만들기 → 대화 → 영어 → 🆘 실제 확인'],
+      ['','휴대폰·데스크톱·다크 모드 확인',0,D]
+    ]},
+    {t:'다음 단계 산출물',d:'③ 테스트 · ④ 압축 파일 · ⑤ 발표',items:[
+      ['','③ 테스트 파일',0,D],
+      ['','④ 앱 압축 파일 <code>output/제출/2026_11_19_heartline_4_앱.zip</code>',0,D],
+      ['','⑤ 발표: <code>deck.html</code> + <code>output/제출/2026_11_19_heartline_5_발표.pptx</code>',0,D]
+    ]}
+  ];
+  var KEY='hl-checklist-v2', state={};
+  try{state=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){state={};}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+  var list=document.getElementById('list'), all=[];
+  function itemHTML(id,it){
+    var safe=it[0]===S;
+    return '<label class="it'+(safe?' s':'')+'"><input type="checkbox" data-id="'+id+'"><span>'+(safe?'<em class="safe">🔒 안전</em>':'')+it[1]+(it[2]?'<em class="f">'+it[2]+'</em>':'')+'</span></label>';
+  }
+  DATA.forEach(function(sec,si){
+    var html='', n=0;
+    function add(it){var id=si+'-'+(n++); all.push({id:id,safe:it[0]===S,sec:si}); if(!(id in state)&&it[3]) state[id]=true; html+=itemHTML(id,it);}
+    if(sec.items) sec.items.forEach(add);
+    if(sec.groups) sec.groups.forEach(function(g){html+='<div class="grp">'+g[0]+'</div>'; g[1].forEach(add);});
+    var el=document.createElement('section'); el.className='sec'; el.id='sec'+si;
+    el.innerHTML='<header role="button" tabindex="0" aria-expanded="true"><div class="num">'+si+'</div><div><h2>'+sec.t+'</h2><small>'+sec.d+'</small></div><div class="bar"><span class="cnt"></span><i><u></u></i></div><span class="chev">▾</span></header><div class="body">'+html+'</div>';
+    list.appendChild(el);
+    var h=el.querySelector('header');
+    function tog(){el.classList.toggle('closed');h.setAttribute('aria-expanded',!el.classList.contains('closed'));}
+    h.addEventListener('click',tog);
+    h.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();tog();}});
+  });
+  document.querySelectorAll('input[data-id]').forEach(function(c){
+    c.checked=!!state[c.dataset.id];
+    c.closest('label').classList.toggle('chk',c.checked);
+    c.addEventListener('change',function(){state[c.dataset.id]=c.checked; c.closest('label').classList.toggle('chk',c.checked); save(); update();});
+  });
+  function update(){
+    var done=0,sd=0,st=0;
+    all.forEach(function(a){if(state[a.id])done++; if(a.safe){st++; if(state[a.id])sd++;}});
+    var p=Math.round(done/all.length*100);
+    document.getElementById('ring').style.setProperty('--p',p);
+    document.getElementById('pct').textContent=p+'%';
+    document.getElementById('t1').textContent=done+' / '+all.length+' 완료';
+    document.getElementById('t2').textContent='🔒 안전 '+sd+' / '+st+(sd===st?' · 공개 가능 조건 충족':'');
+    DATA.forEach(function(_,si){
+      var items=all.filter(function(a){return a.sec===si;}), d=items.filter(function(a){return state[a.id];}).length;
+      var el=document.getElementById('sec'+si);
+      el.querySelector('.cnt').textContent=d+'/'+items.length;
+      el.querySelector('u').style.width=(d/items.length*100)+'%';
+      el.classList.toggle('done',d===items.length);
+    });
+  }
+  update();
+  var sb=document.getElementById('safeBtn');
+  sb.addEventListener('click',function(){var on=document.body.classList.toggle('safe-only');sb.classList.toggle('on',on);sb.setAttribute('aria-pressed',on);});
+  var fb=document.getElementById('foldBtn');
+  fb.addEventListener('click',function(){
+    var secs=document.querySelectorAll('.sec'), anyOpen=[].some.call(secs,function(s){return !s.classList.contains('closed');});
+    secs.forEach(function(s){s.classList.toggle('closed',anyOpen);s.querySelector('header').setAttribute('aria-expanded',!anyOpen);});
+    fb.textContent=anyOpen?'모두 펼치기':'모두 접기';
+  });
+  document.getElementById('resetBtn').addEventListener('click',function(){
+    if(!confirm('이 브라우저의 체크 표시를 모두 지울까요?'))return;
+    Object.keys(state).forEach(function(k){state[k]=false;});save();document.querySelectorAll('input[data-id]').forEach(function(c){c.checked=false;c.closest('label').classList.remove('chk');});update();
+  });
+  var root=document.documentElement;
+  try{var s=localStorage.getItem('hl-theme'); if(s) root.setAttribute('data-theme',s);}catch(e){}
+  document.getElementById('theme').addEventListener('click',function(){
+    var dark=root.getAttribute('data-theme')!=='light';
+    var n=dark?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('hl-theme',n);}catch(e){}
+  });
+})();
+</script>
+<script>
+/* 인쇄용(PDF 제출): ?print=1 → 밝은 테마, 접힌 내용 모두 펼침, 메뉴 숨김 */
+(function(){ if(!/print=1/.test(location.search)) return; var r=document.documentElement;
+  r.setAttribute('data-theme','light'); r.classList.add('printing');
+  document.querySelectorAll('details').forEach(function(d){d.open=true;});
+  document.querySelectorAll('.sec.closed').forEach(function(s){s.classList.remove('closed');}); })();
+</script>
+<style>
+@page{size:A4;margin:12mm}
+@media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.nav,#hud,.theme,.demo-btns,.tools button,#mreset{display:none!important}.card,.check,.suite,.mrow,label.it,.node,.sec>header{break-inside:avoid}section{padding:28px 0!important}html{scroll-behavior:auto}}
+.printing .nav{display:none}
+</style>
+</body>
+</html>
