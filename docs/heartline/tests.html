@@ -10,7 +10,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23F07A93'/%3E%3Cpath d='M16 24s-7-4.3-7-9.2A3.8 3.8 0 0 1 16 12.6a3.8 3.8 0 0 1 7 2.2C23 19.7 16 24 16 24z' fill='white'/%3E%3C/svg%3E">
 <script>
 (function () {
-  var SITE_V = '20261119152136';
+  var SITE_V = '20261119153102';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -153,7 +153,7 @@ footer{padding:30px 0 46px;text-align:center;color:var(--ink2);font-size:13px}
   <h1>만들기 전에, <span>약속부터</span> 정했어요</h1>
   <p class="lead">서버를 짜기 전에 테스트를 먼저 썼어요. 가장 중요한 약속은 <b>"내가 만든 연인의 설정이 모두 AI에게 전달된다"</b>예요. 4단계에서 50개 모두 통과했어요.</p>
   <div class="stats">
-    <div class="stat"><b>50</b><span>자동 테스트 · 모두 통과</span></div>
+    <div class="stat"><b>55</b><span>자동 테스트 · 모두 통과</span></div>
     <div class="stat"><b>⭐ 4</b><span>페르소나 반영 테스트</span></div>
     <div class="stat"><b>50</b><span>일상 문장 — 오탐 3개 이하</span></div>
     <div class="stat"><b>17</b><span>수동 시나리오 (페르소나 우선)</span></div>
@@ -164,20 +164,20 @@ footer{padding:30px 0 46px;text-align:center;color:var(--ink2);font-size:13px}
   <div class="kicker">두 가지 테스트</div>
   <h2>코드가 확인하는 것, 사람이 확인하는 것</h2>
   <div class="two vs">
-    <div class="card"><div class="ico">🤖</div><h3>① 자동 테스트</h3><p>실제 제미나이 대신 <b>가짜 AI</b>로 서버를 시험해요. 몇 번을 돌려도 <b>무료 한도를 쓰지 않고</b>, 설치할 것도 없어요(파이썬 기본 기능).</p><div style="margin-top:10px"><span class="pill p-ok">사용량 0</span> <span class="pill p-lav">50개</span></div></div>
+    <div class="card"><div class="ico">🤖</div><h3>① 자동 테스트</h3><p>실제 제미나이 대신 <b>가짜 AI</b>로 서버를 시험해요. 몇 번을 돌려도 <b>무료 한도를 쓰지 않고</b>, 설치할 것도 없어요(파이썬 기본 기능).</p><div style="margin-top:10px"><span class="pill p-ok">사용량 0</span> <span class="pill p-lav">55개</span></div></div>
     <div class="card"><div class="ico">🧑‍💻</div><h3>② 수동 시나리오</h3><p>실제 앱에서 실제 AI로 <b>사람이 직접</b> 확인해요. 화면 느낌, 공감 품질, 위기 대응처럼 코드로 판단하기 어려운 것들이에요.</p><div style="margin-top:10px"><span class="pill p-sos">무료 한도 사용</span> <span class="pill p-lav">17개</span></div></div>
   </div>
   <div class="flow" aria-label="개발 흐름">
     <div>✍️ 테스트 작성</div><i>→</i>
     <div>🛠️ 4단계: 모듈 만들기</div><i>→</i>
-    <div class="now">✅ 50개 통과 (지금)</div><i>→</i>
+    <div class="now">✅ 55개 통과 (지금)</div><i>→</i>
     <div>🧑‍💻 수동 시나리오</div>
   </div>
 </div></section>
 
 <section id="auto" class="alt"><div class="wrap">
   <div class="kicker">① 자동 테스트</div>
-  <h2>파일 4개, 테스트 50개</h2>
+  <h2>파일 5개, 테스트 55개</h2>
   <p class="sub">묶음을 눌러 어떤 걸 시험하는지 펼쳐 보세요. 4단계 구현 뒤 <b>모두 통과(pass)</b>했어요.</p>
   <p class="legend">⭐ = 페르소나(1순위) · 🔒 = 기본 안전</p>
   <div id="suites"></div>
@@ -191,7 +191,7 @@ cd agents/heartline/server
 python3 -m unittest discover -s tests -v
 
 <span class="c"># 4단계 구현 뒤 결과</span>
-Ran 50 tests ... OK</pre>
+Ran 55 tests ... OK</pre>
     </div>
     <div class="card">
       <h3>서버가 지켜야 할 약속</h3>
@@ -311,6 +311,13 @@ Ran 50 tests ... OK</pre>
       [0,'한도·바쁨이면 다음 무료 모델로'],
       [0,'모든 모델이 막히면 오류'],
       [1,'안전 규칙이 담긴 지시가 실제로 전달됨']
+    ]},
+    {ico:'🎭',f:'test_demo.py',d:'맛보기 모드 (키 없이 대본 답장)',items:[
+      [2,'⭐ 츤데레 페르소나는 츤데레 말투로'],
+      [2,'⭐ 존댓말 페르소나는 존댓말로'],
+      [0,'말풍선 1~3개'],
+      [0,'영어 모드에서 교정 카드'],
+      [1,'위기 문장엔 안부 확인 + 109 안내']
     ]}
   ];
   var host=document.getElementById('suites');

@@ -178,3 +178,5 @@ legend{font-weight:800;padding:0 6px;font-size:15px}
 .seg.stage button{font-size:13px;padding:8px 4px}
 .icon.back{width:28px;margin-left:-4px}
 #profKw{margin:2px 0 4px}
+
+.demo-note{margin:0;padding:7px 14px;font-size:12.5px;text-align:center;background:color-mix(in srgb,var(--lav) 22%,var(--card));color:var(--ink)}

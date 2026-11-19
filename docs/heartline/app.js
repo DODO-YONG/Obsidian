@@ -368,7 +368,14 @@
   function findServer() {
     var h = location.hash.match(/server=([^&]+)/);
     if (h) { server = decodeURIComponent(h[1]).replace(/\/$/, ''); return Promise.resolve(server); }
-    if (location.port === '8766') { server = ''; return Promise.resolve(server); }
+    // 서버가 이 화면을 직접 보여 주는 경우(압축 파일·로컬 실행): 같은 주소에 서버가 있다
+    return fetch('/api/health', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+      .then(function (j) {
+        if (j && j.ok) { server = ''; return server; }
+        return fetchBoard();
+      });
+  }
+  function fetchBoard() {
     return fetch('server.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); })
       .then(function (j) { server = j && j.url ? j.url.replace(/\/$/, '') : null; }).catch(function () { server = null; })
       .then(function () { if (server === null && /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) server = 'http://127.0.0.1:8766'; return server; });
@@ -376,7 +383,7 @@
   function checkHealth() {
     if (server === null) { setOnline(false); return Promise.resolve(false); }
     return fetch(server + '/api/health', { cache: 'no-store' }).then(function (r) { return r.json(); })
-      .then(function (j) { setOnline(!!(j && j.ok && j.ai)); return online; }).catch(function () { setOnline(false); return false; });
+      .then(function (j) { setOnline(!!(j && j.ok && j.ai)); $('demoNote').hidden = !(j && j.demo); return online; }).catch(function () { setOnline(false); return false; });
   }
   function setOnline(v) { online = v; $('aiDot').classList.toggle('on', v); $('aiDot').title = v ? 'AI 연결됨' : '지금은 답하기 어려워요'; }
 

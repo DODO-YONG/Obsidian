@@ -23,7 +23,7 @@ date: 2026-11-19
 1. ✅ PRD (2026-11-19 v0.6, 페르소나 1순위로 재구성)
 2. ✅ 체크리스트 (2026-11-19) — [[Heartline 체크리스트_261119]] · [보기 좋은 페이지](https://dodo-yong.github.io/Obsidian/heartline/checklist.html), 51개 항목(🔒 안전 15)
 3. ✅ 테스트 파일 (2026-11-19) — [[Heartline 테스트 계획_261119]] · [보기 좋은 페이지](https://dodo-yong.github.io/Obsidian/heartline/tests.html): 자동 테스트 46개(`agents/heartline/server/tests/`, 가짜 AI·설치 없음, 구현 전이라 skip) + 수동 시나리오
-4. ✅ 앱 + 압축 파일 (2026-11-19) — 앱 https://dodo-yong.github.io/Obsidian/heartline/ · `output/2026_11_19_heartline.zip` · 자동 테스트 50/50 통과
+4. ✅ 앱 + 압축 파일 (2026-11-19) — 앱 https://dodo-yong.github.io/Obsidian/heartline/ · `output/2026_11_19_heartline.zip` · 자동 테스트 55/55 통과
 5. ✅ 발표 (2026-11-19) — 7장·3~5분, [발표 페이지](https://dodo-yong.github.io/Obsidian/heartline/deck.html)(시연·작동 방식 그대로 움직임, N=발표자 메모, F=전체화면) · `output/2026_11_19_heartline_발표.pptx`(슬라이드 이미지 + 메모)
 
 ## 설계 결정
@@ -48,6 +48,11 @@ date: 2026-11-19
 - 프리셋 6종·직접 만들기 다섯 묶음·실시간 미리보기, 대화 목록 최대 5명, 프로필 고치기(대화 유지)·정리, 예전 데이터 자동 이동 — 브라우저 자동 조작으로 확인.
 - 실제 AI: 츤데레 프리셋이 "야근까지 했어? 고생했네. 몸 상하게 왜 그렇게 무리해, 밥은 챙겨 먹은 거야?"처럼 설정대로 답함.
 - 자동 테스트 50/50 (페르소나 카드 반영 테스트 4개 추가).
+
+## 압축 파일로 다른 사람이 실행 (2026-11-19)
+- `make-zip.sh` → `Heartline/` 폴더: 시작하기 안내서(html·txt)·더블클릭 실행 파일(맥 .command·윈도우 .bat)·start.py·server/·web/.
+- 키가 없으면 **맛보기 모드**(`demo.py`, 페르소나 말투별 대본·영어 교정·🆘) → 받은 사람이 키 없이도 체험. 키를 넣으면 진짜 AI.
+- 다른 폴더에 풀어서 실제 실행 확인: 테스트 55/55, 맛보기 배너·츤데레 대본 답장 동작. 윈도우·다른 맥에서는 아직 시험 안 함.
 
 ## 남은 일
 - 공개 모드(`start-public.sh`)로 실제 터널 접속 확인

@@ -15,12 +15,21 @@ from collections import defaultdict, deque
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+import demo
 import gemini_client as gc
 import prompts
 import safety
 
 HERE = Path(__file__).resolve().parent
-WEB_DIR = Path(os.environ.get("HEARTLINE_WEB_DIR") or HERE.parents[2] / "docs" / "heartline")
+def _web_dir():
+    if os.environ.get("HEARTLINE_WEB_DIR"):
+        return Path(os.environ["HEARTLINE_WEB_DIR"])
+    if (HERE.parent / "web" / "index.html").exists():   # 배포용 압축 파일 구조: Heartline/server · Heartline/web
+        return HERE.parent / "web"
+    return HERE.parents[2] / "docs" / "heartline"        # 저장소 구조
+
+
+WEB_DIR = _web_dir()
 PAID_KEYS = ("ANTHROPIC_API_KEY", "OPENAI_API_KEY")
 MAX_BODY = 32 * 1024
 MAX_RECENT = 20
@@ -116,6 +125,7 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/health":
             g = self.guest_id()
             return self.send_json(200, {"ok": True, "ai": self.server.llm is not None,
+                                        "demo": bool(getattr(self.server.llm, "demo", False)),
                                         "remaining": self.server.limiter.remaining(g) if g else None})
         self.serve_static(path)
 
@@ -253,11 +263,11 @@ def main():
     refuse_paid_billing()
     port = int(gc.env("HEARTLINE_PORT", "8766"))
     origins = [o.strip() for o in (gc.env("HEARTLINE_ORIGINS") or "").split(",") if o.strip()]
-    llm = gc.from_env()
+    llm = gc.from_env() or demo.DemoLLM()
     srv = make_server("127.0.0.1", port, llm, origins,
                       int(gc.env("HEARTLINE_GUEST_PER_HOUR", "30")), int(gc.env("HEARTLINE_DAILY_LIMIT", "300")))
     print(f"💗 Heartline 답변 서버: http://127.0.0.1:{port}")
-    print(f"   AI 키: {'있음' if llm else '없음 (.env 에 GOOGLE_API_KEY)'} · 허용 화면: {', '.join(sorted(srv.allowed_origins))}")
+    print(f"   AI: {'맛보기 모드 (키 없음 · 미리 써 둔 답장)' if getattr(llm, 'demo', False) else '제미나이 무료 등급'} · 허용 화면: {', '.join(sorted(srv.allowed_origins))}")
     print("   대화 본문은 저장·기록하지 않아요. 끄기: Ctrl+C")
     try:
         srv.serve_forever()

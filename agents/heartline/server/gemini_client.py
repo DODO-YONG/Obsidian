@@ -34,7 +34,10 @@ class AllModelsBusy(Exception):
 def env(name, default=None):
     if os.environ.get(name):
         return os.environ[name]
-    for f in (HERE / ".env", HERE.parents[2] / ".env"):
+    files = [HERE / ".env"]
+    if (HERE.parents[2] / "docs" / "heartline").exists():  # 저장소 안에서 실행할 때만 루트 .env 도 본다
+        files.append(HERE.parents[2] / ".env")
+    for f in files:
         if f.exists():
             for line in f.read_text(encoding="utf-8").splitlines():
                 if line.startswith(name + "="):
