@@ -12,6 +12,7 @@ date: 2026-11-19
 상위: [[heartline]] · 기준: [[Heartline PRD_261119]] · [[Heartline 체크리스트_261119]]
 
 > 구현 **전에** 테스트를 먼저 썼다. 테스트가 "서버가 이렇게 동작해야 한다"는 약속이 되고, 4단계 개발은 이 테스트를 통과시키는 것이 목표.
+> 보기 좋은 페이지: https://dodo-yong.github.io/Obsidian/heartline/tests.html (수동 시나리오 통과/실패를 바로 기록, 브라우저 저장)
 > 두 가지로 나눈다: **① 자동 테스트**(가짜 AI, 사용량 0) · **② 수동 시나리오**(실제 앱·실제 AI, 사람이 확인)
 
 ## ① 자동 테스트 — `agents/heartline/server/tests/`

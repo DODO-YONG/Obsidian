@@ -91,3 +91,5 @@
 ## [2026-11-19] output | Heartline 작동 방식: 끝나면 처음부터 반복 재생, 장면 바꾸면 자동 재생, ◀ ▶·막대 누르면 멈추고 그 단계 보기
 
 ## [2026-11-19] output | Heartline 3단계 테스트: 자동 테스트 46개(agents/heartline/server/tests/, unittest·가짜 AI, 구현 전 skip) + 위기 30·일상 50·품질 시나리오 + 수동 시나리오 → [[Heartline 테스트 계획_261119]]
+
+## [2026-11-19] output | Heartline 테스트 페이지 docs/heartline/tests.html: 자동 테스트 46개 목록, 시나리오 데이터 요약(위기 문장 원문은 비공개), 수동 시나리오 통과/실패 기록 → https://dodo-yong.github.io/Obsidian/heartline/tests.html
