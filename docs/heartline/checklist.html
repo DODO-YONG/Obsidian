@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Heartline 체크리스트</title>
+<meta name="description" content="Heartline 개발 체크리스트(2단계): PRD의 핵심 기능과 MVP 완료 기준을 개발 순서대로 쪼갠 목록.">
+<meta name="theme-color" content="#FFE9E3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1F161C" media="(prefers-color-scheme: dark)">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23F07A93'/%3E%3Cpath d='M16 24s-7-4.3-7-9.2A3.8 3.8 0 0 1 16 12.6a3.8 3.8 0 0 1 7 2.2C23 19.7 16 24 16 24z' fill='white'/%3E%3C/svg%3E">
+<script>
+(function () {
+  var SITE_V = '20261119142510';
+  fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
+    if (!j.v || j.v === SITE_V) return;
+    var k = 'site-reloaded-' + j.v;
+    try { if (sessionStorage.getItem(k)) return; sessionStorage.setItem(k, '1'); } catch (e) { return; }
+    location.replace(location.pathname + '?v=' + j.v + location.hash);
+  }).catch(function () {});
+})();
+</script>
+<style>
+:root{
+  --bg:#FFF6F3; --bg2:#FFE9E3; --bg3:#FFD6DE; --card:#FFFFFF; --ink:#3A2A30; --ink2:#7A6168; --line:#F3D9DE;
+  --rose:#F07A93; --rose-d:#D85C78; --lav:#9D8CF0; --lav-bg:#F1EEFF; --sos:#E8833A; --sos-bg:#FFF2E6; --ok:#3CA88E;
+  --shadow:0 10px 30px rgba(216,92,120,.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1F161C; --bg2:#2A1E26; --bg3:#3A2531; --card:#2C2028; --ink:#F7E9EE; --ink2:#C7AAB4; --line:#43303B;
+    --rose:#F28CA2; --rose-d:#F28CA2; --lav:#B7A8FF; --lav-bg:#2E2840; --sos:#F2A061; --sos-bg:#3A2A1E; --ok:#5CC9AE;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1F161C; --bg2:#2A1E26; --bg3:#3A2531; --card:#2C2028; --ink:#F7E9EE; --ink2:#C7AAB4; --line:#43303B;
+  --rose:#F28CA2; --rose-d:#F28CA2; --lav:#B7A8FF; --lav-bg:#2E2840; --sos:#F2A061; --sos-bg:#3A2A1E; --ok:#5CC9AE;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,-apple-system,"Apple SD Gothic Neo",sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--rose-d)}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:12px;height:56px}
+.brand{font-weight:800;white-space:nowrap}
+.brand i{font-style:normal;color:var(--rose)}
+.nav .sp{flex:1}
+.nav a.lnk{font-size:14px;text-decoration:none;color:var(--ink2);padding:6px 10px;border-radius:999px;white-space:nowrap}
+.nav a.lnk:hover{background:var(--bg2)}
+.theme{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;width:34px;height:34px;cursor:pointer;flex:none}
+.hero{background:linear-gradient(160deg,var(--bg2),var(--bg3));padding:44px 0 36px}
+.tag{display:inline-block;font-size:13px;font-weight:600;color:var(--rose-d);background:var(--card);border-radius:999px;padding:4px 12px}
+h1{font-size:clamp(28px,4.4vw,40px);margin:14px 0 8px;letter-spacing:-.02em}
+.lead{color:var(--ink2);margin:0 0 20px}
+.total{display:flex;align-items:center;gap:18px;background:var(--card);border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);flex-wrap:wrap}
+.ring{--p:0;width:74px;height:74px;border-radius:50%;background:conic-gradient(var(--rose) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;flex:none}
+.ring b{width:58px;height:58px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:17px}
+.total .t1{font-weight:700;font-size:17px}
+.total .t2{color:var(--ink2);font-size:14px}
+.tools{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.tools button{font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 12px;cursor:pointer}
+.tools button.on{background:var(--sos);border-color:var(--sos);color:#fff}
+main{padding:28px 0 40px}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:20px;margin-bottom:16px;box-shadow:var(--shadow);overflow:hidden}
+.sec>header{display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;user-select:none}
+.sec>header .num{width:32px;height:32px;border-radius:10px;background:var(--bg2);color:var(--rose-d);display:grid;place-items:center;font-weight:800;flex:none}
+.sec.done>header .num{background:var(--ok);color:#fff}
+.sec h2{font-size:18px;margin:0}
+.sec small{color:var(--ink2);font-size:13px}
+.sec .bar{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);flex:none}
+.sec .bar i{display:block;width:90px;height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+.sec .bar i u{display:block;height:100%;background:var(--rose);width:0;transition:width .3s}
+.sec.done .bar i u{background:var(--ok)}
+.sec .chev{transition:transform .2s;color:var(--ink2)}
+.sec.closed .chev{transform:rotate(-90deg)}
+.sec.closed .body{display:none}
+.body{padding:0 18px 14px}
+.grp{font-size:13px;font-weight:700;color:var(--ink2);margin:12px 0 4px}
+label.it{display:flex;gap:12px;align-items:flex-start;padding:9px 6px;border-radius:12px;cursor:pointer}
+label.it:hover{background:var(--bg)}
+label.it input{appearance:none;-webkit-appearance:none;flex:none;width:22px;height:22px;margin:1px 0 0;border:2px solid var(--rose);border-radius:7px;display:grid;place-items:center;cursor:pointer;background:var(--card)}
+label.it input:checked{background:var(--rose)}
+label.it input:checked::after{content:"✓";color:#fff;font-size:13px;font-weight:800}
+label.it input:focus-visible{outline:3px solid color-mix(in srgb,var(--rose) 40%,transparent);outline-offset:2px}
+label.it span{font-size:15px}
+label.it.chk span{color:var(--ink2);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--ink2) 50%,transparent)}
+.safe{display:inline-block;font-size:11px;font-weight:700;color:var(--sos);background:var(--sos-bg);border-radius:6px;padding:0 6px;margin-right:6px;vertical-align:1px}
+.f{display:inline-block;font-size:11px;font-weight:700;color:var(--lav);background:var(--lav-bg);border-radius:6px;padding:0 6px;margin-left:6px;vertical-align:1px}
+body.safe-only label.it:not(.s){display:none}
+body.safe-only .grp{display:none}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.86em;background:var(--bg2);padding:1px 6px;border-radius:6px}
+.note{font-size:14px;color:var(--ink2);background:var(--card);border-left:4px solid var(--rose);border-radius:10px;padding:12px 14px;margin-bottom:18px}
+footer{padding:10px 0 44px;text-align:center;color:var(--ink2);font-size:13px}
+@media (max-width:560px){
+  .sec .bar i{width:54px}
+  .sec>header{padding:14px}
+  .body{padding:0 10px 12px}
+  .tools{margin-left:0}
+  .nav a.lnk{display:none}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap">
+  <div class="brand"><i>♥</i> Heartline <span style="font-weight:500;color:var(--ink2);font-size:13px">체크리스트</span></div>
+  <div class="sp"></div>
+  <a class="lnk" href="prd.html">← PRD 보기</a>
+  <button class="theme" id="theme" aria-label="밝게/어둡게 전환">◐</button>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="tag">2단계 · 개발 체크리스트</span>
+  <h1>Heartline 만들기, 하나씩 체크</h1>
+  <p class="lead">PRD v0.5의 핵심 기능(F1~F4)과 MVP 완료 기준을 개발 순서대로 쪼갰어요. <b>🔒 안전</b> 항목은 하나라도 안 되면 공개하지 않아요.</p>
+  <div class="total">
+    <div class="ring" id="ring"><b id="pct">0%</b></div>
+    <div><div class="t1" id="t1">0 / 0 완료</div><div class="t2" id="t2">🔒 안전 0 / 0</div></div>
+    <div class="tools">
+      <button id="safeBtn" aria-pressed="false">🔒 안전만 보기</button>
+      <button id="foldBtn">모두 접기</button>
+      <button id="resetBtn">체크 초기화</button>
+    </div>
+  </div>
+</div></header>
+
+<main><div class="wrap">
+  <p class="note">체크 상태는 <b>이 브라우저에만</b> 저장돼요. 위키의 원본 목록은 <code>Heartline 체크리스트_261119.md</code>예요. 파일 위치: 서버 <code>agents/heartline/server/</code> · 화면 <code>docs/heartline/</code></p>
+  <div id="list"></div>
+</div></main>
+<footer>Heartline 체크리스트 · 기준 문서 <a href="prd.html">PRD v0.5</a> · 2026-11-19</footer>
+
+<script>
+(function(){
+  var S='s'; // safety marker
+  var DATA=[
+    {t:'준비',d:'폴더·키·비용 안전장치',items:[
+      ['','<code>agents/heartline/server/</code> 폴더와 README 만들기 (README ↔ 위키 허브 링크)'],
+      ['','<code>.env.example</code>에 <code>GOOGLE_API_KEY</code> 이름만, 실제 키는 <code>.env</code>(git 제외)'],
+      ['','제미나이 키가 <b>무료 등급</b>(결제 연결 없음)인지 확인'],
+      [S,'서버 시작 시 유료 과금 키가 있으면 실행 거부 (<code>refuse_paid_billing</code>)'],
+      ['','<code>cloudflared</code> 설치 확인']
+    ]},
+    {t:'답변 서버',d:'server/ — 파이썬 + 제미나이 무료',items:[
+      ['','<code>server.py</code>: 표준 라이브러리 서버, 포트 8766'],
+      ['','<code>GET /api/health</code>: 켜짐 상태 응답'],
+      ['','<code>POST /api/chat</code>: 답장을 글자 단위로 스트리밍(SSE)'],
+      ['','<code>gemini_client.py</code>: 무료 등급 호출, 한도·바쁨이면 다음 무료 모델로'],
+      ['','<code>prompts.py</code>: 안전 규칙 → 페르소나 → 모드 → 기억 요약 순서'],
+      ['','마음 대화 지시: 공감부터, 질문 하나씩, 진단·약 조언 금지','F2'],
+      ['','영어 모드 지시: 자연스러운 대화, 교정 최대 2개, 힘든 얘기면 마음 대화로','F4'],
+      ['','답장을 짧은 말풍선 1~3개로 나눠 보내도록 지시','F2'],
+      ['','교정 카드·위기 신호를 본문과 분리해 화면에 따로 전달'],
+      [S,'<code>safety.py</code>: 위기 표현 감지, 미성년 페르소나 거부, 전화번호·이메일 가림, 길이 제한'],
+      [S,'대화 본문을 파일·로그에 남기지 않기'],
+      ['','배포한 화면에서 온 요청만 받기(CORS), 방문자별 사용량 제한']
+    ]},
+    {t:'화면',d:'docs/heartline/ — 메신저 같은 대화방',groups:[
+      ['입장 · 페르소나',[
+        [S,'입장 화면: 19세 확인, "AI이며 상담을 대신하지 않음", 개인정보 안내 → 동의해야 입장','F1'],
+        ['','프리셋 3종(다정한 연상 / 장난꾸러기 동갑 / 차분한 지적인 타입), 성별 선택','F1'],
+        ['','직접 만들기: 이름·성별·호칭·성격·말투·사귄 날','F1'],
+        [S,'미성년 나이대는 선택 불가','F1']
+      ]],
+      ['대화방',[
+        ['','메신저 배치: 프로필 사진·이름·<b>AI 표시</b>·상태 메시지 / 말풍선 / 입력창','F2'],
+        ['','입력 중 "···" → 말풍선이 차례로 도착','F2'],
+        ['','보낸 시각, 날짜 구분선, 읽음 "1"','F2'],
+        ['','말풍선 두 번 탭 → 💗 반응','F2'],
+        ['','대화·페르소나를 브라우저(IndexedDB)에 저장, 새로고침해도 유지','F2'],
+        ['','기억 요약 → 다시 오면 지난 이야기를 이어 감','F2'],
+        ['','따뜻한 피치–로즈 디자인, 밤 테마, 폭 360px에서도 안 깨짐','F2']
+      ]],
+      ['위기 대응',[
+        [S,'🆘 버튼 항상 보임 → 109 · 1577-0199 · 112 · 119','F3'],
+        [S,'위험 표현이면 캐릭터를 멈추고 안부 확인 + 도움 카드','F3'],
+        [S,'브라우저 키워드 + 서버(AI) 판단 2중 감지','F3'],
+        [S,'서버가 꺼져 있어도 🆘와 키워드 감지 동작','F3']
+      ]],
+      ['영어 모드',[
+        ['','🇬🇧 토글, 켜면 같은 상대가 영어로 대화','F4'],
+        ['','틀린 문장 아래 교정 카드(고친 문장 + 짧은 이유)','F4'],
+        ['','위기 신호가 오면 영어 모드 자동으로 끄기','F4']
+      ]],
+      ['그 밖의 화면',[
+        ['','설정: 페르소나 수정, 대화 전체 삭제'],
+        ['','<code>server.json</code>으로 서버 자동 연결, 꺼져 있으면 "지금은 답하기 어려워요"'],
+        [S,'입력창 아래 개인정보 안내, 전송 전 전화번호·이메일 가림']
+      ]]
+    ]},
+    {t:'안전 검증',d:'공개 전 필수',items:[
+      [S,'위기 문장 시험 세트(직접·간접 표현) <b>100%</b> 도움 카드 표시'],
+      [S,'진단·약 조언·의존 유도·성적 응답 0건'],
+      [S,'미성년 페르소나 시도 → 화면·서버 모두 거부'],
+      [S,'전화번호·이메일 넣고 보내면 가려진 채 전송'],
+      [S,'서버 로그에 대화 본문이 없는지 확인']
+    ]},
+    {t:'배포',d:'공개 링크로 열기',items:[
+      ['','<code>start-public.sh</code>: 서버 + 터널 켜고 <code>server.json</code> 갱신, 끄면 "꺼짐"'],
+      ['','<code>bump-site-version.sh</code>에 새 페이지 추가 후 실행'],
+      ['','공개 링크에서 접속 → 대화 → 영어 모드 → 🆘까지 실제 확인'],
+      ['','휴대폰·데스크톱·다크 모드 확인']
+    ]},
+    {t:'다음 단계 산출물',d:'③ 테스트 · ④ 압축 파일 · ⑤ 발표',items:[
+      ['','③ 테스트 파일: <code>server/tests/</code>(가짜 AI) + 위기·공감 시나리오 목록'],
+      ['','④ 앱 압축 파일: <code>.env</code>·<code>__pycache__</code> 빼고 <code>output/YYYY_MM_DD_heartline.zip</code>'],
+      ['','⑤ 발표 PPT: <code>wiki/projects/heartline/output/</code>'],
+      ['','README 지도 상태 바꾸기(🟨 기획 → 🟦 개발중 → 🟩 완료)']
+    ]}
+  ];
+  var KEY='hl-checklist-v1', state={};
+  try{state=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){state={};}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+  var list=document.getElementById('list'), all=[];
+  function itemHTML(id,it){
+    var safe=it[0]===S;
+    return '<label class="it'+(safe?' s':'')+'"><input type="checkbox" data-id="'+id+'"><span>'+(safe?'<em class="safe">🔒 안전</em>':'')+it[1]+(it[2]?'<em class="f">'+it[2]+'</em>':'')+'</span></label>';
+  }
+  DATA.forEach(function(sec,si){
+    var html='', n=0;
+    function add(it){var id=si+'-'+(n++); all.push({id:id,safe:it[0]===S,sec:si}); html+=itemHTML(id,it);}
+    if(sec.items) sec.items.forEach(add);
+    if(sec.groups) sec.groups.forEach(function(g){html+='<div class="grp">'+g[0]+'</div>'; g[1].forEach(add);});
+    var el=document.createElement('section'); el.className='sec'; el.id='sec'+si;
+    el.innerHTML='<header role="button" tabindex="0" aria-expanded="true"><div class="num">'+si+'</div><div><h2>'+sec.t+'</h2><small>'+sec.d+'</small></div><div class="bar"><span class="cnt"></span><i><u></u></i></div><span class="chev">▾</span></header><div class="body">'+html+'</div>';
+    list.appendChild(el);
+    var h=el.querySelector('header');
+    function tog(){el.classList.toggle('closed');h.setAttribute('aria-expanded',!el.classList.contains('closed'));}
+    h.addEventListener('click',tog);
+    h.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();tog();}});
+  });
+  document.querySelectorAll('input[data-id]').forEach(function(c){
+    c.checked=!!state[c.dataset.id];
+    c.closest('label').classList.toggle('chk',c.checked);
+    c.addEventListener('change',function(){state[c.dataset.id]=c.checked; if(!c.checked) delete state[c.dataset.id]; c.closest('label').classList.toggle('chk',c.checked); save(); update();});
+  });
+  function update(){
+    var done=0,sd=0,st=0;
+    all.forEach(function(a){if(state[a.id])done++; if(a.safe){st++; if(state[a.id])sd++;}});
+    var p=Math.round(done/all.length*100);
+    document.getElementById('ring').style.setProperty('--p',p);
+    document.getElementById('pct').textContent=p+'%';
+    document.getElementById('t1').textContent=done+' / '+all.length+' 완료';
+    document.getElementById('t2').textContent='🔒 안전 '+sd+' / '+st+(sd===st?' · 공개 가능 조건 충족':'');
+    DATA.forEach(function(_,si){
+      var items=all.filter(function(a){return a.sec===si;}), d=items.filter(function(a){return state[a.id];}).length;
+      var el=document.getElementById('sec'+si);
+      el.querySelector('.cnt').textContent=d+'/'+items.length;
+      el.querySelector('u').style.width=(d/items.length*100)+'%';
+      el.classList.toggle('done',d===items.length);
+    });
+  }
+  update();
+  var sb=document.getElementById('safeBtn');
+  sb.addEventListener('click',function(){var on=document.body.classList.toggle('safe-only');sb.classList.toggle('on',on);sb.setAttribute('aria-pressed',on);});
+  var fb=document.getElementById('foldBtn');
+  fb.addEventListener('click',function(){
+    var secs=document.querySelectorAll('.sec'), anyOpen=[].some.call(secs,function(s){return !s.classList.contains('closed');});
+    secs.forEach(function(s){s.classList.toggle('closed',anyOpen);s.querySelector('header').setAttribute('aria-expanded',!anyOpen);});
+    fb.textContent=anyOpen?'모두 펼치기':'모두 접기';
+  });
+  document.getElementById('resetBtn').addEventListener('click',function(){
+    if(!confirm('이 브라우저의 체크 표시를 모두 지울까요?'))return;
+    state={};save();document.querySelectorAll('input[data-id]').forEach(function(c){c.checked=false;c.closest('label').classList.remove('chk');});update();
+  });
+  var root=document.documentElement;
+  try{var s=localStorage.getItem('hl-theme'); if(s) root.setAttribute('data-theme',s);}catch(e){}
+  document.getElementById('theme').addEventListener('click',function(){
+    var dark=root.getAttribute('data-theme')!=='light';
+    var n=dark?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('hl-theme',n);}catch(e){}
+  });
+})();
+</script>
+</body>
+</html>

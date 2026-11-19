@@ -83,3 +83,5 @@
 ## [2026-11-19] output | Heartline PRD 시각화 페이지 `docs/heartline/prd.html`(대화방 시연·기능 카드·구조도·MVP 체크) → 공개 링크 https://dodo-yong.github.io/Obsidian/heartline/prd.html
 
 ## [2026-11-19] output | Heartline PRD 페이지에 재생형 '작동 방식' 추가(마음 대화·위기 대응·영어 모드 통신 흐름 + 역할 트리 + 설계 이유, docs/heartline/how.*), 페이지 기본 다크 모드
+
+## [2026-11-19] output | Heartline 2단계 체크리스트 → [[Heartline 체크리스트_261119]], 페이지 https://dodo-yong.github.io/Obsidian/heartline/checklist.html (진행률·안전만 보기, 체크는 브라우저 저장)

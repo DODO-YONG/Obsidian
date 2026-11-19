@@ -21,7 +21,7 @@ date: 2026-11-19
 
 ## 진행 단계
 1. ✅ PRD (2026-11-19 v0.5, 핵심만 남김)
-2. ⏳ 체크리스트
+2. ✅ 체크리스트 (2026-11-19) — [[Heartline 체크리스트_261119]] · [보기 좋은 페이지](https://dodo-yong.github.io/Obsidian/heartline/checklist.html), 51개 항목(🔒 안전 15)
 3. ⏳ 테스트 파일
 4. ⏳ 앱 압축 파일 (`output/`)
 5. ⏳ 발표 PPT (`output/`)

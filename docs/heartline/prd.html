@@ -10,12 +10,12 @@
 <meta name="theme-color" content="#FFE9E3" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1F161C" media="(prefers-color-scheme: dark)">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link rel="stylesheet" href="how.css?v=20261119142209">
+<link rel="stylesheet" href="how.css?v=20261119142510">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23F07A93'/%3E%3Cpath d='M16 24s-7-4.3-7-9.2A3.8 3.8 0 0 1 16 12.6a3.8 3.8 0 0 1 7 2.2C23 19.7 16 24 16 24z' fill='white'/%3E%3C/svg%3E">
 <script>
 /* 새 버전 자동 확인 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261119142209';
+  var SITE_V = '20261119142510';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -210,6 +210,7 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
     <li><a href="#how">작동 방식</a></li>
     <li><a href="#tech">Tech Spec</a></li>
     <li><a href="#mvp">MVP</a></li>
+    <li><a href="checklist.html">체크리스트</a></li>
   </ul>
   <button class="theme" id="theme" aria-label="밝게/어둡게 전환">◐</button>
 </div></nav>
@@ -220,7 +221,7 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
     <h1>기댈 사람이 없을 때,<br><span>언제든 곁에 있는</span> 사람</h1>
     <p class="lead">Heartline은 직접 만든 가상 연인과 <b>메신저로 톡하듯</b> 마음을 나누는 웹앱이에요. 원하면 같은 상대와 <b>영어 대화 연습</b>도 할 수 있어요.</p>
     <div class="steps">
-      <b class="on">① PRD</b><b>② 체크리스트</b><b>③ 테스트</b><b>④ 앱 압축 파일</b><b>⑤ 발표 PPT</b>
+      <b class="on">① PRD</b><a href="checklist.html" style="text-decoration:none"><b>② 체크리스트 →</b></a><b>③ 테스트</b><b>④ 앱 압축 파일</b><b>⑤ 발표 PPT</b>
     </div>
   </div>
   <div>
@@ -512,6 +513,6 @@ footer{padding:36px 0 48px;text-align:center;color:var(--ink2);font-size:13px}
   scenes.heart();
 })();
 </script>
-<script src="how.js?v=20261119142209" defer></script>
+<script src="how.js?v=20261119142510" defer></script>
 </body>
 </html>

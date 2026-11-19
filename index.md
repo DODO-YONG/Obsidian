@@ -37,6 +37,7 @@
 
 - [[heartline]] — 허브: DY-007 CUPID(제안) · 기댈 사람 없는 이를 위한 정서 지원 가상 연인 웹앱 Heartline(+영어 모드) (기획)
 - [[Heartline PRD_261119]] — PRD v0.5(핵심만): 정서 지원 가상 연인 + 영어 모드, 핵심 기능 4개(페르소나·마음 대화·위기 대응·영어 모드), 메신저 UI, HTML/JS + 서버 + 터널 + 제미나이 무료, MVP 완료 기준. 시각화 페이지: `docs/heartline/prd.html`
+- [[Heartline 체크리스트_261119]] — 2단계 개발 체크리스트: 준비·서버·화면(F1~F4)·안전 검증·배포·다음 산출물, 51개(🔒 안전 15). 페이지 `docs/heartline/checklist.html`
 
 # 🔗 공통 (shared)
 - [[나]] — 사용자 본인 페이지
