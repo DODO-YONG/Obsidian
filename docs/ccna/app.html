@@ -231,7 +231,7 @@
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261120124859';
+  var SITE_V = '20261120133358';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -241,7 +241,7 @@
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
-<script src="tracer-auth.js?v=20261120124859"></script>
+<script src="tracer-auth.js?v=20261120133358"></script>
 </head>
 <body>
 <header>
@@ -276,7 +276,7 @@
     <div class="help" id="connHelp" hidden>
       <div id="helpMsg"><b>AI 문제·해설은 구글 로그인 후 쓸 수 있어요.</b> 서브넷 계산 문제는 로그인 없이 언제나 풀 수 있어요.</div>
       <div><button class="btn primary" id="helpLogin" type="button">Google로 로그인</button></div>
-      <div class="note" style="margin:0">로그인하면 이메일·이름과 이용 기록(언제·무엇을 했는지, 기기 종류)이 저장되고, 진도·레벨이 계정에 남아 다른 기기에서도 이어져요. IP 주소는 저장하지 않아요. 입력한 문제와 답은 구글 제미나이로 전송되니 개인정보는 넣지 마세요. <a href="privacy.html" style="color:inherit">개인정보 처리방침</a></div>
+      <div class="note" id="helpNote" style="margin:0">로그인하면 이메일·이름과 이용 기록(언제·무엇을 했는지, 기기 종류)이 저장되고, 진도·레벨이 계정에 남아 다른 기기에서도 이어져요. IP 주소는 저장하지 않아요. 입력한 문제와 답은 구글 제미나이로 전송되니 개인정보는 넣지 마세요. <a href="privacy.html" style="color:inherit">개인정보 처리방침</a></div>
     </div>
     <!-- 문제 풀기 -->
     <section id="view-practice" aria-labelledby="tab-practice">
@@ -776,6 +776,7 @@ var Subnet = (function () {
   }
   function helpText() {
     var u = state.user; if (!u) return 'AI 문제·해설은 구글 로그인 후 쓸 수 있어요.';
+    if (state.online) return '로그인되어 있어요. AI 문제·해설을 쓸 수 있어요' + (u.ai_left >= 9999 ? '.' : ' (오늘 ' + u.ai_left + '회 남음, 한도를 다 쓰면 저장된 문제가 나와요).') + ' 로그아웃은 오른쪽 위에서 할 수 있어요.';
     if (u.status === 'blocked') return '이용이 제한된 계정이에요. 관리자에게 문의해 주세요. (서브넷 계산은 계속 풀 수 있어요)';
     if (u.status === 'pending') return '관리자 승인을 기다리고 있어요. 승인되면 AI 문제를 쓸 수 있어요. (서브넷 계산은 바로 풀 수 있어요)';
     return '오늘 쓸 수 있는 AI 요청을 모두 썼어요. 저장된 문제는 계속 나올 수 있어요.';
@@ -783,7 +784,7 @@ var Subnet = (function () {
   function showHelp() {
     var u = state.user;
     $('#helpMsg').innerHTML = u ? '<b>' + esc(helpText()) + '</b>' : '<b>AI 문제·해설은 구글 로그인 후 쓸 수 있어요.</b> 서브넷 계산 문제는 로그인 없이 언제나 풀 수 있어요.';
-    $('#helpLogin').hidden = !!u || !state.ready; $('#connHelp').hidden = false; if (!u) $('#helpLogin').focus();
+    $('#helpLogin').hidden = !!u || !state.ready; $('#helpNote').hidden = !!u; $('#connHelp').hidden = false; if (!u && state.ready) $('#helpLogin').focus();
   }
   function setOnline(on) {
     state.online = on;
@@ -798,6 +799,7 @@ var Subnet = (function () {
     $('#adminLink').hidden = !(u && u.admin);
     // 저장소에 문제가 남아 있으면 한도를 다 써도 문제는 나올 수 있어서, 활성 계정이면 켜 둔다
     setOnline(!!(u && u.status === 'active' && (u.can_practice || u.can_explain)));
+    if (!$('#connHelp').hidden) showHelp();   // 열려 있던 설명도 로그인 상태에 맞게 바꾼다
   }
   var pushT = null;
   function loadMe(quiet) {
@@ -817,7 +819,8 @@ var Subnet = (function () {
     }).catch(function () { setUser(null); refreshStats(); });
   }
   $('#helpLogin').addEventListener('click', function () { TracerAuth.login('app.html'); });
-  $('#conn').addEventListener('click', function () { if (state.online) { $('#connHelp').hidden = !$('#connHelp').hidden; return; } showHelp(); });
+  // 상태 표시를 누르면 지금 상태 설명만 열고 닫는다(로그인된 상태에선 로그인 버튼을 보이지 않음)
+  $('#conn').addEventListener('click', function () { if (!$('#connHelp').hidden) { $('#connHelp').hidden = true; return; } showHelp(); });
   function initAuth() {
     if (!window.TracerAuth) { return new Promise(function (r) { setTimeout(r, 200); }).then(initAuth); }
     return TracerAuth.ready.then(function (c) {
