@@ -129,3 +129,5 @@
 ## [2026-11-20] output | TRACER 소개·이용 분리: /ccna/ 선택 화면 → about.html(핵심만, 새 구조 작동 방식 그림) · app.html(이용), 공용 로그인 부품(로그인/로그아웃 분명하게), Q-BRANCH #how 그림도 새 구조로
 
 ## [2026-11-20] output | TRACER 구글 로그인 앱 게시: 개인정보 처리방침(privacy.html) 추가, Branding(홈·방침·허용 도메인) 작성, Publish → In production(심사 불필요). 이제 누구나 로그인
+
+## [2026-11-20] output | 공개 소개 갱신: 루트 README(지도·TRACER 표·쓰는 법)와 Q-BRANCH 소개 페이지(TRACER 카드·버튼을 새 주소로, 4일차 작업 기록)

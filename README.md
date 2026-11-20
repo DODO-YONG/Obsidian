@@ -2,7 +2,7 @@
 
 [![나만의 에이전트 작업실 소개 페이지](docs/preview.png)](https://dodo-yong.github.io/Obsidian/)
 
-**🌐 소개 페이지: https://dodo-yong.github.io/Obsidian/** · 🧠 [CCNA 코치 TRACER](https://tracer-eosin.vercel.app/ccna/) · 🗺️ [TRACER 작동 방식](https://dodo-yong.github.io/Obsidian/ccna/#how) · 💻 [터미널 작업 기록](https://dodo-yong.github.io/Obsidian/terminal.html)
+**🌐 소개 페이지: https://dodo-yong.github.io/Obsidian/** · 🧠 [CCNA 코치 TRACER](https://tracer-eosin.vercel.app/ccna/) · 🗺️ [TRACER 작동 방식](https://tracer-eosin.vercel.app/ccna/about.html#how) · 💻 [터미널 작업 기록](https://dodo-yong.github.io/Obsidian/terminal.html)
 
 AWS 인턴십 과정에서 Claude Code로 나에게 필요한 에이전트를 하나씩 만들어 보는 학습 기록. 코드는 `agents/`, 설계·학습 메모는 Obsidian 위키(`wiki/`)에 있다.
 에이전트에는 007처럼 번호와 코드명을 붙였다(나는 Agent DY). → [코드명 목록](wiki/shared/에이전트%20코드명.md)
@@ -30,11 +30,13 @@ flowchart LR
   end
   W --> IC
 
-  subgraph CC["DY-003 TRACER · CCNA 시험 대비 코치 (누구나 접속)"]
+  subgraph CC["DY-003 TRACER · CCNA 시험 대비 코치 (상시 운영 · 누구나 구글 로그인)"]
     direction TB
-    CC1["🌐 공개 화면 (GitHub Pages)<br/>소개 · 단원·범위 선택 · 🎮 XP·칭호·퀘스트"] -->|"server.json으로<br/>주소 자동 확인"| CC2["💻 개인 서버 (답변 서버)<br/>Cloudflare 임시 터널 · 키는 로컬에만"]
-    CC2 --> CC3["✨ 제미나이 무료 등급<br/>영어 문제 · 영어 해설"]
-    CC1 -.->|"서버 없이도"| CC4["🔢 서브넷 계산<br/>브라우저가 직접 출제·채점"]
+    CC1["🌐 TRACER 화면 (Vercel · 무료)<br/>처음 화면 → 소개 / 이용 · 관리자 · 🎮 XP·칭호·퀘스트"] -->|"구글 로그인"| CC5["🔑 Supabase Auth"]
+    CC1 -->|"/api"| CC2["⚙️ TRACER 서버 (Vercel 함수)<br/>권한·하루 한도 · 키·정답 보관"]
+    CC2 <-->|"읽기·쓰기"| CC6["🗄️ Supabase DB (무료)<br/>문제은행 · 진도 · 활동 기록"]
+    CC2 -->|"문제은행에 없을 때만"| CC3["✨ 제미나이 무료 등급<br/>영어 문제 · 해설"]
+    CC1 -.->|"로그인 없이도"| CC4["🔢 서브넷 계산<br/>브라우저가 직접 출제·채점"]
   end
   W --> CC
 
@@ -77,7 +79,7 @@ flowchart LR
 |---|---|---|---|---|
 | 🛡️ DY-001 **SENTINEL** | URL을 주면 공격 없이 응답만 읽어 보안 약점을 찾고, 위험도와 고치는 법을 리포트로 써 줌 | 🟦 초기 버전 | [agents/security-agent](agents/security-agent) | [위키](wiki/projects/security-agent/security-agent.md) · [1일차 기록](https://dodo-yong.github.io/security-agent/) |
 | 🎤 DY-002 **MIRROR** | AWS 16가지 리더십 원칙 면접 연습. 약한 원칙부터 묻고, 꼬리 질문으로 파고든 뒤 STAR·수치·원칙 적합도로 평가 | 🟦 초기 버전 | [agents/interview-coach](agents/interview-coach) | [위키](wiki/projects/interview-coach/interview-coach.md) |
-| 🧠 DY-003 **TRACER** | CCNA 200-301 연습 사이트. 단원·범위를 골라 **영어 문제**를 받고 **영어 해설**까지. 누구나 접속, XP·칭호·퀘스트·배지. 화면은 공개, 답변은 키를 보관한 개인 서버가 제미나이로. [작동 방식 그림](https://dodo-yong.github.io/Obsidian/ccna/#how) | 🟦 상시 운영 · 공개 (구글 로그인·문제은행·관리자) | [agents/ccna-coach](agents/ccna-coach) · [**사이트**](https://tracer-eosin.vercel.app/ccna/) | [위키](wiki/projects/ccna-coach/ccna-coach.md) |
+| 🧠 DY-003 **TRACER** | CCNA 200-301 연습 사이트. 단원·범위를 골라 **영어 문제**를 받고 **영어 해설**(고른 보기가 왜 틀렸는지까지). 구글 로그인 · 진도는 계정에 저장 · XP·칭호·퀘스트·배지. Vercel + Supabase 무료로 항상 운영, 한 번 만든 문제는 **문제은행**에 저장해 다시 씀, 관리자 페이지(사용자 권한·활동 기록·문제 검토). [소개](https://tracer-eosin.vercel.app/ccna/about.html) · [작동 방식 그림](https://tracer-eosin.vercel.app/ccna/about.html#how) | 🟦 상시 운영 · 공개 (구글 로그인·문제은행·관리자) | [agents/ccna-coach](agents/ccna-coach) · [**사이트**](https://tracer-eosin.vercel.app/ccna/) | [위키](wiki/projects/ccna-coach/ccna-coach.md) |
 | 💬 DY-004 **TWIN** | 터미널에서 구글 제미나이와 대화 (키는 `.env`, 대화 기록은 볼트 밖) | 사용 중 | [scripts/gemini.py](scripts/gemini.py) | [위키](wiki/shared/gemini-chat.md) |
 | 📝 DY-005 **PRIMER** | 내 분야 초보자가 자주 묻는 질문 15개와 두 줄 답을 Gemini에게 한 번 받아 `answer.md`로 저장 | 🟦 초기 버전 | [agents/beginner-faq](agents/beginner-faq) | — |
 | 🧹 DY-006 **SWEEPER** | 홈 폴더 정리 도우미. 다운로드·데스크탑 현황과 휴지통 후보, 흩어진 문서를 위키 `raw/`로 모으기, 폴더를 종류별로 정리. 스캔은 코드(사용량 0), 옮기기·지우기는 터미널에서 직접 승인·휴지통만 | 🟦 초기 버전 | [agents/laptop-helper](agents/laptop-helper) | [위키](wiki/projects/laptop-helper/laptop-helper.md) |
@@ -85,28 +87,26 @@ flowchart LR
 
 ## 🧠 TRACER 쓰는 법
 
-- **방문자**: https://dodo-yong.github.io/Obsidian/ccna/ 를 열면 끝. 가입·코드 없음. 오른쪽 위가 "AI 연결됨"이면 AI 문제·해설, "AI 꺼짐"이어도 서브넷 계산은 언제나 가능. 레벨·퀘스트·배지는 각자 브라우저에 저장.
-- **주인(나)**: 내 Mac에서 아래를 켜 두면 공개 사이트가 자동으로 연결된다. 끄면 자동으로 "AI 꺼짐".
-  ```bash
-  cd ~/Obsidian/agents/ccna-coach && ./start-public.sh
-  ```
-  - 방문자는 1명당 시간당 30번 · 방문자 전체 하루 300번(무료 한도 보호). 내 진도는 이 Mac에서 http://127.0.0.1:8765
-  - 자세한 내용: [agents/ccna-coach/README.md](agents/ccna-coach/README.md)
-- **2026-11-20부터 상시 운영**: https://tracer-eosin.vercel.app/ccna/ (Vercel + Supabase 무료, 구글 로그인, 문제은행, 관리자 페이지 `/ccna/admin.html`). 내 Mac·터널 불필요, 예전 github.io 주소는 새 주소로 자동 이동. 위의 `start-public.sh` 방식은 은퇴 → [SETUP.md](agents/ccna-coach/SETUP.md)
+**주소: https://tracer-eosin.vercel.app/ccna/** — 처음 화면에서 "소개 보기" / "바로 이용하기"를 고른다. (예전 github.io 주소로 와도 자동 이동)
+
+- **누구나**: 오른쪽 위 **Google로 로그인** → 범위·난이도 고르고 **문제 받기** → 답을 내면 해설과 XP. 진도는 계정에 저장돼 다른 기기에서도 이어진다. 로그아웃도 오른쪽 위. 서브넷 계산은 로그인 없이 바로.
+- **무료 한도 보호**: 사람마다 하루 AI 30회(관리자가 조정), 전체 하루 300회. 문제은행에 문제가 쌓일수록 AI를 덜 부르고 빨라진다.
+- **주인(나)**: [관리자 페이지](https://tracer-eosin.vercel.app/ccna/admin.html)에서 사용자 권한·차단·한도, 활동 기록, 신고된 문제를 관리. 내 Mac은 꺼져 있어도 된다.
+- 페이지: [소개](https://tracer-eosin.vercel.app/ccna/about.html) · [이용](https://tracer-eosin.vercel.app/ccna/app.html) · [개인정보 처리방침](https://tracer-eosin.vercel.app/ccna/privacy.html) · 구성·배포: [agents/ccna-coach/README.md](agents/ccna-coach/README.md), [SETUP.md](agents/ccna-coach/SETUP.md)
 
 ## 🌐 공개 사이트 (GitHub Pages, `docs/`)
 
 | 페이지 | 주소 | 파일 |
 |---|---|---|
 | 소개 (Q-BRANCH) | https://dodo-yong.github.io/Obsidian/ (TRACER 원리: `#how`) — 작업 기록은 하루 6개가 넘으면 핵심만 보이고 '더 보기'로 접힘 | `docs/index.html`, `style.css` |
-| TRACER (CCNA 코치) | https://dodo-yong.github.io/Obsidian/ccna/ (소개: `#intro`, 작동 방식: `#how`) | `docs/ccna/index.html`, `topics.json`, `server.json` |
-| TRACER 작동 방식 (공용) | 위 두 페이지에 함께 들어감 | `docs/tracer-how.js`, `docs/tracer-how.css` — 여기만 고치면 두 곳이 같이 바뀜 |
+| TRACER (CCNA 코치) | **https://tracer-eosin.vercel.app/ccna/** (Vercel에서 운영 · github.io `/ccna/`는 자동 이동) — 처음 화면 · `about.html` 소개 · `app.html` 이용 · `admin.html` 관리자 · `privacy.html` | `docs/ccna/*`, `docs/api/` (서버), `docs/vercel.json` |
+| TRACER 작동 방식 (공용) | Q-BRANCH `#how`와 TRACER 소개(`about.html#how`)에 함께 들어감 | `docs/tracer-how.js`, `docs/tracer-how.css` — 여기만 고치면 두 곳이 같이 바뀜 |
 | 터미널 작업 기록 | https://dodo-yong.github.io/Obsidian/terminal.html | `docs/terminal.html` |
 | Heartline (CUPID 앱) | https://dodo-yong.github.io/Obsidian/heartline/ (PRD `prd.html` · 체크리스트 `checklist.html` · 테스트 `tests.html` · 발표 `deck.html`) | `docs/heartline/` |
 
 - 사이트를 고친 뒤엔 `scripts/bump-site-version.sh`로 버전을 올린다 → 열린 페이지가 새 버전을 감지하면 한 번 자동 새로고침(브라우저 캐시 대응). 공용 파일 주소의 `?v=`도 함께 올린다.
 - 공개 문구는 "제 Mac" 대신 "개인 서버", "개인 컴퓨터 환경" 같은 공식 표현을 쓴다.
-- `docs/ccna/server.json`은 `start-public.sh`가 켜고 끌 때 자동으로 갱신·커밋한다.
+- `docs/ccna/server.json`은 예전 github.io 주소 방문자를 새 주소(`home`)로 보내는 안내판이다. (`start-public.sh`는 은퇴 — 켜면 안내판을 덮어쓴다)
 
 ## 📁 폴더 구조
 
