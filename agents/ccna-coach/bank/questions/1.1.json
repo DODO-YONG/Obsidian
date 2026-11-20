@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "1.1",
+  "difficulty": "쉬움",
+  "question": "Which device makes forwarding decisions for Ethernet frames based on the destination MAC address?",
+  "choices": [
+   "Layer 2 switch",
+   "Router",
+   "Hub",
+   "Firewall"
+  ],
+  "answer": "A",
+  "explanation": "A Layer 2 switch learns source MAC addresses and builds a MAC address table. It uses the destination MAC address in each frame to choose the egress port. Routers use Layer 3 addresses, and hubs simply repeat signals.",
+  "option_notes": [
+   "Correct: A Layer 2 switch forwards frames using its MAC address table.",
+   "Wrong: A router forwards packets using destination IP addresses.",
+   "Wrong: A hub repeats every signal out all other ports and has no table.",
+   "Wrong: A firewall filters traffic by policy; it is not the standard MAC-forwarding device."
+  ],
+  "key_concept": "Switches forward by MAC address.",
+  "cli_example": "show mac address-table",
+  "tip": "Switch = MAC (L2). Router = IP (L3)."
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "쉬움",
+  "question": "What is the primary function of a router?",
+  "choices": [
+   "Forward frames between ports in the same VLAN",
+   "Forward packets between different IP networks",
+   "Provide power to IP phones",
+   "Convert digital signals to radio waves"
+  ],
+  "answer": "B",
+  "explanation": "A router connects separate IP networks and chooses the best path to a destination using its routing table. It makes decisions using Layer 3 information. Layer 2 switching, PoE and radio transmission are done by other devices.",
+  "option_notes": [
+   "Wrong: Frame forwarding inside a VLAN is the job of a switch.",
+   "Correct: Routers move packets between IP networks.",
+   "Wrong: Supplying power is a PoE function of a switch or injector.",
+   "Wrong: Radio transmission is performed by a wireless access point."
+  ],
+  "key_concept": "Router = Layer 3 forwarding between networks.",
+  "cli_example": "show ip route",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "쉬움",
+  "question": "Which device is designed to permit or deny traffic based on a security policy?",
+  "choices": [
+   "Hub",
+   "Access point",
+   "Firewall",
+   "Repeater"
+  ],
+  "answer": "C",
+  "explanation": "A firewall inspects traffic and allows or blocks it according to configured security rules. It is placed between network zones, such as inside and outside. Hubs, access points and repeaters do not enforce security policy.",
+  "option_notes": [
+   "Wrong: A hub only repeats electrical signals.",
+   "Wrong: An access point provides wireless connectivity.",
+   "Correct: A firewall enforces a traffic security policy.",
+   "Wrong: A repeater regenerates signals and does not filter."
+  ],
+  "key_concept": "Firewall = policy enforcement between zones.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "쉬움",
+  "question": "What is the role of a wireless access point (AP) in a network?",
+  "choices": [
+   "It routes traffic between VLANs",
+   "It blocks malicious traffic with signatures",
+   "It assigns IP addresses to all clients by default",
+   "It connects wireless clients to the wired network"
+  ],
+  "answer": "D",
+  "explanation": "An AP bridges wireless clients (802.11) onto the wired Ethernet network. It typically does not route between VLANs or act as a firewall. IP addressing is normally done by a DHCP server.",
+  "option_notes": [
+   "Wrong: Inter-VLAN routing needs a router or L3 switch.",
+   "Wrong: Signature-based blocking is an IPS function.",
+   "Wrong: DHCP service is provided by a DHCP server, not the AP itself by default in enterprise designs.",
+   "Correct: The AP is the bridge between Wi-Fi clients and the wired LAN."
+  ],
+  "key_concept": "AP = wireless to wired bridge.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "쉬움",
+  "question": "Which device centrally manages and configures lightweight access points?",
+  "choices": [
+   "Wireless LAN Controller (WLC)",
+   "Layer 2 switch",
+   "Hub",
+   "Syslog server"
+  ],
+  "answer": "A",
+  "explanation": "A WLC manages lightweight APs, pushes configuration and handles functions such as RF management, roaming and security policy. Lightweight APs build a CAPWAP tunnel to the WLC. A switch only provides connectivity.",
+  "option_notes": [
+   "Correct: The WLC centrally controls lightweight APs.",
+   "Wrong: A switch connects the AP but does not manage its radio configuration.",
+   "Wrong: A hub has no management function.",
+   "Wrong: A syslog server only collects log messages."
+  ],
+  "key_concept": "Lightweight AP + WLC = centralized wireless architecture.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "쉬움",
+  "question": "Which statement best describes a Layer 3 switch?",
+  "choices": [
+   "It only forwards frames by MAC address",
+   "It can switch frames and also route IP packets",
+   "It only filters traffic with application awareness",
+   "It converts wired signals to wireless"
+  ],
+  "answer": "B",
+  "explanation": "A Layer 3 switch combines Layer 2 switching with IP routing, usually in hardware. It is commonly used for inter-VLAN routing with SVIs. A Layer 2 switch cannot route between subnets.",
+  "option_notes": [
+   "Wrong: That describes a Layer 2 switch only.",
+   "Correct: A Layer 3 switch performs both switching and routing.",
+   "Wrong: Application awareness is a next-generation firewall feature.",
+   "Wrong: Wireless conversion is an AP function."
+  ],
+  "key_concept": "L3 switch = switch + routing (SVI or routed ports).",
+  "cli_example": "ip routing",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "쉬움",
+  "question": "By default, which device separates broadcast domains?",
+  "choices": [
+   "Layer 2 switch",
+   "Hub",
+   "Router",
+   "Repeater"
+  ],
+  "answer": "C",
+  "explanation": "Routers do not forward Layer 2 broadcasts, so each router interface is its own broadcast domain. A Layer 2 switch forwards broadcasts within a VLAN. Hubs and repeaters extend one domain.",
+  "option_notes": [
+   "Wrong: A Layer 2 switch floods broadcasts within a VLAN.",
+   "Wrong: A hub forwards everything to all ports.",
+   "Correct: A router interface is a boundary for broadcasts.",
+   "Wrong: A repeater just extends the same domain."
+  ],
+  "key_concept": "Routers and VLANs separate broadcast domains; switches separate collision domains.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "쉬움",
+  "question": "Which feature is typically included in a next-generation firewall (NGFW) but not in a traditional stateful firewall?",
+  "choices": [
+   "Packet forwarding by MAC address",
+   "Creating a spanning-tree root",
+   "Providing PoE to endpoints",
+   "Application visibility and control"
+  ],
+  "answer": "D",
+  "explanation": "NGFWs add application awareness, user identity and often an integrated IPS on top of stateful inspection. This allows policies such as blocking a specific application even when it uses common ports. STP and PoE are switch features.",
+  "option_notes": [
+   "Wrong: MAC-based forwarding is switch behavior.",
+   "Wrong: Spanning tree runs on switches.",
+   "Wrong: PoE is supplied by switches or injectors.",
+   "Correct: NGFWs identify and control applications, not just ports."
+  ],
+  "key_concept": "NGFW = stateful firewall + application control + IPS.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "쉬움",
+  "question": "What is the main difference between an IPS and an IDS?",
+  "choices": [
+   "An IPS sits inline and can block traffic; an IDS only detects and alerts",
+   "An IDS sits inline and can block traffic; an IPS only alerts",
+   "An IPS works at Layer 2 only; an IDS works at Layer 7 only",
+   "An IPS routes packets; an IDS switches frames"
+  ],
+  "answer": "A",
+  "explanation": "An Intrusion Prevention System is placed in the traffic path and can drop malicious packets. An Intrusion Detection System receives a copy of traffic and generates alerts. Both inspect traffic for threats.",
+  "option_notes": [
+   "Correct: IPS is inline and preventive; IDS is passive and detective.",
+   "Wrong: This reverses the roles.",
+   "Wrong: Neither is limited to one layer like this.",
+   "Wrong: Neither device is a router or a switch."
+  ],
+  "key_concept": "IPS = prevent (inline). IDS = detect (copy).",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "쉬움",
+  "question": "Which Cisco product is a campus network controller that provides automation and assurance through a GUI and REST APIs?",
+  "choices": [
+   "Cisco WLC only for guest access",
+   "Cisco DNA Center",
+   "Cisco Packet Tracer",
+   "Cisco IOS XE Boot ROM"
+  ],
+  "answer": "B",
+  "explanation": "Cisco DNA Center is the controller for Cisco campus networks. It provides design, policy, provisioning and assurance, and it exposes REST APIs. A WLC manages wireless APs, and Packet Tracer is a simulator.",
+  "option_notes": [
+   "Wrong: A WLC manages wireless, not the whole campus fabric.",
+   "Correct: DNA Center is the centralized campus automation controller.",
+   "Wrong: Packet Tracer is a simulation tool, not a controller.",
+   "Wrong: A boot ROM is device firmware, not a controller."
+  ],
+  "key_concept": "DNA Center = intent-based networking controller.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "보통",
+  "question": "A Layer 2 switch receives a frame whose destination MAC address is not in its MAC address table. What does the switch do?",
+  "choices": [
+   "Drops the frame",
+   "Sends the frame back out the ingress port",
+   "Floods the frame out all ports in the VLAN except the ingress port",
+   "Sends an ICMP unreachable message to the sender"
+  ],
+  "answer": "C",
+  "explanation": "A frame with an unknown destination unicast MAC is flooded to every other port in the same VLAN. If the destination replies, the switch learns its port from the source MAC. Switches do not generate ICMP messages for this.",
+  "option_notes": [
+   "Wrong: Dropping would break communication before learning.",
+   "Wrong: The ingress port is excluded from flooding.",
+   "Correct: Unknown unicast frames are flooded within the VLAN.",
+   "Wrong: Switches do not send ICMP for unknown MAC addresses."
+  ],
+  "key_concept": "Unknown unicast = flood (except ingress).",
+  "cli_example": "show mac address-table dynamic",
+  "tip": "Learning uses the source MAC; forwarding uses the destination MAC."
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "보통",
+  "question": "A router receives a packet for a destination that does not match any route and no default route exists. What happens?",
+  "choices": [
+   "The router floods the packet out all interfaces",
+   "The router forwards the packet to the first interface",
+   "The router asks DHCP for a route",
+   "The router drops the packet and may send an ICMP destination unreachable message"
+  ],
+  "answer": "D",
+  "explanation": "Without a matching route or a default route, the router has no next hop. It discards the packet and normally sends ICMP destination unreachable to the source. Routers do not flood packets.",
+  "option_notes": [
+   "Wrong: Routers do not flood packets like switches.",
+   "Wrong: There is no 'first interface' fallback.",
+   "Wrong: DHCP does not provide routes to routers for forwarding decisions.",
+   "Correct: No route means the packet is dropped."
+  ],
+  "key_concept": "Gateway of last resort = default route (0.0.0.0/0).",
+  "cli_example": "show ip route",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "보통",
+  "question": "Which protocol and ports do lightweight APs use to build a tunnel to a WLC?",
+  "choices": [
+   "CAPWAP over UDP 5246 and 5247",
+   "GRE over TCP 47",
+   "LWAPP over TCP 443",
+   "IPsec over UDP 500"
+  ],
+  "answer": "A",
+  "explanation": "Lightweight APs and the WLC use CAPWAP. UDP 5246 carries control messages, and UDP 5247 carries data. This lets the WLC manage the AP and tunnel client traffic.",
+  "option_notes": [
+   "Correct: CAPWAP uses UDP 5246 (control) and 5247 (data).",
+   "Wrong: GRE is IP protocol 47, not TCP, and is not the AP tunnel.",
+   "Wrong: LWAPP is a legacy predecessor and does not use TCP 443.",
+   "Wrong: UDP 500 is IKE for IPsec, not for AP control."
+  ],
+  "key_concept": "CAPWAP = AP-to-WLC tunnel.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "보통",
+  "question": "Where is an IDS normally connected so that it can analyze traffic?",
+  "choices": [
+   "Inline between the router and the firewall so it can drop packets",
+   "To a SPAN port or TAP that receives a copy of the traffic",
+   "On the WAN link as the default gateway",
+   "Between two access switches as a hub"
+  ],
+  "answer": "B",
+  "explanation": "An IDS is passive. It analyzes a mirrored copy of traffic from a SPAN port or network TAP and alerts on suspicious activity. Because it is not inline, it cannot block traffic by itself.",
+  "option_notes": [
+   "Wrong: Inline placement is for an IPS.",
+   "Correct: IDS sees a copy; it is out of band.",
+   "Wrong: An IDS is not a gateway.",
+   "Wrong: Hubs are not used for this."
+  ],
+  "key_concept": "Passive = copy. Inline = IPS.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "보통",
+  "question": "A switch has 8 active ports, all connected to individual hosts, and all ports are in one VLAN. How many collision domains and broadcast domains exist?",
+  "choices": [
+   "1 collision domain and 8 broadcast domains",
+   "1 collision domain and 1 broadcast domain",
+   "8 collision domains and 1 broadcast domain",
+   "8 collision domains and 8 broadcast domains"
+  ],
+  "answer": "C",
+  "explanation": "Each switch port is its own collision domain. All ports in one VLAN share a single broadcast domain. Full duplex on each link also removes collisions in practice.",
+  "option_notes": [
+   "Wrong: This reverses the counts.",
+   "Wrong: Switches do separate collision domains.",
+   "Correct: Collision domain per port; broadcast domain per VLAN.",
+   "Wrong: Ports in the same VLAN share one broadcast domain."
+  ],
+  "key_concept": "Switch ports = collision domains; VLAN = broadcast domain.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "보통",
+  "question": "Which device would you use to allow only inbound TCP 443 to a web server while tracking return traffic through a state table?",
+  "choices": [
+   "Layer 2 switch",
+   "Wireless LAN controller",
+   "Hub",
+   "Stateful firewall"
+  ],
+  "answer": "D",
+  "explanation": "A stateful firewall tracks connections and automatically permits return traffic for allowed sessions. This lets you permit only inbound TCP 443 without opening wide ports for replies. Switches, WLCs and hubs do not perform this inspection.",
+  "option_notes": [
+   "Wrong: A Layer 2 switch has no session state.",
+   "Wrong: A WLC manages wireless APs.",
+   "Wrong: A hub has no filtering.",
+   "Correct: Stateful firewalls track sessions."
+  ],
+  "key_concept": "Stateful = state table of connections.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "보통",
+  "question": "How does an autonomous AP differ from a lightweight AP?",
+  "choices": [
+   "An autonomous AP is configured and managed on its own, with no WLC required",
+   "An autonomous AP depends on a WLC for all configuration",
+   "An autonomous AP can only operate in the 6 GHz band",
+   "An autonomous AP has no radio"
+  ],
+  "answer": "A",
+  "explanation": "An autonomous AP has its own full IOS configuration and runs independently. A lightweight AP needs a WLC through CAPWAP to operate. Autonomous APs are common in small deployments.",
+  "option_notes": [
+   "Correct: Autonomous APs run standalone.",
+   "Wrong: That describes a lightweight AP.",
+   "Wrong: Band support is unrelated to the AP type.",
+   "Wrong: All APs have radios."
+  ],
+  "key_concept": "Autonomous = standalone; lightweight = WLC-managed.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "보통",
+  "question": "Which command turns a Cisco physical switch port into a routed (Layer 3) port on a multilayer switch?",
+  "choices": [
+   "switchport mode access",
+   "no switchport",
+   "ip routing",
+   "spanning-tree portfast"
+  ],
+  "answer": "B",
+  "explanation": "On a multilayer switch, 'no switchport' in interface mode converts the interface to a routed port so an IP address can be assigned directly. 'ip routing' is a global command that enables routing but does not change one port.",
+  "option_notes": [
+   "Wrong: This sets an access port and keeps it Layer 2.",
+   "Correct: no switchport makes the port Layer 3.",
+   "Wrong: This enables routing globally, not per-port conversion.",
+   "Wrong: PortFast is an STP feature."
+  ],
+  "key_concept": "Routed port: no switchport + ip address.",
+  "cli_example": "interface GigabitEthernet1/0/1\n no switchport\n ip address 10.1.1.1 255.255.255.252",
+  "tip": "SVI is for VLANs; routed port is for point-to-point links."
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "보통",
+  "question": "Which description matches the southbound direction of Cisco DNA Center?",
+  "choices": [
+   "Communication from the controller to applications using REST APIs",
+   "Communication between two switches using STP",
+   "Communication from the controller to network devices using protocols such as SSH, SNMP and NETCONF",
+   "Communication between hosts and DNS servers"
+  ],
+  "answer": "C",
+  "explanation": "Southbound interfaces connect a controller to the devices it manages, using SSH, SNMP, NETCONF and similar protocols. Northbound interfaces expose REST APIs to applications and scripts.",
+  "option_notes": [
+   "Wrong: That is the northbound interface.",
+   "Wrong: STP is a Layer 2 loop prevention protocol.",
+   "Correct: Southbound = controller to devices.",
+   "Wrong: DNS is not a controller interface."
+  ],
+  "key_concept": "Northbound = apps (REST). Southbound = devices.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "보통",
+  "question": "Which feature lets a switch deliver electrical power to a lightweight AP through the same UTP cable that carries data?",
+  "choices": [
+   "Power over Ethernet (PoE)",
+   "Spanning Tree Protocol",
+   "Link Aggregation",
+   "Port mirroring"
+  ],
+  "answer": "A",
+  "explanation": "PoE lets a powered device, such as an AP or IP phone, receive power from the switch (the power sourcing equipment) over the Ethernet cable. This avoids a separate power outlet near the AP. STP, link aggregation and SPAN do not supply power.",
+  "option_notes": [
+   "Correct: PoE powers devices over the data cable.",
+   "Wrong: STP prevents Layer 2 loops.",
+   "Wrong: Link aggregation bundles links for bandwidth.",
+   "Wrong: Port mirroring copies traffic to an analyzer."
+  ],
+  "key_concept": "PoE = power over the Ethernet cable.",
+  "cli_example": "interface GigabitEthernet0/1\n power inline auto",
+  "tip": "show power inline"
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "어려움",
+  "question": "Users in VLAN 10 and VLAN 20 are connected to the same Layer 2 switch, and the switch has no IP routing. Hosts in the two VLANs cannot ping each other. What is required?",
+  "choices": [
+   "A second Layer 2 switch in each VLAN",
+   "A hub connecting the two VLANs",
+   "Disabling VTP",
+   "A Layer 3 device that routes between the VLAN subnets"
+  ],
+  "answer": "D",
+  "explanation": "Different VLANs are different broadcast domains and subnets, so traffic between them must be routed. A router (router on a stick) or a Layer 3 switch with SVIs provides inter-VLAN routing. More Layer 2 devices do not solve this.",
+  "option_notes": [
+   "Wrong: More Layer 2 devices keep traffic separate.",
+   "Wrong: A hub would not route and would not preserve VLAN separation.",
+   "Wrong: VTP only syncs VLAN databases and does not route.",
+   "Correct: VLANs need a Layer 3 device to communicate."
+  ],
+  "key_concept": "Inter-VLAN routing = router on a stick or L3 switch.",
+  "cli_example": "interface vlan 10\n ip address 192.168.10.1 255.255.255.0\ninterface vlan 20\n ip address 192.168.20.1 255.255.255.0\nip routing",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "어려움",
+  "question": "A multilayer switch has SVIs configured for VLAN 10 and VLAN 20, both up/up, but hosts in the two VLANs cannot reach each other. 'show ip route' shows no connected routes. What is the most likely cause?",
+  "choices": [
+   "The 'ip routing' command is missing",
+   "The hosts are using full duplex",
+   "The SVIs need 'switchport mode trunk'",
+   "CAPWAP is not configured"
+  ],
+  "answer": "A",
+  "explanation": "A multilayer switch only routes when 'ip routing' is enabled globally. Without it, the switch acts like a Layer 2 device even with SVIs, and no connected routes are installed. Duplex and trunk settings do not apply to SVIs.",
+  "option_notes": [
+   "Correct: Layer 3 switches need ip routing enabled.",
+   "Wrong: Duplex does not stop SVI routing.",
+   "Wrong: Trunk mode is a switchport setting, not an SVI one.",
+   "Wrong: CAPWAP is for wireless APs."
+  ],
+  "key_concept": "No ip routing = no routing on an L3 switch.",
+  "cli_example": "Switch(config)# ip routing\nSwitch# show ip route",
+  "tip": "Common exam trap: SVIs exist but ip routing is off."
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "어려움",
+  "question": "An engineer sees that VLAN 30's SVI is administratively up but its line protocol is down. Which condition explains this?",
+  "choices": [
+   "The SVI has no description",
+   "VLAN 30 does not exist in the VLAN database or no active port is in VLAN 30",
+   "The switch is using full duplex",
+   "The SVI IP address is a private address"
+  ],
+  "answer": "B",
+  "explanation": "An SVI's line protocol is up only when the VLAN exists and at least one port in that VLAN (access port or trunk allowing it) is up. Descriptions, duplex and private addressing do not affect SVI state.",
+  "option_notes": [
+   "Wrong: A description is cosmetic.",
+   "Correct: SVI up/up requires an existing VLAN with an active port.",
+   "Wrong: Duplex is a physical port setting.",
+   "Wrong: Private addressing is valid for SVIs."
+  ],
+  "key_concept": "SVI down/down: check VLAN exists and a port is up.",
+  "cli_example": "show vlan brief\nshow ip interface brief",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "어려움",
+  "question": "A switch with 8 ports has 4 ports in VLAN 10 and 4 ports in VLAN 20, each connected to one host. How many collision domains and broadcast domains does the switch create?",
+  "choices": [
+   "2 collision domains and 8 broadcast domains",
+   "8 collision domains and 1 broadcast domain",
+   "8 collision domains and 2 broadcast domains",
+   "2 collision domains and 2 broadcast domains"
+  ],
+  "answer": "C",
+  "explanation": "Every switch port is a separate collision domain, giving 8. Each VLAN is one broadcast domain, giving 2. The VLANs do not communicate without a Layer 3 device.",
+  "option_notes": [
+   "Wrong: This swaps the numbers.",
+   "Wrong: The two VLANs create two broadcast domains, not one.",
+   "Correct: 8 ports = 8 collision domains; 2 VLANs = 2 broadcast domains.",
+   "Wrong: Collision domains are counted per port, not per VLAN."
+  ],
+  "key_concept": "Collision per port; broadcast per VLAN.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "어려움",
+  "question": "A lightweight AP operates in local mode. How is wireless client data handled?",
+  "choices": [
+   "Client traffic is switched locally at the AP and never reaches the WLC",
+   "Client traffic is encrypted only with WEP",
+   "Client traffic is sent directly to the Internet with NAT on the AP",
+   "Client traffic is tunneled to the WLC over CAPWAP"
+  ],
+  "answer": "D",
+  "explanation": "In local mode, the AP tunnels client data and control traffic to the WLC using CAPWAP, so the WLC applies VLAN mapping and policy. FlexConnect mode can switch traffic locally at the branch instead.",
+  "option_notes": [
+   "Wrong: That describes FlexConnect local switching.",
+   "Wrong: Encryption type is not defined by AP mode.",
+   "Wrong: NAT is not the AP's function in this mode.",
+   "Correct: Local mode centralizes client data at the WLC."
+  ],
+  "key_concept": "Local mode = tunnel to WLC; FlexConnect = local switching option.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "어려움",
+  "question": "A host with MAC address AAAA.AAAA.AAAA was on Fa0/1 and is moved to Fa0/5. After it sends a frame, what happens to the switch's MAC table entry?",
+  "choices": [
+   "The entry is updated to show the MAC on Fa0/5",
+   "The switch keeps Fa0/1 and ignores the frame",
+   "Both Fa0/1 and Fa0/5 are listed permanently",
+   "The switch shuts down Fa0/5 with port-security by default"
+  ],
+  "answer": "A",
+  "explanation": "A switch learns from the source MAC of each frame. When it sees a known MAC on a new port, it updates the entry to the new port. Port security is not enabled by default, so nothing is shut down.",
+  "option_notes": [
+   "Correct: Switches update entries when a MAC appears on a new port.",
+   "Wrong: The table is dynamic and follows the latest source.",
+   "Wrong: A MAC is listed on a single port per VLAN.",
+   "Wrong: Port security is off by default."
+  ],
+  "key_concept": "Source MAC = learning.",
+  "cli_example": "show mac address-table address aaaa.aaaa.aaaa",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "어려움",
+  "question": "Why can an inline IPS become a single point of failure?",
+  "choices": [
+   "It only inspects mirrored traffic and misses attacks",
+   "All traffic must pass through it, so a failure can interrupt the path",
+   "It cannot drop packets",
+   "It runs only on wireless networks"
+  ],
+  "answer": "B",
+  "explanation": "An inline IPS sits in the traffic path, so if it fails without a bypass or fail-open design, connectivity is lost. That is the trade-off for being able to block attacks in real time. An IDS on a SPAN port does not have this problem.",
+  "option_notes": [
+   "Wrong: That describes an IDS.",
+   "Correct: Inline devices sit in the data path and need resilience.",
+   "Wrong: Dropping packets is its main prevention action.",
+   "Wrong: IPS is not limited to wireless."
+  ],
+  "key_concept": "Inline = can block but can fail the link; passive = safe but cannot block.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "어려움",
+  "question": "Why do Layer 3 switches usually forward inter-VLAN traffic faster than a traditional software-based router on a stick?",
+  "choices": [
+   "They use fewer IP addresses",
+   "They do not need a routing table",
+   "They perform routing in hardware (ASICs) using CEF tables",
+   "They ignore access control lists"
+  ],
+  "answer": "C",
+  "explanation": "Multilayer switches use specialized ASICs and CEF-style forwarding tables to route at wire speed. A router on a stick must send all inter-VLAN traffic over one trunk link and often forwards in software.",
+  "option_notes": [
+   "Wrong: Address count does not change speed.",
+   "Wrong: They still use a forwarding/routing table.",
+   "Correct: L3 switches route in hardware.",
+   "Wrong: They can apply ACLs, often in hardware."
+  ],
+  "key_concept": "L3 switch = high-speed inter-VLAN routing.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "어려움",
+  "question": "A network engineer needs an application to automatically provision devices through Cisco DNA Center. Which interface does the application use?",
+  "choices": [
+   "The southbound NETCONF interface",
+   "The console port",
+   "SNMP trap receiver on the router",
+   "The northbound REST API"
+  ],
+  "answer": "D",
+  "explanation": "Applications and scripts talk to the controller through its northbound REST API. The controller then uses southbound protocols such as NETCONF, SSH or SNMP to configure the devices.",
+  "option_notes": [
+   "Wrong: Southbound is controller-to-device.",
+   "Wrong: The console is a local management port.",
+   "Wrong: SNMP traps are device notifications.",
+   "Correct: Northbound REST API is how apps talk to the controller."
+  ],
+  "key_concept": "Remember: apps use northbound, devices use southbound.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.1",
+  "difficulty": "어려움",
+  "question": "A 4-port switch has three ports each connected to one PC, and the fourth port connected to a hub with three PCs attached. All ports are in one VLAN. How many collision domains and broadcast domains exist?",
+  "choices": [
+   "7 collision domains and 1 broadcast domain",
+   "4 collision domains and 1 broadcast domain",
+   "1 collision domain and 1 broadcast domain",
+   "4 collision domains and 4 broadcast domains"
+  ],
+  "answer": "B",
+  "explanation": "Each switch port is a separate collision domain, so there are 4. The hub and its three PCs share the one collision domain of the fourth port. All ports in a single VLAN form one broadcast domain.",
+  "option_notes": [
+   "Wrong: Devices on the hub share a collision domain, so they are not counted separately.",
+   "Correct: A hub extends the collision domain of the switch port it uses.",
+   "Wrong: Switch ports do separate collision domains.",
+   "Wrong: One VLAN means one broadcast domain."
+  ],
+  "key_concept": "Count switch ports for collision domains; a hub adds none.",
+  "cli_example": "",
+  "tip": ""
+ }
+]

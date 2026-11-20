@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "2.2",
+  "difficulty": "쉬움",
+  "question": "What is the purpose of an 802.1Q trunk link between two switches?",
+  "choices": [
+   "To combine several links into one logical link",
+   "To carry traffic for multiple VLANs over a single link",
+   "To prevent Layer 2 loops",
+   "To assign IP addresses to VLANs"
+  ],
+  "answer": "B",
+  "explanation": "A trunk lets several VLANs share one physical link. 802.1Q inserts a tag with the VLAN ID so the receiving switch knows which VLAN each frame belongs to.",
+  "option_notes": [
+   "Wrong: Combining links is EtherChannel, not trunking.",
+   "Correct: A trunk carries frames from many VLANs, identified by tags.",
+   "Wrong: Loop prevention is done by STP.",
+   "Wrong: IP addressing is done on SVIs or routed interfaces."
+  ],
+  "key_concept": "Trunk = many VLANs on one link.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "쉬움",
+  "question": "How large is the 802.1Q tag that is inserted into an Ethernet frame?",
+  "choices": [
+   "4 bytes",
+   "2 bytes",
+   "8 bytes",
+   "12 bytes"
+  ],
+  "answer": "A",
+  "explanation": "The tag has a 2-byte TPID (0x8100) and a 2-byte TCI containing the 3-bit priority, 1-bit DEI and 12-bit VLAN ID.",
+  "option_notes": [
+   "Correct: The 802.1Q tag is 4 bytes (TPID 2 bytes plus TCI 2 bytes).",
+   "Wrong: 2 bytes is only the TPID or only the TCI.",
+   "Wrong: 8 bytes is too large.",
+   "Wrong: 12 bytes is the size of the two MAC addresses combined."
+  ],
+  "key_concept": "802.1Q adds a 4-byte tag.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "쉬움",
+  "question": "Which VLAN is the default native VLAN on an 802.1Q trunk of a Cisco switch?",
+  "choices": [
+   "VLAN 0",
+   "VLAN 99",
+   "VLAN 1002",
+   "VLAN 1"
+  ],
+  "answer": "D",
+  "explanation": "By default untagged frames on an 802.1Q trunk are assigned to VLAN 1, the native VLAN. It can be changed per trunk with switchport trunk native vlan.",
+  "option_notes": [
+   "Wrong: VLAN 0 is not used as a native VLAN by default.",
+   "Wrong: VLAN 99 is only a common best-practice choice.",
+   "Wrong: VLAN 1002 is a reserved legacy VLAN.",
+   "Correct: The default native VLAN is VLAN 1."
+  ],
+  "key_concept": "Default native VLAN = 1.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "쉬움",
+  "question": "Which interface command statically configures a port as a trunk?",
+  "choices": [
+   "switchport trunk enable",
+   "trunk on",
+   "switchport mode trunk",
+   "switchport access trunk"
+  ],
+  "answer": "C",
+  "explanation": "switchport mode trunk makes the port a trunk unconditionally. On switches that support both ISL and 802.1Q you may also need switchport trunk encapsulation dot1q first.",
+  "option_notes": [
+   "Wrong: switchport trunk enable is not valid.",
+   "Wrong: trunk on is not an IOS interface command.",
+   "Correct: switchport mode trunk forces the port into trunking mode.",
+   "Wrong: switchport access refers to access mode settings."
+  ],
+  "key_concept": "switchport mode trunk = static trunk.",
+  "cli_example": "Switch(config-if)# switchport mode trunk",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "쉬움",
+  "question": "Which command shows the trunk ports, their native VLAN and the VLANs allowed on them?",
+  "choices": [
+   "show vlan brief",
+   "show interfaces trunk",
+   "show trunk vlans",
+   "show ip interface brief"
+  ],
+  "answer": "B",
+  "explanation": "show interfaces trunk is the primary verification command for trunk ports. It has sections for allowed VLANs, active VLANs and VLANs forwarding in spanning tree.",
+  "option_notes": [
+   "Wrong: show vlan brief does not list trunk ports.",
+   "Correct: show interfaces trunk lists trunk mode, encapsulation, native VLAN and allowed VLANs.",
+   "Wrong: show trunk vlans is not a valid command.",
+   "Wrong: show ip interface brief shows IP status only."
+  ],
+  "key_concept": "Verify trunks with show interfaces trunk.",
+  "cli_example": "Switch# show interfaces trunk",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "쉬움",
+  "question": "Which command changes the native VLAN of a trunk to VLAN 99?",
+  "choices": [
+   "switchport trunk native vlan 99",
+   "switchport native vlan 99",
+   "switchport mode native 99",
+   "vlan native 99"
+  ],
+  "answer": "A",
+  "explanation": "The native VLAN is configured on the trunk interface. Both ends of the trunk must use the same native VLAN or you get a mismatch.",
+  "option_notes": [
+   "Correct: switchport trunk native vlan 99 is the correct interface command.",
+   "Wrong: The trunk keyword is required.",
+   "Wrong: switchport mode does not take a native option.",
+   "Wrong: vlan native is not a valid command."
+  ],
+  "key_concept": "Native VLAN: switchport trunk native vlan <id>.",
+  "cli_example": "Switch(config-if)# switchport trunk native vlan 99",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "쉬움",
+  "question": "Which command allows only VLANs 10 and 20 on a trunk?",
+  "choices": [
+   "switchport trunk vlan 10,20",
+   "switchport allowed vlan 10,20",
+   "trunk allow vlan 10 20",
+   "switchport trunk allowed vlan 10,20"
+  ],
+  "answer": "D",
+  "explanation": "By default a trunk allows VLANs 1-4094. The allowed vlan command restricts which VLANs are carried, which reduces unneeded traffic and improves security.",
+  "option_notes": [
+   "Wrong: The word allowed is required.",
+   "Wrong: The trunk keyword is required.",
+   "Wrong: This is not valid IOS syntax.",
+   "Correct: switchport trunk allowed vlan sets the allowed list."
+  ],
+  "key_concept": "Limit trunk VLANs with switchport trunk allowed vlan.",
+  "cli_example": "Switch(config-if)# switchport trunk allowed vlan 10,20",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "쉬움",
+  "question": "Which VLAN ID size does the 802.1Q tag use?",
+  "choices": [
+   "8 bits",
+   "16 bits",
+   "12 bits",
+   "10 bits"
+  ],
+  "answer": "C",
+  "explanation": "The 12-bit VID allows IDs 0-4095, where 0 and 4095 are reserved, leaving 4094 usable VLANs.",
+  "option_notes": [
+   "Wrong: 8 bits would allow only 256 VLANs.",
+   "Wrong: 16 bits is the size of the TPID and the TCI fields, not the VID.",
+   "Correct: The VLAN ID field is 12 bits, giving 4096 values (4094 usable).",
+   "Wrong: 10 bits would allow only 1024 values."
+  ],
+  "key_concept": "VID = 12 bits = 4094 usable VLANs.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "쉬움",
+  "question": "Which trunking protocol is an open IEEE standard?",
+  "choices": [
+   "ISL",
+   "802.1Q",
+   "DTP",
+   "VTP"
+  ],
+  "answer": "B",
+  "explanation": "802.1Q is the IEEE standard. ISL was Cisco's older proprietary trunk encapsulation and is no longer supported on most modern switches.",
+  "option_notes": [
+   "Wrong: ISL is Cisco proprietary.",
+   "Correct: 802.1Q is the IEEE standard for VLAN tagging.",
+   "Wrong: DTP is Cisco proprietary and only negotiates trunking.",
+   "Wrong: VTP is Cisco proprietary and distributes VLAN info."
+  ],
+  "key_concept": "802.1Q = standard; ISL = Cisco.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "쉬움",
+  "question": "What does the interface command switchport nonegotiate do?",
+  "choices": [
+   "Stops the port from sending DTP frames",
+   "Disables trunking on the port",
+   "Changes the port to access mode",
+   "Shuts down the port"
+  ],
+  "answer": "A",
+  "explanation": "DTP automatically negotiates trunking. switchport nonegotiate stops DTP frames on a port that is statically set as trunk (or access), which is a common security best practice.",
+  "option_notes": [
+   "Correct: It disables DTP negotiation on the interface.",
+   "Wrong: Trunking itself is not disabled.",
+   "Wrong: It does not change the mode.",
+   "Wrong: It does not shut the port."
+  ],
+  "key_concept": "nonegotiate = turn DTP off.",
+  "cli_example": "Switch(config-if)# switchport mode trunk\nSwitch(config-if)# switchport nonegotiate",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "보통",
+  "question": "Two switches are connected. Both ports are set to switchport mode dynamic auto. What is the resulting link type?",
+  "choices": [
+   "Trunk",
+   "ISL trunk",
+   "The ports are err-disabled",
+   "Access"
+  ],
+  "answer": "D",
+  "explanation": "Dynamic auto waits for the other end to request trunking. If both are auto, nobody initiates and the link operates as an access port.",
+  "option_notes": [
+   "Wrong: Neither side asks to trunk.",
+   "Wrong: No ISL is involved when nobody negotiates.",
+   "Wrong: The ports simply stay in access mode.",
+   "Correct: Auto only responds to DTP and neither side initiates, so the link stays access."
+  ],
+  "key_concept": "auto + auto = access.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "보통",
+  "question": "One switch port is set to dynamic desirable and the neighboring port is set to dynamic auto. What link type results?",
+  "choices": [
+   "Access",
+   "Err-disabled",
+   "Trunk",
+   "Routed port"
+  ],
+  "answer": "C",
+  "explanation": "Dynamic desirable sends DTP requests and becomes a trunk if the neighbor is trunk, desirable or auto. Dynamic auto only answers those requests.",
+  "option_notes": [
+   "Wrong: Access happens only if no side initiates.",
+   "Wrong: No error state occurs here.",
+   "Correct: Desirable actively asks to trunk and auto accepts.",
+   "Wrong: The ports remain switch ports."
+  ],
+  "key_concept": "desirable + auto = trunk.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "보통",
+  "question": "On some Catalyst switches the command switchport mode trunk is rejected until another command is entered. Which command is that?",
+  "choices": [
+   "switchport trunk native vlan 1",
+   "switchport trunk encapsulation dot1q",
+   "switchport nonegotiate",
+   "spanning-tree portfast trunk"
+  ],
+  "answer": "B",
+  "explanation": "Switches such as the Catalyst 3560 support ISL and 802.1Q, so you must choose the encapsulation before the port can be a trunk. Newer switches support only 802.1Q and skip this.",
+  "option_notes": [
+   "Wrong: Native VLAN is optional.",
+   "Correct: Platforms that support both ISL and 802.1Q need the encapsulation set first.",
+   "Wrong: nonegotiate is optional.",
+   "Wrong: PortFast is unrelated to enabling trunk mode."
+  ],
+  "key_concept": "Set encapsulation dot1q first where ISL is supported.",
+  "cli_example": "Switch(config-if)# switchport trunk encapsulation dot1q\nSwitch(config-if)# switchport mode trunk",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "보통",
+  "question": "Refer to the output.\n\nPort Vlans allowed on trunk\nGi0/1 1-4094\nPort Vlans allowed and active in management domain\nGi0/1 1,10,20\n\nWhat does the second section mean?",
+  "choices": [
+   "VLANs 1, 10 and 20 exist on this switch and are permitted on the trunk",
+   "Only VLANs 1, 10 and 20 are blocked",
+   "VLANs 1, 10 and 20 are pruned",
+   "The trunk is down"
+  ],
+  "answer": "A",
+  "explanation": "A VLAN appears as allowed and active only if it is permitted on the trunk and also exists on the switch. Other allowed VLANs are not created locally.",
+  "option_notes": [
+   "Correct: Allowed and active means permitted on the trunk and present in the VLAN database.",
+   "Wrong: They are active, not blocked.",
+   "Wrong: Pruning is shown in the last section.",
+   "Wrong: A down trunk would not appear in this output."
+  ],
+  "key_concept": "Allowed + existing on the switch = allowed and active.",
+  "cli_example": "Switch# show interfaces trunk",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "보통",
+  "question": "A trunk currently allows VLANs 10,20. An engineer enters switchport trunk allowed vlan add 30. What is the allowed list now?",
+  "choices": [
+   "30",
+   "1-4094",
+   "10,30",
+   "10,20,30"
+  ],
+  "answer": "D",
+  "explanation": "The keyword add appends VLANs to the existing list. Without add, the command replaces the entire list, which is a common cause of outages.",
+  "option_notes": [
+   "Wrong: Without add, the list would be replaced with 30.",
+   "Wrong: The list was not reset to all VLANs.",
+   "Wrong: VLAN 20 was not removed.",
+   "Correct: add appends VLAN 30 to the existing list."
+  ],
+  "key_concept": "allowed vlan add appends; without add it replaces.",
+  "cli_example": "Switch(config-if)# switchport trunk allowed vlan add 30",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "보통",
+  "question": "By how much does an 802.1Q tag increase the maximum Ethernet frame size?",
+  "choices": [
+   "From 1500 to 1504 bytes",
+   "From 1518 to 1530 bytes",
+   "From 1518 to 1522 bytes",
+   "From 64 to 68 bytes"
+  ],
+  "answer": "C",
+  "explanation": "The standard Ethernet maximum is 1518 bytes including header and FCS. The 4-byte 802.1Q tag brings that to 1522 bytes.",
+  "option_notes": [
+   "Wrong: 1500 is the MTU, not the frame size.",
+   "Wrong: The tag is only 4 bytes, not 12.",
+   "Correct: The 4-byte tag raises the maximum frame from 1518 to 1522 bytes.",
+   "Wrong: The minimum frame size is not what changes the maximum."
+  ],
+  "key_concept": "802.1Q adds 4 bytes: 1518 to 1522.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "보통",
+  "question": "Which traffic is sent untagged on an 802.1Q trunk?",
+  "choices": [
+   "Frames from all VLANs",
+   "Frames belonging to the native VLAN",
+   "Only voice VLAN frames",
+   "Only broadcast frames"
+  ],
+  "answer": "B",
+  "explanation": "802.1Q tags every frame except those of the native VLAN. The receiving switch places untagged frames in its own configured native VLAN.",
+  "option_notes": [
+   "Wrong: All other VLANs are tagged.",
+   "Correct: Native VLAN frames are sent without a tag.",
+   "Wrong: Voice VLANs are tagged.",
+   "Wrong: Broadcasts are tagged like any other frame if not native."
+  ],
+  "key_concept": "Native VLAN = untagged.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "보통",
+  "question": "VLAN 20 is not in the allowed list of a trunk between two switches. What is the effect?",
+  "choices": [
+   "VLAN 20 frames are not carried across that trunk",
+   "VLAN 20 is deleted from the switch",
+   "The trunk goes down",
+   "VLAN 20 becomes the native VLAN"
+  ],
+  "answer": "A",
+  "explanation": "The allowed list filters the VLANs on the trunk. Hosts in VLAN 20 on opposite switches cannot communicate across it.",
+  "option_notes": [
+   "Correct: Only allowed VLANs are forwarded on the trunk.",
+   "Wrong: The VLAN still exists locally.",
+   "Wrong: The trunk stays up for other VLANs.",
+   "Wrong: Native VLAN does not change."
+  ],
+  "key_concept": "Trunk allowed list filters VLANs.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "보통",
+  "question": "Switch A has switchport mode trunk. Switch B has the default Catalyst setting. What type of link results?",
+  "choices": [
+   "Access",
+   "Err-disabled",
+   "Routed",
+   "Trunk"
+  ],
+  "answer": "D",
+  "explanation": "The default mode on most Catalyst switches is dynamic auto. A static trunk port sends DTP frames, so the dynamic auto neighbor becomes a trunk.",
+  "option_notes": [
+   "Wrong: Auto would become access only if the neighbor were access or auto.",
+   "Wrong: No error occurs.",
+   "Wrong: The ports stay switchports.",
+   "Correct: The default dynamic auto accepts DTP negotiation from a static trunk."
+  ],
+  "key_concept": "trunk + auto = trunk.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "보통",
+  "question": "Which DTP mode combination results in an access link?",
+  "choices": [
+   "dynamic desirable on both ends",
+   "trunk on one end and dynamic auto on the other",
+   "dynamic auto on both ends",
+   "dynamic desirable and dynamic auto"
+  ],
+  "answer": "C",
+  "explanation": "Trunking forms when at least one side actively initiates (trunk or desirable) and the other side is trunk, desirable or auto. Two auto ports never initiate.",
+  "option_notes": [
+   "Wrong: Desirable ends negotiate a trunk.",
+   "Wrong: A static trunk forces trunking with auto.",
+   "Correct: Neither side initiates trunking so both stay access.",
+   "Wrong: Desirable plus auto produces a trunk."
+  ],
+  "key_concept": "auto + auto = access.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "어려움",
+  "question": "SW1 has native VLAN 10 on its trunk and SW2 has native VLAN 20 on the other end. An untagged frame from VLAN 10 arrives at SW2. In which VLAN does SW2 place it?",
+  "choices": [
+   "VLAN 10",
+   "VLAN 20",
+   "VLAN 1",
+   "The frame is dropped"
+  ],
+  "answer": "B",
+  "explanation": "Untagged frames take the receiving port's native VLAN. A mismatch merges traffic of two VLANs and can cause loops and security problems. CDP reports NATIVE_VLAN_MISMATCH.",
+  "option_notes": [
+   "Wrong: VLAN 10 would apply only if the native VLANs matched.",
+   "Correct: SW2 treats untagged frames as its own native VLAN 20.",
+   "Wrong: VLAN 1 is not the native VLAN on SW2.",
+   "Wrong: The frame is forwarded, not dropped, which is the problem."
+  ],
+  "key_concept": "Native VLAN mismatch leaks traffic between VLANs.",
+  "cli_example": "",
+  "tip": "Match the native VLAN on both ends."
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "어려움",
+  "question": "A trunk allows VLANs 10,20,30. The engineer runs switchport trunk allowed vlan 20. What is the result?",
+  "choices": [
+   "Only VLAN 20 is allowed; VLAN 10 and 30 stop crossing the trunk",
+   "VLAN 20 is added to the list",
+   "The command is rejected",
+   "VLAN 10 and 30 remain allowed"
+  ],
+  "answer": "A",
+  "explanation": "The allowed vlan command without add, remove or except overwrites the entire list. Traffic for VLANs 10 and 30 would stop.",
+  "option_notes": [
+   "Correct: Without add the list is replaced by just VLAN 20.",
+   "Wrong: Adding requires the add keyword.",
+   "Wrong: IOS accepts this command.",
+   "Wrong: The old VLANs are removed."
+  ],
+  "key_concept": "Always use add when appending VLANs to a trunk.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "어려움",
+  "question": "Switch A has switchport mode access. Switch B has switchport mode dynamic desirable. What is the result?",
+  "choices": [
+   "The link operates as a trunk",
+   "Switch B becomes err-disabled",
+   "Both ports become routed ports",
+   "The link operates as an access link"
+  ],
+  "answer": "D",
+  "explanation": "A statically configured access port never trunks. The desirable port sends DTP frames but gets no positive answer, so it stays in access mode.",
+  "option_notes": [
+   "Wrong: A static access port refuses to trunk.",
+   "Wrong: No err-disabled state results.",
+   "Wrong: The ports stay switchports.",
+   "Correct: The access side does not negotiate, so B falls back to access."
+  ],
+  "key_concept": "access never trunks.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "어려움",
+  "question": "Switch A: switchport mode trunk and switchport nonegotiate. Switch B: switchport mode dynamic desirable. What happens?",
+  "choices": [
+   "Both ports become trunks",
+   "Both ports become access ports",
+   "A is a trunk and B is an access port, so traffic of tagged VLANs fails",
+   "Switch B is err-disabled"
+  ],
+  "answer": "C",
+  "explanation": "nonegotiate stops DTP frames, so the desirable side gets no negotiation and operates as access. The two ends disagree, so tagged traffic fails.",
+  "option_notes": [
+   "Wrong: B cannot become a trunk without DTP from A.",
+   "Wrong: A is statically a trunk, so it stays trunk.",
+   "Correct: A sends no DTP frames, so B never learns to trunk and stays access.",
+   "Wrong: No err-disabled state is used for this."
+  ],
+  "key_concept": "nonegotiate requires a static trunk on both ends.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "어려움",
+  "question": "What does the global command vlan dot1q tag native do?",
+  "choices": [
+   "It removes tags from all VLANs",
+   "It tags native VLAN frames on all 802.1Q trunks",
+   "It changes the native VLAN to 1",
+   "It disables DTP"
+  ],
+  "answer": "B",
+  "explanation": "By default native VLAN frames are untagged. Tagging the native VLAN helps against double-tagging VLAN hopping attacks.",
+  "option_notes": [
+   "Wrong: It does not remove tags.",
+   "Correct: Native VLAN frames are sent with an 802.1Q tag.",
+   "Wrong: It does not change the native VLAN number.",
+   "Wrong: DTP is unaffected."
+  ],
+  "key_concept": "vlan dot1q tag native tags the native VLAN.",
+  "cli_example": "Switch(config)# vlan dot1q tag native",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "어려움",
+  "question": "Trunk Gi0/1 is up, but hosts in VLAN 30 on SW2 cannot communicate with VLAN 30 hosts on SW1. show interfaces trunk on SW1 lists allowed 1-4094 and allowed and active 1,10,20. What is the most likely cause?",
+  "choices": [
+   "VLAN 30 does not exist on SW1",
+   "VLAN 30 is the native VLAN",
+   "The trunk is using ISL",
+   "SW1 trunk is in dynamic auto mode"
+  ],
+  "answer": "A",
+  "explanation": "A VLAN must exist in the local VLAN database to be active on the trunk. Create VLAN 30 on SW1.",
+  "option_notes": [
+   "Correct: VLAN 30 is allowed but not in the active list, so it is missing from SW1.",
+   "Wrong: Native VLAN would not remove it from the active list.",
+   "Wrong: ISL is not shown, and would affect all VLANs.",
+   "Wrong: The trunk is up, so the mode is not the issue."
+  ],
+  "key_concept": "Allowed but not active = VLAN missing locally.",
+  "cli_example": "Switch(config)# vlan 30",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "어려움",
+  "question": "Refer to the output.\n\nPort Vlans in spanning tree forwarding state and not pruned\nGi0/1 1,10\n\nVLANs 1,10,20 are allowed and active on the trunk. What explains the missing VLAN 20?",
+  "choices": [
+   "VLAN 20 is the native VLAN",
+   "VLAN 20 was deleted",
+   "The trunk uses ISL",
+   "Spanning tree is blocking VLAN 20 on this port"
+  ],
+  "answer": "D",
+  "explanation": "The last section lists VLANs allowed, active and forwarding. A VLAN missing there is blocked by STP (or pruned by VTP) on that port.",
+  "option_notes": [
+   "Wrong: Native VLAN would still be listed.",
+   "Wrong: A deleted VLAN would not be active.",
+   "Wrong: ISL does not affect this.",
+   "Correct: VLAN 20 is active but not forwarding, which points to STP blocking or pruning."
+  ],
+  "key_concept": "Third section = forwarding VLANs.",
+  "cli_example": "Switch# show interfaces trunk",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "어려움",
+  "question": "Which is a recommended practice to reduce VLAN hopping with double tagging?",
+  "choices": [
+   "Use VLAN 1 as the native VLAN for all trunks",
+   "Leave all ports in dynamic desirable mode",
+   "Use an unused VLAN as the native VLAN and do not assign user ports to it",
+   "Allow all VLANs on every trunk"
+  ],
+  "answer": "C",
+  "explanation": "Double tagging exploits a native VLAN shared with attacker ports. Use an unused native VLAN, disable DTP and prune the allowed list.",
+  "option_notes": [
+   "Wrong: Using VLAN 1 for user ports and native VLAN is the vulnerable setup.",
+   "Wrong: Desirable allows unwanted trunk negotiation.",
+   "Correct: Moving native VLAN away from user VLANs prevents the double-tag attack.",
+   "Wrong: Allowing all VLANs widens exposure."
+  ],
+  "key_concept": "Use an unused native VLAN.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "어려움",
+  "question": "Which configuration meets the need for a static 802.1Q trunk, native VLAN 99, VLANs 10 and 20 only, and no DTP frames?",
+  "choices": [
+   "switchport mode dynamic desirable\nswitchport trunk allowed vlan 10,20",
+   "switchport mode trunk\nswitchport trunk native vlan 99\nswitchport trunk allowed vlan 10,20,99\nswitchport nonegotiate",
+   "switchport mode access\nswitchport trunk native vlan 99",
+   "switchport mode trunk\nswitchport nonegotiate\nswitchport trunk allowed vlan 10,20,30"
+  ],
+  "answer": "B",
+  "explanation": "A static trunk with nonegotiate removes DTP. The allowed list must include the native VLAN if it should be carried.",
+  "option_notes": [
+   "Wrong: Dynamic desirable still uses DTP and has no native VLAN setting.",
+   "Correct: It sets a static trunk, native 99, the VLAN list and turns off DTP.",
+   "Wrong: Access mode is not a trunk.",
+   "Wrong: The allowed list includes VLAN 30 and no native VLAN 99."
+  ],
+  "key_concept": "Static trunk + nonegotiate + allowed list.",
+  "cli_example": "Switch(config-if)# switchport mode trunk\nSwitch(config-if)# switchport trunk native vlan 99\nSwitch(config-if)# switchport trunk allowed vlan 10,20,99\nSwitch(config-if)# switchport nonegotiate",
+  "tip": ""
+ },
+ {
+  "sub": "2.2",
+  "difficulty": "어려움",
+  "question": "What is the maximum payload of a standard Ethernet frame (MTU) after an 802.1Q tag is added, assuming default Ethernet II framing?",
+  "choices": [
+   "1500 bytes",
+   "1496 bytes",
+   "1504 bytes",
+   "1522 bytes"
+  ],
+  "answer": "A",
+  "explanation": "The 802.1Q tag adds 4 bytes to the frame (max 1522) but the payload can remain 1500 bytes.",
+  "option_notes": [
+   "Correct: The MTU stays 1500; the tag enlarges the frame instead.",
+   "Wrong: The tag does not reduce the payload.",
+   "Wrong: The payload does not increase.",
+   "Wrong: 1522 is the maximum frame size, not the payload."
+  ],
+  "key_concept": "Tag grows the frame, not the MTU.",
+  "cli_example": "",
+  "tip": ""
+ }
+]

@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "6.2",
+  "difficulty": "쉬움",
+  "question": "Which network plane is responsible for forwarding user traffic from an ingress interface to an egress interface?",
+  "choices": [
+   "Data plane",
+   "Control plane",
+   "Management plane",
+   "Application plane"
+  ],
+  "answer": "A",
+  "explanation": "The data (forwarding) plane moves packets through the device using the tables that the control plane built. Typical tasks include routing lookups, switching, NAT and ACL enforcement on transit traffic.",
+  "option_notes": [
+   "Correct: The data plane performs the actual forwarding of packets and frames.",
+   "Wrong: The control plane builds the tables used for forwarding decisions.",
+   "Wrong: The management plane handles administration of the device.",
+   "Wrong: Not a standard device plane in this model."
+  ],
+  "key_concept": "Data plane = forwarding of transit traffic.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "쉬움",
+  "question": "Which function belongs to the control plane?",
+  "choices": [
+   "Forwarding a packet out of an interface",
+   "Building the routing table using OSPF",
+   "Collecting syslog messages from the device",
+   "Encrypting a packet with a hardware chip"
+  ],
+  "answer": "B",
+  "explanation": "The control plane decides how traffic should be forwarded. Examples are OSPF, EIGRP, BGP, ARP and spanning tree, which build the tables used by the data plane.",
+  "option_notes": [
+   "Wrong: That is the data plane.",
+   "Correct: Routing protocols calculate paths and populate tables.",
+   "Wrong: That is the management plane.",
+   "Wrong: That is a data plane function."
+  ],
+  "key_concept": "Control plane = protocols that build forwarding tables.",
+  "cli_example": "show ip route ospf",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "쉬움",
+  "question": "Which activity is part of the management plane?",
+  "choices": [
+   "Running OSPF to find neighbors",
+   "Switching an Ethernet frame to a MAC address",
+   "Connecting to a router with SSH to change its configuration",
+   "Learning ARP entries"
+  ],
+  "answer": "C",
+  "explanation": "The management plane covers how administrators and tools access and monitor the device, such as SSH, SNMP, syslog, NETCONF and the REST API.",
+  "option_notes": [
+   "Wrong: OSPF is control plane.",
+   "Wrong: That is data plane.",
+   "Correct: Administrative access and monitoring protocols belong to the management plane.",
+   "Wrong: ARP is control plane."
+  ],
+  "key_concept": "Management plane = SSH, SNMP, syslog, NETCONF.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "쉬움",
+  "question": "In a traditional network, where does each device make its own control plane decisions?",
+  "choices": [
+   "On one central controller only",
+   "On the end-user PCs",
+   "At the ISP only",
+   "On the device itself, in a distributed way"
+  ],
+  "answer": "D",
+  "explanation": "Traditional networks have a distributed control plane. Every device runs routing and switching protocols and is configured individually, usually through the CLI.",
+  "option_notes": [
+   "Wrong: That describes a controller-based network.",
+   "Wrong: End hosts do not run the network's control plane.",
+   "Wrong: Not a traditional enterprise model.",
+   "Correct: Each router or switch runs its own protocols and builds its own tables."
+  ],
+  "key_concept": "Traditional = distributed control plane, per-device config.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "쉬움",
+  "question": "What is a key characteristic of a controller-based network?",
+  "choices": [
+   "Configuration and policy are managed centrally from a controller",
+   "Every device must be configured manually through the console",
+   "No devices are needed in the network",
+   "The controller forwards every user packet"
+  ],
+  "answer": "A",
+  "explanation": "In a controller-based design, administrators define intent and policy on a central controller. The controller pushes configuration to devices and provides visibility across the network.",
+  "option_notes": [
+   "Correct: The controller gives one place to define and push policy.",
+   "Wrong: That describes traditional management.",
+   "Wrong: Devices are still needed.",
+   "Wrong: In most designs, devices forward the traffic."
+  ],
+  "key_concept": "Controller = central policy and visibility.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "쉬움",
+  "question": "What is Cisco Catalyst Center (formerly Cisco DNA Center)?",
+  "choices": [
+   "A routing protocol for WAN links",
+   "A controller-based platform for automation and assurance of campus and branch networks",
+   "A type of Layer 2 switch",
+   "A wireless encryption standard"
+  ],
+  "answer": "B",
+  "explanation": "Catalyst Center is Cisco's on-premises controller for enterprise networks. It provides design, policy, provisioning (automation) and assurance with analytics and a northbound API.",
+  "option_notes": [
+   "Wrong: It is a platform, not a protocol.",
+   "Correct: It provides automation, policy and analytics.",
+   "Wrong: It is software, not a switch.",
+   "Wrong: Not related."
+  ],
+  "key_concept": "Catalyst Center = Cisco's campus controller.",
+  "cli_example": "",
+  "tip": "DNA Center was renamed Catalyst Center."
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "쉬움",
+  "question": "Which is a benefit of using a controller for network management instead of the CLI on every device?",
+  "choices": [
+   "It removes the need for network devices",
+   "It makes configuration slower",
+   "A single point to apply consistent policy across many devices",
+   "It requires each device to be reloaded"
+  ],
+  "answer": "C",
+  "explanation": "Controllers let operators apply a policy once and have it deployed in a consistent way to many devices. This reduces errors and saves time compared with per-device CLI.",
+  "option_notes": [
+   "Wrong: Devices remain.",
+   "Wrong: Typically faster at scale.",
+   "Correct: Central policy reduces inconsistencies.",
+   "Wrong: Not required."
+  ],
+  "key_concept": "Central policy gives consistency.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "쉬움",
+  "question": "Which interface type do administrators commonly use to configure a traditional router?",
+  "choices": [
+   "A centralized policy engine",
+   "Voice commands to a phone",
+   "A web browser on the end user PC only",
+   "CLI over SSH or console"
+  ],
+  "answer": "D",
+  "explanation": "Traditional management relies on logging in to each device with the CLI (SSH, console) and configuring it manually. Scripts can help, but the model is still device-by-device.",
+  "option_notes": [
+   "Wrong: This is controller-based.",
+   "Wrong: Not a management method.",
+   "Wrong: Not typical.",
+   "Correct: Per-device CLI is the typical traditional method."
+  ],
+  "key_concept": "Traditional = CLI per device.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "쉬움",
+  "question": "Which statement about a controller as a point of failure is most accurate?",
+  "choices": [
+   "The controller must be designed with redundancy because it is central to management",
+   "A controller can never fail",
+   "The controller has no effect on the network",
+   "Controllers are used only for one device"
+  ],
+  "answer": "A",
+  "explanation": "Because a controller manages many devices, its availability matters. Vendors provide clustering and backup options. A controller outage usually affects management and automation, not forwarding.",
+  "option_notes": [
+   "Correct: Redundant controllers reduce the risk.",
+   "Wrong: Any system can fail.",
+   "Wrong: It does manage it.",
+   "Wrong: They manage many devices."
+  ],
+  "key_concept": "Plan controller high availability.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "쉬움",
+  "question": "What does a 'single pane of glass' refer to in controller-based networking?",
+  "choices": [
+   "A physical window in the data center",
+   "One interface that shows and manages the whole network",
+   "A fiber-optic cable type",
+   "A password manager"
+  ],
+  "answer": "B",
+  "explanation": "A single pane of glass is one central dashboard or interface that gives visibility and control of many devices, instead of logging in to each one separately.",
+  "option_notes": [
+   "Wrong: Not related.",
+   "Correct: One dashboard replaces many tools and device logins.",
+   "Wrong: Not related.",
+   "Wrong: Not related."
+  ],
+  "key_concept": "Single pane of glass = one unified view.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "보통",
+  "question": "Which Catalyst Center capability lets a new switch discover and join the network and receive its configuration with little manual effort?",
+  "choices": [
+   "Port security",
+   "Spanning tree PortFast",
+   "Plug and Play (PnP)",
+   "Syslog"
+  ],
+  "answer": "C",
+  "explanation": "Catalyst Center Plug and Play lets new devices be claimed, assigned a site and template, and provisioned automatically when they first connect to the network.",
+  "option_notes": [
+   "Wrong: This limits MAC addresses on switch ports.",
+   "Wrong: PortFast speeds up access port forwarding.",
+   "Correct: PnP onboards new devices automatically.",
+   "Wrong: Syslog collects messages."
+  ],
+  "key_concept": "PnP = automated onboarding of new devices.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "보통",
+  "question": "Which Catalyst Center function monitors network health and uses analytics to find issues?",
+  "choices": [
+   "Design",
+   "Provision",
+   "Platform",
+   "Assurance"
+  ],
+  "answer": "D",
+  "explanation": "Catalyst Center Assurance collects telemetry and shows health of the network, devices and clients, with insights that help find and fix problems faster.",
+  "option_notes": [
+   "Wrong: Design is for modeling sites, settings and templates.",
+   "Wrong: Provision pushes configuration to devices.",
+   "Wrong: Platform provides APIs and integrations.",
+   "Correct: Assurance provides health scores, analytics and insights."
+  ],
+  "key_concept": "Assurance = analytics and health monitoring.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "보통",
+  "question": "What is the purpose of the Software Image Management (SWIM) feature in Catalyst Center?",
+  "choices": [
+   "To upgrade and manage device software images centrally",
+   "To collect NetFlow records",
+   "To assign IP addresses to clients",
+   "To encrypt wireless clients"
+  ],
+  "answer": "A",
+  "explanation": "SWIM lets administrators import, validate, distribute and activate software images on many devices from the controller, instead of upgrading each device manually.",
+  "option_notes": [
+   "Correct: SWIM automates image distribution and activation.",
+   "Wrong: That is a different function.",
+   "Wrong: DHCP does that.",
+   "Wrong: Not its purpose."
+  ],
+  "key_concept": "SWIM = central software upgrades.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "보통",
+  "question": "An external ticketing application needs to ask a controller to run a task. Which interface does the application use?",
+  "choices": [
+   "The southbound API toward devices",
+   "The northbound API of the controller",
+   "The console port of the controller",
+   "A spanning tree BPDU"
+  ],
+  "answer": "B",
+  "explanation": "Applications and scripts talk to a controller through its northbound interface, usually a REST API. The controller then uses southbound protocols to talk to the network devices.",
+  "option_notes": [
+   "Wrong: This connects the controller to devices.",
+   "Correct: Northbound APIs expose controller functions to applications.",
+   "Wrong: This is not for applications.",
+   "Wrong: Not related."
+  ],
+  "key_concept": "Northbound = applications to controller; southbound = controller to devices.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "보통",
+  "question": "Which protocols may a controller use on its southbound interface to configure or monitor devices?",
+  "choices": [
+   "HTTP GET only to end users",
+   "HSRP and VRRP",
+   "NETCONF, SSH or SNMP",
+   "CDP and PoE"
+  ],
+  "answer": "C",
+  "explanation": "A controller reaches devices over southbound interfaces such as NETCONF, SSH/CLI, SNMP, and in some products RESTCONF. This is how it reads state and applies configuration.",
+  "option_notes": [
+   "Wrong: Not a southbound device protocol.",
+   "Wrong: These are first-hop redundancy protocols.",
+   "Correct: These are common management protocols toward the devices.",
+   "Wrong: Not controller configuration protocols."
+  ],
+  "key_concept": "Southbound examples: NETCONF, SSH, SNMP, RESTCONF.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "보통",
+  "question": "In intent-based networking, what does the administrator provide to the controller?",
+  "choices": [
+   "Exact CLI commands for every device",
+   "Only the physical cable map",
+   "A list of passwords for the users",
+   "The desired business outcome or policy, which the system translates into device configuration"
+  ],
+  "answer": "D",
+  "explanation": "Intent-based networking lets the admin describe what is wanted (for example, 'give voice traffic priority'). The controller works out how to configure the devices, and then verifies the result.",
+  "option_notes": [
+   "Wrong: That is traditional management.",
+   "Wrong: Not intent.",
+   "Wrong: Not intent.",
+   "Correct: The system translates intent into configuration."
+  ],
+  "key_concept": "Intent = what, not how.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "보통",
+  "question": "SNMP polling from a monitoring server to a router is an example of which plane?",
+  "choices": [
+   "Management plane",
+   "Data plane",
+   "Control plane",
+   "Physical plane"
+  ],
+  "answer": "A",
+  "explanation": "SNMP, SSH, syslog and NETCONF are management plane functions. They let administrators and tools monitor and configure the device.",
+  "option_notes": [
+   "Correct: SNMP is used to monitor and manage devices.",
+   "Wrong: Data plane forwards user traffic.",
+   "Wrong: Control plane runs routing and switching protocols.",
+   "Wrong: Not a standard plane."
+  ],
+  "key_concept": "SNMP/syslog/SSH = management plane.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "보통",
+  "question": "Which statement is true about the data plane in most controller-based campus designs?",
+  "choices": [
+   "The controller forwards every packet",
+   "Network devices still forward user traffic",
+   "Users must connect directly to the controller",
+   "Packets are forwarded by the management server"
+  ],
+  "answer": "B",
+  "explanation": "In most designs, including Catalyst Center managed networks, switches and routers still forward packets. The controller provides management, policy and analytics.",
+  "option_notes": [
+   "Wrong: This would be a major bottleneck.",
+   "Correct: Forwarding stays on the devices.",
+   "Wrong: Not required.",
+   "Wrong: Not the typical design."
+  ],
+  "key_concept": "Forwarding stays on devices.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "보통",
+  "question": "Which Catalyst Center feature applies a standard configuration snippet with variables to many devices?",
+  "choices": [
+   "Syslog",
+   "PortFast",
+   "Templates",
+   "EtherChannel"
+  ],
+  "answer": "C",
+  "explanation": "Templates in Catalyst Center hold CLI configuration with variables. They can be assigned to devices or sites and pushed during provisioning for a consistent configuration.",
+  "option_notes": [
+   "Wrong: Syslog is for logging.",
+   "Wrong: This is an STP feature.",
+   "Correct: Templates automate repeatable configuration.",
+   "Wrong: This bundles links."
+  ],
+  "key_concept": "Templates = reusable configs with variables.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "어려움",
+  "question": "Catalyst Center becomes unreachable because of a server failure. What is the expected effect on user traffic already flowing through the campus switches?",
+  "choices": [
+   "All traffic stops immediately",
+   "Switches erase their running configuration",
+   "All routing protocols stop and neighbors drop",
+   "Traffic continues to be forwarded; management, automation and assurance are unavailable"
+  ],
+  "answer": "D",
+  "explanation": "Catalyst Center is a management and control-of-intent platform and is not in the forwarding path. Devices keep forwarding with their existing configuration. Only new provisioning, analytics and changes are affected.",
+  "option_notes": [
+   "Wrong: Devices do not depend on the controller for forwarding.",
+   "Wrong: They do not erase it.",
+   "Wrong: Protocols run on the devices.",
+   "Correct: Devices keep their configuration and forwarding state."
+  ],
+  "key_concept": "Controller outage affects management, not forwarding.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "어려움",
+  "question": "Which pairing of function and plane is correct?",
+  "choices": [
+   "Enforcing an ACL on transit packets - data plane; exporting syslog - management plane; building an OSPF database - control plane",
+   "Enforcing an ACL on transit packets - management plane; exporting syslog - data plane",
+   "Building an OSPF database - data plane; SSH access - control plane",
+   "Forwarding frames - control plane; SNMP - data plane"
+  ],
+  "answer": "A",
+  "explanation": "ACL filtering and forwarding of transit traffic occur in the data plane. Routing protocols are control plane. SSH, SNMP and syslog are management plane.",
+  "option_notes": [
+   "Correct: Each function is matched to the right plane.",
+   "Wrong: Mismatched planes.",
+   "Wrong: Mismatched planes.",
+   "Wrong: Mismatched planes."
+  ],
+  "key_concept": "Data = forward; control = decide; management = administer.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "어려움",
+  "question": "A company has 500 switches. A new QoS policy must be added. Which statement correctly contrasts the two approaches?",
+  "choices": [
+   "Traditional: define once and push; controller-based: configure each switch separately",
+   "Traditional: configure each switch separately; controller-based: define the policy once and push it to all",
+   "Both need 500 separate logins",
+   "Controller-based requires typing QoS on each switch console"
+  ],
+  "answer": "B",
+  "explanation": "In the traditional model an engineer must log in to each switch or script it. A controller defines the policy once and deploys it to the selected devices, with consistent results and fewer errors.",
+  "option_notes": [
+   "Wrong: Reversed.",
+   "Correct: The controller removes the per-device repetition.",
+   "Wrong: A controller avoids this.",
+   "Wrong: The controller pushes it centrally."
+  ],
+  "key_concept": "Controller = define once, deploy many.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "어려움",
+  "question": "An administrator states 'Give the finance VLAN higher priority than guest Wi-Fi.' The controller determines the QoS commands for each device model. Which concept does this describe?",
+  "choices": [
+   "Manual CLI provisioning",
+   "Spanning tree convergence",
+   "Intent-based networking with policy translation",
+   "Port security"
+  ],
+  "answer": "C",
+  "explanation": "The administrator describes the desired outcome. The controller translates it into per-device configuration (different commands for different platforms) and then monitors whether the intent is met.",
+  "option_notes": [
+   "Wrong: The admin did not write commands.",
+   "Wrong: Not related.",
+   "Correct: The controller converts intent into device-specific config.",
+   "Wrong: Not related."
+  ],
+  "key_concept": "Intent translation hides device-level detail.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "어려움",
+  "question": "Which statement correctly describes a possible disadvantage of controller-based management?",
+  "choices": [
+   "It always increases per-device CLI work",
+   "It can only manage one device",
+   "It cannot provide any visibility",
+   "A compromised controller could give an attacker wide control, so it must be secured and access limited"
+  ],
+  "answer": "D",
+  "explanation": "A controller holds credentials and can configure many devices. If it is compromised, the impact is large, so it needs strong authentication, RBAC, hardening and redundancy.",
+  "option_notes": [
+   "Wrong: It usually reduces it.",
+   "Wrong: It manages many.",
+   "Wrong: Visibility is a main benefit.",
+   "Correct: Centralization concentrates risk."
+  ],
+  "key_concept": "Central control means central risk.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "어려움",
+  "question": "A monitoring tool uses a REST API on Catalyst Center to get a list of devices, and Catalyst Center then uses SSH and SNMP to read device data. Which labels are correct?",
+  "choices": [
+   "REST API is northbound; SSH and SNMP are southbound",
+   "REST API is southbound; SSH and SNMP are northbound",
+   "All three are northbound",
+   "All three are southbound"
+  ],
+  "answer": "A",
+  "explanation": "The northbound interface connects applications to the controller, typically with REST. The southbound interface connects the controller to network devices with protocols such as SSH, SNMP and NETCONF.",
+  "option_notes": [
+   "Correct: Northbound faces applications; southbound faces devices.",
+   "Wrong: Reversed.",
+   "Wrong: SSH and SNMP face devices.",
+   "Wrong: REST faces applications."
+  ],
+  "key_concept": "North = apps; south = devices.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "어려움",
+  "question": "Which scenario best shows the benefit of Catalyst Center Assurance over traditional device-by-device monitoring?",
+  "choices": [
+   "It prevents any link from failing",
+   "It correlates data from many devices and clients to point to the likely cause of an issue",
+   "It requires engineers to read separate logs on each device",
+   "It replaces all routing protocols"
+  ],
+  "answer": "B",
+  "explanation": "Assurance gathers telemetry from many devices and presents health scores and suggested actions. This is more efficient than manually checking logs and counters on each device.",
+  "option_notes": [
+   "Wrong: It cannot stop hardware failures.",
+   "Correct: Correlation across the network speeds root-cause finding.",
+   "Wrong: This is the traditional approach.",
+   "Wrong: Not its function."
+  ],
+  "key_concept": "Assurance correlates network-wide data.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "어려움",
+  "question": "Which statement about traditional networks compared with controller-based networks is correct?",
+  "choices": [
+   "Traditional networks have central policy by default",
+   "Controller-based networks need CLI on every device for every change",
+   "Traditional networks have per-device policy, which makes configuration inconsistencies more likely",
+   "Traditional networks cannot forward any traffic"
+  ],
+  "answer": "C",
+  "explanation": "Each device in a traditional network holds its own policy and configuration, so differences can accumulate between devices. Controller-based networks hold the intended policy centrally.",
+  "option_notes": [
+   "Wrong: Central policy is a controller feature.",
+   "Wrong: The controller pushes changes.",
+   "Correct: Policy lives on each device, so drift is more likely.",
+   "Wrong: They can."
+  ],
+  "key_concept": "Traditional = per-device config, more drift risk.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "어려움",
+  "question": "Which feature of Catalyst Center would an engineer use to create a hierarchy of sites, buildings and floors and define settings such as NTP and DHCP servers for them?",
+  "choices": [
+   "Assurance",
+   "SWIM only",
+   "Port mirroring",
+   "Design"
+  ],
+  "answer": "D",
+  "explanation": "In Catalyst Center, the Design area is used to model the site hierarchy and set network settings and profiles. Policy, Provision and Assurance build upon this design.",
+  "option_notes": [
+   "Wrong: Assurance monitors health.",
+   "Wrong: SWIM handles images.",
+   "Wrong: Not a Catalyst Center function.",
+   "Correct: Design defines the network hierarchy and common settings."
+  ],
+  "key_concept": "Design = model sites and settings.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "보통",
+  "question": "Which statement about a controller-based network and the control plane is most accurate?",
+  "choices": [
+   "Control plane intelligence is centralized in the controller to a greater degree than in a traditional network",
+   "Each device alone decides everything, with no central input",
+   "The control plane is removed completely from the network",
+   "Only end hosts run the control plane"
+  ],
+  "answer": "A",
+  "explanation": "In traditional networks the control plane is fully distributed on devices. Controller-based designs centralize some or all decision-making and policy in the controller, depending on the architecture.",
+  "option_notes": [
+   "Correct: Controllers add central intelligence and decision-making.",
+   "Wrong: That describes the traditional model.",
+   "Wrong: It still exists, centrally or on devices.",
+   "Wrong: Hosts do not run it for the network."
+  ],
+  "key_concept": "Controller centralizes control and policy.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.2",
+  "difficulty": "어려움",
+  "question": "An engineer wants to see the full path and hop-by-hop interface health between two hosts across many switches from one tool. Which type of platform gives this most easily?",
+  "choices": [
+   "The CLI of a single access switch",
+   "A controller with path-trace and assurance features, such as Catalyst Center",
+   "A console cable on one router",
+   "A cable tester"
+  ],
+  "answer": "B",
+  "explanation": "Catalyst Center can run a path trace between two endpoints and show devices, interfaces and health along the path. In a traditional network the engineer would check each hop manually.",
+  "option_notes": [
+   "Wrong: It only knows its local view.",
+   "Correct: The controller has network-wide knowledge and telemetry.",
+   "Wrong: Only one device.",
+   "Wrong: Physical layer only."
+  ],
+  "key_concept": "Controller has end-to-end visibility.",
+  "cli_example": "",
+  "tip": ""
+ }
+]

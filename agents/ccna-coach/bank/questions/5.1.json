@@ -1,0 +1,662 @@
+[
+{
+"sub": "5.1",
+"difficulty": "쉬움",
+"question": "In network security terminology, what is a threat?",
+"choices": [
+"A potential danger that could harm an asset by exploiting a weakness",
+"A weakness in a system that can be abused",
+"A tool that takes advantage of a software flaw",
+"An action that reduces the impact of an attack"
+],
+"answer": "A",
+"explanation": "A threat is a potential danger that could take advantage of a vulnerability to harm an asset. It can come from a person, a piece of malware or a natural event. A threat only becomes a problem if a vulnerability exists to exploit.",
+"option_notes": [
+"Correct: This is the definition of a threat.",
+"Wrong: That describes a vulnerability.",
+"Wrong: That describes an exploit.",
+"Wrong: That describes a mitigation or countermeasure."
+],
+"key_concept": "Threat = potential danger that can exploit a vulnerability.",
+"cli_example": "",
+"tip": "Threat = what could hurt you; vulnerability = the weakness; exploit = the method."
+},
+{
+"sub": "5.1",
+"difficulty": "쉬움",
+"question": "Which term describes a weakness in a system, such as an unpatched operating system or a default password?",
+"choices": [
+"Exploit",
+"Vulnerability",
+"Threat actor",
+"Mitigation"
+],
+"answer": "B",
+"explanation": "A vulnerability is a weakness in hardware, software, configuration or procedure that an attacker could use. Unpatched software and default credentials are classic examples. Vulnerabilities are removed or reduced through patching and hardening.",
+"option_notes": [
+"Wrong: An exploit is the code or technique that uses a weakness.",
+"Correct: An unpatched OS or default password is a weakness.",
+"Wrong: A threat actor is the person or group that attacks.",
+"Wrong: Mitigation is the action taken to reduce risk."
+],
+"key_concept": "A vulnerability is a weakness that can be exploited.",
+"cli_example": "",
+"tip": "Patching and hardening remove vulnerabilities."
+},
+{
+"sub": "5.1",
+"difficulty": "쉬움",
+"question": "What is an exploit?",
+"choices": [
+"A security policy that defines acceptable use",
+"A hardware device that blocks attacks",
+"A tool or technique that takes advantage of a vulnerability",
+"The potential for loss caused by an attack"
+],
+"answer": "C",
+"explanation": "An exploit is code or a technique that takes advantage of a specific vulnerability to cause unintended behavior, such as gaining access. It turns a weakness into an actual attack. A patch from the vendor usually removes the vulnerability the exploit relies on.",
+"option_notes": [
+"Wrong: That is a policy, not an exploit.",
+"Wrong: That describes a protective device such as a firewall.",
+"Correct: This matches the definition of an exploit.",
+"Wrong: That describes risk."
+],
+"key_concept": "An exploit is the means of abusing a vulnerability.",
+"cli_example": "",
+"tip": "Vulnerability exists first; the exploit uses it."
+},
+{
+"sub": "5.1",
+"difficulty": "쉬움",
+"question": "Which part of the CIA triad is primarily protected by encrypting data?",
+"choices": [
+"Integrity",
+"Availability",
+"Accounting",
+"Confidentiality"
+],
+"answer": "D",
+"explanation": "Encryption turns data into unreadable ciphertext so only authorized parties with the key can read it. This protects confidentiality. Integrity is protected by hashing and digital signatures, and availability by redundancy and DoS protection.",
+"option_notes": [
+"Wrong: Integrity is protected by hashes and signatures.",
+"Wrong: Availability is protected by redundancy and resilience.",
+"Wrong: Accounting is part of AAA, not the CIA triad.",
+"Correct: Encryption keeps data private."
+],
+"key_concept": "Encryption protects confidentiality.",
+"cli_example": "",
+"tip": "Confidentiality = encryption; Integrity = hashing; Availability = redundancy."
+},
+{
+"sub": "5.1",
+"difficulty": "쉬움",
+"question": "An attacker sends emails that look like they come from a bank and asks users to enter their credentials on a fake website. What is this attack called?",
+"choices": [
+"Phishing",
+"Smurf attack",
+"VLAN hopping",
+"Port scanning"
+],
+"answer": "A",
+"explanation": "Phishing uses fraudulent messages that appear to come from a trusted source to trick users into revealing sensitive information. It is a form of social engineering. User awareness training is the main defense.",
+"option_notes": [
+"Correct: Deceptive messages that steal credentials.",
+"Wrong: A smurf attack is an ICMP amplification DoS attack.",
+"Wrong: VLAN hopping abuses trunking to reach other VLANs.",
+"Wrong: Port scanning probes hosts for open ports."
+],
+"key_concept": "Phishing tricks users with fake messages.",
+"cli_example": "",
+"tip": "Fake email asking for credentials = phishing."
+},
+{
+"sub": "5.1",
+"difficulty": "쉬움",
+"question": "Which type of malware replicates itself and spreads across a network without needing a user to run an infected file?",
+"choices": [
+"Trojan horse",
+"Worm",
+"Spyware",
+"Adware"
+],
+"answer": "B",
+"explanation": "A worm is self-replicating malware that spreads on its own by exploiting vulnerabilities. A virus needs a host file and usually user action. A Trojan horse pretends to be legitimate software and does not self-replicate.",
+"option_notes": [
+"Wrong: A Trojan disguises itself as useful software.",
+"Correct: Worms self-replicate and spread automatically.",
+"Wrong: Spyware secretly collects information but does not self-spread by definition.",
+"Wrong: Adware displays unwanted advertisements."
+],
+"key_concept": "Worms self-propagate across networks.",
+"cli_example": "",
+"tip": "Worm = spreads by itself; virus = needs a host file; Trojan = disguised."
+},
+{
+"sub": "5.1",
+"difficulty": "쉬움",
+"question": "What best describes a Trojan horse?",
+"choices": [
+"Malware that spreads by itself through network vulnerabilities",
+"Malware that encrypts files and demands payment",
+"Malware disguised as legitimate software",
+"A flood of traffic that overwhelms a server"
+],
+"answer": "C",
+"explanation": "A Trojan horse is malicious software that appears to be legitimate or useful, so users install it willingly. Once running, it can open a backdoor or steal data. It does not replicate by itself like a worm.",
+"option_notes": [
+"Wrong: That describes a worm.",
+"Wrong: That describes ransomware.",
+"Correct: This is the definition of a Trojan.",
+"Wrong: That describes a DoS attack."
+],
+"key_concept": "Trojans hide malicious code inside apparently legitimate software.",
+"cli_example": "",
+"tip": "Trojan = looks legitimate, does harm."
+},
+{
+"sub": "5.1",
+"difficulty": "쉬움",
+"question": "Which security goal is mainly attacked by a denial-of-service (DoS) attack?",
+"choices": [
+"Confidentiality",
+"Integrity",
+"Non-repudiation",
+"Availability"
+],
+"answer": "D",
+"explanation": "A DoS attack floods a system with traffic or requests so legitimate users cannot reach it. That makes the service unavailable. Availability is therefore the property under attack.",
+"option_notes": [
+"Wrong: Confidentiality is attacked by eavesdropping or data theft.",
+"Wrong: Integrity is attacked by unauthorized data changes.",
+"Wrong: Non-repudiation is about proving who performed an action.",
+"Correct: DoS makes services unreachable."
+],
+"key_concept": "DoS attacks target availability.",
+"cli_example": "",
+"tip": "DoS/DDoS = availability."
+},
+{
+"sub": "5.1",
+"difficulty": "쉬움",
+"question": "What is social engineering?",
+"choices": [
+"Manipulating people to disclose information or bypass security",
+"Exploiting a buffer overflow in a service",
+"Flooding a switch with fake MAC addresses",
+"Capturing traffic with a protocol analyzer"
+],
+"answer": "A",
+"explanation": "Social engineering manipulates people into giving up confidential information or performing actions that weaken security. It targets human behavior instead of technical flaws. Phishing, pretexting and tailgating are examples.",
+"option_notes": [
+"Correct: This is the definition.",
+"Wrong: That is a technical exploit.",
+"Wrong: That is a CAM table overflow attack.",
+"Wrong: That is eavesdropping or sniffing."
+],
+"key_concept": "Social engineering exploits people, not software.",
+"cli_example": "",
+"tip": "User training is the main defense against social engineering."
+},
+{
+"sub": "5.1",
+"difficulty": "쉬움",
+"question": "Which action is an example of mitigation?",
+"choices": [
+"Running a ping sweep of the target subnet",
+"Installing a security patch on a server",
+"Sending a spoofed email to employees",
+"Capturing credentials with a sniffer"
+],
+"answer": "B",
+"explanation": "Mitigation reduces the likelihood or impact of an attack. Installing a vendor patch removes a known vulnerability, which lowers risk. Scanning ports or sending phishing mail are attacker actions.",
+"option_notes": [
+"Wrong: That is reconnaissance.",
+"Correct: Patching removes a known vulnerability.",
+"Wrong: That is a phishing attack.",
+"Wrong: That is an attack technique."
+],
+"key_concept": "Mitigation = actions that reduce risk.",
+"cli_example": "",
+"tip": "Patching, hardening and filtering are mitigations."
+},
+{
+"sub": "5.1",
+"difficulty": "보통",
+"question": "What is a zero-day attack?",
+"choices": [
+"An attack that lasts for less than one day",
+"An attack launched on the first day of the month",
+"An exploit of a vulnerability for which no patch is available yet",
+"An attack that uses a default password"
+],
+"answer": "C",
+"explanation": "A zero-day attack exploits a vulnerability that the vendor does not yet know about or has not yet patched. Defenders have had zero days to fix it, so no patch exists. Layered defenses such as IPS, segmentation and monitoring help reduce the damage.",
+"option_notes": [
+"Wrong: Duration is not what defines a zero-day.",
+"Wrong: The calendar date is irrelevant.",
+"Correct: Defenders have zero days of warning.",
+"Wrong: Default passwords are a configuration weakness, not a zero-day."
+],
+"key_concept": "Zero-day = exploit for an unpatched, often unknown flaw.",
+"cli_example": "",
+"tip": "No patch exists yet for a zero-day."
+},
+{
+"sub": "5.1",
+"difficulty": "보통",
+"question": "An attacker secretly positions a device between a client and a server and reads or alters their traffic. Which attack is this?",
+"choices": [
+"Denial of service",
+"Brute force",
+"Ransomware",
+"Man-in-the-middle"
+],
+"answer": "D",
+"explanation": "In a man-in-the-middle (MITM) attack, the attacker intercepts communication between two parties, often with ARP spoofing. The attacker can read or modify the data. Encryption such as TLS and Dynamic ARP Inspection help prevent it.",
+"option_notes": [
+"Wrong: DoS aims to make a service unavailable.",
+"Wrong: Brute force guesses credentials repeatedly.",
+"Wrong: Ransomware encrypts data for payment.",
+"Correct: The attacker sits between the two endpoints."
+],
+"key_concept": "MITM = attacker relays and can alter traffic between two parties.",
+"cli_example": "",
+"tip": "ARP poisoning is a common way to create a MITM."
+},
+{
+"sub": "5.1",
+"difficulty": "보통",
+"question": "How does spear phishing differ from ordinary phishing?",
+"choices": [
+"It is targeted at specific individuals using personal information",
+"It uses voice calls instead of email",
+"It only affects wireless networks",
+"It encrypts the victim's files"
+],
+"answer": "A",
+"explanation": "Ordinary phishing is sent to many people with generic content. Spear phishing is targeted at a specific person or group and uses personal details to look believable. That makes it more convincing and harder to detect.",
+"option_notes": [
+"Correct: This makes spear phishing more convincing.",
+"Wrong: That describes vishing.",
+"Wrong: Phishing is independent of the network type.",
+"Wrong: That is ransomware behavior."
+],
+"key_concept": "Spear phishing is targeted; phishing is mass-mailed.",
+"cli_example": "",
+"tip": "Whaling = spear phishing aimed at executives."
+},
+{
+"sub": "5.1",
+"difficulty": "보통",
+"question": "What makes a distributed denial-of-service (DDoS) attack different from a DoS attack?",
+"choices": [
+"It targets confidentiality instead of availability",
+"The attack traffic comes from many compromised hosts at once",
+"It only uses the TCP protocol",
+"It requires physical access to the target"
+],
+"answer": "B",
+"explanation": "A DDoS attack uses many compromised hosts, often a botnet, to send traffic at the same time. A DoS attack comes from a single source. The distributed sources make the attack harder to block with a simple source filter.",
+"option_notes": [
+"Wrong: DDoS still targets availability.",
+"Correct: This is what distributed means.",
+"Wrong: DDoS can use many protocols, including UDP and ICMP.",
+"Wrong: DDoS is launched remotely."
+],
+"key_concept": "DDoS = many sources, usually a botnet.",
+"cli_example": "",
+"tip": "Botnet = group of compromised hosts controlled by an attacker."
+},
+{
+"sub": "5.1",
+"difficulty": "보통",
+"question": "A ping sweep followed by a port scan of a company network is an example of which type of attack?",
+"choices": [
+"Access attack",
+"Denial of service",
+"Reconnaissance",
+"Replay attack"
+],
+"answer": "C",
+"explanation": "Reconnaissance attacks gather information about a target before a real attack. Ping sweeps find live hosts and port scans find open services. They do not directly damage the network, but they prepare for later attacks.",
+"option_notes": [
+"Wrong: An access attack gains entry to a device or account.",
+"Wrong: No service is being overloaded here.",
+"Correct: The attacker is mapping live hosts and services.",
+"Wrong: A replay attack resends captured valid messages."
+],
+"key_concept": "Reconnaissance = information gathering before an attack.",
+"cli_example": "",
+"tip": "Ping sweep finds hosts; port scan finds services."
+},
+{
+"sub": "5.1",
+"difficulty": "보통",
+"question": "A company wants to be sure that a file has not been altered during transfer. Which technology best supports this requirement?",
+"choices": [
+"A VLAN",
+"Port security",
+"A syslog server",
+"A hash such as SHA-256"
+],
+"answer": "D",
+"explanation": "A cryptographic hash such as SHA-256 produces a digest of the file. If the receiver computes a different digest, the file changed. This supports integrity, while encryption supports confidentiality.",
+"option_notes": [
+"Wrong: A VLAN separates traffic but does not detect changes.",
+"Wrong: Port security limits MAC addresses on a switch port.",
+"Wrong: Syslog records events and does not verify file integrity.",
+"Correct: Comparing digests detects changes."
+],
+"key_concept": "Hashing supports integrity.",
+"cli_example": "",
+"tip": "Integrity = hash/HMAC/digital signature."
+},
+{
+"sub": "5.1",
+"difficulty": "보통",
+"question": "Malware encrypts the files on a user's PC and displays a message demanding payment for the decryption key. What is this malware called?",
+"choices": [
+"Ransomware",
+"Spyware",
+"Rootkit",
+"Adware"
+],
+"answer": "A",
+"explanation": "Ransomware holds data hostage by encrypting it and demands payment for recovery. Regular offline backups are the best protection because they allow recovery without paying. Patching and user training reduce the chance of infection.",
+"option_notes": [
+"Correct: It locks data until a ransom is paid.",
+"Wrong: Spyware silently gathers information.",
+"Wrong: A rootkit hides malicious activity on a system.",
+"Wrong: Adware only displays unwanted ads."
+],
+"key_concept": "Ransomware encrypts files and demands payment.",
+"cli_example": "",
+"tip": "Best defense: tested offline backups."
+},
+{
+"sub": "5.1",
+"difficulty": "보통",
+"question": "What does the defense-in-depth strategy recommend?",
+"choices": [
+"Relying on a single strong perimeter firewall",
+"Using multiple layers of different security controls",
+"Hiding the network SSID and nothing else",
+"Placing all servers in a single VLAN"
+],
+"answer": "B",
+"explanation": "Defense in depth uses multiple layers of security controls, such as firewalls, IPS, endpoint protection, access control and training. If one layer fails, others still protect the asset. No single control is trusted alone.",
+"option_notes": [
+"Wrong: That is a single point of failure.",
+"Correct: If one layer fails, others still protect.",
+"Wrong: One weak control is not layered defense.",
+"Wrong: This reduces segmentation."
+],
+"key_concept": "Layer several controls so one failure does not expose the asset.",
+"cli_example": "",
+"tip": "Layered security = defense in depth."
+},
+{
+"sub": "5.1",
+"difficulty": "보통",
+"question": "An attacker changes the source IP address in packets so that they appear to come from a trusted host. What is this technique called?",
+"choices": [
+"Port scanning",
+"Tailgating",
+"IP spoofing",
+"Keylogging"
+],
+"answer": "C",
+"explanation": "IP spoofing forges the source address of packets to hide identity or impersonate a trusted host. It is used in many attacks, including reflection and amplification DoS attacks. Filtering such as ACLs and anti-spoofing checks can reduce it.",
+"option_notes": [
+"Wrong: Scanning discovers services and does not forge addresses.",
+"Wrong: Tailgating is a physical entry technique.",
+"Correct: The source address is forged.",
+"Wrong: Keylogging records keystrokes."
+],
+"key_concept": "Spoofing = forging an address to impersonate another device.",
+"cli_example": "",
+"tip": "MAC spoofing, IP spoofing and ARP spoofing all forge identifiers."
+},
+{
+"sub": "5.1",
+"difficulty": "보통",
+"question": "An attacker tries a list of common words and variations as passwords against an account. Which attack is this?",
+"choices": [
+"Smurf attack",
+"Pharming",
+"Session hijacking",
+"Dictionary attack"
+],
+"answer": "D",
+"explanation": "A dictionary attack tries passwords from a precompiled word list, which works well against weak passwords. A pure brute-force attack tries every possible combination. Account lockout and long, complex passwords make both much harder.",
+"option_notes": [
+"Wrong: A smurf attack is an ICMP amplification DoS.",
+"Wrong: Pharming redirects users to fake sites using DNS tampering.",
+"Wrong: Session hijacking steals an active session.",
+"Correct: It uses a list of likely passwords."
+],
+"key_concept": "Dictionary attack = guessing from a word list.",
+"cli_example": "",
+"tip": "Lockout policies and MFA defeat guessing attacks."
+},
+{
+"sub": "5.1",
+"difficulty": "어려움",
+"question": "A server runs an old web application version with a known flaw. A script that abuses that flaw is released and an attacker uses it to gain a shell on the server. Which statement correctly identifies the terms?",
+"choices": [
+"The old application is the vulnerability and the script is the exploit",
+"The old application is the exploit and the script is the vulnerability",
+"The script is the mitigation and the attacker is the vulnerability",
+"The old application is the threat and the attacker is the exploit"
+],
+"answer": "A",
+"explanation": "The unpatched application is the vulnerability, the released script that abuses the flaw is the exploit, and the attacker is the threat actor posing the threat. The shell on the server shows a successful attack. Patching the application would have mitigated the vulnerability.",
+"option_notes": [
+"Correct: The flaw is the weakness and the script uses it.",
+"Wrong: The terms are reversed.",
+"Wrong: The script is not a defense and the attacker is not a weakness.",
+"Wrong: The attacker is the threat actor and not an exploit."
+],
+"key_concept": "Vulnerability = flaw; exploit = code that uses it; threat actor = the attacker.",
+"cli_example": "",
+"tip": "Keep the three terms separate: weakness, method, actor."
+},
+{
+"sub": "5.1",
+"difficulty": "어려움",
+"question": "An attacker sends small DNS queries with the victim's spoofed source address to many open DNS resolvers. The resolvers send large replies to the victim, which becomes overloaded. Which two terms best describe this attack?",
+"choices": [
+"Man-in-the-middle and replay",
+"Reflection and amplification",
+"Brute force and dictionary",
+"Tailgating and phishing"
+],
+"answer": "B",
+"explanation": "Spoofing the victim's source address makes the replies go to the victim, which is reflection. The small query producing a much larger response is amplification. The result is a DDoS because the traffic arrives from many resolvers.",
+"option_notes": [
+"Wrong: The attacker is not intercepting or replaying a session.",
+"Correct: Spoofing redirects replies and responses are larger than queries.",
+"Wrong: These are password-guessing methods.",
+"Wrong: These are physical and social engineering methods."
+],
+"key_concept": "Reflection and amplification use spoofed sources and third-party servers.",
+"cli_example": "",
+"tip": "Spoofed source + large reply = reflection/amplification."
+},
+{
+"sub": "5.1",
+"difficulty": "어려움",
+"question": "A user tries many accounts, testing only one or two very common passwords on each account, so no single account is locked out. Which attack is this?",
+"choices": [
+"Classic brute force against one account",
+"Pharming",
+"Password spraying",
+"Smishing"
+],
+"answer": "C",
+"explanation": "Password spraying tries a few common passwords against many accounts to stay under lockout thresholds. A classic brute-force attack tries many passwords against one account and triggers lockouts quickly. Multi-factor authentication and monitoring failed logins are effective defenses.",
+"option_notes": [
+"Wrong: Many passwords are tried against a single account.",
+"Wrong: Pharming redirects users to fake sites.",
+"Correct: A few common passwords are tried across many accounts.",
+"Wrong: Smishing is phishing by text message."
+],
+"key_concept": "Password spraying = few passwords, many accounts.",
+"cli_example": "",
+"tip": "Spraying avoids account lockout."
+},
+{
+"sub": "5.1",
+"difficulty": "어려움",
+"question": "Which statement correctly relates risk, threat and vulnerability?",
+"choices": [
+"Risk is the same as a vulnerability",
+"Risk exists only after a successful attack",
+"Risk is removed completely by installing an antivirus program",
+"Risk is the likelihood and impact of a threat exploiting a vulnerability"
+],
+"answer": "D",
+"explanation": "Risk is the likelihood that a threat will exploit a vulnerability and the impact that would result. If either the threat or the vulnerability is absent, risk is low. Patching removes a vulnerability and therefore lowers risk.",
+"option_notes": [
+"Wrong: A vulnerability is only one factor.",
+"Wrong: Risk is the possibility, not the completed event.",
+"Wrong: Controls reduce risk but rarely remove it completely.",
+"Correct: Risk combines threat, vulnerability and impact."
+],
+"key_concept": "Risk arises when a threat meets a vulnerability.",
+"cli_example": "",
+"tip": "No vulnerability means a threat cannot be exploited."
+},
+{
+"sub": "5.1",
+"difficulty": "어려움",
+"question": "An attacker compromises a website that employees of the target company visit often, so that visiting employees get infected. What is this attack called?",
+"choices": [
+"Watering hole attack",
+"Whaling",
+"Smurf attack",
+"Evil twin"
+],
+"answer": "A",
+"explanation": "A watering hole attack infects a legitimate site that the target group trusts and frequently visits. The attacker waits for victims to come to the site. It is harder to detect than direct phishing because users visit a trusted URL.",
+"option_notes": [
+"Correct: A trusted site visited by victims is compromised.",
+"Wrong: Whaling targets senior executives with phishing.",
+"Wrong: Smurf uses ICMP broadcasts for DoS.",
+"Wrong: An evil twin is a rogue wireless access point."
+],
+"key_concept": "Watering hole = compromise a site the targets already visit.",
+"cli_example": "",
+"tip": "Defenses: patched browsers, content filtering, endpoint protection."
+},
+{
+"sub": "5.1",
+"difficulty": "어려움",
+"question": "An attacker's DHCP server on an access port answers client requests before the legitimate server and gives its own address as the default gateway. Which attack is this and which feature mitigates it?",
+"choices": [
+"DHCP starvation; port security only",
+"Rogue DHCP server; DHCP snooping",
+"ARP poisoning; DHCP snooping",
+"VLAN hopping; BPDU guard"
+],
+"answer": "B",
+"explanation": "This is a rogue DHCP server attack that sets up a man-in-the-middle. DHCP snooping mitigates it by allowing DHCP server responses only on trusted ports. Untrusted access ports that send OFFER or ACK messages have those messages dropped.",
+"option_notes": [
+"Wrong: Starvation exhausts the pool and is a different attack.",
+"Correct: Snooping blocks server messages on untrusted ports.",
+"Wrong: ARP poisoning is mitigated by DAI.",
+"Wrong: BPDU guard protects STP, not DHCP."
+],
+"key_concept": "Rogue DHCP server is mitigated with DHCP snooping.",
+"cli_example": "interface g0/24\n ip dhcp snooping trust",
+"tip": "Only uplinks toward the real DHCP server are trusted."
+},
+{
+"sub": "5.1",
+"difficulty": "어려움",
+"question": "An attacker sends gratuitous ARP replies that map the default gateway IP address to the attacker's MAC address. Which attack is this and which feature stops it?",
+"choices": [
+"MAC flooding; DHCP snooping",
+"DNS spoofing; BPDU guard",
+"ARP poisoning; Dynamic ARP Inspection",
+"Smurf attack; root guard"
+],
+"answer": "C",
+"explanation": "This is ARP poisoning (spoofing), used to make a man-in-the-middle. Dynamic ARP Inspection validates ARP packets against the DHCP snooping binding table and drops invalid ones. Port security alone does not check ARP content.",
+"option_notes": [
+"Wrong: MAC flooding overflows the CAM table.",
+"Wrong: BPDU guard protects STP.",
+"Correct: DAI validates IP-to-MAC bindings.",
+"Wrong: Root guard protects the STP root bridge."
+],
+"key_concept": "ARP poisoning is mitigated by DAI.",
+"cli_example": "ip arp inspection vlan 10",
+"tip": "DAI relies on the DHCP snooping binding table."
+},
+{
+"sub": "5.1",
+"difficulty": "어려움",
+"question": "An employee finds a USB drive labeled 'Payroll' in the parking lot and plugs it into a work PC, which installs malware. Which statement describes what happened?",
+"choices": [
+"A zero-day attack on the network switch",
+"A man-in-the-middle attack",
+"A denial-of-service attack",
+"A baiting attack, which is a form of social engineering"
+],
+"answer": "D",
+"explanation": "This is a baiting attack, a form of social engineering that uses curiosity to get the victim to run malicious media. The human behavior is the vulnerability. User awareness training and disabling USB autorun reduce the risk.",
+"option_notes": [
+"Wrong: No switch vulnerability is described.",
+"Wrong: No traffic was intercepted.",
+"Wrong: No service was overloaded.",
+"Correct: Curiosity is used to deliver the malware."
+],
+"key_concept": "Baiting = leaving infected media for victims to find.",
+"cli_example": "",
+"tip": "Social engineering targets human curiosity and trust."
+},
+{
+"sub": "5.1",
+"difficulty": "어려움",
+"question": "A hash of a file is sent together with the file over an untrusted network and an attacker modifies both the file and the hash. Which technology would let the receiver detect this tampering?",
+"choices": [
+"An HMAC using a shared secret key",
+"A longer plain hash",
+"Sending the hash through a second VLAN",
+"Compressing the file before sending"
+],
+"answer": "A",
+"explanation": "A plain hash can be recalculated by an attacker, so it is not enough. An HMAC uses a shared secret key in the hash calculation, and the attacker cannot produce a valid value without the key. A digital signature also solves this by using the sender's private key.",
+"option_notes": [
+"Correct: Without the key, the attacker cannot create a valid value.",
+"Wrong: The attacker can still compute any plain hash.",
+"Wrong: VLANs do not protect data from being modified.",
+"Wrong: Compression does not authenticate data."
+],
+"key_concept": "HMAC adds a secret key so the digest cannot be forged.",
+"cli_example": "",
+"tip": "Hash alone = integrity only against accidents."
+},
+{
+"sub": "5.1",
+"difficulty": "어려움",
+"question": "Which statement about attack classes is correct?",
+"choices": [
+"Password cracking is reconnaissance and port scanning is a DoS attack",
+"Password cracking is an access attack and port scanning is reconnaissance",
+"A SYN flood is an access attack and a ping sweep is a DoS attack",
+"Phishing is a DoS attack and DDoS is reconnaissance"
+],
+"answer": "B",
+"explanation": "Reconnaissance attacks gather information, access attacks try to gain entry or privileges, and denial-of-service attacks try to make resources unavailable. Password cracking is therefore an access attack, while a port scan is reconnaissance. Each class has different mitigations.",
+"option_notes": [
+"Wrong: Both pairings are wrong.",
+"Correct: This pairs each technique with the correct class.",
+"Wrong: A SYN flood is DoS and a ping sweep is reconnaissance.",
+"Wrong: Both pairings are wrong."
+],
+"key_concept": "Port scan = reconnaissance; password cracking = access; flooding = DoS.",
+"cli_example": "",
+"tip": "Match the goal of the attacker to the class."
+}
+]
