@@ -15,12 +15,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=20261120124407">
-<link rel="stylesheet" href="tracer-how.css?v=20261120124407">
+<link rel="stylesheet" href="style.css?v=20261120124859">
+<link rel="stylesheet" href="tracer-how.css?v=20261120124859">
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261120124407';
+  var SITE_V = '20261120124859';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -68,6 +68,7 @@
           GitHub 저장소</a>
         <a class="btn" href="https://tracer-eosin.vercel.app/ccna/">🧠 CCNA 코치 써 보기</a>
         <a class="btn" href="heartline/">💗 Heartline 써 보기</a>
+        <a class="btn" href="shadow/">🎧 SHADOW 열기</a>
       </div>
     </div>
 
@@ -90,14 +91,14 @@
           <li><span class="h">2b4bd68</span><span class="t">14:59</span><span class="m">Heartline 서버·앱 구현</span></li>
           <li><span class="h">d2339c9</span><span class="t">15:21</span><span class="m">Heartline 발표 (deck + pptx)</span></li>
           <li class="more">… 외 18개 (잡음·작은 수정 포함)</li>
-          <li class="day"># 4일차 · 11-20 · 13 commits</li>
+          <li class="day"># 4일차 · 11-20 · 15 commits</li>
           <li><span class="h">f6af5d3</span><span class="t">09:07</span><span class="m">소개 페이지: 에이전트 카드 3열로 한 화면에, TRACER 원리 4개 장면으로</span></li>
           <li><span class="h">70a0c0c</span><span class="t">10:11</span><span class="m">TRACER 상시 운영: Vercel /api·Supabase·구글 로그인·문제은행·관리자 페이지</span></li>
           <li><span class="h">2da8568</span><span class="t">10:23</span><span class="m">TRACER 배포 완료: tracer-eosin.vercel.app, 예전 주소 자동 이동</span></li>
-          <li><span class="h">e825e57</span><span class="t">10:35</span><span class="m">TRACER 소개·이용 분리: 처음 화면 선택 → 소개(about) / 이용(app), 로그인 표시 개선</span></li>
-          <li class="more">… 외 9개 (잡음·작은 수정 포함)</li>
+          <li><span class="h">76c604c</span><span class="t">12:45</span><span class="m">DY-008 SHADOW: 영어 섀도잉 코치 초기 버전</span></li>
+          <li class="more">… 외 11개 (잡음·작은 수정 포함)</li>
         </ol>
-        <div class="tail">91 commits · 4 days<span class="cursor" aria-hidden="true"></span></div>
+        <div class="tail">93 commits · 4 days<span class="cursor" aria-hidden="true"></span></div>
         <!-- gitlog:end -->
       </div>
     </figure>
@@ -157,7 +158,7 @@
         <p class="label"><span class="n">02</span>에이전트</p>
         <div>
           <h2>지금까지 만든 에이전트</h2>
-          <p>에이전트를 만들고 시험하는 도우미·자동 장치까지 한 장에 보려면 <a href="map.html">작업실 지도</a>를 보세요. 007처럼 번호와 코드명을 붙였습니다. SENTINEL·MIRROR·SWEEPER는 Claude Agent SDK(Python), TRACER·CUPID는 제미나이 API(무료 등급)로 만든 초기 버전입니다.</p>
+          <p>에이전트를 만들고 시험하는 도우미·자동 장치까지 한 장에 보려면 <a href="map.html">작업실 지도</a>를 보세요. 007처럼 번호와 코드명을 붙였습니다. SENTINEL·MIRROR·SWEEPER는 Claude Agent SDK(Python), TRACER·CUPID는 제미나이 API(무료 등급)로 만든 초기 버전입니다. SHADOW는 AI 서비스 없이 컴퓨터 안의 음성 인식(Whisper)과 내장 사전만으로 동작합니다.</p>
         </div>
       </div>
 
@@ -290,27 +291,38 @@
           </div>
         </article>
 
-        <article class="agent">
+        <article class="agent agent-shadow">
           <div class="agent-id">
             <span class="mono">DY-008 · agents/shadowing-coach</span>
             <h3>SHADOW</h3>
-            <span class="chip">초기 버전 · 개인용</span>
+            <span class="chip">초기 버전 · 개인용 · 비용 0원</span>
             <div class="links">
               <a href="shadow/"><b>SHADOW 열기 →</b></a>
               <a href="https://github.com/DODO-YONG/Obsidian/tree/main/agents/shadowing-coach">코드 보기 →</a>
             </div>
           </div>
           <div class="agent-body">
-            <p>영어 섀도잉 코치. 유튜브 영상을 문장 단위로 듣고, 누르고 있는 동안 녹음해서 떼면 바로 재생합니다. 원본과 내 억양 곡선, 음성 인식이 알아들은 단어를 비교합니다.</p>
+            <p>영어 말하기를 위한 섀도잉 코치. 유튜브 주소를 넣으면 문장 단위로 나눠 주고, 한 문장을 들은 뒤 <kbd>Space</kbd>를 누르고 있는 동안 따라 말하면 <b>떼는 순간 바로 내 목소리</b>를 들려줍니다. 원본과 내 <b>억양 곡선</b>, 음성 인식이 <b>알아들은 단어</b>를 바로 비교하고, 모르는 단어는 눌러서 뜻을 봅니다.</p>
+            <figure class="shadow-viz" aria-label="억양 곡선 예시: 원본과 내 목소리의 음높이 비교">
+              <svg viewBox="0 0 340 104" role="img">
+                <line class="g" x1="0" y1="20" x2="340" y2="20"/><line class="g" x1="0" y1="50" x2="340" y2="50"/><line class="g" x1="0" y1="80" x2="340" y2="80"/>
+                <path class="ref" d="M8 58 C 24 40, 34 30, 46 34 S 70 56, 84 52 S 108 44, 120 46 M140 40 C 152 30, 164 28, 176 36 S 196 50, 212 48 M226 44 C 240 40, 252 46, 266 56 S 300 72, 330 76"/>
+                <path class="mine" d="M10 62 C 26 50, 36 42, 48 44 S 72 58, 86 56 S 110 50, 122 52 M142 46 C 154 40, 166 40, 178 44 S 198 52, 214 52 M228 48 C 242 46, 254 50, 268 58 S 302 68, 330 70"/>
+                <g class="w"><text x="6" y="100">Today,</text><text x="62" y="100">I want</text><text x="116" y="100">to tell you</text><text x="196" y="100">three</text><text x="240" y="100">stories…</text></g>
+              </svg>
+              <figcaption><span class="k ref">━ 원본</span><span class="k mine">━ 나</span><span>억양 <b>74%</b> · 알아들음 <b>82%</b></span><span class="miss">three → <s>tree</s></span></figcaption>
+            </figure>
             <details class="agent-more"><summary>작동 순서 · 자세히</summary>
             <ol class="pipeline" aria-label="동작 순서">
-              <li><span>소리 내려받기</span></li><li><span>Whisper로 문장 나누기</span></li><li><span>누르는 동안 녹음</span></li><li><span>억양·단어 비교</span></li>
+              <li><span>유튜브 주소</span></li><li><span>문장 나누기</span></li><li><span>듣고 따라 말하기</span></li><li><span>억양·발음 비교</span></li><li><span>날짜별 기록</span></li>
             </ol>
             <ul class="points">
-              <li>개인 컴퓨터 환경에서만 동작. 음성 인식(Whisper)도 로컬에서 실행해 외부 AI 호출·추가 비용 없음</li>
-              <li>억양은 각자 평균 목소리 기준 반음으로 바꾸고 말 빠르기 차이를 맞춰 오르내림 모양만 비교</li>
-              <li>발음은 "알아들은 단어" 비율로 표시. 무음에서 음성 인식이 말을 지어내는 문제는 소리 크기로 먼저 거름</li>
-              <li>녹음은 문장마다 날짜별로 쌓여 예전 녹음과 비교. 내려받은 소리·녹음은 공개 저장소에 올리지 않음</li>
+              <li>누르는 동안만 녹음하고 떼면 바로 재생. 영상을 그냥 보다가 눌러도 멈추고 그 문장으로 녹음</li>
+              <li><b>억양 곡선</b>: 각자 평균 목소리를 기준으로 반음 단위로 바꾸고 말 빠르기 차이를 맞춰, 오르내림 <b>모양</b>만 비교 (YIN·DTW, 브라우저 안에서 계산)</li>
+              <li><b>발음 체크</b>: 음성 인식(Whisper)이 알아들은 단어를 원문과 비교해 다르게 들린 단어를 표시. 무음에서 말을 지어내는 문제는 소리 크기로 먼저 거름</li>
+              <li><b>단어 뜻</b>: 단어를 누르면 컴퓨터에 내장된 영한사전으로 품사별 짧은 뜻. graduated처럼 바뀐 형태는 기본형 동사 뜻까지</li>
+              <li>소리 내려받기·음성 인식·사전 모두 개인 컴퓨터 안에서 처리해 외부 AI 호출·추가 비용 없음. 내려받은 소리와 녹음은 공개 저장소에 올리지 않음</li>
+              <li>녹음은 문장마다 날짜별로 쌓여 첫 녹음과 오늘 녹음을 비교. 로그인하면 자동으로 켜지고 이 페이지에서 바로 열림</li>
             </ul>
             </details>
           </div>
@@ -444,6 +456,17 @@
           <div class="ev"><time>10:38</time><div><h4>누구나 로그인</h4>
             <p>개인정보 처리방침을 만들고 구글 로그인 앱을 공개했습니다. 기본 정보만 받아 별도 심사 없이 열렸습니다.</p>
             <div class="tags"><span>privacy.html</span></div></div></div>
+          <div class="ev key"><time>11:30</time><div><h4>여덟 번째 에이전트: SHADOW</h4>
+            <p>영어 말하기 연습용 섀도잉 코치. 바로 만들지 않고 아이디어부터 함께 검토해 "스피커로 듣고 → 누르는 동안 녹음 → 떼면 바로 재생"으로 정하고, 유튜브 소리를 내려받아 컴퓨터 안의 음성 인식으로 문장을 나누는 방식을 골랐습니다.</p>
+            <div class="tags"><span>Whisper (로컬)</span><span>yt-dlp</span><span>비용 0원</span></div></div></div>
+          <div class="ev"><time>11:40</time><div><h4>억양 곡선과 발음 체크</h4>
+            <p>원본과 내 목소리의 음높이를 반음 단위로 겹쳐 그리고, 음성 인식이 알아들은 단어를 원문과 비교합니다. 15분짜리 연설을 약 25초 만에 문장 189개로 나눴습니다.</p>
+            <div class="tags"><span>YIN</span><span>DTW</span></div></div></div>
+          <div class="ev"><time>12:37</time><div><h4>단어 뜻은 내장 사전으로</h4>
+            <p>단어를 누르면 컴퓨터에 들어 있는 영한사전에서 품사별 짧은 뜻을 보여 줍니다. 첫 항목만 쓰면 stories가 "층"으로 나와서, 같은 철자의 항목을 모두 받아 알맞은 뜻을 고르게 했습니다.</p></div></div>
+          <div class="ev"><time>12:44</time><div><h4>링크 하나로 열기</h4>
+            <p>로그인하면 SHADOW가 자동으로 켜지고, 이 소개 페이지의 "SHADOW 열기"로 바로 들어갑니다.</p>
+            <div class="tags"><span>LaunchAgent</span><span>docs/shadow</span></div></div></div>
         </div>
       </div>
     </div>
@@ -479,6 +502,8 @@
           <p>틀린 문제를 모아 다시 풀고, 약한 범위가 더 자주 나오게 합니다.</p></div>
         <div class="todo"><span class="mono">DY-002 MIRROR</span><h3>영어 답변 연습 강화</h3>
           <p>한국어로 다듬은 이야기를 영어로 다시 말하고, 어색한 표현을 교정받습니다.</p></div>
+        <div class="todo"><span class="mono">DY-008 SHADOW</span><h3>소리 단위 발음 점수</h3>
+          <p>th·r·l처럼 한 소리 단위로 어디가 다른지 짚어 주고, 별표 친 문장만 모아 반복합니다.</p></div>
         <div class="todo"><span class="mono">new · inbox</span><h3>위키 인박스 에이전트</h3>
           <p>새 자료가 들어오면 요약 초안을 만들고, 아침마다 처리할 목록을 알려 줍니다.</p></div>
       </div>
@@ -543,6 +568,6 @@
   }
 })();
 </script>
-<script src="tracer-how.js?v=20261120124407" defer></script>
+<script src="tracer-how.js?v=20261120124859" defer></script>
 </body>
 </html>

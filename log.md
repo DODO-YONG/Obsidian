@@ -149,3 +149,5 @@
 ## [2026-11-20] output | SHADOW 단어 뜻 보기(맥 내장 뉴에이스 영한사전, Swift 도우미, 클릭하면 품사별 짧은 뜻) + 한글 입력 상태에서도 단축키 동작 → [[shadowing-coach]]
 
 ## [2026-11-20] output | SHADOW GitHub 바로가기: docs/shadow/ 'SHADOW 열기' 페이지(→127.0.0.1:8777) + 로그인 때 자동 실행(autostart.sh, LaunchAgent), README·소개 페이지 링크 → [[shadowing-coach]]
+
+## [2026-11-20] output | 소개 페이지 SHADOW 소개 보강: 카드(억양 곡선 예시 그림·핵심 기능 6가지), 맨 위 'SHADOW 열기' 버튼, 4일차 작업 기록 4개, 다음 할 것(소리 단위 발음 점수)
