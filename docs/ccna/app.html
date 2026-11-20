@@ -139,6 +139,8 @@
   .conn .cd { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-3); }
   .conn.on .cd { background: var(--ok); box-shadow: 0 0 0 3px var(--ok-soft); }
   .conn.off .cd { background: var(--part); }
+  .conn.wait .cd { background: var(--accent); animation: connPulse 1s ease-in-out infinite; }
+  @keyframes connPulse { 50% { opacity: .25; } }
   /* 로그인 부품 (tracer-auth.js) */
   [data-auth] { display: flex; align-items: center; gap: 8px; flex: none; }
   .auth-wait { font-size: 13px; color: var(--ink-3); white-space: nowrap; }
@@ -161,6 +163,7 @@
   .help { margin: 0 0 16px; padding: 14px 16px; border-radius: 12px; background: var(--part-soft); color: var(--ink); font-size: 14px; display: grid; gap: 6px; }
   .help code { background: var(--panel); padding: 2px 6px; border-radius: 6px; font-size: 13px; }
   .help b { color: var(--part); }
+  .help.ok { background: var(--ok-soft); } .help.ok b { color: var(--ok); }
   .connform { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; } .connform label { flex: 1 1 200px; }
   .connform label { display: grid; gap: 4px; font-size: 12.5px; color: var(--ink-2); min-width: 0; }
   .connform input { border: 1px solid var(--rule); background: var(--panel); border-radius: 9px; padding: 8px 10px; min-width: 0; }
@@ -231,7 +234,7 @@
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261120133358';
+  var SITE_V = '20261120133758';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -241,7 +244,7 @@
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
-<script src="tracer-auth.js?v=20261120133358"></script>
+<script src="tracer-auth.js?v=20261120133758"></script>
 </head>
 <body>
 <header>
@@ -527,7 +530,7 @@ var Subnet = (function () {
   // 로그인은 공용 부품(tracer-auth.js)이 맡는다. 화면과 /api는 같은 주소(Vercel).
   function lsGet(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
   function lsSet(k, v) { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch (e) {} }
-  var state = { topics: [], selected: new Set(), qtype: 'mcq', diff: '보통', q: null, choice: null, busy: false, online: false, user: null, ready: false };
+  var state = { topics: [], selected: new Set(), qtype: 'mcq', diff: '보통', q: null, choice: null, busy: false, online: false, user: null, ready: false, linking: false, linkErr: false };
   try { var saved = JSON.parse(localStorage.getItem('ccna-sel') || '[]'); saved.forEach(function (s) { state.selected.add(s); }); } catch (e) {}
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -775,7 +778,10 @@ var Subnet = (function () {
     $('#sRecent').innerHTML = '<li class="muted" style="padding:0">풀이 기록은 내 계정에만 저장되고 다른 사용자에게 보이지 않아요.</li>';
   }
   function helpText() {
-    var u = state.user; if (!u) return 'AI 문제·해설은 구글 로그인 후 쓸 수 있어요.';
+    var u = state.user;
+    if (!u && state.linking) return '로그인됐어요. AI 서버에 연결하는 중이에요. 한동안 아무도 안 썼으면 처음 연결에 몇 초 걸릴 수 있어요.';
+    if (!u && state.linkErr) return '로그인은 됐는데 AI 서버 연결이 늦어요. 위쪽 상태 표시를 누르면 다시 연결해요.';
+    if (!u) return 'AI 문제·해설은 구글 로그인 후 쓸 수 있어요.';
     if (state.online) return '로그인되어 있어요. AI 문제·해설을 쓸 수 있어요' + (u.ai_left >= 9999 ? '.' : ' (오늘 ' + u.ai_left + '회 남음, 한도를 다 쓰면 저장된 문제가 나와요).') + ' 로그아웃은 오른쪽 위에서 할 수 있어요.';
     if (u.status === 'blocked') return '이용이 제한된 계정이에요. 관리자에게 문의해 주세요. (서브넷 계산은 계속 풀 수 있어요)';
     if (u.status === 'pending') return '관리자 승인을 기다리고 있어요. 승인되면 AI 문제를 쓸 수 있어요. (서브넷 계산은 바로 풀 수 있어요)';
@@ -783,13 +789,16 @@ var Subnet = (function () {
   }
   function showHelp() {
     var u = state.user;
-    $('#helpMsg').innerHTML = u ? '<b>' + esc(helpText()) + '</b>' : '<b>AI 문제·해설은 구글 로그인 후 쓸 수 있어요.</b> 서브넷 계산 문제는 로그인 없이 언제나 풀 수 있어요.';
-    $('#helpLogin').hidden = !!u || !state.ready; $('#helpNote').hidden = !!u; $('#connHelp').hidden = false; if (!u && state.ready) $('#helpLogin').focus();
+    var signed = !!u || state.linking || state.linkErr;   // 로그인은 됐는데 서버 연결 전이어도 로그인 버튼은 숨긴다
+    $('#helpMsg').innerHTML = signed ? '<b>' + esc(helpText()) + '</b>' : '<b>AI 문제·해설은 구글 로그인 후 쓸 수 있어요.</b> 서브넷 계산 문제는 로그인 없이 언제나 풀 수 있어요.';
+    $('#connHelp').classList.toggle('ok', state.online || state.linking);
+    $('#helpLogin').hidden = signed || !state.ready; $('#helpNote').hidden = signed; $('#connHelp').hidden = false; if (!signed && state.ready) $('#helpLogin').focus();
   }
   function setOnline(on) {
     state.online = on;
-    var c = $('#conn'), u = state.user; c.classList.toggle('on', on); c.classList.toggle('off', !on);
-    $('#connText').textContent = !state.ready ? 'AI 준비 중 · 서브넷만' : !u ? '로그인하면 AI 사용' :
+    var c = $('#conn'), u = state.user, wait = !u && state.linking;
+    c.classList.toggle('on', on); c.classList.toggle('off', !on && !wait); c.classList.toggle('wait', wait);
+    $('#connText').textContent = !state.ready ? 'AI 준비 중 · 서브넷만' : wait ? 'AI 연결 중…' : !u && state.linkErr ? 'AI 연결 늦음 · 다시 시도' : !u ? '로그인하면 AI 사용' :
       u.status !== 'active' ? (u.status === 'pending' ? '승인 대기 · 서브넷만' : '이용 제한 · 서브넷만') :
       on ? (u.ai_left >= 9999 ? 'AI 사용 가능' : 'AI 사용 가능 · 오늘 ' + u.ai_left + '회') : 'AI 한도 소진';
     if (on) $('#connHelp').hidden = true;
@@ -802,10 +811,13 @@ var Subnet = (function () {
     if (!$('#connHelp').hidden) showHelp();   // 열려 있던 설명도 로그인 상태에 맞게 바꾼다
   }
   var pushT = null;
-  function loadMe(quiet) {
+  function loadMe(quiet, tries) {
     if (!(window.TracerAuth && TracerAuth.session())) return Promise.resolve();
+    tries = tries || 0;
+    if (!state.user) { state.linking = true; state.linkErr = false; setOnline(false); if (!$('#connHelp').hidden) showHelp(); }
     return api('/api/me').then(function (me) {
       var first = !state.user;
+      state.linking = false; state.linkErr = false;
       setUser(me);
       if (first) {
         // 진행 합치기: 계정과 이 브라우저 중 XP가 큰 쪽을 쓴다(처음 로그인하면 브라우저 기록을 계정으로 옮김)
@@ -816,18 +828,28 @@ var Subnet = (function () {
         if (!quiet) toast('로그인했어요. 진도와 레벨이 계정에 저장돼요.');
       }
       return refreshStats();
-    }).catch(function () { setUser(null); refreshStats(); });
+    }).catch(function () {
+      var still = window.TracerAuth && TracerAuth.session();
+      if (still && !state.user && tries < 2) return new Promise(function (r) { setTimeout(r, 1500); }).then(function () { return loadMe(quiet, tries + 1); });
+      state.linking = false; state.linkErr = !!still && !state.user;
+      if (!state.user) { setUser(null); refreshStats(); }
+    });
   }
   $('#helpLogin').addEventListener('click', function () { TracerAuth.login('app.html'); });
   // 상태 표시를 누르면 지금 상태 설명만 열고 닫는다(로그인된 상태에선 로그인 버튼을 보이지 않음)
-  $('#conn').addEventListener('click', function () { if (!$('#connHelp').hidden) { $('#connHelp').hidden = true; return; } showHelp(); });
+  $('#conn').addEventListener('click', function () {
+    if (state.linkErr) { loadMe(false); return; }   // 연결이 늦었으면 누를 때 다시 연결
+    if (!$('#connHelp').hidden) { $('#connHelp').hidden = true; return; } showHelp();
+  });
   function initAuth() {
     if (!window.TracerAuth) { return new Promise(function (r) { setTimeout(r, 200); }).then(initAuth); }
     return TracerAuth.ready.then(function (c) {
-      state.ready = !!c; setUser(null);
+      state.ready = !!c; state.linking = !!TracerAuth.session(); setUser(null);
       TracerAuth.onChange(function (sess) {
         if (sess && sess.user) { if (!state.user) loadMe(false); return; }
+        state.linking = false; state.linkErr = false;
         if (state.user) { Game.onSave(null); setUser(null); refreshStats(); toast('로그아웃했어요. 진도는 계정에 남아 있어요.'); }
+        else setOnline(false);
       });
       if (TracerAuth.session()) return loadMe(true);
       refreshStats();
