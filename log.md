@@ -135,3 +135,5 @@
 ## [2026-11-20] output | TRACER 소개에 '이렇게 관리하고 있어요'(이용 현황·사용자와 권한·활동 기록·문제 검토) 추가
 
 ## [2026-11-20] query | TRACER 예전 풀이 기록(private, 시험 2건)은 Supabase로 옮기지 않기로 결정
+
+## [2026-11-20] output | TRACER 자동 화면 시험: Playwright 15개(agents/ccna-coach/e2e) + GitHub Actions tracer-test(푸시마다, 가짜 로그인·DB·제미나이, 토큰 0)

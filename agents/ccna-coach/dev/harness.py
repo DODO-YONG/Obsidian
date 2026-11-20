@@ -34,5 +34,6 @@ class H(SimpleHTTPRequestHandler):
         return super().do_GET()
     def do_POST(self):
         if self.path.startswith('/api/'): return self._api('do_POST')
-print('로컬 시험 화면: http://127.0.0.1:8799/ccna/  (선택 화면 · about.html 소개 · app.html 이용, 가짜 DB·가짜 제미나이)')
-ThreadingHTTPServer(('127.0.0.1', 8799), H).serve_forever()
+PORT = int(os.environ.get("TRACER_HARNESS_PORT", "8799"))   # e2e 시험은 다른 포트로 띄움
+print(f'로컬 시험 화면: http://127.0.0.1:{PORT}/ccna/  (선택 화면 · about.html 소개 · app.html 이용, 가짜 DB·가짜 제미나이)', flush=True)
+ThreadingHTTPServer(('127.0.0.1', PORT), H).serve_forever()

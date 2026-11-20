@@ -46,7 +46,9 @@
 | `SETUP.md` | 계정 준비·배포 순서(직접 할 일) |
 | `migrate_private_log.py` | 예전 `private/` 풀이 기록을 내 계정으로 옮기는 스크립트 (2026-11-20 옮기지 않기로 결정, 필요할 때만) |
 | `dev/test_core.py` | 로직 시험 24개(가짜 DB·가짜 제미나이, 사용량 0) |
-| `dev/harness.py` | 로컬 화면 시험 서버 http://127.0.0.1:8799/ccna/ (가짜 로그인) |
+| `dev/harness.py` | 로컬 화면 시험 서버 http://127.0.0.1:8799/ccna/ (가짜 로그인, 포트는 `TRACER_HARNESS_PORT`) |
+| `e2e/` | **화면 자동 시험 15개(Playwright)** — 푸시마다 GitHub Actions가 실행, 토큰·사용량 0 → [e2e/README.md](e2e/README.md) |
+| `../../.github/workflows/tracer-test.yml` | 자동 시험 워크플로(로직 시험 + 화면 시험) |
 | `../../.github/workflows/tracer-keepalive.yml` | Supabase 일시정지 방지(하루 한 번 깨우기) |
 
 > 아래는 **예전 방식(내 Mac 서버 + 임시 터널) — 은퇴**. `start-public.sh`를 켜면 `server.json`의 새 주소 안내(home)를 덮어쓰니 쓰지 않는다.

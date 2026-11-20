@@ -37,3 +37,6 @@ build/
 
 # 점검 리포트: 대상 사이트의 취약점 정보 → 절대 공개 저장소에 올리지 않음
 reports/
+
+# Playwright 시험 실패 기록
+test-results/
