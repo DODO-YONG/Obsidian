@@ -266,7 +266,7 @@
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261119170225';
+  var SITE_V = '20261120090626';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -275,7 +275,7 @@
   }).catch(function () {});
 })();
 </script>
-<link rel="stylesheet" href="../tracer-how.css?v=20261119170225">
+<link rel="stylesheet" href="../tracer-how.css?v=20261120090626">
 </head>
 <body>
 <header>
@@ -342,7 +342,7 @@
   <div class="how2" id="how">
     <div class="eyebrow2">HOW IT WORKS</div>
     <h2>TRACER는 이렇게 동작해요</h2>
-    <p>화면은 누구나 여는 공개 웹사이트이고, AI 문제·해설은 개인 컴퓨터 환경에서 운영하는 개인 서버가 만듭니다. <b>재생</b>을 누르면 문제 하나가 어떤 길로 오가는지 따라가 볼 수 있어요.</p>
+    <p>화면은 누구나 여는 공개 웹사이트이고, AI 문제·해설은 개인 컴퓨터 환경에서 운영하는 개인 서버가 만듭니다. 아래 탭에서 <b>서버 켜기 → 문제 받기 → 채점·해설 → 서브넷</b> 순서로 장면을 고르면, 데이터가 어떤 길로 오가는지 한 단계씩 재생돼요.</p>
     <div class="tq-how" data-tracer-how></div>
   </div>
 
@@ -949,6 +949,6 @@ var Subnet = (function () {
     .catch(function () { $('#scopeList').innerHTML = '<p class="muted">출제 범위를 불러오지 못했어요.</p>'; });
 })();
 </script>
-<script src="../tracer-how.js?v=20261119170225" defer></script>
+<script src="../tracer-how.js?v=20261120090626" defer></script>
 </body>
 </html>

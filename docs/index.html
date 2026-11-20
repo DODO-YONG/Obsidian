@@ -15,12 +15,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="tracer-how.css?v=20261119170225">
+<link rel="stylesheet" href="style.css?v=20261120090626">
+<link rel="stylesheet" href="tracer-how.css?v=20261120090626">
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261119170225';
+  var SITE_V = '20261120090626';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -88,14 +88,14 @@
           <li><span class="h">59a9d46</span><span class="t">11:23</span><span class="m">ccna-coach(TRACER) 첫 버전</span></li>
           <li><span class="h">b50f113</span><span class="t">15:37</span><span class="m">DY-006 SWEEPER 첫 버전</span></li>
           <li class="more">… 외 47개 (잡음·작은 수정 포함)</li>
-          <li class="day"># 3일차 · 11-19 · 21 commits</li>
+          <li class="day"># 3일차 · 11-19 · 22 commits</li>
           <li><span class="h">4b602f3</span><span class="t">14:12</span><span class="m">DY-007 CUPID: Heartline PRD</span></li>
           <li><span class="h">7e48fba</span><span class="t">14:40</span><span class="m">Heartline: 테스트 먼저 46개</span></li>
           <li><span class="h">2b4bd68</span><span class="t">14:59</span><span class="m">Heartline 서버·앱 구현</span></li>
           <li><span class="h">d2339c9</span><span class="t">15:21</span><span class="m">Heartline 발표 (deck + pptx)</span></li>
-          <li class="more">… 외 17개 (잡음·작은 수정 포함)</li>
+          <li class="more">… 외 18개 (잡음·작은 수정 포함)</li>
         </ol>
-        <div class="tail">77 commits · 3 days<span class="cursor" aria-hidden="true"></span></div>
+        <div class="tail">78 commits · 3 days<span class="cursor" aria-hidden="true"></span></div>
         <!-- gitlog:end -->
       </div>
     </figure>
@@ -172,6 +172,7 @@
           </div>
           <div class="agent-body">
             <p>URL을 주면 공격 없이 응답만 읽어 웹사이트의 보안 약점을 찾고, 위험도와 고치는 법을 리포트로 써 줍니다.</p>
+            <details class="agent-more"><summary>작동 순서 · 자세히</summary>
             <ol class="pipeline" aria-label="동작 순서">
               <li><span>권한 확인</span></li><li><span>헤더·쿠키·TLS·본문 점검</span></li><li><span>리포트 저장</span></li>
             </ol>
@@ -180,6 +181,7 @@
               <li>공격 요청은 보내지 않고 응답만 읽기</li>
               <li>연습용 취약 사이트로 시험해 봄</li>
             </ul>
+            </details>
           </div>
         </article>
 
@@ -194,6 +196,7 @@
           </div>
           <div class="agent-body">
             <p>AWS 16가지 리더십 원칙 행동 면접을 연습합니다. 약한 원칙부터 묻고, 꼬리 질문으로 파고든 뒤 평가합니다.</p>
+            <details class="agent-more"><summary>작동 순서 · 자세히</summary>
             <ol class="pipeline" aria-label="동작 순서">
               <li><span>내 경험 읽기</span></li><li><span>질문 + 꼬리 질문</span></li><li><span>5개 항목 평가</span></li><li><span>연습 기록</span></li>
             </ol>
@@ -202,6 +205,7 @@
               <li>연습 기록이 쌓이면 약한 원칙부터 다시 질문</li>
               <li>개인 경험 기록은 공개 저장소에 올리지 않음</li>
             </ul>
+            </details>
           </div>
         </article>
 
@@ -218,6 +222,7 @@
           </div>
           <div class="agent-body">
             <p>CCNA 200-301 시험 대비 코치. 단원과 세부 범위를 고르면 실제 시험처럼 영어로 문제를 내고, 답을 내면 영어로 해설합니다.</p>
+            <details class="agent-more"><summary>작동 순서 · 자세히</summary>
             <ol class="pipeline" aria-label="동작 순서">
               <li><span>단원·범위 선택</span></li><li><span>영어 문제</span></li><li><span>내 답</span></li><li><span>영어 해설 + XP</span></li>
             </ol>
@@ -228,10 +233,9 @@
               <li>서브넷 계산은 AI 없이 코드가 출제·채점 (서버가 꺼져 있어도 사용)</li>
               <li>XP·레벨·칭호(Cable Rookie → CCNA Ready)·오늘의 퀘스트·배지</li>
             </ul>
+            </details>
           </div>
         </article>
-      </div>
-      <div class="agents" style="margin-top:20px">
         <article class="agent">
           <div class="agent-id">
             <span class="mono">DY-006 · agents/laptop-helper</span>
@@ -243,6 +247,7 @@
           </div>
           <div class="agent-body">
             <p>개인 컴퓨터의 홈 폴더를 정리해 주는 도우미. 다운로드·데스크탑 현황을 보고하고, 흩어진 문서를 위키로 모으고, 폴더를 종류별로 나눕니다.</p>
+            <details class="agent-more"><summary>작동 순서 · 자세히</summary>
             <ol class="pipeline" aria-label="동작 순서">
               <li><span>스캔 (AI 없음)</span></li><li><span>정리 제안</span></li><li><span>직접 승인</span></li><li><span>옮기기·휴지통</span></li>
             </ol>
@@ -251,6 +256,7 @@
               <li>옮기기·복사·휴지통은 실행 직전에 터미널에서 사람이 직접 승인. 지우기는 휴지통으로만</li>
               <li>키·인증서·앱 데이터·비공개 폴더는 목록도 보지 않음, 파일 내용은 읽지 않음</li>
             </ul>
+            </details>
           </div>
         </article>
 
@@ -268,6 +274,7 @@
           </div>
           <div class="agent-body">
             <p>Heartline: 내 취향대로 만드는 나만의 가상 연인 웹앱. 성격·말투·호칭·관계를 정해 연인을 만들고, 메신저처럼 대화합니다. 부가로 영어 모드가 있습니다.</p>
+            <details class="agent-more"><summary>작동 순서 · 자세히</summary>
             <ol class="pipeline" aria-label="동작 순서">
               <li><span>페르소나 만들기</span></li><li><span>메신저 대화</span></li><li><span>영어 모드 교정</span></li><li><span>내 브라우저에 저장</span></li>
             </ol>
@@ -277,10 +284,16 @@
               <li>대화·페르소나는 방문자 브라우저에만, 서버는 저장하지 않음. AI 고지·성인 캐릭터만·위기 시 도움 안내</li>
               <li>PRD → 체크리스트 → 테스트 먼저 → 구현 → 발표, 하루에 다섯 단계 (자동 테스트 55개 통과)</li>
             </ul>
+            </details>
           </div>
         </article>
+
+        <aside class="agent agent-extra">
+          <span class="mono">DY-004 · DY-005</span>
+          <p>그 밖에 <b>DY-004 TWIN</b>(<a href="https://github.com/DODO-YONG/Obsidian/blob/main/scripts/gemini.py"><code>scripts/gemini.py</code></a>, 터미널 제미나이 대화)과 <b>DY-005 PRIMER</b>(<code>agents/beginner-faq</code>, 초보자 FAQ 받기)가 있습니다.</p>
+        </aside>
       </div>
-      <p class="aside">그 밖에 <b>DY-004 TWIN</b>(<a href="https://github.com/DODO-YONG/Obsidian/blob/main/scripts/gemini.py"><code>scripts/gemini.py</code></a>, 터미널 제미나이 대화)과 <b>DY-005 PRIMER</b>(<code>agents/beginner-faq</code>, 초보자 FAQ 받기)가 있습니다.</p>
+
     </div>
   </section>
 
@@ -290,7 +303,7 @@
         <p class="label"><span class="n">03</span>TRACER 원리</p>
         <div>
           <h2>TRACER는 이렇게 동작합니다</h2>
-          <p>화면은 누구나 여는 공개 웹사이트이고, AI 답변은 키를 보관한 개인 서버(개인 컴퓨터 환경)가 만듭니다. <b>재생</b>을 누르면 문제 하나가 어떤 길로 오가는지 따라가 볼 수 있습니다.</p>
+          <p>화면은 누구나 여는 공개 웹사이트이고, AI 문제·해설은 키를 보관한 개인 서버(개인 컴퓨터 환경)가 만듭니다. 아래 탭에서 <b>서버 켜기 → 문제 받기 → 채점·해설 → 서브넷</b> 순서로 장면을 고르면, 데이터가 어떤 길로 오가는지 한 단계씩 재생됩니다.</p>
         </div>
       </div>
 
@@ -485,6 +498,6 @@
   }
 })();
 </script>
-<script src="tracer-how.js?v=20261119170225" defer></script>
+<script src="tracer-how.js?v=20261120090626" defer></script>
 </body>
 </html>

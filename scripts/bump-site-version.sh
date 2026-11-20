@@ -7,6 +7,7 @@ V="$(date +%Y%m%d%H%M%S)"
 for f in docs/index.html docs/terminal.html docs/ccna/index.html docs/heartline/prd.html docs/heartline/checklist.html docs/heartline/tests.html docs/heartline/index.html docs/heartline/deck.html; do
   sed -i '' -E "s/var SITE_V = '[0-9]+';/var SITE_V = '$V';/" "$f"
   sed -i '' -E "s/tracer-how\.(css|js)\?v=[0-9]+/tracer-how.\1?v=$V/g" "$f"
+  sed -i '' -E "s/href=\"style\.css\?v=[0-9]+/href=\"style.css?v=$V/g" "$f"
   sed -i '' -E "s/([\"/])(how|app)\.(css|js)\?v=[0-9]+/\1\2.\3?v=$V/g" "$f"
 done
 printf '{"v": "%s"}\n' "$V" > docs/version.json
