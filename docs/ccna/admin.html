@@ -145,7 +145,8 @@
     </nav>
     <span class="spacer"></span>
     <span class="who" id="who"></span>
-    <a class="back" href="./">← TRACER</a>
+    <button class="btn sm" id="logoutBtn" type="button" hidden>로그아웃</button>
+    <a class="back" href="app.html">← TRACER</a>
     <button class="icon-btn" id="themeBtn" type="button" aria-label="밝은 화면으로 전환">◐</button>
   </div>
 </header>
@@ -421,12 +422,13 @@
   // ---- 시작: 로그인 → 관리자 확인
   function start() {
     return api('/api/me').then(function (m) {
-      me = m;
+      me = m; $('#logoutBtn').hidden = false;
       if (!m.admin) { gate('관리자만 볼 수 있는 화면이에요. (' + m.email + ')', false); return; }
-      $('#gate').hidden = true; $('#tabs').hidden = false; $('#who').textContent = (m.name || m.email) + ' · ' + ROLE[m.role];
+      $('#gate').hidden = true; $('#tabs').hidden = false; $('#who').textContent = (m.name || m.email) + ' · ' + ROLE[m.role] + ' · 로그인됨';
       var t = (location.hash || '').slice(1); show(['dash', 'users', 'activity', 'bank'].indexOf(t) >= 0 ? t : 'dash');
     }).catch(function (e) { gate(e.message, true); });
   }
+  $('#logoutBtn').addEventListener('click', function () { sb.auth.signOut().then(function () { location.href = './'; }); });
   $('#loginBtn').addEventListener('click', function () { sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname } }); });
   fetch('topics.json').then(function (r) { return r.json(); }).then(function (t) {
     topics = t;

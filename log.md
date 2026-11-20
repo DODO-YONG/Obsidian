@@ -125,3 +125,5 @@
 ## [2026-11-20] output | TRACER 상시 운영 코드: Vercel /api(docs/api)·Supabase 스키마(RLS)·구글 로그인·문제은행(30개부터 90% 재사용, 객관식 저장 해설)·신고·관리자 페이지(docs/ccna/admin.html)·깨우기 Actions·SETUP.md. 로직 시험 24개·로컬 화면 확인, 배포는 사용자 계정 준비 후
 
 ## [2026-11-20] output | TRACER 배포: https://tracer-eosin.vercel.app/ccna/ (Vercel tracer · Supabase Tracer · 구글 OAuth 테스트 모드). 실제 로그인·출제·저장 해설 채점·관리자 확인, github.io → 새 주소 자동 이동, 깨우기 변수 설정
+
+## [2026-11-20] output | TRACER 소개·이용 분리: /ccna/ 선택 화면 → about.html(핵심만, 새 구조 작동 방식 그림) · app.html(이용), 공용 로그인 부품(로그인/로그아웃 분명하게), Q-BRANCH #how 그림도 새 구조로

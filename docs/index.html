@@ -15,12 +15,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=20261120093924">
-<link rel="stylesheet" href="tracer-how.css?v=20261120093924">
+<link rel="stylesheet" href="style.css?v=20261120103446">
+<link rel="stylesheet" href="tracer-how.css?v=20261120103446">
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261120093924';
+  var SITE_V = '20261120103446';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -89,10 +89,12 @@
           <li><span class="h">2b4bd68</span><span class="t">14:59</span><span class="m">Heartline 서버·앱 구현</span></li>
           <li><span class="h">d2339c9</span><span class="t">15:21</span><span class="m">Heartline 발표 (deck + pptx)</span></li>
           <li class="more">… 외 18개 (잡음·작은 수정 포함)</li>
-          <li class="day"># 4일차 · 11-20 · 1 commits</li>
+          <li class="day"># 4일차 · 11-20 · 3 commits</li>
           <li><span class="h">f6af5d3</span><span class="t">09:07</span><span class="m">소개 페이지: 에이전트 카드 3열로 한 화면에, TRACER 원리 4개 장면으로</span></li>
+          <li><span class="h">70a0c0c</span><span class="t">10:11</span><span class="m">TRACER 상시 운영: Vercel /api·Supabase·구글 로그인·문제은행·관리자 페이지</span></li>
+          <li><span class="h">2da8568</span><span class="t">10:23</span><span class="m">TRACER 배포 완료: tracer-eosin.vercel.app, 예전 주소 자동 이동</span></li>
         </ol>
-        <div class="tail">79 commits · 4 days<span class="cursor" aria-hidden="true"></span></div>
+        <div class="tail">81 commits · 4 days<span class="cursor" aria-hidden="true"></span></div>
         <!-- gitlog:end -->
       </div>
     </figure>
@@ -300,7 +302,7 @@
         <p class="label"><span class="n">03</span>TRACER 원리</p>
         <div>
           <h2>TRACER는 이렇게 동작합니다</h2>
-          <p>화면은 누구나 여는 공개 웹사이트이고, AI 문제·해설은 키를 보관한 개인 서버(개인 컴퓨터 환경)가 만듭니다. 아래 탭에서 <b>서버 켜기 → 문제 받기 → 채점·해설 → 서브넷</b> 순서로 장면을 고르면, 데이터가 어떤 길로 오가는지 한 단계씩 재생됩니다.</p>
+          <p>구글 계정으로 로그인하면, 무료 클라우드 서버(Vercel)가 문제은행(Supabase)에서 문제를 꺼내거나 제미나이로 새로 만들어 줍니다. 아래 탭에서 <b>로그인 → 문제 받기 → 채점·해설 → 서브넷</b> 순서로 장면을 고르면, 데이터가 어떤 길로 오가는지 한 단계씩 재생됩니다.</p>
         </div>
       </div>
 
@@ -495,6 +497,6 @@
   }
 })();
 </script>
-<script src="tracer-how.js?v=20261120093924" defer></script>
+<script src="tracer-how.js?v=20261120103446" defer></script>
 </body>
 </html>

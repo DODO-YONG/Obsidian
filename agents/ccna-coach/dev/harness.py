@@ -9,11 +9,12 @@ os.environ["SUPABASE_URL"] = "http://fake"; os.environ["SUPABASE_ANON_KEY"] = "f
 import index as api
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 DOCS = str(__import__("pathlib").Path(__file__).resolve().parents[3] / "docs")
-FAKE_SB = b"""window.supabase={createClient:function(){var tok=localStorage.getItem('fake-tok');var cbs=[];
-return {auth:{getSession:function(){return Promise.resolve({data:{session:tok?{access_token:tok}:null}})},
+FAKE_SB = b"""window.supabase={createClient:function(){var cbs=[];
+function sess(){var t=localStorage.getItem('fake-tok');return t?{access_token:t,user:{email:'owner@example.com',user_metadata:{full_name:'Test Owner'}}}:null}
+return {auth:{getSession:function(){return Promise.resolve({data:{session:sess()}})},
 onAuthStateChange:function(f){cbs.push(f)},
-signInWithOAuth:function(){tok='a';localStorage.setItem('fake-tok','a');cbs.forEach(function(f){f('SIGNED_IN',{})});return Promise.resolve({})},
-signOut:function(){tok=null;localStorage.removeItem('fake-tok');return Promise.resolve({})}}}}};"""
+signInWithOAuth:function(){localStorage.setItem('fake-tok','a');cbs.forEach(function(f){f('SIGNED_IN',sess())});return Promise.resolve({})},
+signOut:function(){localStorage.removeItem('fake-tok');cbs.forEach(function(f){f('SIGNED_OUT',null)});return Promise.resolve({})}}}}};"""
 class H(SimpleHTTPRequestHandler):
     def __init__(self, *a, **k): super().__init__(*a, directory=DOCS, **k)
     def log_message(self, *a): pass
@@ -25,12 +26,13 @@ class H(SimpleHTTPRequestHandler):
         if self.path.startswith('/api/'): return self._api('do_GET')
         if self.path.startswith('/fake-supabase.js'):
             self.send_response(200); self.send_header('Content-Type','text/javascript'); self.end_headers(); return self.wfile.write(FAKE_SB)
-        if self.path.split('?')[0] in ('/ccna/', '/ccna/index.html', '/ccna/admin.html'):
-            f = DOCS + ('/ccna/index.html' if not self.path.startswith('/ccna/admin') else '/ccna/admin.html')
+        pth = self.path.split('?')[0]
+        if pth.startswith('/ccna/') and (pth.endswith('.html') or pth == '/ccna/'):
+            f = DOCS + (pth + 'index.html' if pth.endswith('/') else pth)
             b = open(f, 'rb').read().replace(b'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js', b'/fake-supabase.js')
             self.send_response(200); self.send_header('Content-Type','text/html; charset=utf-8'); self.end_headers(); return self.wfile.write(b)
         return super().do_GET()
     def do_POST(self):
         if self.path.startswith('/api/'): return self._api('do_POST')
-print('로컬 시험 화면: http://127.0.0.1:8799/ccna/  (가짜 DB·가짜 제미나이)')
+print('로컬 시험 화면: http://127.0.0.1:8799/ccna/  (선택 화면 · about.html 소개 · app.html 이용, 가짜 DB·가짜 제미나이)')
 ThreadingHTTPServer(('127.0.0.1', 8799), H).serve_forever()

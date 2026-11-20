@@ -8,7 +8,7 @@
 - **위키 메모**: `wiki/projects/ccna-coach/`
 
 ## 🚀 새 구조 (2026-11-20 · 상시 운영 중)
-**주소: https://tracer-eosin.vercel.app/ccna/** · 관리자: https://tracer-eosin.vercel.app/ccna/admin.html
+**주소: https://tracer-eosin.vercel.app/ccna/** (처음 화면에서 소개/이용 선택) · 소개 `about.html` · 이용 `app.html` · 관리자 `admin.html`
 내 Mac 없이 항상 동작: **Vercel(화면+/api) + Supabase(DB·구글 로그인)**. 모두 무료 등급, 카드 등록 없음.
 **배포 방법(직접 할 일): [SETUP.md](SETUP.md)** · 계획·결정: 위키 `wiki/projects/ccna-coach/topics/TRACER 고도화 계획.md`
 
@@ -36,6 +36,11 @@
 | `../../docs/api/_core.py` | 로그인·권한·한도·문제은행·채점·관리자 로직 |
 | `../../docs/api/_db.py` · `_gemini.py` | Supabase REST 호출 · 제미나이 호출(환경변수 키) |
 | `../../docs/vercel.json` | Vercel 설정(루트 `docs`, `/api/*` → `index.py`, docs가 바뀔 때만 빌드) |
+| `../../docs/ccna/index.html` | 처음 화면: "소개 보기" / "바로 이용하기" 선택 (예전 `#intro`·`#how` 바로가기는 소개로) |
+| `../../docs/ccna/about.html` | 소개: 쓰는 법 3단계·좋은 점·작동 방식 그림·저장하는/안 하는 것·FAQ |
+| `../../docs/ccna/app.html` | 이용 화면(문제 풀기·내 문제 해설·진도) — 소개 없이 바로 시작 |
+| `../../docs/ccna/tracer-auth.js` | 공용 로그인 부품: 로그아웃 상태 "Google로 로그인", 로그인 상태 "내 이름 + 로그아웃" (세 페이지 공통) |
+| `../../docs/ccna/tracer-site.css` | 처음 화면·소개 공용 스타일 |
 | `../../docs/ccna/admin.html` | 관리자 페이지 |
 | `supabase/schema.sql` | 표·RLS·함수 — Supabase SQL Editor에 붙여 넣기 |
 | `SETUP.md` | 계정 준비·배포 순서(직접 할 일) |

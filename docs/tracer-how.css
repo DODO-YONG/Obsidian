@@ -1,23 +1,23 @@
-/* DY-003 TRACER 작동 방식 — 소개 페이지(docs/index.html)와 TRACER 사이트(docs/ccna/) 공용.
+/* DY-003 TRACER 작동 방식 — 소개 페이지(docs/index.html)와 TRACER 소개(docs/ccna/about.html) 공용.
    이 파일과 tracer-how.js만 고치면 두 곳이 함께 바뀐다. 색은 .tq-how 안에서만 쓰는 --tq-* 토큰. */
 .tq-how {
   --tq-sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
   --tq-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
   --tq-bg: #F7F9FC; --tq-card: #FFFFFF; --tq-stroke: #D2D9E2; --tq-line: #B8C2CF; --tq-t1: #141B24; --tq-t2: #4A5563;
   --tq-web: #2C4BD6; --tq-web-s: #E3E8FB; --tq-mac: #B5610F; --tq-mac-s: #FBEBD7; --tq-ai: #1E8A52; --tq-ai-s: #DCF2E5;
-  --tq-gray: #5B6675; --tq-gray-s: #EBEFF4; --tq-pkt: #2C4BD6; --tq-pkt-t: #FFFFFF;
+  --tq-gray: #5B6675; --tq-gray-s: #EBEFF4; --tq-db: #7446D0; --tq-db-s: #ECE4FB; --tq-pkt: #2C4BD6; --tq-pkt-t: #FFFFFF;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .tq-how {
     --tq-bg: #0B1017; --tq-card: #18212D; --tq-stroke: #34425A; --tq-line: #4D5D74; --tq-t1: #F1F4F8; --tq-t2: #B7C1CE;
     --tq-web: #8EA6FF; --tq-web-s: #22305C; --tq-mac: #F2B45A; --tq-mac-s: #3D2C12; --tq-ai: #6FD69A; --tq-ai-s: #163826;
-    --tq-gray: #AEB8C6; --tq-gray-s: #26303D; --tq-pkt: #8EA6FF; --tq-pkt-t: #0A0E13;
+    --tq-gray: #AEB8C6; --tq-gray-s: #26303D; --tq-db: #B99BFF; --tq-db-s: #2E2350; --tq-pkt: #8EA6FF; --tq-pkt-t: #0A0E13;
   }
 }
 :root[data-theme="dark"] .tq-how {
   --tq-bg: #0B1017; --tq-card: #18212D; --tq-stroke: #34425A; --tq-line: #4D5D74; --tq-t1: #F1F4F8; --tq-t2: #B7C1CE;
   --tq-web: #8EA6FF; --tq-web-s: #22305C; --tq-mac: #F2B45A; --tq-mac-s: #3D2C12; --tq-ai: #6FD69A; --tq-ai-s: #163826;
-  --tq-gray: #AEB8C6; --tq-gray-s: #26303D; --tq-pkt: #8EA6FF; --tq-pkt-t: #0A0E13;
+  --tq-gray: #AEB8C6; --tq-gray-s: #26303D; --tq-db: #B99BFF; --tq-db-s: #2E2350; --tq-pkt: #8EA6FF; --tq-pkt-t: #0A0E13;
 }
 
 .tq-stage { border: 1px solid var(--tq-stroke); border-radius: 18px; background: var(--tq-bg); overflow: hidden; }
@@ -141,3 +141,11 @@
 .tq-how ul { margin-top: 0; }
 @media (prefers-reduced-motion: reduce) { .tq-how *, .tq-how *::before, .tq-how *::after { transition: none !important; animation: none !important; } }
 :where(.tq-how) p, :where(.tq-how) h3, :where(.tq-how) h4 { margin: 0; }
+
+/* 2026-11-20 새 구조: 구글 로그인(회색) · 데이터베이스(보라) */
+.tq-svg .k-login .tile { fill: var(--tq-gray-s); } .tq-svg .k-login .ico { stroke: var(--tq-gray); }
+.tq-svg .k-db .tile { fill: var(--tq-db-s); } .tq-svg .k-db .ico { stroke: var(--tq-db); }
+.tq-svg .k-login.on .card { stroke: var(--tq-gray); filter: drop-shadow(0 0 12px color-mix(in srgb, var(--tq-gray) 40%, transparent)); }
+.tq-svg .k-db.on .card { stroke: var(--tq-db); filter: drop-shadow(0 0 14px color-mix(in srgb, var(--tq-db) 45%, transparent)); }
+.tq-who.d { color: var(--tq-db); background: var(--tq-db-s); }
+.b-login { --c: var(--tq-gray); --cs: var(--tq-gray-s); } .b-db { --c: var(--tq-db); --cs: var(--tq-db-s); }
