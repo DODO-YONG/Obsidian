@@ -231,7 +231,7 @@
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261120103446';
+  var SITE_V = '20261120103628';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -241,6 +241,7 @@
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script src="tracer-auth.js?v=20261120103628"></script>
 </head>
 <body>
 <header>
@@ -818,7 +819,7 @@ var Subnet = (function () {
   $('#helpLogin').addEventListener('click', function () { TracerAuth.login('app.html'); });
   $('#conn').addEventListener('click', function () { if (state.online) { $('#connHelp').hidden = !$('#connHelp').hidden; return; } showHelp(); });
   function initAuth() {
-    if (!window.TracerAuth) { setOnline(false); refreshStats(); return; }
+    if (!window.TracerAuth) { return new Promise(function (r) { setTimeout(r, 200); }).then(initAuth); }
     return TracerAuth.ready.then(function (c) {
       state.ready = !!c; setUser(null);
       TracerAuth.onChange(function (sess) {
@@ -834,6 +835,5 @@ var Subnet = (function () {
     .catch(function () { $('#scopeList').innerHTML = '<p class="muted">출제 범위를 불러오지 못했어요.</p>'; });
 })();
 </script>
-<script src="tracer-auth.js?v=20261120103446"></script>
 </body>
 </html>
