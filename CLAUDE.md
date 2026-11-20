@@ -7,6 +7,7 @@
 
 | 질문 대상 | 먼저 볼 곳 |
 |---|---|
+| 다음에 할 일·"보드 맨 위 거 해줘" | `wiki/개발 보드.md` |
 | 에이전트 기능·사용법 | `agents/<이름>/README.md` (security-agent·interview-coach·ccna-coach·laptop-helper·beginner-faq) |
 | 에이전트 설계 결정·남은 일 | `wiki/projects/<이름>/<이름>.md` |
 | 코드명 DY-00x | `wiki/shared/에이전트 코드명.md` |
@@ -21,6 +22,7 @@
 ## 항상 지킬 핵심
 - **`raw/`는 읽기 전용**(수정·삭제·이동 금지). 위키는 `wiki/`, 바이너리 산출물은 `wiki/projects/<프로젝트>/output/YYYY_MM_DD_제목.확장자`.
 - 위키 페이지를 만들거나 바꾸면 `index.md` 해당 섹션과 `log.md`(`## [YYYY-MM-DD] ingest|query|lint|output | 제목`)를 갱신한다.
+- **할 일은 `wiki/개발 보드.md` 한 곳에만** 적는다(허브엔 쓰지 않음). 작업을 끝내면 체크해서 완료 칸으로, 새 할 일은 알맞은 칸에 추가.
 - 검토상태는 사용자가 말한 값만(모르면 `미확인`). 모순은 `> ⚠️ 모순:`으로 표시.
 
 ## 에이전트 코드 (`agents/`)
