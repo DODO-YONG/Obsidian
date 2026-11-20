@@ -100,7 +100,13 @@
   .choice[aria-pressed="true"] .ltr { color: var(--accent); }
   .choice.correct { border-color: var(--ok); background: var(--ok-soft); }
   .choice.wrong { border-color: var(--bad); background: var(--bad-soft); }
-  .answer-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .answer-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; align-items: center; }
+  .answer-row .hint { font-size: 13.5px; color: var(--ink-3); }
+  .graded .choice { cursor: default; } .graded .choice:hover { border-color: var(--rule); }
+  .graded .choice.correct:hover { border-color: var(--ok); } .graded .choice.wrong:hover { border-color: var(--bad); }
+  #gradeBtn.next { background: var(--ok); border-color: var(--ok); }
+  .next-row { display: flex; justify-content: center; margin-top: 14px; }
+  #qCard { scroll-margin-top: 84px; }
   .answer-row input, textarea { flex: 1; min-width: 200px; border: 1px solid var(--rule); background: var(--panel); border-radius: 10px; padding: 10px 12px; }
   textarea { width: 100%; resize: vertical; min-height: 110px; font-family: var(--sans); line-height: 1.6; }
   .empty { text-align: center; padding: 48px 20px; color: var(--ink-2); }
@@ -234,7 +240,7 @@
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261120142055';
+  var SITE_V = '20261120142613';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -244,7 +250,7 @@
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
-<script src="tracer-auth.js?v=20261120142055"></script>
+<script src="tracer-auth.js?v=20261120142613"></script>
 </head>
 <body>
 <header>
@@ -613,14 +619,18 @@ var Subnet = (function () {
   $('#newQ').dataset.label = '문제 받기';
   $('#newQ').addEventListener('click', function () {
     var btn = this;
-    if (state.qtype === 'subnet') { state.q = Subnet.make(state.diff); state.choice = null; renderQ(); $('#expBox').innerHTML = ''; return; }
+    if (state.qtype === 'subnet') { state.busy = false; state.q = Subnet.make(state.diff); state.choice = null; $('#qCard').classList.remove('graded'); renderQ(); $('#expBox').innerHTML = ''; showCard(); return; }
     if (!state.online) { toast(state.user ? helpText() : 'AI 문제는 구글 로그인 후 쓸 수 있어요. 서브넷 계산은 바로 풀 수 있어요.'); showHelp(); return; }
     busy(btn, true, '문제 준비 중');
     api('/api/question', { subs: Array.from(state.selected), difficulty: state.diff, qtype: state.qtype })
-      .then(function (q) { state.q = q; state.choice = null; renderQ(); $('#expBox').innerHTML = ''; loadMe(true); })
-      .catch(function (e) { toast(e.message); })
+      .then(function (q) { state.q = q; state.choice = null; $('#qCard').classList.remove('graded'); renderQ(); $('#expBox').innerHTML = ''; showCard(); loadMe(true); })
+      .catch(function (e) { toast(e.message); ['#gradeBtn', '#nextBtn2'].forEach(function (k) { var b = $(k); if (b && b.dataset.label) busy(b, false); }); })
       .finally(function () { busy(btn, false); });
   });
+  function showCard() {   // 새 문제가 화면 위쪽에 보이도록(해설을 읽느라 내려가 있었을 때)
+    var c = $('#qCard'), top = c.getBoundingClientRect().top;
+    if (top < 70 || top > innerHeight * 0.6) c.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   function formatQ(text) {
     // 줄 맨 앞이 장비 프롬프트(R1#, Switch> 등)나 show 출력처럼 보이는 연속 줄은 터미널 블록으로
@@ -642,23 +652,30 @@ var Subnet = (function () {
     if (q.choices && q.choices.length) {
       body += '<div class="choices" role="group" aria-label="보기">' + q.choices.map(function (c, i) {
         return '<button class="choice" aria-pressed="false" data-l="' + 'ABCD'[i] + '"><span class="ltr">' + 'ABCD'[i] + '</span><span>' + esc(c) + '</span></button>';
-      }).join('') + '</div><div class="answer-row"><button class="btn primary" id="gradeBtn" disabled>채점하고 해설 받기</button></div>';
+      }).join('') + '</div><div class="answer-row"><button class="btn primary" id="gradeBtn" disabled>채점하기</button><span class="hint" id="gradeHint">보기를 하나 고르세요</span></div>';
     } else {
       body += '<div class="answer-row"><input id="ansIn" placeholder="' + (q.qtype === 'subnet' ? 'e.g. 192.168.1.64 or 62' : 'Type a short answer in English') + '" aria-label="내 답">' +
-        '<button class="btn primary" id="gradeBtn">채점하고 해설 받기</button></div>';
+        '<button class="btn primary" id="gradeBtn">채점하기</button></div>';
     }
     $('#qCard').innerHTML = meta + body;
-    var g = $('#gradeBtn'); g.dataset.label = '채점하고 해설 받기';
+    var g = $('#gradeBtn'); g.dataset.label = '채점하기';
     $('#qCard').querySelectorAll('.choice').forEach(function (b) {
       b.addEventListener('click', function () {
         if (state.graded) return;
         $('#qCard').querySelectorAll('.choice').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
         state.choice = b.dataset.l; g.disabled = false;
+        var h = $('#gradeHint'); if (h) h.textContent = b.dataset.l + '를 골랐어요. 채점하기를 누르세요';
       });
     });
     var inp = $('#ansIn'); if (inp) { inp.focus(); inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') g.click(); }); }
     state.graded = false;
+    function next(btn) {   // 다음 문제: 채점 버튼 자리에서 바로 '불러오는 중'을 보여 준다
+      if (state.busy) return;
+      [g, $('#nextBtn2')].forEach(function (b) { if (b) busy(b, true, '다음 문제 불러오는 중'); });
+      $('#newQ').click();
+    }
     g.addEventListener('click', function () {
+      if (state.graded) { next(g); return; }
       var ans = state.choice || (inp && inp.value.trim());
       if (!ans) { toast('답을 입력해 주세요.'); return; }
       busy(g, true, q.qtype === 'short' ? '제미나이가 채점 중' : '채점 중');
@@ -678,9 +695,14 @@ var Subnet = (function () {
         }
         var gr = Game.result(r.verdict, q); r.xp = gr.xp;
         $('#expBox').innerHTML = renderExp(r, q.qtype === 'subnet') + (q.qtype !== 'subnet' && q.id ? '<div class="q-foot"><button class="linkbtn" id="reportBtn" type="button">문제에 오류가 있나요? 신고하기</button></div>' : '');
+        // 해설 아래에도 '다음 문제' (해설을 읽고 내려온 자리에서 바로 누를 수 있게)
+        $('#expBox').insertAdjacentHTML('beforeend', '<div class="next-row"><button class="btn primary" id="nextBtn2" type="button">다음 문제 →</button></div>');
         var rb = $('#reportBtn'); if (rb) rb.addEventListener('click', function () { reportQ(q.id, rb); });
         celebrate(gr);
-        g.dataset.label = '다음 문제'; busy(g, false); g.onclick = function () { $('#newQ').click(); };
+        $('#qCard').classList.add('graded'); if (inp) inp.readOnly = true;
+        var h = $('#gradeHint'); if (h) h.textContent = '채점 완료 · 아래 해설을 확인하세요';
+        g.dataset.label = '다음 문제 →'; g.classList.add('next'); busy(g, false);
+        var n2 = $('#nextBtn2'); n2.dataset.label = '다음 문제 →'; n2.addEventListener('click', function () { next(n2); });
         refreshStats();
       }).catch(function (e) { toast(e.message); busy(g, false); });
     });

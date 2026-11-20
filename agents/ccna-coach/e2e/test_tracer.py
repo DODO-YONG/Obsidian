@@ -77,7 +77,7 @@ def test_mcq_question_and_grade(logged_in, errors, base_url):
     expect(page.locator("#expBox .verdict")).to_contain_text("Correct")
     expect(page.locator('#qCard .choice[data-l="B"]')).to_have_class(re.compile("correct"))
     expect(page.locator("#reportBtn")).to_be_visible()
-    expect(page.locator("#gradeBtn")).to_have_text("다음 문제")
+    expect(page.locator("#gradeBtn")).to_contain_text("다음 문제")
 
 
 def test_conn_help_logged_in_has_no_login_button(logged_in, errors, base_url):
