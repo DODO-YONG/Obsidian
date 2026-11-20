@@ -137,3 +137,5 @@
 ## [2026-11-20] query | TRACER 예전 풀이 기록(private, 시험 2건)은 Supabase로 옮기지 않기로 결정
 
 ## [2026-11-20] output | TRACER 자동 화면 시험: Playwright 15개(agents/ccna-coach/e2e) + GitHub Actions tracer-test(푸시마다, 가짜 로그인·DB·제미나이, 토큰 0)
+
+## [2026-11-20] output | 시험 작성 도우미 e2e-test-writer(.claude/agents, Sonnet): 새 기능의 Playwright 시험만 써 주고 실행은 GitHub Actions. tracer-test 첫 실행 성공

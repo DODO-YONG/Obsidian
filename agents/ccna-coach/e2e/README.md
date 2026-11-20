@@ -26,7 +26,7 @@ cd ~/Obsidian/agents/ccna-coach/e2e && .venv/bin/pytest -q
 화면을 보면서 돌리려면 `--headed --slowmo 300`을 붙인다.
 
 ## 새 기능을 만들 때
-1. 기능을 만든 뒤 `test_tracer.py`에 시험을 하나 추가한다(Claude에게 "이 기능 시험도 추가해 줘").
+1. 기능을 만든 뒤 Claude에게 "이 기능 테스트 추가해 줘" → **시험 작성 도우미**(`.claude/agents/e2e-test-writer.md`, Sonnet)가 `test_tracer.py`에 시험을 추가하고 로컬에서 통과시킨다. 실행은 안 맡긴다(GitHub Actions가 무료로).
 2. 가짜 제미나이 답은 `../dev/fakes.py`의 `ask_json` — 객관식 정답은 항상 B.
 3. 푸시하면 끝. 실패했을 때만 Claude에게 실패 기록을 보여 주면 된다.
 
