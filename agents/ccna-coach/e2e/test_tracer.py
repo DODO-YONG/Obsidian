@@ -104,6 +104,37 @@ def test_conn_help_logged_out_shows_login(page, errors, base_url):
     expect(page.locator("#connHelp")).to_be_hidden()
 
 
+def test_conn_waiting_for_me_shows_linking(logged_in, errors, base_url):
+    page = logged_in
+    held = []
+    page.route("**/api/me", lambda route: held.append(route))   # 응답을 붙잡아 '연결 중' 상태를 만든다
+    page.goto(base_url + "/ccna/app.html")
+    expect(page.locator("#connText")).to_contain_text("AI 연결 중")
+    expect(page.locator("#conn")).to_have_class(re.compile(r"\bwait\b"))
+    page.locator("#conn").click()
+    expect(page.locator("#connHelp")).to_be_visible()
+    expect(page.locator("#helpMsg")).to_contain_text("AI 서버에 연결하는 중")
+    expect(page.locator("#helpLogin")).to_be_hidden()
+    expect(page.locator("#connHelp")).to_have_class(re.compile(r"\bok\b"))
+    for r in held:
+        r.continue_()                                           # 이제 응답이 온다
+    expect(page.locator("#connText")).to_contain_text("AI 사용 가능")
+    expect(page.locator("#conn")).to_have_class(re.compile(r"\bon\b"))
+    expect(page.locator("#connHelp")).to_be_hidden()
+
+
+def test_conn_me_failure_then_retry_on_click(logged_in, errors, base_url):
+    page = logged_in
+    page.route("**/api/me", lambda route: route.abort())        # 계속 실패 (자동 재시도 2번, 1.5초 간격)
+    page.goto(base_url + "/ccna/app.html")
+    expect(page.locator("#connText")).to_contain_text("AI 연결 늦음", timeout=10000)
+    expect(page.locator("#helpLogin")).to_be_hidden()
+    page.unroute("**/api/me")                                   # 서버가 살아남
+    page.locator("#conn").click()                               # 누르면 다시 연결
+    expect(page.locator("#connText")).to_contain_text("AI 사용 가능")
+    expect(page.locator("#helpLogin")).to_be_hidden()
+
+
 # ---------- 관리자 ----------
 def test_admin_requires_login(page, errors, base_url):
     page.goto(base_url + "/ccna/admin.html")
