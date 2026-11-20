@@ -1,6 +1,6 @@
 # TRACER 상시 운영 준비 (Vercel + Supabase + 구글 로그인) — 직접 할 일
 
-> ✅ 2026-11-20 완료: https://tracer-eosin.vercel.app/ccna/ (구글 OAuth 앱은 아직 **테스트 모드** — 테스트 사용자로 등록한 계정만 로그인. 누구나 쓰게 하려면 Branding 작성 후 게시)
+> ✅ 2026-11-20 완료: https://tracer-eosin.vercel.app/ccna/ · 같은 날 구글 OAuth 앱 **게시(In production)** — 누구나 구글 계정으로 로그인 (기본 범위만 써서 심사 불필요, 개인정보 처리방침 `privacy.html`)
 
 > 계정 만들기·키 붙여 넣기는 **본인이 직접** 한다(Claude는 키를 보거나 입력하지 않는다).
 > **세 곳 모두 결제 수단(카드)을 등록하지 않는다.** 카드가 없으면 한도를 넘어도 청구되지 않고 멈추기만 한다.

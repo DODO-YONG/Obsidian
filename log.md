@@ -127,3 +127,5 @@
 ## [2026-11-20] output | TRACER 배포: https://tracer-eosin.vercel.app/ccna/ (Vercel tracer · Supabase Tracer · 구글 OAuth 테스트 모드). 실제 로그인·출제·저장 해설 채점·관리자 확인, github.io → 새 주소 자동 이동, 깨우기 변수 설정
 
 ## [2026-11-20] output | TRACER 소개·이용 분리: /ccna/ 선택 화면 → about.html(핵심만, 새 구조 작동 방식 그림) · app.html(이용), 공용 로그인 부품(로그인/로그아웃 분명하게), Q-BRANCH #how 그림도 새 구조로
+
+## [2026-11-20] output | TRACER 구글 로그인 앱 게시: 개인정보 처리방침(privacy.html) 추가, Branding(홈·방침·허용 도메인) 작성, Publish → In production(심사 불필요). 이제 누구나 로그인
