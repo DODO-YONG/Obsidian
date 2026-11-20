@@ -139,3 +139,5 @@
 ## [2026-11-20] output | TRACER 자동 화면 시험: Playwright 15개(agents/ccna-coach/e2e) + GitHub Actions tracer-test(푸시마다, 가짜 로그인·DB·제미나이, 토큰 0)
 
 ## [2026-11-20] output | 시험 작성 도우미 e2e-test-writer(.claude/agents, Sonnet): 새 기능의 Playwright 시험만 써 주고 실행은 GitHub Actions. tracer-test 첫 실행 성공
+
+## [2026-11-20] output | 작업실 지도(docs/map.html): 에이전트·만들기 도우미·자동 장치·만드는 사람 네 층, 기능이 나가는 길, 토큰 비교, 추가 규칙. 소개 페이지·README에서 링크

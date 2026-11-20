@@ -15,12 +15,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=20261120104743">
-<link rel="stylesheet" href="tracer-how.css?v=20261120104743">
+<link rel="stylesheet" href="style.css?v=20261120111743">
+<link rel="stylesheet" href="tracer-how.css?v=20261120111743">
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261120104743';
+  var SITE_V = '20261120111743';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -46,6 +46,7 @@
       <a href="#log">작업 기록</a>
       <a href="#rules">지키는 것</a>
       <a href="#next">다음</a>
+      <a href="map.html">작업실 지도</a>
     </nav>
     <button class="theme-btn" id="themeBtn" type="button" aria-label="어두운 화면으로 전환">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
@@ -89,14 +90,14 @@
           <li><span class="h">2b4bd68</span><span class="t">14:59</span><span class="m">Heartline 서버·앱 구현</span></li>
           <li><span class="h">d2339c9</span><span class="t">15:21</span><span class="m">Heartline 발표 (deck + pptx)</span></li>
           <li class="more">… 외 18개 (잡음·작은 수정 포함)</li>
-          <li class="day"># 4일차 · 11-20 · 8 commits</li>
+          <li class="day"># 4일차 · 11-20 · 12 commits</li>
           <li><span class="h">f6af5d3</span><span class="t">09:07</span><span class="m">소개 페이지: 에이전트 카드 3열로 한 화면에, TRACER 원리 4개 장면으로</span></li>
           <li><span class="h">70a0c0c</span><span class="t">10:11</span><span class="m">TRACER 상시 운영: Vercel /api·Supabase·구글 로그인·문제은행·관리자 페이지</span></li>
           <li><span class="h">2da8568</span><span class="t">10:23</span><span class="m">TRACER 배포 완료: tracer-eosin.vercel.app, 예전 주소 자동 이동</span></li>
           <li><span class="h">e825e57</span><span class="t">10:35</span><span class="m">TRACER 소개·이용 분리: 처음 화면 선택 → 소개(about) / 이용(app), 로그인 표시 개선</span></li>
-          <li class="more">… 외 4개 (잡음·작은 수정 포함)</li>
+          <li class="more">… 외 8개 (잡음·작은 수정 포함)</li>
         </ol>
-        <div class="tail">86 commits · 4 days<span class="cursor" aria-hidden="true"></span></div>
+        <div class="tail">90 commits · 4 days<span class="cursor" aria-hidden="true"></span></div>
         <!-- gitlog:end -->
       </div>
     </figure>
@@ -156,7 +157,7 @@
         <p class="label"><span class="n">02</span>에이전트</p>
         <div>
           <h2>지금까지 만든 에이전트</h2>
-          <p>007처럼 번호와 코드명을 붙였습니다. SENTINEL·MIRROR·SWEEPER는 Claude Agent SDK(Python), TRACER·CUPID는 제미나이 API(무료 등급)로 만든 초기 버전입니다.</p>
+          <p>에이전트를 만들고 시험하는 도우미·자동 장치까지 한 장에 보려면 <a href="map.html">작업실 지도</a>를 보세요. 007처럼 번호와 코드명을 붙였습니다. SENTINEL·MIRROR·SWEEPER는 Claude Agent SDK(Python), TRACER·CUPID는 제미나이 API(무료 등급)로 만든 초기 버전입니다.</p>
         </div>
       </div>
 
@@ -516,6 +517,6 @@
   }
 })();
 </script>
-<script src="tracer-how.js?v=20261120104743" defer></script>
+<script src="tracer-how.js?v=20261120111743" defer></script>
 </body>
 </html>

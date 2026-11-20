@@ -28,6 +28,18 @@
         "agents/ccna-coach/dev/harness.py"
       ],
       "port": 8799
+    },
+    {
+      "name": "docs-alt",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8791",
+        "--directory",
+        "docs"
+      ],
+      "port": 8791
     }
   ]
 }

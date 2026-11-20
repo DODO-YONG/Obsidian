@@ -27,6 +27,7 @@
 - `agents/<이름>/`, 새 프로젝트는 `agents/_template/` 복사. 설계 메모는 `wiki/projects/<이름>/`에 두고 README ↔ 위키 허브 서로 링크. `agents/`는 Obsidian에서 숨김(git엔 올라감).
 - 에이전트를 추가하거나 상태(기획·개발중·완료)가 바뀌면 **루트 `README.md`의 Mermaid 지도(노드+`class` 색)와 목록 표**를 갱신한다.
 - **코드명**: 에이전트마다 `DY-00x` + 코드명([[에이전트 코드명]]). 보이는 이름에만 쓰고 폴더 이름은 그대로. 새 에이전트면 다음 번호를 붙이고 목록·README 지도·소개 페이지 갱신.
+- **만들기 도우미**(`.claude/agents/`)나 **자동 장치**(`.github/workflows/`·`scripts/`)를 추가·변경하면 `docs/map.html`(작업실 지도)도 갱신한다. 도우미는 DY 코드명 없이 하는 일 이름.
 - **화면 기능을 만들거나 바꾸면** 시험 작성은 서브에이전트 `e2e-test-writer`(Sonnet)에 맡긴다. 매번 브라우저로 직접 눌러 보지 않는다(실행은 GitHub Actions). 현재 대상: TRACER.
 - **`docs/` HTML을 고쳤으면** 커밋 전에 `scripts/bump-site-version.sh` 실행(캐시로 옛 화면이 보이는 문제 방지).
 

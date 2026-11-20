@@ -2,7 +2,7 @@
 
 [![나만의 에이전트 작업실 소개 페이지](docs/preview.png)](https://dodo-yong.github.io/Obsidian/)
 
-**🌐 소개 페이지: https://dodo-yong.github.io/Obsidian/** · 🧠 [CCNA 코치 TRACER](https://tracer-eosin.vercel.app/ccna/) · 🗺️ [TRACER 작동 방식](https://tracer-eosin.vercel.app/ccna/about.html#how) · 💻 [터미널 작업 기록](https://dodo-yong.github.io/Obsidian/terminal.html)
+**🌐 소개 페이지: https://dodo-yong.github.io/Obsidian/** · 🧠 [CCNA 코치 TRACER](https://tracer-eosin.vercel.app/ccna/) · 🗺️ [TRACER 작동 방식](https://tracer-eosin.vercel.app/ccna/about.html#how) · 💻 [터미널 작업 기록](https://dodo-yong.github.io/Obsidian/terminal.html) · 🧭 [작업실 지도](https://dodo-yong.github.io/Obsidian/map.html) (에이전트 + 만들기 도우미 + 자동 장치)
 
 AWS 인턴십 과정에서 Claude Code로 나에게 필요한 에이전트를 하나씩 만들어 보는 학습 기록. 코드는 `agents/`, 설계·학습 메모는 Obsidian 위키(`wiki/`)에 있다.
 에이전트에는 007처럼 번호와 코드명을 붙였다(나는 Agent DY). → [코드명 목록](wiki/shared/에이전트%20코드명.md)
