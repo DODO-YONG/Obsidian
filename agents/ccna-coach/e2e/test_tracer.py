@@ -80,6 +80,30 @@ def test_mcq_question_and_grade(logged_in, errors, base_url):
     expect(page.locator("#gradeBtn")).to_have_text("다음 문제")
 
 
+def test_conn_help_logged_in_has_no_login_button(logged_in, errors, base_url):
+    page = logged_in
+    page.goto(base_url + "/ccna/app.html")
+    expect(page.locator("#connText")).to_contain_text("AI 사용 가능")
+    page.locator("#conn").click()
+    expect(page.locator("#connHelp")).to_be_visible()
+    expect(page.locator("#helpMsg")).to_contain_text("로그인되어 있어요")
+    expect(page.locator("#helpLogin")).to_be_hidden()
+    expect(page.locator("#helpNote")).to_be_hidden()
+    page.locator("#conn").click()
+    expect(page.locator("#connHelp")).to_be_hidden()
+
+
+def test_conn_help_logged_out_shows_login(page, errors, base_url):
+    page.goto(base_url + "/ccna/app.html")
+    expect(page.locator("#connText")).to_contain_text("로그인")
+    page.locator("#conn").click()
+    expect(page.locator("#connHelp")).to_be_visible()
+    expect(page.locator("#helpLogin")).to_be_visible()
+    expect(page.locator("#helpNote")).to_be_visible()
+    page.locator("#conn").click()
+    expect(page.locator("#connHelp")).to_be_hidden()
+
+
 # ---------- 관리자 ----------
 def test_admin_requires_login(page, errors, base_url):
     page.goto(base_url + "/ccna/admin.html")
