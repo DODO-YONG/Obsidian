@@ -14,7 +14,7 @@ date: 2026-11-18
 
 단원·세부 범위를 골라 문제를 받고, 답을 내면 해설을 받는 웹사이트. 화면은 공개(GitHub Pages), 답변은 내 Mac의 서버가 제미나이로.
 
-- **화면**: https://dodo-yong.github.io/Obsidian/ccna/
+- **화면**: https://tracer-eosin.vercel.app/ccna/ (예전 https://dodo-yong.github.io/Obsidian/ccna/ 는 자동 이동)
 - **코드**: `agents/ccna-coach/` (답변 서버), `docs/ccna/` (화면·출제 범위)
 - **제미나이**: [[gemini-chat]]과 같은 무료 등급 키, 같은 모델 자동 전환 방식
 
@@ -68,6 +68,6 @@ date: 2026-11-18
   - 확인: 데스크톱(어둡게)·모바일(밝게) 화면, 가로 스크롤 없음.
 
 ## 다음 할 일
-- **고도화(2026-11-20)**: 구글 로그인·DB·상시 운영(Vercel+Supabase 무료)·관리자 페이지·문제은행 — 코드 완료, 배포 대기(`agents/ccna-coach/SETUP.md`) → [[TRACER 고도화 계획]]
+- **고도화(2026-11-20)**: 구글 로그인·DB·상시 운영(Vercel+Supabase 무료)·관리자 페이지·문제은행 — **2026-11-20 배포, 상시 운영** https://tracer-eosin.vercel.app/ccna/ → [[TRACER 고도화 계획]]
 - 약한 범위를 자동으로 더 자주 출제
 - 틀린 문제 다시 풀기

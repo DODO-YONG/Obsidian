@@ -2,7 +2,7 @@
 type: topic
 tags: [에이전트, CCNA, 계획, Vercel, Supabase]
 project: ccna-coach
-상태: 개발중
+상태: 운영중
 date: 2026-11-20
 ---
 
@@ -96,3 +96,12 @@ date: 2026-11-20
 - 브라우저는 로그인만 하고 DB는 못 만짐(RLS 켜고 정책 0개). 모든 읽기·쓰기는 `/api`가 비밀 키로. 공개 키·Supabase 주소도 저장소가 아니라 `/api/config`가 환경변수에서 내려줌.
 - 시험: 로직 24개 통과(가짜 DB·가짜 제미나이). 로컬 화면(`dev/harness.py`, 가짜 로그인)에서 로그인 → 문제 받기 → 저장된 해설로 채점(제미나이 0번) → 신고 → 관리자 4개 탭·권한 변경·활동 기록 확인, 데스크톱·모바일 가로 넘침 없음.
 - ❓ 아직: 실제 Supabase SQL 실행, 실제 구글 로그인, Vercel 배포(파이썬 함수·rewrite 동작), 실제 제미나이로 해설 포함 문제 생성. TRACER 원리 그림(`tracer-how.js`)은 배포 확인 후 새 구조로 갱신.
+
+## 배포 (2026-11-20)
+- 주소: https://tracer-eosin.vercel.app/ccna/ · 관리자 `/ccna/admin.html`. 예전 github.io `/ccna/`는 `server.json`의 `home`으로 자동 이동.
+- 사용자가 계정 준비, Claude가 앱 브라우저로 나머지: 구글 OAuth 클라이언트 생성(리디렉션 = Supabase 콜백), Vercel Import(루트 `docs`, Hobby), Supabase Site URL·Redirect URL. 비밀 키·보안 비밀번호 붙여 넣기와 Deploy·계정 선택은 사용자가 직접.
+- 확인: `/api/health` DB·키 정상, 실제 구글 로그인 → 주인(owner) 지정 → 실제 제미나이로 객관식 생성(약 20초) → 저장된 해설로 채점(보기별 이유 표시) → 관리자 대시보드·활동 기록(가입·접속·문제 받기·채점, 기기 표시)에 반영.
+- 깨우기: 저장소 변수 `TRACER_URL` 설정 → `.github/workflows/tracer-keepalive.yml` 하루 1번.
+- 교훈: 앱 안 브라우저는 페이지의 복사 버튼(클립보드 쓰기)이 막힘 → 키는 Chrome에서 복사하거나 직접 드래그 선택. Vercel은 2FA 설정을 권유(사용자 몫).
+- ❓ 남은 일: 구글 OAuth 앱 **게시**(현재 테스트 모드 → 등록한 테스트 사용자만 로그인) — 개인정보 처리방침 페이지 필요. TRACER 원리 그림(`tracer-how.js`)을 새 구조로 갱신. 기존 `private/` 풀이 기록 옮기기(`migrate_private_log.py`, .env에 Supabase 값 필요).
+

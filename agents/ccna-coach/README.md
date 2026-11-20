@@ -4,11 +4,12 @@
 
 - **화면**: https://dodo-yong.github.io/Obsidian/ccna/ (코드: `docs/ccna/`)
 - **답변 서버**: 이 폴더의 `server.py` — 내 Mac에서 `http://127.0.0.1:8765`로 돈다
-- **상태**: 초기 버전 → 상시 운영 버전 코드 완료, 배포 전 ([SETUP.md](SETUP.md))
+- **상태**: 상시 운영 (2026-11-20 배포, Vercel 프로젝트 `tracer` · Supabase 프로젝트 `Tracer`)
 - **위키 메모**: `wiki/projects/ccna-coach/`
 
-## 🚀 새 구조 (2026-11-20 · 코드 완료, 배포 전)
-내 Mac 없이 항상 동작하도록 **Vercel(화면+/api) + Supabase(DB·구글 로그인)** 로 옮기는 중. 모두 무료 등급, 카드 등록 없음.
+## 🚀 새 구조 (2026-11-20 · 상시 운영 중)
+**주소: https://tracer-eosin.vercel.app/ccna/** · 관리자: https://tracer-eosin.vercel.app/ccna/admin.html
+내 Mac 없이 항상 동작: **Vercel(화면+/api) + Supabase(DB·구글 로그인)**. 모두 무료 등급, 카드 등록 없음.
 **배포 방법(직접 할 일): [SETUP.md](SETUP.md)** · 계획·결정: 위키 `wiki/projects/ccna-coach/topics/TRACER 고도화 계획.md`
 
 ```
@@ -43,7 +44,7 @@
 | `dev/harness.py` | 로컬 화면 시험 서버 http://127.0.0.1:8799/ccna/ (가짜 로그인) |
 | `../../.github/workflows/tracer-keepalive.yml` | Supabase 일시정지 방지(하루 한 번 깨우기) |
 
-> 아래는 **예전 방식(내 Mac 서버 + 임시 터널)**. 새 구조가 배포되면 은퇴한다.
+> 아래는 **예전 방식(내 Mac 서버 + 임시 터널) — 은퇴**. `start-public.sh`를 켜면 `server.json`의 새 주소 안내(home)를 덮어쓰니 쓰지 않는다.
 
 ## 구조 (예전)
 ```

@@ -2,7 +2,7 @@
 
 [![나만의 에이전트 작업실 소개 페이지](docs/preview.png)](https://dodo-yong.github.io/Obsidian/)
 
-**🌐 소개 페이지: https://dodo-yong.github.io/Obsidian/** · 🧠 [CCNA 코치 TRACER](https://dodo-yong.github.io/Obsidian/ccna/) · 🗺️ [TRACER 작동 방식](https://dodo-yong.github.io/Obsidian/ccna/#how) · 💻 [터미널 작업 기록](https://dodo-yong.github.io/Obsidian/terminal.html)
+**🌐 소개 페이지: https://dodo-yong.github.io/Obsidian/** · 🧠 [CCNA 코치 TRACER](https://tracer-eosin.vercel.app/ccna/) · 🗺️ [TRACER 작동 방식](https://dodo-yong.github.io/Obsidian/ccna/#how) · 💻 [터미널 작업 기록](https://dodo-yong.github.io/Obsidian/terminal.html)
 
 AWS 인턴십 과정에서 Claude Code로 나에게 필요한 에이전트를 하나씩 만들어 보는 학습 기록. 코드는 `agents/`, 설계·학습 메모는 Obsidian 위키(`wiki/`)에 있다.
 에이전트에는 007처럼 번호와 코드명을 붙였다(나는 Agent DY). → [코드명 목록](wiki/shared/에이전트%20코드명.md)
@@ -77,7 +77,7 @@ flowchart LR
 |---|---|---|---|---|
 | 🛡️ DY-001 **SENTINEL** | URL을 주면 공격 없이 응답만 읽어 보안 약점을 찾고, 위험도와 고치는 법을 리포트로 써 줌 | 🟦 초기 버전 | [agents/security-agent](agents/security-agent) | [위키](wiki/projects/security-agent/security-agent.md) · [1일차 기록](https://dodo-yong.github.io/security-agent/) |
 | 🎤 DY-002 **MIRROR** | AWS 16가지 리더십 원칙 면접 연습. 약한 원칙부터 묻고, 꼬리 질문으로 파고든 뒤 STAR·수치·원칙 적합도로 평가 | 🟦 초기 버전 | [agents/interview-coach](agents/interview-coach) | [위키](wiki/projects/interview-coach/interview-coach.md) |
-| 🧠 DY-003 **TRACER** | CCNA 200-301 연습 사이트. 단원·범위를 골라 **영어 문제**를 받고 **영어 해설**까지. 누구나 접속, XP·칭호·퀘스트·배지. 화면은 공개, 답변은 키를 보관한 개인 서버가 제미나이로. [작동 방식 그림](https://dodo-yong.github.io/Obsidian/ccna/#how) | 🟦 초기 버전 · 공개 · 상시 운영(구글 로그인·문제은행·관리자) 개발중 | [agents/ccna-coach](agents/ccna-coach) · [**사이트**](https://dodo-yong.github.io/Obsidian/ccna/) | [위키](wiki/projects/ccna-coach/ccna-coach.md) |
+| 🧠 DY-003 **TRACER** | CCNA 200-301 연습 사이트. 단원·범위를 골라 **영어 문제**를 받고 **영어 해설**까지. 누구나 접속, XP·칭호·퀘스트·배지. 화면은 공개, 답변은 키를 보관한 개인 서버가 제미나이로. [작동 방식 그림](https://dodo-yong.github.io/Obsidian/ccna/#how) | 🟦 상시 운영 · 공개 (구글 로그인·문제은행·관리자) | [agents/ccna-coach](agents/ccna-coach) · [**사이트**](https://tracer-eosin.vercel.app/ccna/) | [위키](wiki/projects/ccna-coach/ccna-coach.md) |
 | 💬 DY-004 **TWIN** | 터미널에서 구글 제미나이와 대화 (키는 `.env`, 대화 기록은 볼트 밖) | 사용 중 | [scripts/gemini.py](scripts/gemini.py) | [위키](wiki/shared/gemini-chat.md) |
 | 📝 DY-005 **PRIMER** | 내 분야 초보자가 자주 묻는 질문 15개와 두 줄 답을 Gemini에게 한 번 받아 `answer.md`로 저장 | 🟦 초기 버전 | [agents/beginner-faq](agents/beginner-faq) | — |
 | 🧹 DY-006 **SWEEPER** | 홈 폴더 정리 도우미. 다운로드·데스크탑 현황과 휴지통 후보, 흩어진 문서를 위키 `raw/`로 모으기, 폴더를 종류별로 정리. 스캔은 코드(사용량 0), 옮기기·지우기는 터미널에서 직접 승인·휴지통만 | 🟦 초기 버전 | [agents/laptop-helper](agents/laptop-helper) | [위키](wiki/projects/laptop-helper/laptop-helper.md) |
@@ -92,7 +92,7 @@ flowchart LR
   ```
   - 방문자는 1명당 시간당 30번 · 방문자 전체 하루 300번(무료 한도 보호). 내 진도는 이 Mac에서 http://127.0.0.1:8765
   - 자세한 내용: [agents/ccna-coach/README.md](agents/ccna-coach/README.md)
-- **개발중(2026-11-20)**: 내 Mac 없이 항상 도는 버전(Vercel + Supabase 무료 · 구글 로그인 · 문제은행 · 관리자 페이지) 코드 완료, 배포 준비 중 → [SETUP.md](agents/ccna-coach/SETUP.md)
+- **2026-11-20부터 상시 운영**: https://tracer-eosin.vercel.app/ccna/ (Vercel + Supabase 무료, 구글 로그인, 문제은행, 관리자 페이지 `/ccna/admin.html`). 내 Mac·터널 불필요, 예전 github.io 주소는 새 주소로 자동 이동. 위의 `start-public.sh` 방식은 은퇴 → [SETUP.md](agents/ccna-coach/SETUP.md)
 
 ## 🌐 공개 사이트 (GitHub Pages, `docs/`)
 

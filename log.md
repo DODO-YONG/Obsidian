@@ -123,3 +123,5 @@
 ## [2026-11-20] query | TRACER 고도화 계획 작성: 구글 로그인·Supabase·Vercel 상시 운영(무료만)·관리자 페이지·문제 저장소(객관식 해설 미리 저장, 30개 이후 90% 재사용) → topics/TRACER 고도화 계획
 
 ## [2026-11-20] output | TRACER 상시 운영 코드: Vercel /api(docs/api)·Supabase 스키마(RLS)·구글 로그인·문제은행(30개부터 90% 재사용, 객관식 저장 해설)·신고·관리자 페이지(docs/ccna/admin.html)·깨우기 Actions·SETUP.md. 로직 시험 24개·로컬 화면 확인, 배포는 사용자 계정 준비 후
+
+## [2026-11-20] output | TRACER 배포: https://tracer-eosin.vercel.app/ccna/ (Vercel tracer · Supabase Tracer · 구글 OAuth 테스트 모드). 실제 로그인·출제·저장 해설 채점·관리자 확인, github.io → 새 주소 자동 이동, 깨우기 변수 설정
