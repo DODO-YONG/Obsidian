@@ -23,6 +23,7 @@
 # 📁 프로젝트: ccna-coach
 
 - [[ccna-coach]] — 허브: CCNA 200-301 문제·해설 사이트. 화면은 GitHub Pages, 답변은 개인 서버(내 Mac)가 제미나이로(키는 로컬에만). 작동 방식 그림은 공용 `docs/tracer-how.*`
+  - [[TRACER 고도화 계획]] — 구글 로그인·Supabase DB·Vercel 상시 운영(무료 등급만)·관리자 페이지·문제은행(객관식 해설 미리 저장, AI 호출 절약). 코드 완료, 배포 대기
 
 # 📁 프로젝트: ccna
 

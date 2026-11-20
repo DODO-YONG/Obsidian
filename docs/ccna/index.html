@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TRACER · CCNA 코치</title>
-<meta name="description" content="CCNA 200-301 단원별 문제 풀이와 해설. 답변은 개인 서버가 제미나이로 생성합니다.">
+<meta name="description" content="CCNA 200-301 단원별 문제 풀이와 해설. 구글 로그인, 문제은행과 제미나이로 영어 문제·해설을 제공합니다.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -139,6 +139,11 @@
   .conn .cd { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-3); }
   .conn.on .cd { background: var(--ok); box-shadow: 0 0 0 3px var(--ok-soft); }
   .conn.off .cd { background: var(--part); }
+  .authbtn { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--rule); background: var(--panel); border-radius: 999px; padding: 4px 11px; font-size: 13px; color: var(--ink); cursor: pointer; white-space: nowrap; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
+  .authbtn .g { width: 16px; height: 16px; flex: none; }
+  .authbtn:hover { border-color: var(--accent); }
+  .adm { font-size: 13px; color: var(--accent); text-decoration: none; white-space: nowrap; font-weight: 600; }
+  .q-foot { display: flex; justify-content: flex-end; margin-top: 10px; }
   .home { font-size: 13.5px; color: var(--ink-2); text-decoration: none; }
   .home:hover { color: var(--ink); }
   .help { margin: 0 0 16px; padding: 14px 16px; border-radius: 12px; background: var(--part-soft); color: var(--ink); font-size: 14px; display: grid; gap: 6px; }
@@ -246,8 +251,10 @@
   @keyframes pop { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   .tabs button, .home, .conn { white-space: nowrap; }
   @media (max-width: 1100px) { .lv .ttl { display: none; } .dday { display: none; } }
-  @media (max-width: 900px) { #connText { display: none; } .conn { padding: 6px; } }
+  @media (max-width: 900px) { #connText { display: none; } .conn { padding: 6px; } .authbtn .nm { max-width: 90px; overflow: hidden; text-overflow: ellipsis; } }
   @media (max-width: 760px) { .lv .ttl, .lv .bar { display: none; } .lv { padding-right: 4px; } }
+  @media (max-width: 560px) { .authbtn .nm, .adm .t { display: none; } .authbtn { padding: 6px; } .lv .bar { display: none; } }
+  @media (max-width: 420px) { header .bar { gap: 4px !important; padding-left: 12px; padding-right: 12px; } .tabs button { padding: 5px 5px !important; font-size: 13.5px !important; } }
   @media (max-width: 560px) { #appName { display: none; } .bar { gap: 6px; } .tabs button { padding: 5px 7px; font-size: 14px; } .lv { padding: 3px; } .lv .num { padding: 2px 6px; } .logo { gap: 0; } }
   .toast { position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px; max-width: min(560px, calc(100% - 32px)); z-index: 20; }
   .spin { width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: s .8s linear infinite; }
@@ -266,7 +273,7 @@
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261120090626';
+  var SITE_V = '20261120093924';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -275,7 +282,8 @@
   }).catch(function () {});
 })();
 </script>
-<link rel="stylesheet" href="../tracer-how.css?v=20261120090626">
+<link rel="stylesheet" href="../tracer-how.css?v=20261120093924">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <header>
@@ -292,6 +300,8 @@
     <span class="spacer"></span>
     <span class="dday" id="dday" hidden></span>
     <button class="conn" id="conn" type="button" aria-describedby="connHelp"><span class="cd" aria-hidden="true"></span><span id="connText">서버 확인 중</span></button>
+    <a class="adm" id="adminLink" href="admin.html" hidden title="관리자 페이지" aria-label="관리자 페이지">⚙<span class="t"> 관리자</span></a>
+    <button class="authbtn" id="authBtn" type="button" hidden><svg class="g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg><span class="nm" id="authText">Google로 로그인</span></button>
     <a class="home" href="../" title="소개 페이지">소개</a>
     <button class="icon-btn" id="themeBtn" type="button" aria-label="어두운 화면으로 전환">◐</button>
   </div>
@@ -309,7 +319,7 @@
         <button class="btn" id="goSubnet" type="button">서브넷 계산부터 풀기</button>
         <button class="linkbtn" id="hideIntro" type="button" style="align-self:center">소개 접기</button>
       </div>
-      <div class="chips2"><span>가입 없음</span><span>무료</span><span>6개 단원 · 52개 범위</span><span>진행은 내 브라우저에 저장</span></div>
+      <div class="chips2"><span>구글 로그인</span><span>무료</span><span>6개 단원 · 52개 범위</span><span>진도는 내 계정에 저장</span></div>
     </div>
     <figure class="sample" aria-label="문제와 해설 예시 화면">
       <div class="tag"><span>3.3 · IP Connectivity · 보통</span><span>예시</span></div>
@@ -375,13 +385,9 @@
 
   <main>
     <div class="help" id="connHelp" hidden>
-      <div><b>지금은 AI 답변 서버가 꺼져 있어요.</b> 서버가 켜지면 이 화면이 자동으로 연결돼요(새로고침). 서브넷 계산 문제는 언제나 풀 수 있어요.</div>
-      <form class="connform" id="connForm">
-        <label>서버 주소<input id="srvIn" type="url" inputmode="url" placeholder="https://….trycloudflare.com" autocomplete="off"></label>
-        <label id="codeLbl" hidden>접속 코드<input id="codeIn" type="password" placeholder="받은 코드" autocomplete="off"></label>
-        <button class="btn primary" type="submit">연결</button>
-      </form>
-      <div class="note" style="margin:0">서버 주소를 직접 알고 있다면 위에 넣고 연결하세요. 입력한 문제와 답은 구글 제미나이로 전송되니 개인정보는 넣지 마세요.</div>
+      <div id="helpMsg"><b>AI 문제·해설은 구글 로그인 후 쓸 수 있어요.</b> 서브넷 계산 문제는 로그인 없이 언제나 풀 수 있어요.</div>
+      <div><button class="btn primary" id="helpLogin" type="button">Google로 로그인</button></div>
+      <div class="note" style="margin:0">로그인하면 이메일·이름과 이용 기록(언제·무엇을 했는지, 기기 종류)이 저장되고, 진도·레벨이 계정에 남아 다른 기기에서도 이어져요. IP 주소는 저장하지 않아요. 입력한 문제와 답은 구글 제미나이로 전송되니 개인정보는 넣지 마세요.</div>
     </div>
     <!-- 문제 풀기 -->
     <section id="view-practice" aria-labelledby="tab-practice">
@@ -469,7 +475,7 @@
 <div class="levelup" id="levelUp" hidden role="alert"><div class="card"><div class="k">LEVEL UP</div><div class="l" id="luLv">Lv 2</div><div class="n" id="luTitle"></div><div class="s">새 칭호를 얻었어요</div></div></div>
 
 <script>
-// ── 게임: XP·레벨·칭호·오늘의 퀘스트·업적. 각자 브라우저에만 저장(서버와 무관).
+// ── 게임: XP·레벨·칭호·오늘의 퀘스트·업적. 브라우저에 저장하고, 로그인하면 계정(DB)에도 저장.
 var Game = (function () {
   var KEY = 'tracer-game-v1';
   var TITLES = ['Cable Rookie', 'Patch Panel Apprentice', 'MAC Learner', 'VLAN Wrangler', 'Subnet Slicer',
@@ -491,7 +497,8 @@ var Game = (function () {
   function levelOf(xp) { var l = 1; while (l < 10 && xp >= need(l + 1)) l++; return l; }
   function blank() { return { xp: 0, streak: 0, best: 0, n: 0, ok: 0, hardOk: 0, subnetOk: 0, custom: 0, dom: {}, questsDone: 0, badges: [], day: null }; }
   var S = (function () { try { return Object.assign(blank(), JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { return blank(); } })();
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+  var onSave = null;   // 로그인하면 계정에도 저장(아래 loadMe)
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} if (onSave) onSave(S); }
 
   // 오늘의 퀘스트: 날짜로 정해지는 3개
   function today() { var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
@@ -580,6 +587,9 @@ var Game = (function () {
     custom: function () { return apply({ custom: true }); },
     render: render,
     reset: function () { S = blank(); save(); render(); },
+    data: function () { return S; },
+    load: function (d) { S = Object.assign(blank(), d || {}); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} render(); },
+    onSave: function (fn) { onSave = fn; },
     title: function (lv) { return TITLES[lv - 1]; },
     titles: function () { return TITLES.slice(); },
     level: function () { return levelOf(S.xp); },
@@ -625,28 +635,18 @@ var Subnet = (function () {
 
 (function () {
   var $ = function (s) { return document.querySelector(s); };
-  // 서버 주소: 서버가 직접 이 화면을 준 경우(내 Mac·터널 주소) → 같은 곳, 아니면 저장값 → 링크의 #server= → 내 Mac
-  var SERVED = (location.port === '8765' && /^(127\.0\.0\.1|localhost)$/.test(location.hostname)) || /trycloudflare\.com$/.test(location.hostname);
+  // 화면과 /api가 같은 주소(Vercel)에 있다. 예전 GitHub Pages 주소로 오면 server.json 의 home 으로 보낸다.
   function lsGet(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
   function lsSet(k, v) { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch (e) {} }
-  var fromHash = (location.hash.match(/server=([^&]+)/) || [])[1];
-  if (fromHash) history.replaceState(null, '', location.pathname);
-  var API = '';          // 아래 findServer()가 정한다
-  var CODE = lsGet('ccna-code');
-  // 서버 찾기 순서: 이 화면을 준 서버 → 링크의 #server= → 공개된 현재 주소(server.json) → 직접 저장한 주소
+  var ON_PAGES = /github\.io$/.test(location.hostname);
+  var sb = null;          // Supabase 로그인 클라이언트(/api/config 로 받은 공개 값으로 만든다)
   function findServer() {
-    if (SERVED) { API = ''; return Promise.resolve(); }
-    if (fromHash) { API = decodeURIComponent(fromHash).replace(/\/+$/, ''); return Promise.resolve(); }
+    if (!ON_PAGES) return Promise.resolve(true);
     return fetch('server.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); })
-      .catch(function () { return {}; })
-      .then(function (s) {
-        var saved = lsGet('ccna-server');
-        if (s && s.url) API = s.url;
-        else if (saved && !/trycloudflare\.com/.test(saved)) API = saved;   // 지난 임시 주소는 이미 사라졌으니 쓰지 않음
-        else API = null;                                                     // 켜진 서버 없음
-      });
+      .then(function (j) { if (j && j.home) { location.replace(j.home.replace(/\/+$/, '') + '/ccna/' + location.hash); return false; } return false; })
+      .catch(function () { return false; });
   }
-  var state = { topics: [], selected: new Set(), qtype: 'mcq', diff: '보통', q: null, choice: null, busy: false, online: false };
+  var state = { topics: [], selected: new Set(), qtype: 'mcq', diff: '보통', q: null, choice: null, busy: false, online: false, user: null, ready: false };
   try { var saved = JSON.parse(localStorage.getItem('ccna-sel') || '[]'); saved.forEach(function (s) { state.selected.add(s); }); } catch (e) {}
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -663,13 +663,18 @@ var Subnet = (function () {
       o.onclick = function () { o.hidden = true; };
     }
   }
+  function token() {
+    if (!sb) return Promise.resolve('');
+    return sb.auth.getSession().then(function (r) { return (r.data.session && r.data.session.access_token) || ''; }).catch(function () { return ''; });
+  }
   function api(path, body) {
-    var url = path.indexOf('/api/') === 0 ? API + path : path;
-    var headers = { 'Content-Type': 'application/json' }; if (CODE) headers['X-Access-Code'] = CODE;
-    return fetch(url, body ? { method: 'POST', headers: headers, body: JSON.stringify(body) } : { headers: CODE ? { 'X-Access-Code': CODE } : {} })
-      .catch(function () { setOnline(false); throw new Error('답변 서버에 연결하지 못했어요. 서버 주소를 확인하거나 주인에게 서버가 켜져 있는지 물어보세요.'); })
-      .then(function (r) { return r.json().then(function (j) {
-        if (r.status === 401) { $('#connHelp').hidden = false; $('#codeIn').focus(); }
+    return token().then(function (t) {
+      var headers = { 'Content-Type': 'application/json' }; if (t) headers.Authorization = 'Bearer ' + t;
+      return fetch(path, body ? { method: 'POST', headers: headers, body: JSON.stringify(body) } : { headers: headers });
+    }).catch(function () { throw new Error('서버에 연결하지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요.'); })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) {
+        if (r.status === 401) { setUser(null); showHelp(); }
+        if (r.status === 403 && (j.code === 'blocked' || j.code === 'pending')) { state.user && (state.user.status = j.code); setOnline(false); }
         if (!r.ok) throw new Error(j.error || '요청 실패'); return j; }); });
   }
   function saveSel() { try { localStorage.setItem('ccna-sel', JSON.stringify(Array.from(state.selected))); } catch (e) {} }
@@ -728,10 +733,10 @@ var Subnet = (function () {
   $('#newQ').addEventListener('click', function () {
     var btn = this;
     if (state.qtype === 'subnet') { state.q = Subnet.make(state.diff); state.choice = null; renderQ(); $('#expBox').innerHTML = ''; return; }
-    if (!state.online) { toast('AI 문제는 답변 서버에 연결해야 해요. 서브넷 계산은 바로 풀 수 있어요.'); $('#connHelp').hidden = false; return; }
-    busy(btn, true, '제미나이가 출제 중');
+    if (!state.online) { toast(state.user ? helpText() : 'AI 문제는 구글 로그인 후 쓸 수 있어요. 서브넷 계산은 바로 풀 수 있어요.'); showHelp(); return; }
+    busy(btn, true, '문제 준비 중');
     api('/api/question', { subs: Array.from(state.selected), difficulty: state.diff, qtype: state.qtype })
-      .then(function (q) { state.q = q; state.choice = null; renderQ(); $('#expBox').innerHTML = ''; })
+      .then(function (q) { state.q = q; state.choice = null; renderQ(); $('#expBox').innerHTML = ''; loadMe(true); })
       .catch(function (e) { toast(e.message); })
       .finally(function () { busy(btn, false); });
   });
@@ -750,7 +755,8 @@ var Subnet = (function () {
   function renderQ() {
     var q = state.q;
     var meta = '<div class="q-meta"><span class="pill acc">' + esc(q.sub) + '</span><span class="pill">' + esc(q.domain) + '</span>' +
-      '<span class="pill">' + esc(q.difficulty) + '</span><span class="pill">' + ({ mcq: '객관식', short: '주관식', subnet: '서브넷 계산' }[q.qtype]) + '</span></div>';
+      '<span class="pill">' + esc(q.difficulty) + '</span><span class="pill">' + ({ mcq: '객관식', short: '주관식', subnet: '서브넷 계산' }[q.qtype]) + '</span>' +
+      (q.source === 'bank' ? '<span class="pill" title="다른 사용자가 받았던 문제를 다시 냈어요(AI 호출 없음)">문제은행</span>' : q.source === 'new' ? '<span class="pill" title="방금 AI가 만든 문제">새 문제</span>' : '') + '</div>';
     var body = '<div class="q-text">' + formatQ(q.question) + '</div>';
     if (q.choices && q.choices.length) {
       body += '<div class="choices" role="group" aria-label="보기">' + q.choices.map(function (c, i) {
@@ -774,9 +780,9 @@ var Subnet = (function () {
     g.addEventListener('click', function () {
       var ans = state.choice || (inp && inp.value.trim());
       if (!ans) { toast('답을 입력해 주세요.'); return; }
-      busy(g, true, q.qtype === 'subnet' ? '채점 중' : '제미나이가 해설 중');
+      busy(g, true, q.qtype === 'short' ? '제미나이가 채점 중' : '채점 중');
       var req = q.qtype === 'subnet' ? Promise.resolve(Subnet.explain(q, ans)) : api('/api/grade', { id: q.id, answer: ans });
-      if (q.qtype === 'subnet' && state.online && !state.guest) {
+      if (q.qtype === 'subnet' && state.user) {
         var r0 = Subnet.explain(q, ans);
         api('/api/log', { verdict: r0.verdict, difficulty: q.difficulty, question: q.question, user: ans, answer: q.answer }).catch(function () {});
       }
@@ -790,7 +796,8 @@ var Subnet = (function () {
           });
         }
         var gr = Game.result(r.verdict, q); r.xp = gr.xp;
-        $('#expBox').innerHTML = renderExp(r, q.qtype === 'subnet');
+        $('#expBox').innerHTML = renderExp(r, q.qtype === 'subnet') + (q.qtype !== 'subnet' && q.id ? '<div class="q-foot"><button class="linkbtn" id="reportBtn" type="button">문제에 오류가 있나요? 신고하기</button></div>' : '');
+        var rb = $('#reportBtn'); if (rb) rb.addEventListener('click', function () { reportQ(q.id, rb); });
         celebrate(gr);
         g.dataset.label = '다음 문제'; busy(g, false); g.onclick = function () { $('#newQ').click(); };
         refreshStats();
@@ -805,17 +812,24 @@ var Subnet = (function () {
     return '<div class="panel exp ' + cls + '"><div class="verdict"><span class="dot" aria-hidden="true"></span>' + esc(label) + (r.xp ? '<span class="xpgain">+' + r.xp + ' XP</span>' : '') + '</div><dl>' +
       rows.filter(function (x) { return x[1] && String(x[1]).trim(); }).map(function (x) {
         return '<dt>' + x[0] + '</dt><dd' + (x[2] ? ' class="cli"' : '') + '>' + esc(x[1]) + '</dd>';
-      }).join('') + '</dl><p class="foot">' + (local ? 'Calculated by code, not AI.' : 'AI explanations can be wrong — check the official Cisco docs if unsure. · ' + esc(r.model || '')) + '</p></div>';
+      }).join('') + '</dl><p class="foot">' + (local ? 'Calculated by code, not AI.' : 'AI explanations can be wrong — check the official Cisco docs if unsure. · ' + esc(r.model === 'saved explanation' ? 'saved explanation (no AI call)' : r.model || '')) + '</p></div>';
+  }
+  function reportQ(id, btn) {
+    var why = prompt('어떤 오류인가요? (예: 정답이 틀림, 보기가 둘 다 맞음, 해설이 틀림)');
+    if (why === null) return;
+    btn.disabled = true;
+    api('/api/report', { id: id, reason: why.trim() }).then(function () { btn.textContent = '신고했어요. 고마워요! 신고가 쌓이면 이 문제는 출제가 멈추고 관리자가 확인해요.'; })
+      .catch(function (e) { btn.disabled = false; toast(e.message); });
   }
 
   // ---- 내 문제 해설
   $('#cGo').dataset.label = '해설 받기';
   $('#cGo').addEventListener('click', function () {
     var q = $('#cQ').value.trim(); if (!q) { toast('문제를 입력해 주세요.'); return; }
-    if (!state.online) { toast('해설은 답변 서버에 연결해야 해요.'); $('#connHelp').hidden = false; return; }
+    if (!state.online) { toast(state.user ? helpText() : '해설은 구글 로그인 후 쓸 수 있어요.'); showHelp(); return; }
     var btn = this; busy(btn, true, '제미나이가 해설 중');
     api('/api/explain', { question: q, answer: $('#cA').value.trim(), sub: Array.from(state.selected)[0] || '' })
-      .then(function (r) { var gr = Game.custom(); r.xp = gr.xp; $('#cExpBox').innerHTML = renderExp(r, false); celebrate(gr); refreshStats(); })
+      .then(function (r) { var gr = Game.custom(); r.xp = gr.xp; $('#cExpBox').innerHTML = renderExp(r, false); celebrate(gr); refreshStats(); loadMe(true); })
       .catch(function (e) { toast(e.message); })
       .finally(function () { busy(btn, false); });
   });
@@ -875,8 +889,7 @@ var Subnet = (function () {
 
   // ---- 진도
   function refreshStats() {
-    if (!state.online) { renderScope(null); offlineStats(); return Promise.resolve(); }
-    if (state.guest) { renderScope(null); offlineStats('풀이 기록은 저장하지 않아요'); return Promise.resolve(); }
+    if (!state.user) { renderScope(null); offlineStats(); return Promise.resolve(); }
     return api('/api/stats').then(function (s) {
       state.lastStats = s; renderScope(s);
       $('#sTotal').textContent = s.total;
@@ -885,8 +898,7 @@ var Subnet = (function () {
         return '<div class="drow"><span class="n">' + d.id + '</span><span>' + esc(d.name) + '</span><span class="r">' + (d.n ? d.ok + '/' + d.n : '–') + '</span></div>';
       }).join('');
       var w = [];
-      if (!s.has_key) w.push('서버에 GOOGLE_API_KEY가 없어요. 볼트 .env에 넣으면 객관식·주관식이 동작해요.');
-      if (!s.private_ok) w.push('기록 폴더가 비공개가 아니라 풀이 기록을 저장하지 않아요.');
+      if (!s.has_key) w.push('서버에 GOOGLE_API_KEY가 없어요. Vercel 환경변수에 넣으면 객관식·주관식이 동작해요.');
       $('#sWarn').innerHTML = w.map(function (x) { return '<div class="warn">' + esc(x) + '</div>'; }).join('');
       $('#sWeak').innerHTML = s.weak.length ? s.weak.map(function (x) {
         return '<li><button data-sub="' + x.sub + '">' + esc(x.sub + ' ' + x.name.split(' (')[0]) + '</button><span class="mono">' + x.ok + '/' + x.n + '</span></li>';
@@ -915,40 +927,89 @@ var Subnet = (function () {
   });
 
   function offlineStats(msg) {
-    $('#sTotal').textContent = '–'; $('#sRate').textContent = msg || '답변 서버에 연결되면 진도가 보여요';
+    $('#sTotal').textContent = '–'; $('#sRate').textContent = msg || '로그인하면 진도가 계정에 저장돼요';
     $('#sDomains').innerHTML = ''; $('#sWarn').innerHTML = '';
-    $('#sWeak').innerHTML = '<li class="muted" style="padding:0">서버 연결 후 보여요.</li>';
-    $('#sRecent').innerHTML = '<li class="muted" style="padding:0">풀이 기록은 개인 서버에만 저장돼요.</li>';
+    $('#sWeak').innerHTML = '<li class="muted" style="padding:0">로그인 후 보여요.</li>';
+    $('#sRecent').innerHTML = '<li class="muted" style="padding:0">풀이 기록은 내 계정에만 저장되고 다른 사용자에게 보이지 않아요.</li>';
   }
-  function setOnline(on, guest) {
-    state.online = on; state.guest = !!guest;
-    var c = $('#conn'); c.classList.toggle('on', on); c.classList.toggle('off', !on);
-    $('#connText').textContent = on ? (guest ? 'AI 연결됨' : '내 서버 연결됨') : 'AI 꺼짐 · 서브넷만';
-    if (on && (!guest || CODE)) $('#connHelp').hidden = true;
+  function helpText() {
+    var u = state.user; if (!u) return 'AI 문제·해설은 구글 로그인 후 쓸 수 있어요.';
+    if (u.status === 'blocked') return '이용이 제한된 계정이에요. 관리자에게 문의해 주세요. (서브넷 계산은 계속 풀 수 있어요)';
+    if (u.status === 'pending') return '관리자 승인을 기다리고 있어요. 승인되면 AI 문제를 쓸 수 있어요. (서브넷 계산은 바로 풀 수 있어요)';
+    return '오늘 쓸 수 있는 AI 요청을 모두 썼어요. 저장된 문제는 계속 나올 수 있어요.';
   }
-  function checkServer() {
-    if (API === null) { setOnline(false); refreshStats(); return Promise.resolve(); }
-    return fetch(API + '/api/health').then(function (r) { return r.json(); })
-      .then(function (h) { state.needsCode = !!h.needs_code; $('#codeLbl').hidden = !h.needs_code; setOnline(!!h.ok, h.guest); if (h.needs_code && !CODE) { $('#connHelp').hidden = false; } })
-      .catch(function () { setOnline(false); })
-      .then(refreshStats);
+  function showHelp() {
+    var u = state.user;
+    $('#helpMsg').innerHTML = u ? '<b>' + esc(helpText()) + '</b>' : '<b>AI 문제·해설은 구글 로그인 후 쓸 수 있어요.</b> 서브넷 계산 문제는 로그인 없이 언제나 풀 수 있어요.';
+    $('#helpLogin').hidden = !!u || !state.ready; $('#connHelp').hidden = false;
   }
-  function fillForm() { $('#srvIn').value = SERVED ? location.origin : (API || ''); }
-  $('#codeIn').value = CODE;
-  $('#connForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    var s = $('#srvIn').value.trim().replace(/\/+$/, '');
-    if (!SERVED) { if (s && !/^https?:\/\//.test(s)) s = 'https://' + s; lsSet('ccna-server', s); API = s || null; }
-    CODE = $('#codeIn').value.trim(); lsSet('ccna-code', CODE);
-    checkServer().then(function () { toast(state.online ? (state.guest ? '연결됐어요. 손님 모드예요.' : '내 서버에 연결됐어요.') : '연결하지 못했어요. 주소를 확인해 주세요.'); });
+  function setOnline(on) {
+    state.online = on;
+    var c = $('#conn'), u = state.user; c.classList.toggle('on', on); c.classList.toggle('off', !on);
+    $('#connText').textContent = !state.ready ? 'AI 준비 중 · 서브넷만' : !u ? '로그인하면 AI 사용' :
+      u.status !== 'active' ? (u.status === 'pending' ? '승인 대기 · 서브넷만' : '이용 제한 · 서브넷만') :
+      on ? (u.ai_left >= 9999 ? 'AI 사용 가능' : 'AI 사용 가능 · 오늘 ' + u.ai_left + '회') : 'AI 한도 소진';
+    if (on) $('#connHelp').hidden = true;
+  }
+  function setUser(u) {
+    state.user = u;
+    var b = $('#authBtn'); b.hidden = !state.ready;
+    $('#authText').textContent = u ? (u.name || u.email) + ' · 로그아웃' : 'Google로 로그인';
+    b.title = u ? u.email + ' (누르면 로그아웃)' : '구글 계정으로 로그인';
+    $('#adminLink').hidden = !(u && u.admin);
+    // 저장소에 문제가 남아 있으면 한도를 다 써도 문제는 나올 수 있어서, 활성 계정이면 켜 둔다
+    setOnline(!!(u && u.status === 'active' && (u.can_practice || u.can_explain)));
+  }
+  var pushT = null;
+  function loadMe(quiet) {
+    if (!sb) return Promise.resolve();
+    return api('/api/me').then(function (me) {
+      var first = !state.user;
+      setUser(me);
+      if (first) {
+        // 진행 합치기: 계정과 이 브라우저 중 XP가 큰 쪽을 쓴다(처음 로그인하면 브라우저 기록을 계정으로 옮김)
+        var local = Game.data();
+        if (me.progress && (me.progress.xp || 0) >= (local.xp || 0)) Game.load(me.progress);
+        else api('/api/progress', { data: local }).catch(function () {});
+        Game.onSave(function (d) { clearTimeout(pushT); pushT = setTimeout(function () { api('/api/progress', { data: d }).catch(function () {}); }, 1500); });
+        if (!quiet) toast('로그인했어요. 진도와 레벨이 계정에 저장돼요.');
+      }
+      return refreshStats();
+    }).catch(function () { setUser(null); refreshStats(); });
+  }
+  function login() {
+    if (!sb) { toast('로그인을 준비 중이에요. 잠시 뒤 다시 눌러 주세요.'); return; }
+    sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname } })
+      .then(function (r) { if (r.error) toast('로그인을 시작하지 못했어요: ' + r.error.message); });
+  }
+  $('#authBtn').addEventListener('click', function () {
+    if (!state.user) return login();
+    sb.auth.signOut().then(function () { Game.onSave(null); setUser(null); refreshStats(); toast('로그아웃했어요. 진도는 계정에 남아 있어요.'); });
   });
-  $('#conn').addEventListener('click', function () { $('#connHelp').hidden = !$('#connHelp').hidden; });
+  $('#helpLogin').addEventListener('click', login);
+  $('#conn').addEventListener('click', function () { if (state.online) { $('#connHelp').hidden = !$('#connHelp').hidden; return; } showHelp(); });
+  function initAuth() {
+    return fetch('/api/config').then(function (r) { return r.json(); }).then(function (c) {
+      if (!c.supabase_url || !c.anon_key || !window.supabase) throw new Error('not ready');
+      sb = window.supabase.createClient(c.supabase_url, c.anon_key, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce' } });
+      state.ready = !!c.ready; setUser(null);
+      sb.auth.onAuthStateChange(function (ev, session) {
+        if (ev === 'SIGNED_IN' && !state.user) setTimeout(function () { loadMe(false); }, 0);
+        if (ev === 'SIGNED_OUT') { setUser(null); }
+      });
+      return sb.auth.getSession().then(function (r) {
+        if (location.search.indexOf('code=') >= 0) history.replaceState(null, '', location.pathname + location.hash);
+        if (r.data.session) return loadMe(true);
+        refreshStats();
+      });
+    }).catch(function () { state.ready = false; setOnline(false); refreshStats(); });
+  }
   fetch('topics.json').then(function (r) { return r.json(); })
     .then(function (t) { state.topics = t; renderScope(); renderIntro(); return findServer(); })
-    .then(function () { fillForm(); return checkServer(); })
+    .then(function (here) { if (here) return initAuth(); setOnline(false); refreshStats(); })
     .catch(function () { $('#scopeList').innerHTML = '<p class="muted">출제 범위를 불러오지 못했어요.</p>'; });
 })();
 </script>
-<script src="../tracer-how.js?v=20261120090626" defer></script>
+<script src="../tracer-how.js?v=20261120093924" defer></script>
 </body>
 </html>

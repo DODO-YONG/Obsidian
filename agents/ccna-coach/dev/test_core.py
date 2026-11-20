@@ -1,0 +1,74 @@
+"""문제 저장소·권한·한도 로직 시험 (가짜 DB·가짜 제미나이, 네트워크·사용량 없음).  실행: python3 agents/ccna-coach/dev/test_core.py"""
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from fakes import *  # noqa
+ok = lambda c, m: print(("✅ " if c else "❌ ") + m) or (c or sys.exit(1))
+o = core.current_user("o"); a = core.current_user("a", "Mozilla/5.0 (iPhone; CPU iPhone OS) Safari/604")
+ok(o["role"] == "owner" and a["role"] == "user", "오너 이메일 → owner, 나머지 user")
+ok(a["_device"].startswith("모바일 · iOS"), "기기 요약: " + a["_device"])
+try: core.current_user("zzz"); ok(False, "")
+except core.ApiError as e: ok(e.code == 401, "로그인 안 하면 401")
+
+# 저장소: BANK_MIN=3 → 처음 3개는 새로 생성, 이후엔 대부분 저장소
+srcs = [core.new_question(o, ["2.1"], "보통", "mcq")["source"] for _ in range(3)]
+ok(srcs == ["new"] * 3 and calls["n"] == 3, "묶음이 비어 있으면 새로 만들어 저장 (제미나이 3번)")
+ok(all("answer" not in q for q in [core.public_q(T["questions"][0], "x")]), "화면에 정답 안 보냄")
+core.BANK_RATIO = 1.0
+before = calls["n"]
+q = core.new_question(a, ["2.1"], "보통", "mcq")
+ok(q["source"] == "bank" and calls["n"] == before, "30개(시험값 3) 이상이면 저장소에서 — 제미나이 0번")
+seen_a = [core.new_question(a, ["2.1"], "보통", "mcq")["id"] for _ in range(2)] + [q["id"]]
+ok(len(set(seen_a)) == 3, "같은 사람에게 같은 문제를 반복하지 않음")
+q4 = core.new_question(a, ["2.1"], "보통", "mcq")
+ok(q4["source"] == "new", "다 풀었으면 새로 생성")
+
+# 채점: 객관식은 저장된 해설로
+before = calls["n"]
+r = core.grade(a, q["id"], "C")
+ok(r["verdict"] == "오답" and r["why_wrong"] == "C no" and r["correct_answer"] == "B. b" and calls["n"] == before, "객관식 채점·보기별 해설 — 제미나이 0번")
+r2 = core.grade(a, q["id"], "B")
+ok(r2["first"] is False and len([x for x in T["attempts"] if x["user_id"] == "u-alice"]) == 1, "같은 문제 두 번 채점해도 기록은 1번")
+try: core.grade(a, T["questions"][-1]["id"] if T["questions"][-1]["id"] not in seen_a + [q4["id"]] else "0"*36, "A"); ok(False, "")
+except core.ApiError as e: ok(e.code in (400, 404), "안 받은 문제는 채점 불가")
+
+# 주관식은 판정만 제미나이
+core.BANK_RATIO = 0.0
+s = core.new_question(a, ["3.4"], "쉬움", "short")
+before = calls["n"]; r = core.grade(a, s["id"], "it is OSPF")
+ok(r["verdict"] == "부분 정답" and calls["n"] == before + 1, "주관식 판정은 제미나이 1번")
+
+# 한도: daily_limit 0 → 저장소에 남은 문제가 있으면 그걸로, 없으면 429
+T["profiles"][1]["daily_limit"] = 0; a = core.current_user("a")
+for _ in range(3): core.new_question(o, ["4.1"], "어려움", "mcq")
+q = core.new_question(a, ["4.1"], "어려움", "mcq")
+ok(q["source"] == "bank", "한도 소진 → 저장소 문제로 대체")
+for _ in range(2): core.new_question(a, ["4.1"], "어려움", "mcq")
+try: core.new_question(a, ["4.1"], "어려움", "mcq"); ok(False, "")
+except core.ApiError as e: ok(e.code == 429, "한도 소진 + 저장소도 다 풂 → 429")
+try: core.explain_custom(a, "Q?", "", ""); ok(False, "")
+except core.ApiError as e: ok(e.code == 429, "내 문제 해설도 한도 적용")
+ok(core.ai_left(o) > 1000, "오너는 한도 없음")
+
+# 권한 회수·차단
+T["profiles"][1].update(daily_limit=30, can_practice=False); a = core.current_user("a")
+try: core.new_question(a, [], "보통", "mcq"); ok(False, "")
+except core.ApiError as e: ok(e.code == 403, "AI 문제 권한 회수 → 403")
+core.admin_update_user(o, {"id": "u-alice", "status": "blocked"}); a = core.current_user("a")
+try: core.explain_custom(a, "Q", "", ""); ok(False, "")
+except core.ApiError as e: ok(e.code == 403 and e.extra.get("code") == "blocked", "차단 → 403")
+try: core.admin_summary(a); ok(False, "")
+except core.ApiError as e: ok(e.code == 403, "일반 사용자는 관리자 API 403")
+try: core.admin_update_user(o, {"id": "u-owner", "status": "blocked"}); ok(False, "")
+except core.ApiError as e: ok(e.code == 403, "주인 계정은 못 바꿈")
+
+# 신고 3건 → 출제 중지, 검토 완료 → 복구
+qid = T["questions"][0]["id"]
+for uid in ("u-x", "u-y", "u-z"):
+    T["question_seen"].append({"user_id": uid, "question_id": qid, "graded_at": None})
+    core.report({"id": uid, "status": "active", "role": "user"}, qid, "answer wrong")
+ok(T["questions"][0]["status"] == "flagged", "신고 3건 → 출제 중지(flagged)")
+core.admin_update_question(o, {"id": qid, "resolve": True})
+ok(T["questions"][0]["status"] == "active" and T["questions"][0]["reports"] == 0, "검토 완료 → 다시 출제")
+ok(any(x["action"] == "admin" for x in T["activity_log"]), "관리자 작업도 활동 기록에 남음")
+ok(not any("ip" in str(x).lower().split("'")[1::2] for x in T["activity_log"]), "IP 저장 안 함")
+print("모두 통과")

@@ -119,3 +119,7 @@
 ## [2026-11-19] output | Heartline 발표도 파일 하나짜리 HTML(2026_11_19_heartline_5_발표.html)로 제출 폴더에 추가, 전체 묶음 다시 만듦
 
 ## [2026-11-19] output | 소개 페이지 갱신: DY-007 CUPID 카드·3일차 작업 기록 추가, git log 상자 자동 생성(scripts/update-site-log.py, 하루 커밋 많으면 축약), 작업 기록 하루 6개 넘으면 핵심만 보이고 접기
+
+## [2026-11-20] query | TRACER 고도화 계획 작성: 구글 로그인·Supabase·Vercel 상시 운영(무료만)·관리자 페이지·문제 저장소(객관식 해설 미리 저장, 30개 이후 90% 재사용) → topics/TRACER 고도화 계획
+
+## [2026-11-20] output | TRACER 상시 운영 코드: Vercel /api(docs/api)·Supabase 스키마(RLS)·구글 로그인·문제은행(30개부터 90% 재사용, 객관식 저장 해설)·신고·관리자 페이지(docs/ccna/admin.html)·깨우기 Actions·SETUP.md. 로직 시험 24개·로컬 화면 확인, 배포는 사용자 계정 준비 후

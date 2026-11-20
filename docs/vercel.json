@@ -1,0 +1,20 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- .",
+  "cleanUrls": false,
+  "rewrites": [
+    { "source": "/api/:route*", "destination": "/api/index?route=:route*" }
+  ],
+  "functions": {
+    "api/index.py": { "maxDuration": 60, "includeFiles": "ccna/topics.json" }
+  },
+  "redirects": [
+    { "source": "/", "destination": "/ccna/", "permanent": false }
+  ],
+  "headers": [
+    { "source": "/(.*)", "headers": [
+      { "key": "X-Content-Type-Options", "value": "nosniff" },
+      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+    ] }
+  ]
+}

@@ -20,6 +20,14 @@
         "agents/heartline/server/server.py"
       ],
       "port": 8766
+    },
+    {
+      "name": "tracer-dev",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "agents/ccna-coach/dev/harness.py"
+      ],
+      "port": 8799
     }
   ]
 }
