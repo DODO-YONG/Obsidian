@@ -4,7 +4,7 @@
 # docs/ 의 HTML을 고친 뒤 커밋 전에 실행:  scripts/bump-site-version.sh
 cd "$(dirname "$0")/.." || exit 1
 V="$(date +%Y%m%d%H%M%S)"
-for f in docs/index.html docs/terminal.html docs/ccna/index.html docs/ccna/about.html docs/ccna/app.html docs/heartline/prd.html docs/heartline/checklist.html docs/heartline/tests.html docs/heartline/index.html docs/heartline/deck.html; do
+for f in docs/index.html docs/terminal.html docs/ccna/index.html docs/ccna/about.html docs/ccna/app.html docs/ccna/privacy.html docs/heartline/prd.html docs/heartline/checklist.html docs/heartline/tests.html docs/heartline/index.html docs/heartline/deck.html; do
   sed -i '' -E "s/var SITE_V = '[0-9]+';/var SITE_V = '$V';/" "$f"
   sed -i '' -E "s/tracer-how\.(css|js)\?v=[0-9]+/tracer-how.\1?v=$V/g" "$f"
   sed -i '' -E "s/tracer-(site|auth)\.(css|js)\?v=[0-9]+/tracer-\1.\2?v=$V/g" "$f"

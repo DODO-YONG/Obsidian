@@ -231,7 +231,7 @@
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261120103628';
+  var SITE_V = '20261120103830';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -241,7 +241,7 @@
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
-<script src="tracer-auth.js?v=20261120103628"></script>
+<script src="tracer-auth.js?v=20261120103830"></script>
 </head>
 <body>
 <header>
@@ -276,7 +276,7 @@
     <div class="help" id="connHelp" hidden>
       <div id="helpMsg"><b>AI 문제·해설은 구글 로그인 후 쓸 수 있어요.</b> 서브넷 계산 문제는 로그인 없이 언제나 풀 수 있어요.</div>
       <div><button class="btn primary" id="helpLogin" type="button">Google로 로그인</button></div>
-      <div class="note" style="margin:0">로그인하면 이메일·이름과 이용 기록(언제·무엇을 했는지, 기기 종류)이 저장되고, 진도·레벨이 계정에 남아 다른 기기에서도 이어져요. IP 주소는 저장하지 않아요. 입력한 문제와 답은 구글 제미나이로 전송되니 개인정보는 넣지 마세요.</div>
+      <div class="note" style="margin:0">로그인하면 이메일·이름과 이용 기록(언제·무엇을 했는지, 기기 종류)이 저장되고, 진도·레벨이 계정에 남아 다른 기기에서도 이어져요. IP 주소는 저장하지 않아요. 입력한 문제와 답은 구글 제미나이로 전송되니 개인정보는 넣지 마세요. <a href="privacy.html" style="color:inherit">개인정보 처리방침</a></div>
     </div>
     <!-- 문제 풀기 -->
     <section id="view-practice" aria-labelledby="tab-practice">
