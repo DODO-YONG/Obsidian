@@ -58,7 +58,7 @@ Supabase → **Authentication → URL Configuration**
 |---|---|---|
 | `TRACER_NEW_USER_STATUS` | `active` | `pending`이면 새 사용자는 관리자 승인 후 AI 사용 |
 | `TRACER_GLOBAL_DAILY_AI` | `300` | 주인을 뺀 전체 사용자의 하루 제미나이 호출 한도 |
-| `TRACER_BANK_MIN` | `30` | 묶음에 이 개수 이상 쌓이면 문제은행 재사용 시작 |
+| `TRACER_BANK_MIN` | `10` | 묶음에 이 개수 이상 쌓이면 문제은행 재사용 시작 |
 | `TRACER_BANK_RATIO` | `0.9` | 재사용 비율(나머지는 새로 만들어 문제은행을 키움) |
 | `TRACER_REPORT_THRESHOLD` | `3` | 미해결 신고가 이만큼이면 그 문제 출제 중지 |
 | `GEMINI_MODEL` | (자동) | 모델 고정 |

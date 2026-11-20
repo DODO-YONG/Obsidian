@@ -1,7 +1,7 @@
 """TRACER 서버 로직 (Vercel). 화면 요청 → 로그인·권한·한도 확인 → 문제 저장소/제미나이 → 기록.
 
 문제 저장소
-- 묶음 = 범위 × 난이도 × 유형. 묶음에 문제가 BANK_MIN(30)개 이상이면 BANK_RATIO(90%)는 저장된 문제에서,
+- 묶음 = 범위 × 난이도 × 유형. 묶음에 문제가 BANK_MIN(기본 10)개 이상이면 BANK_RATIO(90%)는 저장된 문제에서,
   나머지는 새로 만들어 저장한다. 사용자가 이미 받은 문제는 다시 내지 않는다.
 - 객관식은 만들 때 정답·해설·보기별 이유까지 한 번에 받아 저장 → 채점·해설에 제미나이를 쓰지 않는다.
 - 주관식은 판정만 제미나이(뜻이 맞는지 봐야 해서).
@@ -25,7 +25,7 @@ HERE = Path(__file__).resolve().parent
 DOMAINS = json.loads((HERE.parent / "ccna" / "topics.json").read_text(encoding="utf-8"))
 SUB_INDEX = {s["id"]: (d, s["name"]) for d in DOMAINS for s in d["subs"]}
 
-BANK_MIN = int(os.environ.get("TRACER_BANK_MIN") or 30)
+BANK_MIN = int(os.environ.get("TRACER_BANK_MIN") or 10)
 BANK_RATIO = float(os.environ.get("TRACER_BANK_RATIO") or 0.9)
 REPORT_THRESHOLD = int(os.environ.get("TRACER_REPORT_THRESHOLD") or 3)
 GLOBAL_DAILY_AI = int(os.environ.get("TRACER_GLOBAL_DAILY_AI") or 300)
