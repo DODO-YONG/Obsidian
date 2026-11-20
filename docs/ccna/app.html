@@ -234,7 +234,7 @@
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261120133758';
+  var SITE_V = '20261120142055';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -244,7 +244,7 @@
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
-<script src="tracer-auth.js?v=20261120133758"></script>
+<script src="tracer-auth.js?v=20261120142055"></script>
 </head>
 <body>
 <header>
@@ -637,7 +637,7 @@ var Subnet = (function () {
     var q = state.q;
     var meta = '<div class="q-meta"><span class="pill acc">' + esc(q.sub) + '</span><span class="pill">' + esc(q.domain) + '</span>' +
       '<span class="pill">' + esc(q.difficulty) + '</span><span class="pill">' + ({ mcq: '객관식', short: '주관식', subnet: '서브넷 계산' }[q.qtype]) + '</span>' +
-      (q.source === 'bank' ? '<span class="pill" title="다른 사용자가 받았던 문제를 다시 냈어요(AI 호출 없음)">문제은행</span>' : q.source === 'new' ? '<span class="pill" title="방금 AI가 만든 문제">새 문제</span>' : '') + '</div>';
+      (q.source === 'bank' ? '<span class="pill" title="문제은행에 저장된 문제예요(AI 호출 없음)">문제은행</span>' : q.source === 'new' ? '<span class="pill" title="방금 AI가 만든 문제">새 문제</span>' : '') + '</div>';
     var body = '<div class="q-text">' + formatQ(q.question) + '</div>';
     if (q.choices && q.choices.length) {
       body += '<div class="choices" role="group" aria-label="보기">' + q.choices.map(function (c, i) {

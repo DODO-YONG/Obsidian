@@ -12,7 +12,7 @@
 <script>
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 (function () {
-  var SITE_V = '20261120124859';
+  var SITE_V = '20261120142055';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -21,8 +21,8 @@
   }).catch(function () {});
 })();
 </script>
-<link rel="stylesheet" href="tracer-site.css?v=20261120124859">
-<link rel="stylesheet" href="../tracer-how.css?v=20261120124859">
+<link rel="stylesheet" href="tracer-site.css?v=20261120142055">
+<link rel="stylesheet" href="../tracer-how.css?v=20261120142055">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -82,7 +82,7 @@
   <!-- 4. 작동 방식 (공용 그림) -->
   <section class="sec" id="how" aria-labelledby="s4">
     <div class="sec-h"><div class="k">HOW IT WORKS</div><h2 id="s4">이렇게 동작해요</h2>
-      <p>탭을 고르고 ▶ 재생을 누르면 데이터가 어디로 오가는지 한 단계씩 보여 줘요. 한 번 만든 문제는 <b>문제은행</b>에 저장해 다시 쓰기 때문에, 쌓일수록 더 빨라져요.</p></div>
+      <p>탭을 고르고 ▶ 재생을 누르면 데이터가 어디로 오가는지 한 단계씩 보여 줘요. 객관식은 미리 준비한 <b>문제은행</b>(1,500여 문제)에서 바로 나오고, AI는 주관식 문제와 채점에만 써요.</p></div>
     <div class="tq-how" data-tracer-how></div>
   </section>
 
@@ -93,7 +93,7 @@
       <div class="card yes"><h3>저장하는 것</h3><ul><li>구글 계정의 이메일·이름</li><li>푼 문제와 결과, 레벨·배지</li><li>언제 무엇을 했는지, 기기 종류(예: 모바일 · iOS)</li></ul></div>
       <div class="card no"><h3>저장하지 않는 것</h3><ul><li>비밀번호 — 로그인은 구글이 처리해요</li><li>IP 주소</li><li>"내 문제 해설"에 붙여 넣은 문제를 다른 사람과 공유하지 않아요</li></ul></div>
     </div>
-    <p class="note" style="margin-top:12px">문제·해설은 구글 제미나이(AI)가 만들어요. 입력한 문제와 답은 제미나이로 전송되니 개인정보는 넣지 마세요. AI 해설은 틀릴 수 있으니 이상하면 <b>신고하기</b>를 눌러 주세요. 자세한 내용은 <a href="privacy.html">개인정보 처리방침</a>에 있어요.</p>
+    <p class="note" style="margin-top:12px">객관식 문제·해설은 미리 준비한 문제은행에서, 주관식 문제·채점은 구글 제미나이(AI)가 만들어요. 입력한 문제와 답은 제미나이로 전송되니 개인정보는 넣지 마세요. AI 해설은 틀릴 수 있으니 이상하면 <b>신고하기</b>를 눌러 주세요. 자세한 내용은 <a href="privacy.html">개인정보 처리방침</a>에 있어요.</p>
   </section>
 
   <!-- 5-1. 운영 관리 -->
@@ -127,8 +127,8 @@
   <p class="fine">TRACER는 개인이 만든 비공식 학습 도구입니다. Cisco·CCNA는 Cisco Systems의 상표이며 이 사이트와 관계없습니다. · <a href="privacy.html">개인정보 처리방침</a></p>
 </main>
 
-<script src="tracer-auth.js?v=20261120124859"></script>
-<script src="../tracer-how.js?v=20261120124859" defer></script>
+<script src="tracer-auth.js?v=20261120142055"></script>
+<script src="../tracer-how.js?v=20261120142055" defer></script>
 <script>
 document.getElementById('themeBtn').addEventListener('click', function () {
   var r = document.documentElement, light = r.getAttribute('data-theme') === 'light';

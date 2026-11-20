@@ -9,18 +9,19 @@ ok(a["_device"].startswith("모바일 · iOS"), "기기 요약: " + a["_device"]
 try: core.current_user("zzz"); ok(False, "")
 except core.ApiError as e: ok(e.code == 401, "로그인 안 하면 401")
 
-# 저장소: BANK_MIN=3 → 처음 3개는 새로 생성, 이후엔 대부분 저장소
-srcs = [core.new_question(o, ["2.1"], "보통", "mcq")["source"] for _ in range(3)]
-ok(srcs == ["new"] * 3 and calls["n"] == 3, "묶음이 비어 있으면 새로 만들어 저장 (제미나이 3번)")
-ok(all("answer" not in q for q in [core.public_q(T["questions"][0], "x")]), "화면에 정답 안 보냄")
-core.BANK_RATIO = 1.0
+# 객관식: 문제은행에서만 (제미나이 0번). 문제은행 미리 채우기 = generate 로 3개
+try: core.new_question(o, ["2.1"], "보통", "mcq"); ok(False, "")
+except core.ApiError as e: ok(e.code == 404 and calls["n"] == 0, "객관식 묶음이 비어 있으면 404 — 제미나이 안 부름")
+for _ in range(3): core.generate("2.1", "보통", "mcq", o)
 before = calls["n"]
 q = core.new_question(a, ["2.1"], "보통", "mcq")
-ok(q["source"] == "bank" and calls["n"] == before, "30개(시험값 3) 이상이면 저장소에서 — 제미나이 0번")
+ok(q["source"] == "bank" and calls["n"] == before, "객관식은 문제은행에서 — 제미나이 0번")
+ok(all("answer" not in x for x in [core.public_q(T["questions"][0], "x")]), "화면에 정답 안 보냄")
 seen_a = [core.new_question(a, ["2.1"], "보통", "mcq")["id"] for _ in range(2)] + [q["id"]]
 ok(len(set(seen_a)) == 3, "같은 사람에게 같은 문제를 반복하지 않음")
 q4 = core.new_question(a, ["2.1"], "보통", "mcq")
-ok(q4["source"] == "new", "다 풀었으면 새로 생성")
+ok(q4["source"] == "bank" and q4["id"] in seen_a and calls["n"] == before, "다 풀었으면 이미 받은 문제를 다시 — 새로 안 만듦")
+ok(not any(r["ai"] for r in T["activity_log"] if r.get("action") == "question" and r["detail"].get("qtype") == "mcq"), "객관식 받기는 AI 사용으로 안 셈")
 
 # 채점: 객관식은 저장된 해설로
 before = calls["n"]
@@ -37,14 +38,16 @@ s = core.new_question(a, ["3.4"], "쉬움", "short")
 before = calls["n"]; r = core.grade(a, s["id"], "it is OSPF")
 ok(r["verdict"] == "부분 정답" and calls["n"] == before + 1, "주관식 판정은 제미나이 1번")
 
-# 한도: daily_limit 0 → 저장소에 남은 문제가 있으면 그걸로, 없으면 429
+# 한도: daily_limit 0 → 객관식은 계속, 주관식은 저장소에 남은 문제가 있으면 그걸로, 없으면 429
 T["profiles"][1]["daily_limit"] = 0; a = core.current_user("a")
-for _ in range(3): core.new_question(o, ["4.1"], "어려움", "mcq")
-q = core.new_question(a, ["4.1"], "어려움", "mcq")
-ok(q["source"] == "bank", "한도 소진 → 저장소 문제로 대체")
-for _ in range(2): core.new_question(a, ["4.1"], "어려움", "mcq")
-try: core.new_question(a, ["4.1"], "어려움", "mcq"); ok(False, "")
-except core.ApiError as e: ok(e.code == 429, "한도 소진 + 저장소도 다 풂 → 429")
+ok(core.new_question(a, ["2.1"], "보통", "mcq")["source"] == "bank", "한도 소진해도 객관식은 계속")
+core.BANK_RATIO = 0.0
+for _ in range(3): core.new_question(o, ["4.1"], "어려움", "short")
+q = core.new_question(a, ["4.1"], "어려움", "short")
+ok(q["source"] == "bank", "한도 소진 → 주관식 저장소 문제로 대체")
+for _ in range(2): core.new_question(a, ["4.1"], "어려움", "short")
+try: core.new_question(a, ["4.1"], "어려움", "short"); ok(False, "")
+except core.ApiError as e: ok(e.code == 429, "한도 소진 + 주관식 저장소도 다 풂 → 429")
 try: core.explain_custom(a, "Q?", "", ""); ok(False, "")
 except core.ApiError as e: ok(e.code == 429, "내 문제 해설도 한도 적용")
 ok(core.ai_left(o) > 1000, "오너는 한도 없음")

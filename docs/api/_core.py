@@ -1,9 +1,11 @@
 """TRACER 서버 로직 (Vercel). 화면 요청 → 로그인·권한·한도 확인 → 문제 저장소/제미나이 → 기록.
 
 문제 저장소
-- 묶음 = 범위 × 난이도 × 유형. 묶음에 문제가 BANK_MIN(기본 10)개 이상이면 BANK_RATIO(90%)는 저장된 문제에서,
-  나머지는 새로 만들어 저장한다. 사용자가 이미 받은 문제는 다시 내지 않는다.
-- 객관식은 만들 때 정답·해설·보기별 이유까지 한 번에 받아 저장 → 채점·해설에 제미나이를 쓰지 않는다.
+- 객관식: 문제은행(미리 채운 1,560문제 + 예전에 만든 문제)에서만 낸다 → 제미나이 0번, 하루 한도에 안 셈.
+  안 받은 문제가 없으면 다른 범위를 더 보고, 그래도 없으면 이미 받은 문제를 다시 낸다.
+  객관식 생성 코드(generate)는 남겨 두지만 화면 요청으로는 부르지 않는다.
+- 주관식: 묶음(범위 × 난이도)에 BANK_MIN(기본 10)개 이상이면 BANK_RATIO(90%)는 저장된 문제에서,
+  나머지는 제미나이로 새로 만들어 저장한다. 사용자가 이미 받은 문제는 다시 내지 않는다.
 - 주관식은 판정만 제미나이(뜻이 맞는지 봐야 해서).
 - 하루 한도를 다 쓰면 저장소에 남은 문제가 있는 한 그걸로 낸다.
 - "내 문제 해설"(책·기출 붙여 넣기)은 저장소에 넣지 않는다(저작권·개인 입력).
@@ -251,6 +253,22 @@ def generate(sid: str, difficulty: str, qtype: str, p: dict) -> dict:
     return db.one("questions", {"norm_hash": f"eq.{row['norm_hash']}", "select": "*"}) or {**row, "id": None}
 
 
+def _mcq_from_bank(p: dict, pool: list, difficulty: str):
+    """객관식은 문제은행에서만 낸다(AI 0번). 고른 범위에 안 받은 문제가 없으면 다른 범위를 몇 개 더 보고,
+    그래도 없으면 이미 받은 문제를 다시 낸다."""
+    tries = random.sample(pool, min(len(pool), 6))
+    for sid in tries:
+        rows = db.rpc("pick_question", {"p_user": p["id"], "p_sub": sid, "p_diff": difficulty, "p_qtype": "mcq"}) or []
+        if rows:
+            return rows[0], sid, False
+    for sid in tries:
+        rows = db.select("questions", {"sub": f"eq.{sid}", "difficulty": f"eq.{difficulty}", "qtype": "eq.mcq",
+                                       "status": "eq.active", "select": "*", "limit": "50"}) or []
+        if rows:
+            return random.choice(rows), sid, True
+    return None, tries[0], False
+
+
 def new_question(p: dict, subs: list, difficulty: str, qtype: str) -> dict:
     require_active(p)
     if not p["can_practice"]:
@@ -258,6 +276,17 @@ def new_question(p: dict, subs: list, difficulty: str, qtype: str) -> dict:
     difficulty = difficulty if difficulty in DIFFS else "보통"
     qtype = qtype if qtype in ("mcq", "short") else "mcq"
     pool = [s for s in subs if s in SUB_INDEX] or list(SUB_INDEX)
+
+    if qtype == "mcq":
+        q, sid, repeat = _mcq_from_bank(p, pool, difficulty)
+        if not q:
+            raise ApiError(404, "이 범위·난이도의 객관식 문제가 아직 없어요. 다른 범위나 난이도를 골라 주세요.", {"code": "empty"})
+        db.rpc("mark_served", {"p_user": p["id"], "p_qid": q["id"]})
+        log_activity(p, "question", {"sub": sid, "difficulty": difficulty, "qtype": qtype, "source": "bank",
+                                     "qid": q["id"], "repeat": repeat}, ai=False)
+        return public_q(q, "bank")
+
+    # 주관식: 문제은행이 충분하면 주로 거기서, 아니면 AI가 새로 만들어 저장
     sid = random.choice(pool)
     size = db.rpc("bucket_size", {"p_sub": sid, "p_diff": difficulty, "p_qtype": qtype}) or 0
     left = ai_left(p)
@@ -272,7 +301,7 @@ def new_question(p: dict, subs: list, difficulty: str, qtype: str) -> dict:
     if not q and left <= 0:
         q, source = from_bank(), "bank"      # 한도를 다 썼으면 아직 안 받은 저장 문제라도
         if not q:
-            raise ApiError(429, "오늘 쓸 수 있는 AI 문제를 모두 썼어요. 내일 다시 이용해 주세요. (서브넷 계산은 계속 쓸 수 있어요)",
+            raise ApiError(429, "오늘 쓸 수 있는 AI 문제를 모두 썼어요. 객관식은 한도 없이 계속 풀 수 있어요. (서브넷 계산도 계속 쓸 수 있어요)",
                            {"code": "limit"})
     if not q:
         q, source = generate(sid, difficulty, qtype, p), "new"
