@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "5.7",
+  "difficulty": "쉬움",
+  "question": "What is the main purpose of port security on a Cisco switch?",
+  "choices": [
+   "Encrypt traffic on the port",
+   "Limit which MAC addresses can use a switch port",
+   "Assign VLANs dynamically",
+   "Increase port speed"
+  ],
+  "answer": "B",
+  "explanation": "Port security restricts a port to specific or a limited number of source MAC addresses. It helps stop unauthorized devices and MAC flooding.",
+  "option_notes": [
+   "Wrong: It does not encrypt.",
+   "Correct: It limits allowed MAC addresses.",
+   "Wrong: VLAN assignment is a different feature.",
+   "Wrong: Speed is unrelated."
+  ],
+  "key_concept": "Port security limits MACs per port.",
+  "cli_example": "",
+  "tip": "Layer 2 feature."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "쉬움",
+  "question": "What is the default maximum number of secure MAC addresses when port security is enabled on an interface?",
+  "choices": [
+   "1",
+   "2",
+   "5",
+   "Unlimited"
+  ],
+  "answer": "A",
+  "explanation": "By default port security allows one secure MAC address per port.",
+  "option_notes": [
+   "Correct: Default max is 1.",
+   "Wrong: 2 is not the default.",
+   "Wrong: 5 is not the default.",
+   "Wrong: It is not unlimited."
+  ],
+  "key_concept": "Default maximum = 1.",
+  "cli_example": "",
+  "tip": "Default violation = shutdown."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "쉬움",
+  "question": "What is the default violation mode for port security?",
+  "choices": [
+   "Protect",
+   "Restrict",
+   "Shutdown",
+   "Disable"
+  ],
+  "answer": "C",
+  "explanation": "The default is shutdown, which places the port in the err-disabled state when a violation occurs.",
+  "option_notes": [
+   "Wrong: Protect must be configured.",
+   "Wrong: Restrict must be configured.",
+   "Correct: Shutdown is the default.",
+   "Wrong: Disable is not a violation mode."
+  ],
+  "key_concept": "Default violation = shutdown.",
+  "cli_example": "",
+  "tip": "Three modes: protect, restrict, shutdown."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "쉬움",
+  "question": "Which commands enable port security on an access port?",
+  "choices": [
+   "switchport mode access then switchport port-security",
+   "switchport mode trunk dynamic then port-security on",
+   "ip port-security",
+   "spanning-tree portfast security"
+  ],
+  "answer": "A",
+  "explanation": "The interface must be statically set to access or trunk mode before port security can be enabled with switchport port-security.",
+  "option_notes": [
+   "Correct: Set access mode, then enable.",
+   "Wrong: Not valid syntax.",
+   "Wrong: Not valid syntax.",
+   "Wrong: That is not a command."
+  ],
+  "key_concept": "Static mode first, then enable.",
+  "cli_example": "S1(config-if)# switchport mode access\nS1(config-if)# switchport port-security",
+  "tip": "Dynamic ports are rejected."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "쉬움",
+  "question": "What does DHCP snooping protect against?",
+  "choices": [
+   "Rogue DHCP servers",
+   "Spanning tree loops",
+   "Duplicate IP addresses on routers",
+   "DNS poisoning"
+  ],
+  "answer": "A",
+  "explanation": "DHCP snooping blocks DHCP server messages on untrusted ports, so rogue servers cannot hand out bad settings.",
+  "option_notes": [
+   "Correct: Snooping filters DHCP server messages.",
+   "Wrong: STP handles loops.",
+   "Wrong: Routers are unrelated.",
+   "Wrong: DNS is a different protocol."
+  ],
+  "key_concept": "DHCP snooping stops rogue DHCP servers.",
+  "cli_example": "",
+  "tip": "Also builds a binding table."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "쉬움",
+  "question": "Which switch ports should be configured as DHCP snooping trusted ports?",
+  "choices": [
+   "Ports connected to end users",
+   "Ports toward the legitimate DHCP server or uplinks",
+   "All ports",
+   "Unused ports"
+  ],
+  "answer": "B",
+  "explanation": "Trusted ports can forward DHCP server messages. These are ports leading to the real DHCP server or infrastructure.",
+  "option_notes": [
+   "Wrong: User ports are untrusted.",
+   "Correct: Trust server-facing and uplink ports.",
+   "Wrong: Not all.",
+   "Wrong: Unused ports should be shut down."
+  ],
+  "key_concept": "Trust only server-side ports.",
+  "cli_example": "S1(config-if)# ip dhcp snooping trust",
+  "tip": "Default is untrusted."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "쉬움",
+  "question": "Which feature helps prevent ARP spoofing on a switch?",
+  "choices": [
+   "Dynamic ARP Inspection",
+   "VTP",
+   "CDP",
+   "EtherChannel"
+  ],
+  "answer": "A",
+  "explanation": "Dynamic ARP Inspection validates ARP packets against trusted bindings and drops forged ones.",
+  "option_notes": [
+   "Correct: DAI protects against ARP spoofing.",
+   "Wrong: VTP syncs VLANs.",
+   "Wrong: CDP discovers neighbors.",
+   "Wrong: EtherChannel bundles links."
+  ],
+  "key_concept": "DAI = anti ARP spoofing.",
+  "cli_example": "",
+  "tip": "Uses DHCP snooping bindings."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "쉬움",
+  "question": "What happens in a MAC flooding attack?",
+  "choices": [
+   "The attacker overflows the CAM table so the switch floods frames out all ports",
+   "The attacker steals the root bridge",
+   "The attacker changes VLAN IDs",
+   "The router overheats"
+  ],
+  "answer": "A",
+  "explanation": "By sending frames with many fake source MACs, an attacker fills the CAM table. The switch then floods unknown unicast frames like a hub.",
+  "option_notes": [
+   "Correct: Frames get flooded.",
+   "Wrong: That is an STP attack.",
+   "Wrong: That is VLAN hopping.",
+   "Wrong: Not an attack type."
+  ],
+  "key_concept": "Port security mitigates MAC flooding.",
+  "cli_example": "",
+  "tip": "Limit MACs per port."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "쉬움",
+  "question": "What does the sticky option do in port security?",
+  "choices": [
+   "Learns MAC addresses dynamically and saves them in the running configuration",
+   "Blocks all MAC addresses",
+   "Disables the port",
+   "Forces 100 Mb/s"
+  ],
+  "answer": "A",
+  "explanation": "switchport port-security mac-address sticky learns MAC addresses and adds them to running-config as secure addresses.",
+  "option_notes": [
+   "Correct: Sticky addresses are added to the config.",
+   "Wrong: It does not block everything.",
+   "Wrong: It does not disable the port.",
+   "Wrong: Speed is unrelated."
+  ],
+  "key_concept": "Sticky = learned and saved.",
+  "cli_example": "S1(config-if)# switchport port-security mac-address sticky",
+  "tip": "Save with copy run start."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "쉬움",
+  "question": "Which command displays the port security status of one interface?",
+  "choices": [
+   "show port-security interface g0/1",
+   "show spanning-tree g0/1",
+   "show interface status",
+   "show mac"
+  ],
+  "answer": "A",
+  "explanation": "show port-security interface shows enabled status, violation mode, max addresses and violation count.",
+  "option_notes": [
+   "Correct: It shows the port security details.",
+   "Wrong: That shows STP.",
+   "Wrong: That shows status only.",
+   "Wrong: Incomplete command."
+  ],
+  "key_concept": "show port-security interface.",
+  "cli_example": "S1# show port-security interface g0/1",
+  "tip": "Also show port-security address."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "보통",
+  "question": "Which violation mode drops offending frames, sends a log message and increments the violation counter but keeps the port up?",
+  "choices": [
+   "Protect",
+   "Restrict",
+   "Shutdown",
+   "Quarantine"
+  ],
+  "answer": "B",
+  "explanation": "Restrict drops violating traffic and logs it. Protect drops silently. Shutdown err-disables the port.",
+  "option_notes": [
+   "Wrong: Protect does not log.",
+   "Correct: Restrict logs and counts.",
+   "Wrong: Shutdown disables the port.",
+   "Wrong: Not a mode."
+  ],
+  "key_concept": "Restrict = drop + log + count.",
+  "cli_example": "S1(config-if)# switchport port-security violation restrict",
+  "tip": "Protect = silent."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "보통",
+  "question": "A port is err-disabled from a port security violation. How is it restored after fixing the cause?",
+  "choices": [
+   "shutdown then no shutdown on the interface",
+   "clear mac address-table",
+   "reload the router",
+   "no switchport"
+  ],
+  "answer": "A",
+  "explanation": "Cycling the interface with shutdown and no shutdown returns it to normal. Auto-recovery can also be configured with errdisable recovery.",
+  "option_notes": [
+   "Correct: Bounce the interface.",
+   "Wrong: Clearing the MAC table does not re-enable it.",
+   "Wrong: A reload is unnecessary.",
+   "Wrong: no switchport makes it routed."
+  ],
+  "key_concept": "Bounce err-disabled ports.",
+  "cli_example": "S1(config-if)# shutdown\nS1(config-if)# no shutdown",
+  "tip": "errdisable recovery cause psecure-violation."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "보통",
+  "question": "Dynamic ARP Inspection depends on which table?",
+  "choices": [
+   "DHCP snooping binding table",
+   "Routing table",
+   "VLAN database",
+   "STP table"
+  ],
+  "answer": "A",
+  "explanation": "DAI compares ARP packets with IP-to-MAC bindings learned by DHCP snooping, or static ARP ACLs.",
+  "option_notes": [
+   "Correct: DAI uses the DHCP snooping bindings.",
+   "Wrong: Routing is unrelated.",
+   "Wrong: VLANs are unrelated.",
+   "Wrong: STP is unrelated."
+  ],
+  "key_concept": "DAI uses DHCP snooping bindings.",
+  "cli_example": "S1(config)# ip arp inspection vlan 10",
+  "tip": "Trust uplinks."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "보통",
+  "question": "What does ip dhcp snooping limit rate 15 do on an interface?",
+  "choices": [
+   "Limits DHCP packets to 15 per second and err-disables the port if exceeded",
+   "Limits clients to 15 leases",
+   "Sets the lease time",
+   "Reserves 15 Mbps"
+  ],
+  "answer": "A",
+  "explanation": "The rate limit protects against DHCP starvation. If the rate is exceeded the port is placed in err-disabled state.",
+  "option_notes": [
+   "Correct: Packets per second.",
+   "Wrong: It is not a lease count.",
+   "Wrong: Lease time is configured on the server.",
+   "Wrong: It is not bandwidth."
+  ],
+  "key_concept": "Rate-limit DHCP packets.",
+  "cli_example": "S1(config-if)# ip dhcp snooping limit rate 15",
+  "tip": "Untrusted ports."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "보통",
+  "question": "Which attack involves sending many DHCP requests with spoofed MAC addresses to exhaust the DHCP pool?",
+  "choices": [
+   "DHCP starvation",
+   "ARP spoofing",
+   "MAC flooding",
+   "VLAN hopping"
+  ],
+  "answer": "A",
+  "explanation": "DHCP starvation exhausts the pool so legitimate clients cannot get addresses.",
+  "option_notes": [
+   "Correct: That is DHCP starvation.",
+   "Wrong: ARP spoofing poisons ARP caches.",
+   "Wrong: MAC flooding fills the CAM table.",
+   "Wrong: VLAN hopping crosses VLANs."
+  ],
+  "key_concept": "Starvation = exhaust the pool.",
+  "cli_example": "",
+  "tip": "Mitigate with snooping."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "보통",
+  "question": "A port is in dynamic auto mode. What happens when switchport port-security is entered?",
+  "choices": [
+   "The command is rejected",
+   "Port security is enabled normally",
+   "The port becomes a trunk",
+   "The port is err-disabled"
+  ],
+  "answer": "A",
+  "explanation": "Port security needs a static access or trunk port. Dynamic ports reject the command.",
+  "option_notes": [
+   "Correct: IOS rejects it.",
+   "Wrong: It does not enable.",
+   "Wrong: No mode change occurs.",
+   "Wrong: It is not err-disabled."
+  ],
+  "key_concept": "Set switchport mode access first.",
+  "cli_example": "",
+  "tip": "Common lab error."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "보통",
+  "question": "How do you manually define one allowed MAC on a secure port?",
+  "choices": [
+   "switchport port-security mac-address 0011.2233.4455",
+   "port-security allow 0011.2233.4455",
+   "mac-address static 0011.2233.4455",
+   "switchport mac secure 0011.2233.4455"
+  ],
+  "answer": "A",
+  "explanation": "switchport port-security mac-address followed by a MAC creates a static secure address.",
+  "option_notes": [
+   "Correct: That is the syntax.",
+   "Wrong: Not valid.",
+   "Wrong: That is a global MAC table command.",
+   "Wrong: Not valid."
+  ],
+  "key_concept": "Static secure MAC.",
+  "cli_example": "",
+  "tip": "Use with maximum 1."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "보통",
+  "question": "Which feature shuts down a PortFast port when it receives a BPDU?",
+  "choices": [
+   "BPDU guard",
+   "Root guard",
+   "DTP",
+   "UDLD"
+  ],
+  "answer": "A",
+  "explanation": "BPDU guard err-disables PortFast edge ports that receive BPDUs, preventing rogue switches from affecting STP.",
+  "option_notes": [
+   "Correct: BPDU guard does this.",
+   "Wrong: Root guard blocks superior BPDUs; it does not err-disable a PortFast port on any BPDU.",
+   "Wrong: DTP negotiates trunks.",
+   "Wrong: UDLD detects unidirectional links."
+  ],
+  "key_concept": "BPDU guard protects edge ports.",
+  "cli_example": "S1(config-if)# spanning-tree bpduguard enable",
+  "tip": "Use with PortFast."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "보통",
+  "question": "Which two things must be configured for DHCP snooping to inspect a VLAN?",
+  "choices": [
+   "Enable globally and enable for the VLAN",
+   "Only enable on the interface",
+   "Enable DAI first",
+   "Configure VTP"
+  ],
+  "answer": "A",
+  "explanation": "ip dhcp snooping is required globally and ip dhcp snooping vlan activates it for specific VLANs.",
+  "option_notes": [
+   "Correct: Both are needed.",
+   "Wrong: Interface trust alone does not enable it.",
+   "Wrong: DAI is separate.",
+   "Wrong: VTP is unrelated."
+  ],
+  "key_concept": "Global plus per-VLAN.",
+  "cli_example": "S1(config)# ip dhcp snooping\nS1(config)# ip dhcp snooping vlan 10",
+  "tip": "Trust uplinks."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "어려움",
+  "question": "show port-security interface g0/1 shows Port Status: Secure-shutdown, Violation Mode: Shutdown, Security Violation Count: 1. What is the state?",
+  "choices": [
+   "The port is err-disabled because of a violation",
+   "The port is up and passing traffic",
+   "The port is trunking",
+   "The port is in protect mode"
+  ],
+  "answer": "A",
+  "explanation": "Secure-shutdown means the port is shut down by port security after a violation. It must be re-enabled.",
+  "option_notes": [
+   "Correct: Secure-shutdown means err-disabled.",
+   "Wrong: It is not passing traffic.",
+   "Wrong: Trunking is unrelated.",
+   "Wrong: The mode is shutdown."
+  ],
+  "key_concept": "Secure-shutdown = err-disabled.",
+  "cli_example": "S1# show port-security interface g0/1",
+  "tip": "Then shutdown/no shutdown."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "어려움",
+  "question": "A port has max 2 secure MACs set. Three different PCs connect through a hub. With default violation mode, what happens?",
+  "choices": [
+   "The port is err-disabled when the third MAC appears",
+   "The third PC is silently ignored",
+   "Only the first MAC is kept",
+   "The port converts to a trunk"
+  ],
+  "answer": "A",
+  "explanation": "Once the maximum is exceeded, a violation triggers. The default mode shuts the port down.",
+  "option_notes": [
+   "Correct: Third MAC triggers shutdown.",
+   "Wrong: Silent drop is protect mode.",
+   "Wrong: Two MACs are allowed.",
+   "Wrong: No trunk conversion."
+  ],
+  "key_concept": "Exceeding max triggers violation.",
+  "cli_example": "",
+  "tip": "Default is shutdown."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "어려움",
+  "question": "A user with a static IP address (no DHCP) cannot communicate on a VLAN where DAI is enabled. ARP packets from the host are dropped. What fixes this?",
+  "choices": [
+   "Create an ARP ACL with the static IP-to-MAC mapping",
+   "Disable VTP",
+   "Raise the DHCP rate limit",
+   "Change the native VLAN"
+  ],
+  "answer": "A",
+  "explanation": "Hosts without DHCP bindings are not in the snooping table. An ARP ACL or static binding permits them.",
+  "option_notes": [
+   "Correct: ARP ACL permits the host.",
+   "Wrong: VTP is unrelated.",
+   "Wrong: DHCP rates do not matter.",
+   "Wrong: The native VLAN is unrelated."
+  ],
+  "key_concept": "Static hosts need ARP ACLs for DAI.",
+  "cli_example": "S1(config)# arp access-list STATIC\nS1(config-arp-nacl)# permit ip host 10.1.1.50 mac host 0011.2233.4455",
+  "tip": "Or trust the port."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "어려움",
+  "question": "On a switch with DAI enabled, the uplink to a neighboring switch is untrusted. What is the likely result?",
+  "choices": [
+   "ARP packets from hosts behind the neighbor can be dropped",
+   "STP stops working",
+   "VLANs are deleted",
+   "DHCP lease times change"
+  ],
+  "answer": "A",
+  "explanation": "Inter-switch links should be trusted. Otherwise ARP packets arriving from the neighbor are validated against local bindings and may be dropped.",
+  "option_notes": [
+   "Correct: Hosts behind the neighbor are not in local bindings.",
+   "Wrong: STP is unaffected.",
+   "Wrong: VLANs remain.",
+   "Wrong: Lease times are unaffected."
+  ],
+  "key_concept": "Trust inter-switch links for DAI.",
+  "cli_example": "S1(config-if)# ip arp inspection trust",
+  "tip": "Untrusted by default."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "어려움",
+  "question": "An attacker sends double-tagged 802.1Q frames to reach another VLAN. Which mitigation is most appropriate?",
+  "choices": [
+   "Use a dedicated unused native VLAN on trunks and keep user ports out of it",
+   "Enable DHCP snooping",
+   "Increase STP priority",
+   "Enable sticky addresses"
+  ],
+  "answer": "A",
+  "explanation": "Double tagging works when the attacker's VLAN equals the trunk's native VLAN. Using an unused native VLAN prevents it.",
+  "option_notes": [
+   "Correct: Change native VLAN.",
+   "Wrong: DHCP snooping is unrelated.",
+   "Wrong: STP priority is unrelated.",
+   "Wrong: Sticky is port security."
+  ],
+  "key_concept": "Change native VLAN to mitigate double tagging.",
+  "cli_example": "S1(config-if)# switchport trunk native vlan 999",
+  "tip": "Also disable DTP."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "어려움",
+  "question": "A rogue DHCP server is plugged into an untrusted port. What does DHCP snooping do with its DHCPOFFER messages?",
+  "choices": [
+   "Drops them",
+   "Forwards them",
+   "Converts them to ACK",
+   "Sends them to a syslog only"
+  ],
+  "answer": "A",
+  "explanation": "DHCP server messages, such as OFFER and ACK, are dropped on untrusted ports.",
+  "option_notes": [
+   "Correct: Offers on untrusted ports are dropped.",
+   "Wrong: They are not forwarded.",
+   "Wrong: No conversion.",
+   "Wrong: They are dropped."
+  ],
+  "key_concept": "Untrusted ports cannot send server messages.",
+  "cli_example": "",
+  "tip": "Default untrusted."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "어려움",
+  "question": "Which information is stored in the DHCP snooping binding table?",
+  "choices": [
+   "Client MAC, IP address, lease time, VLAN and interface",
+   "Routing prefixes",
+   "STP port roles",
+   "VTP revision numbers"
+  ],
+  "answer": "A",
+  "explanation": "Each entry records MAC, IP, lease time, binding type, VLAN and the port. DAI and IP Source Guard use it.",
+  "option_notes": [
+   "Correct: That is the content.",
+   "Wrong: Routes are in the routing table.",
+   "Wrong: STP roles are separate.",
+   "Wrong: VTP is separate."
+  ],
+  "key_concept": "Binding table = MAC, IP, VLAN, port.",
+  "cli_example": "S1# show ip dhcp snooping binding",
+  "tip": "Used by DAI."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "어려움",
+  "question": "Which mitigation best reduces the effect of a MAC flooding attack on an access port?",
+  "choices": [
+   "Port security with a low maximum",
+   "DHCP snooping",
+   "DAI",
+   "BPDU guard"
+  ],
+  "answer": "A",
+  "explanation": "Limiting the number of learned MACs per port stops one port from filling the CAM table.",
+  "option_notes": [
+   "Correct: Port security limits MACs.",
+   "Wrong: Snooping targets DHCP.",
+   "Wrong: DAI targets ARP.",
+   "Wrong: BPDU guard targets STP."
+  ],
+  "key_concept": "Port security stops CAM overflow.",
+  "cli_example": "",
+  "tip": "Set maximum 1-3."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "어려움",
+  "question": "Which statement about shutting down unused switch ports is correct?",
+  "choices": [
+   "It reduces the attack surface and is a recommended hardening step",
+   "It speeds STP",
+   "It enables DAI",
+   "It breaks the VLAN database"
+  ],
+  "answer": "A",
+  "explanation": "Unused ports should be shutdown and often placed in an unused VLAN to prevent unauthorized access.",
+  "option_notes": [
+   "Correct: Hardening step.",
+   "Wrong: It has no effect on STP speed.",
+   "Wrong: DAI is separate.",
+   "Wrong: VLAN database is unaffected."
+  ],
+  "key_concept": "Shutdown unused ports.",
+  "cli_example": "S1(config-if-range)# shutdown",
+  "tip": "Move to black-hole VLAN."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "보통",
+  "question": "A secure port is set to protect mode with a maximum of 1 MAC. A second device sends frames. What happens?",
+  "choices": [
+   "The frames from the second device are dropped without notification and the port stays up",
+   "The port is err-disabled",
+   "A syslog message is generated for each frame",
+   "The first device is disconnected"
+  ],
+  "answer": "A",
+  "explanation": "Protect mode silently drops traffic from unknown source MACs once the maximum is reached. It does not shut the port down or send notifications.",
+  "option_notes": [
+   "Correct: Protect drops silently.",
+   "Wrong: That is shutdown mode.",
+   "Wrong: Logging is restrict or shutdown behavior.",
+   "Wrong: The first device keeps working."
+  ],
+  "key_concept": "Protect = silent drop.",
+  "cli_example": "S1(config-if)# switchport port-security violation protect",
+  "tip": "Least visible mode."
+ },
+ {
+  "sub": "5.7",
+  "difficulty": "어려움",
+  "question": "What does ip arp inspection validate src-mac dst-mac ip additionally check?",
+  "choices": [
+   "Ethernet source MAC vs ARP sender MAC, destination MAC vs ARP target MAC, and invalid IP addresses",
+   "VLAN IDs and trunk encapsulation",
+   "STP port roles",
+   "DHCP lease times"
+  ],
+  "answer": "A",
+  "explanation": "Optional DAI validation compares MAC addresses in the Ethernet header with the ARP body and rejects invalid IPs such as 0.0.0.0.",
+  "option_notes": [
+   "Correct: Those are the checks.",
+   "Wrong: VLANs are not validated here.",
+   "Wrong: STP is unrelated.",
+   "Wrong: Leases are not checked."
+  ],
+  "key_concept": "DAI validation checks header vs body.",
+  "cli_example": "S1(config)# ip arp inspection validate src-mac dst-mac ip",
+  "tip": "Optional hardening."
+ }
+]

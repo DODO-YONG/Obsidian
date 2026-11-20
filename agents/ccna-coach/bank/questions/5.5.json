@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "5.5",
+  "difficulty": "쉬움",
+  "question": "What is the purpose of a site-to-site IPsec VPN?",
+  "choices": [
+   "Connect a single user's laptop to the office",
+   "Create an encrypted tunnel between two networks over an untrusted network",
+   "Assign IP addresses to remote sites",
+   "Replace the routing protocol"
+  ],
+  "answer": "B",
+  "explanation": "A site-to-site VPN connects entire networks, such as a branch and headquarters, through an encrypted tunnel across the Internet. Users do not need VPN client software.",
+  "option_notes": [
+   "Wrong: That describes remote-access VPN.",
+   "Correct: Site-to-site VPNs link networks securely.",
+   "Wrong: DHCP assigns addresses.",
+   "Wrong: Routing is still required."
+  ],
+  "key_concept": "Site-to-site VPN links two networks.",
+  "cli_example": "",
+  "tip": "Gateways do the work."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "쉬움",
+  "question": "Which VPN type is used when an individual employee connects from home using client software?",
+  "choices": [
+   "Site-to-site VPN",
+   "Remote-access VPN",
+   "MPLS",
+   "Frame Relay"
+  ],
+  "answer": "B",
+  "explanation": "Remote-access VPNs let a single host connect to the corporate network, often with a client such as Cisco AnyConnect.",
+  "option_notes": [
+   "Wrong: Site-to-site connects networks.",
+   "Correct: Remote-access serves individual users.",
+   "Wrong: MPLS is a provider WAN technology.",
+   "Wrong: Frame Relay is a legacy WAN."
+  ],
+  "key_concept": "Remote-access = per-user VPN.",
+  "cli_example": "",
+  "tip": "AnyConnect."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "쉬움",
+  "question": "Which services does IPsec provide?",
+  "choices": [
+   "Confidentiality, integrity, authentication and anti-replay",
+   "Only routing",
+   "Only name resolution",
+   "Only address translation"
+  ],
+  "answer": "A",
+  "explanation": "IPsec encrypts data for confidentiality, uses hashing for integrity, authenticates peers and detects replayed packets.",
+  "option_notes": [
+   "Correct: Those are IPsec security services.",
+   "Wrong: IPsec is not a routing protocol.",
+   "Wrong: DNS resolves names.",
+   "Wrong: NAT translates addresses."
+  ],
+  "key_concept": "IPsec = CIA services plus anti-replay.",
+  "cli_example": "",
+  "tip": "Framework of protocols."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "쉬움",
+  "question": "Which IP protocol number does ESP use?",
+  "choices": [
+   "6",
+   "17",
+   "50",
+   "51"
+  ],
+  "answer": "C",
+  "explanation": "ESP uses IP protocol 50 and AH uses protocol 51. TCP is 6 and UDP is 17.",
+  "option_notes": [
+   "Wrong: 6 is TCP.",
+   "Wrong: 17 is UDP.",
+   "Correct: ESP is protocol 50.",
+   "Wrong: 51 is AH."
+  ],
+  "key_concept": "ESP = 50, AH = 51.",
+  "cli_example": "",
+  "tip": "Neither uses ports."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "쉬움",
+  "question": "Which UDP port does IKE use for negotiation?",
+  "choices": [
+   "UDP 500",
+   "UDP 53",
+   "UDP 123",
+   "UDP 161"
+  ],
+  "answer": "A",
+  "explanation": "IKE uses UDP port 500 to negotiate security associations. NAT traversal uses UDP 4500.",
+  "option_notes": [
+   "Correct: IKE uses 500.",
+   "Wrong: 53 is DNS.",
+   "Wrong: 123 is NTP.",
+   "Wrong: 161 is SNMP."
+  ],
+  "key_concept": "IKE = UDP 500.",
+  "cli_example": "",
+  "tip": "NAT-T = UDP 4500."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "쉬움",
+  "question": "Which IPsec protocol provides encryption of the data payload?",
+  "choices": [
+   "AH",
+   "ESP",
+   "GRE",
+   "ICMP"
+  ],
+  "answer": "B",
+  "explanation": "ESP provides confidentiality and optional integrity. AH provides integrity and authentication only.",
+  "option_notes": [
+   "Wrong: AH does not encrypt.",
+   "Correct: ESP encrypts.",
+   "Wrong: GRE does not encrypt.",
+   "Wrong: ICMP is a messaging protocol."
+  ],
+  "key_concept": "ESP encrypts; AH does not.",
+  "cli_example": "",
+  "tip": "ESP is the common choice."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "쉬움",
+  "question": "In IPsec tunnel mode, what happens to the original IP packet?",
+  "choices": [
+   "It is sent unchanged",
+   "It is encapsulated and protected in a new IP packet",
+   "It is dropped",
+   "It is converted to IPv6"
+  ],
+  "answer": "B",
+  "explanation": "Tunnel mode protects the entire original packet and adds a new outer IP header. Site-to-site VPNs normally use it.",
+  "option_notes": [
+   "Wrong: Transport mode keeps the original header.",
+   "Correct: Tunnel mode wraps the whole packet.",
+   "Wrong: Packets are not dropped.",
+   "Wrong: No IPv6 conversion occurs."
+  ],
+  "key_concept": "Tunnel mode wraps the entire packet.",
+  "cli_example": "",
+  "tip": "Default for gateways."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "쉬움",
+  "question": "Does GRE alone encrypt the traffic it carries?",
+  "choices": [
+   "Yes, with AES",
+   "Yes, with DES",
+   "No, it only encapsulates",
+   "Yes, if the tunnel key is set"
+  ],
+  "answer": "C",
+  "explanation": "GRE provides encapsulation but no encryption. GRE is often combined with IPsec for protection.",
+  "option_notes": [
+   "Wrong: GRE has no encryption.",
+   "Wrong: GRE has no DES.",
+   "Correct: GRE only encapsulates.",
+   "Wrong: A GRE key is not an encryption key."
+  ],
+  "key_concept": "GRE is not secure by itself.",
+  "cli_example": "",
+  "tip": "GRE over IPsec."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "쉬움",
+  "question": "What does IKE do in an IPsec VPN?",
+  "choices": [
+   "Compresses data",
+   "Negotiates security associations and keys",
+   "Assigns VLANs",
+   "Filters packets"
+  ],
+  "answer": "B",
+  "explanation": "IKE authenticates peers and negotiates the parameters and keys for IPsec security associations.",
+  "option_notes": [
+   "Wrong: IPsec does not compress.",
+   "Correct: IKE negotiates SAs and keys.",
+   "Wrong: VLANs are Layer 2.",
+   "Wrong: ACLs filter packets."
+  ],
+  "key_concept": "IKE = negotiation.",
+  "cli_example": "",
+  "tip": "UDP 500."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "쉬움",
+  "question": "Which technology provides remote access with an SSL/TLS tunnel using a client such as AnyConnect over TCP 443?",
+  "choices": [
+   "SSL VPN",
+   "Site-to-site GRE",
+   "Frame Relay",
+   "PPPoE"
+  ],
+  "answer": "A",
+  "explanation": "SSL VPNs use TLS over TCP 443 and pass through most firewalls easily.",
+  "option_notes": [
+   "Correct: SSL VPN uses TLS 443.",
+   "Wrong: GRE is not SSL.",
+   "Wrong: Frame Relay is a WAN technology.",
+   "Wrong: PPPoE is an access protocol."
+  ],
+  "key_concept": "SSL VPN = TLS 443.",
+  "cli_example": "",
+  "tip": "IPsec VPN uses IKE and ESP."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "보통",
+  "question": "Which IKE phase establishes the ISAKMP (management) security association?",
+  "choices": [
+   "Phase 1",
+   "Phase 2",
+   "Phase 3",
+   "Quick mode only"
+  ],
+  "answer": "A",
+  "explanation": "IKE Phase 1 authenticates peers and builds a secure channel. Phase 2 negotiates the IPsec SAs that protect data.",
+  "option_notes": [
+   "Correct: Phase 1 builds the ISAKMP SA.",
+   "Wrong: Phase 2 builds IPsec SAs.",
+   "Wrong: There is no phase 3.",
+   "Wrong: Quick mode is phase 2."
+  ],
+  "key_concept": "Phase 1 = management tunnel; Phase 2 = data SAs.",
+  "cli_example": "",
+  "tip": "IKEv1."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "보통",
+  "question": "What is the purpose of the Diffie-Hellman algorithm in IPsec?",
+  "choices": [
+   "Encrypt bulk data",
+   "Securely derive a shared secret over an untrusted network",
+   "Authenticate users with passwords",
+   "Compress packets"
+  ],
+  "answer": "B",
+  "explanation": "DH lets two peers compute the same shared secret without sending it across the network.",
+  "option_notes": [
+   "Wrong: Symmetric ciphers encrypt data.",
+   "Correct: DH generates shared keying material.",
+   "Wrong: DH is not user authentication.",
+   "Wrong: DH does not compress."
+  ],
+  "key_concept": "DH = key exchange.",
+  "cli_example": "",
+  "tip": "Groups 14, 19, 20 are common."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "보통",
+  "question": "On a Cisco router, what identifies the traffic that should be encrypted by the VPN?",
+  "choices": [
+   "A crypto ACL",
+   "A VLAN",
+   "A DHCP pool",
+   "A trunk"
+  ],
+  "answer": "A",
+  "explanation": "A crypto ACL permits the interesting traffic. Matching packets trigger encryption through the tunnel.",
+  "option_notes": [
+   "Correct: Crypto ACLs select traffic.",
+   "Wrong: VLANs are not used.",
+   "Wrong: DHCP pools assign addresses.",
+   "Wrong: Trunks carry VLANs."
+  ],
+  "key_concept": "Crypto ACL = interesting traffic.",
+  "cli_example": "R1(config)# ip access-list extended VPN-TRAFFIC\nR1(config-ext-nacl)# permit ip 10.1.1.0 0.0.0.255 10.2.2.0 0.0.0.255",
+  "tip": "Mirror on the peer."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "보통",
+  "question": "Which UDP port is used by IPsec NAT traversal?",
+  "choices": [
+   "UDP 500",
+   "UDP 4500",
+   "TCP 50",
+   "UDP 51"
+  ],
+  "answer": "B",
+  "explanation": "NAT-T wraps ESP in UDP 4500 so it can pass through NAT devices. ESP alone has no ports.",
+  "option_notes": [
+   "Wrong: 500 is IKE.",
+   "Correct: 4500 is NAT-T.",
+   "Wrong: ESP is not TCP.",
+   "Wrong: 51 is AH, an IP protocol."
+  ],
+  "key_concept": "NAT-T = UDP 4500.",
+  "cli_example": "",
+  "tip": "Detected during IKE."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "보통",
+  "question": "Why is GRE over IPsec often used between branch routers?",
+  "choices": [
+   "GRE can carry routing protocol multicast that IPsec alone cannot",
+   "GRE provides stronger encryption",
+   "GRE removes the need for keys",
+   "GRE is required by IKE"
+  ],
+  "answer": "A",
+  "explanation": "IPsec alone protects unicast IP traffic. GRE can encapsulate multicast, such as OSPF hellos, then IPsec encrypts the GRE packets.",
+  "option_notes": [
+   "Correct: GRE supports multicast and routing protocols.",
+   "Wrong: GRE does not encrypt.",
+   "Wrong: Keys are still required.",
+   "Wrong: IKE does not require GRE."
+  ],
+  "key_concept": "GRE adds multicast and routing support.",
+  "cli_example": "",
+  "tip": "DMVPN uses mGRE plus IPsec."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "보통",
+  "question": "Which command shows the IKE Phase 1 security associations on a Cisco IOS router?",
+  "choices": [
+   "show crypto isakmp sa",
+   "show ip route",
+   "show vlan brief",
+   "show cdp neighbors"
+  ],
+  "answer": "A",
+  "explanation": "show crypto isakmp sa displays ISAKMP SAs and their state. QM_IDLE means Phase 1 is up.",
+  "option_notes": [
+   "Correct: It displays ISAKMP SAs.",
+   "Wrong: That is the routing table.",
+   "Wrong: That shows VLANs.",
+   "Wrong: That shows neighbors."
+  ],
+  "key_concept": "show crypto isakmp sa for Phase 1.",
+  "cli_example": "R1# show crypto isakmp sa",
+  "tip": "show crypto ipsec sa for Phase 2."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "보통",
+  "question": "Which command displays IPsec Phase 2 statistics such as encapsulated and decapsulated packets?",
+  "choices": [
+   "show crypto ipsec sa",
+   "show crypto isakmp policy",
+   "show ip nat translations",
+   "show interfaces trunk"
+  ],
+  "answer": "A",
+  "explanation": "show crypto ipsec sa shows the IPsec SAs and packet counters.",
+  "option_notes": [
+   "Correct: It shows packet counters.",
+   "Wrong: That shows IKE policy.",
+   "Wrong: That shows NAT.",
+   "Wrong: That shows trunks."
+  ],
+  "key_concept": "show crypto ipsec sa = data counters.",
+  "cli_example": "R1# show crypto ipsec sa",
+  "tip": "Check encaps vs decaps."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "보통",
+  "question": "What does a transform set define?",
+  "choices": [
+   "The IPsec protocols and algorithms for data protection",
+   "The VLAN assignment",
+   "The routing metric",
+   "The DHCP lease"
+  ],
+  "answer": "A",
+  "explanation": "A transform set specifies ESP or AH with encryption and hash algorithms, such as esp-aes and esp-sha-hmac.",
+  "option_notes": [
+   "Correct: Transform sets define IPsec protection.",
+   "Wrong: VLANs are unrelated.",
+   "Wrong: Metrics are routing.",
+   "Wrong: DHCP is unrelated."
+  ],
+  "key_concept": "Transform set = IPsec algorithms.",
+  "cli_example": "R1(config)# crypto ipsec transform-set TS esp-aes 256 esp-sha-hmac",
+  "tip": "Must match on peers."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "보통",
+  "question": "Why is AH usually incompatible with NAT?",
+  "choices": [
+   "AH protects the outer IP header, so address changes break integrity",
+   "AH uses UDP",
+   "AH is encrypted",
+   "NAT blocks all ICMP"
+  ],
+  "answer": "A",
+  "explanation": "AH authenticates the IP header fields including addresses. NAT changes them and the integrity check fails.",
+  "option_notes": [
+   "Correct: Header changes break AH.",
+   "Wrong: AH is protocol 51, not UDP.",
+   "Wrong: AH does not encrypt.",
+   "Wrong: NAT is unrelated to ICMP here."
+  ],
+  "key_concept": "AH breaks with NAT.",
+  "cli_example": "",
+  "tip": "ESP with NAT-T works."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "어려움",
+  "question": "A router shows #pkts encaps: 500, #pkts decaps: 0 for a VPN tunnel. What is the most likely issue?",
+  "choices": [
+   "Outgoing traffic is encrypted but no encrypted traffic is arriving from the peer",
+   "The IKE port is blocked locally for all traffic",
+   "The transform set is missing locally",
+   "The tunnel is not configured"
+  ],
+  "answer": "A",
+  "explanation": "Packets are being encapsulated, so the local side is working. No decapsulated packets means nothing valid arrives from the peer, due to a remote issue, routing or filtering.",
+  "option_notes": [
+   "Correct: Encaps without decaps points to the return path.",
+   "Wrong: IKE must already be up for encaps.",
+   "Wrong: A missing transform set prevents encapsulation.",
+   "Wrong: Encaps shows it is active."
+  ],
+  "key_concept": "Encaps but no decaps = check the peer or path.",
+  "cli_example": "R1# show crypto ipsec sa",
+  "tip": "Check ESP is allowed."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "어려움",
+  "question": "show crypto isakmp sa shows QM_IDLE. What does that indicate?",
+  "choices": [
+   "Phase 1 is established",
+   "Phase 2 failed",
+   "The peer rejected the proposal",
+   "The pre-shared key is wrong"
+  ],
+  "answer": "A",
+  "explanation": "QM_IDLE means the ISAKMP SA is established and idle, waiting for quick mode exchanges. Phase 1 is up.",
+  "option_notes": [
+   "Correct: QM_IDLE shows Phase 1 up.",
+   "Wrong: Phase 2 is not indicated.",
+   "Wrong: Rejection shows MM_NO_STATE.",
+   "Wrong: A wrong key would not reach this state."
+  ],
+  "key_concept": "QM_IDLE = Phase 1 up.",
+  "cli_example": "",
+  "tip": "MM_NO_STATE = problem."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "어려움",
+  "question": "Two peers have different IKE encryption and hash settings in the ISAKMP policy. What happens?",
+  "choices": [
+   "Phase 1 fails",
+   "Phase 1 succeeds but Phase 2 fails",
+   "The tunnel uses default values",
+   "Only NAT-T is affected"
+  ],
+  "answer": "A",
+  "explanation": "IKE Phase 1 requires a matching policy proposal. If there is no match, no ISAKMP SA forms.",
+  "option_notes": [
+   "Correct: No matching proposal means Phase 1 fails.",
+   "Wrong: Phase 2 depends on Phase 1.",
+   "Wrong: There is no default fallback.",
+   "Wrong: NAT-T is unrelated."
+  ],
+  "key_concept": "Phase 1 policy must match.",
+  "cli_example": "R1# show crypto isakmp policy",
+  "tip": "Debug with debug crypto isakmp."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "어려움",
+  "question": "Phase 1 succeeds but Phase 2 fails. The crypto ACLs on the two routers are not mirror images. What is the likely effect?",
+  "choices": [
+   "IPsec SAs cannot be negotiated because proxy identities do not match",
+   "IKE will not start",
+   "DHCP will fail",
+   "OSPF will reset"
+  ],
+  "answer": "A",
+  "explanation": "Crypto ACLs define proxy identities. If they do not mirror, Phase 2 negotiation fails.",
+  "option_notes": [
+   "Correct: Mismatched proxy IDs break Phase 2.",
+   "Wrong: IKE Phase 1 already completed.",
+   "Wrong: DHCP is unrelated.",
+   "Wrong: OSPF is not involved."
+  ],
+  "key_concept": "Crypto ACLs must mirror.",
+  "cli_example": "",
+  "tip": "Common troubleshooting item."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "어려움",
+  "question": "Which statement describes Perfect Forward Secrecy (PFS)?",
+  "choices": [
+   "Each new IPsec SA uses a fresh Diffie-Hellman exchange",
+   "All SAs reuse the Phase 1 key",
+   "Only AH is used",
+   "Keys never change"
+  ],
+  "answer": "A",
+  "explanation": "PFS performs a new DH exchange for Phase 2, so compromising one key does not reveal past or future session keys.",
+  "option_notes": [
+   "Correct: PFS adds a new DH exchange.",
+   "Wrong: Reusing keys is what PFS avoids.",
+   "Wrong: PFS is unrelated to AH.",
+   "Wrong: Keys are rekeyed."
+  ],
+  "key_concept": "PFS = fresh DH per SA.",
+  "cli_example": "R1(config-crypto-map)# set pfs group14",
+  "tip": "Both peers must agree."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "어려움",
+  "question": "An administrator wants OSPF adjacencies across a VPN between two sites. Why is plain IPsec tunnel mode a problem?",
+  "choices": [
+   "It cannot carry multicast routing protocol packets",
+   "It is not encrypted",
+   "It does not support IPv4",
+   "It requires NAT"
+  ],
+  "answer": "A",
+  "explanation": "Classic IPsec encapsulates unicast IP traffic. OSPF hellos use multicast, so GRE or a virtual tunnel interface is used.",
+  "option_notes": [
+   "Correct: Multicast is not supported in classic crypto maps.",
+   "Wrong: IPsec encrypts.",
+   "Wrong: IPv4 is supported.",
+   "Wrong: NAT is not required."
+  ],
+  "key_concept": "Use GRE or VTI for routing protocols.",
+  "cli_example": "",
+  "tip": "DMVPN, VTI."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "어려움",
+  "question": "A pre-shared key is configured differently on two IPsec peers. How does this appear?",
+  "choices": [
+   "Phase 1 authentication fails",
+   "Phase 2 succeeds",
+   "ESP is rejected",
+   "NAT-T triggers"
+  ],
+  "answer": "A",
+  "explanation": "Peers use the pre-shared key to authenticate during IKE Phase 1. A mismatch fails authentication and no tunnel forms.",
+  "option_notes": [
+   "Correct: Mismatched keys fail Phase 1.",
+   "Wrong: Phase 2 requires Phase 1.",
+   "Wrong: ESP is not reached.",
+   "Wrong: NAT-T is unrelated."
+  ],
+  "key_concept": "PSK mismatch = Phase 1 failure.",
+  "cli_example": "R1(config)# crypto isakmp key Cisco123 address 203.0.113.2",
+  "tip": "Check both ends."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "어려움",
+  "question": "A VPN works between two routers directly connected to the Internet, but fails when one router is behind a NAT device. Which feature addresses this?",
+  "choices": [
+   "NAT traversal using UDP 4500",
+   "Port security",
+   "Split horizon",
+   "Proxy ARP"
+  ],
+  "answer": "A",
+  "explanation": "ESP has no ports, so NAT may drop it. NAT-T encapsulates ESP in UDP 4500 to pass NAT.",
+  "option_notes": [
+   "Correct: NAT-T solves this.",
+   "Wrong: Port security is Layer 2.",
+   "Wrong: Split horizon is routing.",
+   "Wrong: Proxy ARP is Layer 2."
+  ],
+  "key_concept": "NAT-T fixes ESP and NAT.",
+  "cli_example": "",
+  "tip": "Port 4500."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "어려움",
+  "question": "Which sequence best describes the structure of an ESP tunnel mode packet?",
+  "choices": [
+   "New IP header, ESP header, original IP packet, ESP trailer, ESP authentication",
+   "Original IP header, TCP header, ESP trailer",
+   "GRE header, original IP header",
+   "UDP header, DHCP header"
+  ],
+  "answer": "A",
+  "explanation": "In tunnel mode a new outer IP header is added in front of the ESP header. The original packet is protected, followed by the trailer and optional authentication.",
+  "option_notes": [
+   "Correct: That is the ESP tunnel mode layout.",
+   "Wrong: That lacks the new IP header.",
+   "Wrong: GRE is a different protocol.",
+   "Wrong: UDP/DHCP is unrelated."
+  ],
+  "key_concept": "ESP tunnel = new IP + ESP + original packet.",
+  "cli_example": "",
+  "tip": "Transport mode keeps the original header."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "보통",
+  "question": "How does IPsec transport mode differ from tunnel mode?",
+  "choices": [
+   "Transport mode keeps the original IP header and protects only the payload",
+   "Transport mode adds a second IP header",
+   "Transport mode uses no ESP",
+   "Transport mode is only for routers"
+  ],
+  "answer": "A",
+  "explanation": "Transport mode protects the payload and keeps the original IP header, so it suits host-to-host communication. Tunnel mode encapsulates the whole original packet in a new one.",
+  "option_notes": [
+   "Correct: Transport mode leaves the original header in place.",
+   "Wrong: A new outer header is tunnel mode.",
+   "Wrong: Transport mode can use ESP or AH.",
+   "Wrong: It is mainly host-to-host."
+  ],
+  "key_concept": "Transport = payload only; tunnel = whole packet.",
+  "cli_example": "",
+  "tip": "Gateways use tunnel mode."
+ },
+ {
+  "sub": "5.5",
+  "difficulty": "어려움",
+  "question": "A router has a correct ISAKMP policy, transform set and crypto map, but the crypto map was never applied to the outgoing interface. What happens to traffic that matches the crypto ACL?",
+  "choices": [
+   "It is forwarded unencrypted and no tunnel is negotiated",
+   "It is encrypted using default values",
+   "It is dropped by the ACL",
+   "The router reloads"
+  ],
+  "answer": "A",
+  "explanation": "The crypto map only takes effect once applied to an interface. Without that, matching packets are routed normally in clear text and IKE does not start.",
+  "option_notes": [
+   "Correct: Nothing triggers encryption.",
+   "Wrong: There are no defaults to use.",
+   "Wrong: A crypto ACL does not block traffic.",
+   "Wrong: No reload occurs."
+  ],
+  "key_concept": "Apply the crypto map to the interface.",
+  "cli_example": "R1(config)# interface g0/0\nR1(config-if)# crypto map VPN-MAP",
+  "tip": "A frequent lab mistake."
+ }
+]

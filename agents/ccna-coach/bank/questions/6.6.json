@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "6.6",
+  "difficulty": "쉬움",
+  "question": "Which statement describes Ansible?",
+  "choices": [
+   "An agentless automation tool that uses SSH to configure devices",
+   "A tool that requires an agent on every managed device",
+   "A routing protocol",
+   "A Layer 2 switching feature"
+  ],
+  "answer": "A",
+  "explanation": "Ansible is an agentless configuration management and automation tool. The control node connects to devices, typically with SSH, and runs the tasks.",
+  "option_notes": [
+   "Correct: no software is needed on managed devices.",
+   "Wrong: this describes Puppet or Chef.",
+   "Wrong: Ansible is not a protocol.",
+   "Wrong: Ansible is not a feature of switches."
+  ],
+  "key_concept": "Ansible = agentless, SSH, push.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "쉬움",
+  "question": "In which format are Ansible playbooks written?",
+  "choices": [
+   "HCL",
+   "Binary",
+   "CSV",
+   "YAML"
+  ],
+  "answer": "D",
+  "explanation": "Ansible playbooks are YAML files that list plays and tasks. Terraform configuration uses HashiCorp Configuration Language (HCL).",
+  "option_notes": [
+   "Wrong: this is used by Terraform.",
+   "Wrong: playbooks are text files.",
+   "Wrong: this is not the playbook format.",
+   "Correct: playbooks are human-readable YAML files."
+  ],
+  "key_concept": "Ansible = YAML; Terraform = HCL.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "쉬움",
+  "question": "Which language does Terraform use for its configuration files?",
+  "choices": [
+   "YAML only",
+   "Assembly",
+   "HashiCorp Configuration Language (HCL)",
+   "SQL"
+  ],
+  "answer": "C",
+  "explanation": "Terraform configuration is written in HCL, in files that end with .tf. It describes the desired infrastructure state.",
+  "option_notes": [
+   "Wrong: playbooks use YAML.",
+   "Wrong: this is not used.",
+   "Correct: Terraform files use HCL syntax.",
+   "Wrong: this is a database language."
+  ],
+  "key_concept": "Terraform = HCL (.tf files).",
+  "cli_example": "provider \"aws\" {\n  region = \"us-east-1\"\n}\n\nresource \"aws_instance\" \"web\" {\n  ami           = \"ami-12345678\"\n  instance_type = \"t3.micro\"\n}",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "쉬움",
+  "question": "What does it mean that Terraform is declarative?",
+  "choices": [
+   "You write every step in order",
+   "You describe the desired end state, and Terraform works out how to reach it",
+   "It can only delete resources",
+   "It needs a person to approve each packet"
+  ],
+  "answer": "B",
+  "explanation": "In a declarative model you state what the infrastructure should look like. Terraform compares that to the current state and calculates the changes needed.",
+  "option_notes": [
+   "Wrong: this is imperative.",
+   "Correct: the steps are determined by the tool.",
+   "Wrong: this is not the meaning.",
+   "Wrong: this is not the meaning."
+  ],
+  "key_concept": "Declarative = desired state, not steps.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "쉬움",
+  "question": "Which file does Ansible use to list the devices it manages?",
+  "choices": [
+   "A state file",
+   "An inventory file",
+   "A MIB file",
+   "A routing table"
+  ],
+  "answer": "B",
+  "explanation": "The inventory lists hosts and groups that playbooks target. Playbooks refer to these groups in the hosts: line.",
+  "option_notes": [
+   "Wrong: this is a Terraform concept.",
+   "Correct: it groups hosts for playbooks.",
+   "Wrong: this is used by SNMP.",
+   "Wrong: this is for forwarding."
+  ],
+  "key_concept": "Ansible inventory = list of managed hosts.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "쉬움",
+  "question": "Which tool is based on an agent that runs on managed nodes and pulls configuration from a master server?",
+  "choices": [
+   "Puppet",
+   "Ansible",
+   "Terraform",
+   "Wireshark"
+  ],
+  "answer": "A",
+  "explanation": "Puppet and Chef use agent software on nodes, and the agents pull configuration from a server. Ansible pushes from a control node without agents.",
+  "option_notes": [
+   "Correct: it uses agents that check in with a Puppet server.",
+   "Wrong: this is agentless by default.",
+   "Wrong: this uses providers and APIs, no agents.",
+   "Wrong: this is a packet analyzer."
+  ],
+  "key_concept": "Puppet/Chef = agent-based pull. Ansible = agentless push.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "쉬움",
+  "question": "What does the Terraform state file track?",
+  "choices": [
+   "The CLI history of the user",
+   "The MAC address table of a switch",
+   "The DHCP leases",
+   "The real infrastructure resources that Terraform manages"
+  ],
+  "answer": "D",
+  "explanation": "Terraform stores what it created in a state file. It compares the state with the configuration to decide what must be added, changed or destroyed.",
+  "option_notes": [
+   "Wrong: this is not tracked.",
+   "Wrong: this is a switch function.",
+   "Wrong: this is a DHCP function.",
+   "Correct: it maps the configuration to real resources."
+  ],
+  "key_concept": "State file = record of managed resources.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "쉬움",
+  "question": "What is a Terraform provider?",
+  "choices": [
+   "A paid internet service",
+   "A type of router interface",
+   "A plugin that lets Terraform talk to a platform API, such as a cloud or network vendor",
+   "A packet filtering rule"
+  ],
+  "answer": "C",
+  "explanation": "Providers are plugins for platforms such as AWS, Azure or Cisco products. They define the resource types Terraform can manage.",
+  "option_notes": [
+   "Wrong: this is not the meaning.",
+   "Wrong: this is not the meaning.",
+   "Correct: providers translate resources into API calls.",
+   "Wrong: this is not the meaning."
+  ],
+  "key_concept": "Provider = plugin for a target platform API.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "쉬움",
+  "question": "Which statement is true about configuration management tools such as Ansible, Puppet and Chef?",
+  "choices": [
+   "They replace all physical hardware",
+   "They only monitor interface counters",
+   "They automate and keep device configuration consistent",
+   "They work only on Layer 1"
+  ],
+  "answer": "C",
+  "explanation": "Configuration management tools define settings in code and apply them to many systems. This improves consistency and reduces manual errors.",
+  "option_notes": [
+   "Wrong: they manage configuration only.",
+   "Wrong: they apply configuration.",
+   "Correct: this is their goal.",
+   "Wrong: they work at the configuration level."
+  ],
+  "key_concept": "Config management = consistent, automated configuration.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "쉬움",
+  "question": "Which command initializes a Terraform working directory and downloads the required providers?",
+  "choices": [
+   "terraform destroy",
+   "terraform init",
+   "terraform show",
+   "terraform exit"
+  ],
+  "answer": "B",
+  "explanation": "terraform init downloads providers and sets up the backend. After init you normally run terraform plan and terraform apply.",
+  "option_notes": [
+   "Wrong: this removes managed resources.",
+   "Correct: it prepares the directory.",
+   "Wrong: this displays state or plan.",
+   "Wrong: this is not a valid action."
+  ],
+  "key_concept": "init, plan, apply.",
+  "cli_example": "terraform init\nterraform plan\nterraform apply",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "보통",
+  "question": "What does the terraform plan command do?",
+  "choices": [
+   "Shows the changes Terraform would make without applying them",
+   "Immediately changes all resources",
+   "Deletes the state file",
+   "Installs Ansible"
+  ],
+  "answer": "A",
+  "explanation": "terraform plan compares configuration, state and real resources, then shows what would be created, changed or destroyed. Nothing is changed until terraform apply.",
+  "option_notes": [
+   "Correct: it is a preview.",
+   "Wrong: this is apply.",
+   "Wrong: it does not.",
+   "Wrong: this is unrelated."
+  ],
+  "key_concept": "plan = preview; apply = execute.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "보통",
+  "question": "Which statement describes how Ansible delivers configuration by default?",
+  "choices": [
+   "Devices pull their configuration from agents on the control node",
+   "It uses a distributed control plane in each device",
+   "It broadcasts configuration to the LAN",
+   "It pushes tasks from a control node to the managed devices"
+  ],
+  "answer": "D",
+  "explanation": "Ansible uses a push model. The engineer runs a playbook on the control node, which connects to each host (SSH for network devices) and runs the tasks.",
+  "option_notes": [
+   "Wrong: this is the pull model.",
+   "Wrong: this is not how it works.",
+   "Wrong: this is not how it works.",
+   "Correct: the control node initiates the connection."
+  ],
+  "key_concept": "Ansible = push, no agent.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "보통",
+  "question": "Which statement best differentiates Terraform from Ansible?",
+  "choices": [
+   "Terraform uses YAML playbooks, Ansible uses HCL",
+   "Terraform needs an agent, Ansible does not",
+   "They cannot be used together",
+   "Terraform is mainly used to provision infrastructure declaratively, while Ansible is commonly used to configure systems with tasks"
+  ],
+  "answer": "D",
+  "explanation": "Terraform focuses on provisioning infrastructure from desired-state definitions, tracking it in a state file. Ansible focuses on configuring systems through ordered tasks. Many teams use both.",
+  "option_notes": [
+   "Wrong: this swaps them.",
+   "Wrong: Terraform does not need an agent.",
+   "Wrong: they are often used together.",
+   "Correct: each has a different main focus."
+  ],
+  "key_concept": "Terraform = provision; Ansible = configure.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "보통",
+  "question": "What is meant by an idempotent Ansible module?",
+  "choices": [
+   "It always reloads the device",
+   "It deletes the configuration each run",
+   "Running it repeatedly gives the same end state and makes no unnecessary changes",
+   "It can run only once ever"
+  ],
+  "answer": "C",
+  "explanation": "An idempotent task checks the current state and acts only if it differs from the desired state. Running a playbook twice should report no changes the second time.",
+  "option_notes": [
+   "Wrong: this is not idempotent.",
+   "Wrong: this is not idempotent.",
+   "Correct: it only changes what is needed.",
+   "Wrong: this is not the meaning."
+  ],
+  "key_concept": "Idempotent = same result however many runs.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "보통",
+  "question": "What is the purpose of the hosts: line in an Ansible play?",
+  "choices": [
+   "It sets the HTTP method",
+   "It specifies which inventory group or hosts the play targets",
+   "It selects the VLAN",
+   "It defines the provider"
+  ],
+  "answer": "B",
+  "explanation": "A play starts with a target and a list of tasks. The hosts: value refers to hosts or groups from the inventory.",
+  "option_notes": [
+   "Wrong: this is a REST concept.",
+   "Correct: it selects the managed devices.",
+   "Wrong: this is a task parameter.",
+   "Wrong: this is a Terraform concept."
+  ],
+  "key_concept": "hosts: = target group from the inventory.",
+  "cli_example": "---\n- name: Configure VLAN\n  hosts: switches\n  gather_facts: no\n  tasks:\n    - name: Create VLAN 20\n      cisco.ios.ios_vlans:\n        config:\n          - vlan_id: 20\n            name: USERS\n        state: merged",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "보통",
+  "question": "What is the benefit of infrastructure as code?",
+  "choices": [
+   "Infrastructure definitions are stored in files that can be versioned, reviewed and reused",
+   "Infrastructure no longer needs hardware",
+   "Configuration cannot be changed",
+   "It avoids all testing"
+  ],
+  "answer": "A",
+  "explanation": "Treating configuration as code allows version control, peer review, repeatability and automation. It reduces manual mistakes and configuration drift.",
+  "option_notes": [
+   "Correct: it brings software practices to infrastructure.",
+   "Wrong: hardware is still needed.",
+   "Wrong: it can be changed.",
+   "Wrong: testing is still needed."
+  ],
+  "key_concept": "IaC = versioned, repeatable infrastructure.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "보통",
+  "question": "Which statement describes configuration drift?",
+  "choices": [
+   "A device configuration changes over time and no longer matches the intended standard",
+   "A cable slowly loses signal strength",
+   "A VLAN is created by a controller",
+   "A router runs a routing protocol"
+  ],
+  "answer": "A",
+  "explanation": "Drift happens when manual changes or errors make devices differ from the approved configuration. Configuration management tools help detect and correct it.",
+  "option_notes": [
+   "Correct: it differs from the desired state.",
+   "Wrong: this is a physical issue.",
+   "Wrong: this is not drift.",
+   "Wrong: this is normal operation."
+  ],
+  "key_concept": "Drift = actual differs from intended state.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "보통",
+  "question": "Which statement about Puppet and Chef is correct?",
+  "choices": [
+   "They are agentless tools that use only SSH",
+   "They are cloud-only monitoring services",
+   "They are Layer 2 protocols",
+   "They are agent-based tools that use their own domain-specific files (manifests and recipes)"
+  ],
+  "answer": "D",
+  "explanation": "Puppet describes configuration in manifests, and Chef uses recipes grouped into cookbooks. Both normally run an agent on each managed node.",
+  "option_notes": [
+   "Wrong: this describes Ansible.",
+   "Wrong: they are configuration tools.",
+   "Wrong: they are not protocols.",
+   "Correct: Puppet uses manifests; Chef uses recipes."
+  ],
+  "key_concept": "Puppet = manifests; Chef = recipes/cookbooks.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "보통",
+  "question": "What happens when you run terraform apply on a configuration that matches the existing infrastructure and state exactly?",
+  "choices": [
+   "All resources are recreated",
+   "All resources are destroyed",
+   "No changes are made",
+   "The state file is deleted"
+  ],
+  "answer": "C",
+  "explanation": "Terraform only changes the differences between the desired and actual state. If there are none, apply reports that infrastructure is up to date.",
+  "option_notes": [
+   "Wrong: this would be unnecessary.",
+   "Wrong: this requires destroy or a change.",
+   "Correct: the actual state already matches the desired state.",
+   "Wrong: this does not happen."
+  ],
+  "key_concept": "Terraform acts on differences only.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "보통",
+  "question": "Which Ansible element contains the individual actions that run on the hosts, such as creating a VLAN?",
+  "choices": [
+   "Inventory",
+   "Tasks",
+   "Provider",
+   "State"
+  ],
+  "answer": "B",
+  "explanation": "A play contains tasks, and each task calls a module with parameters. Tasks run in the order they are listed.",
+  "option_notes": [
+   "Wrong: this lists hosts.",
+   "Correct: they run modules in order.",
+   "Wrong: this is a Terraform term.",
+   "Wrong: this is a Terraform term."
+  ],
+  "key_concept": "Playbook > play > tasks > modules.",
+  "cli_example": "---\n- name: Configure VLAN\n  hosts: switches\n  gather_facts: no\n  tasks:\n    - name: Create VLAN 20\n      cisco.ios.ios_vlans:\n        config:\n          - vlan_id: 20\n            name: USERS\n        state: merged",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "어려움",
+  "question": "Refer to the exhibit. Which statement about this playbook is correct?\n\n---\n- name: Configure VLAN\n  hosts: switches\n  gather_facts: no\n  tasks:\n    - name: Create VLAN 20\n      cisco.ios.ios_vlans:\n        config:\n          - vlan_id: 20\n            name: USERS\n        state: merged",
+  "choices": [
+   "It deletes VLAN 20 from all devices",
+   "It targets the switches group and ensures VLAN 20 named USERS exists",
+   "It provisions a cloud instance",
+   "It is written in HCL and needs the terraform command"
+  ],
+  "answer": "B",
+  "explanation": "The play targets the inventory group switches and runs one task. The ios_vlans module with state merged adds or updates the listed VLAN settings.",
+  "option_notes": [
+   "Wrong: the state is merged, not deleted.",
+   "Correct: the task uses a merged state for the VLAN.",
+   "Wrong: this is not a cloud resource.",
+   "Wrong: this is YAML for Ansible."
+  ],
+  "key_concept": "Read hosts, tasks, module and state.",
+  "cli_example": "---\n- name: Configure VLAN\n  hosts: switches\n  gather_facts: no\n  tasks:\n    - name: Create VLAN 20\n      cisco.ios.ios_vlans:\n        config:\n          - vlan_id: 20\n            name: USERS\n        state: merged",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "어려움",
+  "question": "Refer to the exhibit. What will terraform plan most likely report on the first run when no state exists?\n\nprovider \"aws\" {\n  region = \"us-east-1\"\n}\n\nresource \"aws_instance\" \"web\" {\n  ami           = \"ami-12345678\"\n  instance_type = \"t3.micro\"\n}",
+  "choices": [
+   "One resource to add",
+   "Two resources to destroy",
+   "No changes",
+   "It will configure a Cisco switch"
+  ],
+  "answer": "A",
+  "explanation": "The configuration declares one aws_instance resource. With no state and no existing resource, Terraform plans to create it, so the summary shows one to add.",
+  "option_notes": [
+   "Correct: a new aws_instance would be created.",
+   "Wrong: there is nothing to destroy.",
+   "Wrong: nothing exists yet.",
+   "Wrong: the provider is aws."
+  ],
+  "key_concept": "Plan summary shows add, change, destroy counts.",
+  "cli_example": "provider \"aws\" {\n  region = \"us-east-1\"\n}\n\nresource \"aws_instance\" \"web\" {\n  ami           = \"ami-12345678\"\n  instance_type = \"t3.micro\"\n}",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "어려움",
+  "question": "An engineer manually changes a setting on a server that Terraform created. What will the next terraform plan most likely show?",
+  "choices": [
+   "No difference because Terraform cannot see real resources",
+   "A request to delete the state file",
+   "An error because manual changes are forbidden",
+   "A change to bring the resource back to the declared configuration"
+  ],
+  "answer": "D",
+  "explanation": "Terraform refreshes the real resource and compares it with the configuration. The out-of-band change appears as drift, and apply would correct it.",
+  "option_notes": [
+   "Wrong: it refreshes real resources.",
+   "Wrong: this is not a plan result.",
+   "Wrong: it simply reports a difference.",
+   "Correct: Terraform detects the difference."
+  ],
+  "key_concept": "Terraform reconciles drift toward desired state.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "어려움",
+  "question": "A team must configure 200 existing Cisco switches over SSH without installing any software on them. Which tool best fits?",
+  "choices": [
+   "Puppet with agents",
+   "Chef with agents",
+   "Ansible",
+   "A syslog server"
+  ],
+  "answer": "C",
+  "explanation": "Ansible connects to devices over SSH from a control node and needs no agent installed on them. Puppet and Chef rely on agents.",
+  "option_notes": [
+   "Wrong: this needs agents on devices.",
+   "Wrong: this needs agents on devices.",
+   "Correct: it is agentless and uses SSH.",
+   "Wrong: this collects logs."
+  ],
+  "key_concept": "No agent + SSH = Ansible.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "어려움",
+  "question": "Which sequence shows the typical Terraform workflow?",
+  "choices": [
+   "apply, plan, init",
+   "destroy, init, plan",
+   "init, plan, apply",
+   "plan, destroy, init"
+  ],
+  "answer": "C",
+  "explanation": "terraform init prepares the directory and providers. plan previews the changes, and apply performs them. destroy removes resources when no longer wanted.",
+  "option_notes": [
+   "Wrong: this order is incorrect.",
+   "Wrong: this removes resources first.",
+   "Correct: initialize, preview, then execute.",
+   "Wrong: this order is incorrect."
+  ],
+  "key_concept": "Workflow: init, plan, apply.",
+  "cli_example": "terraform init\nterraform plan\nterraform apply",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "어려움",
+  "question": "After running a playbook twice, the second run reports changed=0 for every task. What does this indicate?",
+  "choices": [
+   "The playbook failed to connect",
+   "The devices already matched the desired state, which shows idempotent behavior",
+   "Ansible deleted the inventory",
+   "The devices were rebooted"
+  ],
+  "answer": "B",
+  "explanation": "changed=0 means every task found the system already in the desired state. This is the expected result for idempotent tasks on a second run.",
+  "option_notes": [
+   "Wrong: failures show failed counts or unreachable.",
+   "Correct: nothing needed to change.",
+   "Wrong: this does not occur.",
+   "Wrong: this is not indicated."
+  ],
+  "key_concept": "changed=0 on re-run = idempotent.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "어려움",
+  "question": "Which comparison of push and pull models is correct?",
+  "choices": [
+   "In a push model the control node sends configuration; in a pull model agents fetch it from a server",
+   "In a push model agents fetch it; in a pull model the control node sends it",
+   "Push and pull are both Layer 1 mechanisms",
+   "Push models never use SSH"
+  ],
+  "answer": "A",
+  "explanation": "Ansible follows a push model from the control node. Puppet and Chef agents normally pull their configuration from a master server at regular intervals.",
+  "option_notes": [
+   "Correct: these are the two delivery models.",
+   "Wrong: this reverses them.",
+   "Wrong: these are not Layer 1 terms.",
+   "Wrong: Ansible pushes using SSH."
+  ],
+  "key_concept": "Push = Ansible; pull = Puppet/Chef agents.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "어려움",
+  "question": "Why does a Terraform user commonly store the state file in a shared remote location in team environments?",
+  "choices": [
+   "Because Terraform cannot run without internet",
+   "To encrypt traffic between devices",
+   "To replace the inventory file",
+   "So every team member works from the same view of the managed infrastructure"
+  ],
+  "answer": "D",
+  "explanation": "The state file is the record of what Terraform manages. If each person has a separate copy, plans may be wrong or conflict, so teams use a shared remote backend.",
+  "option_notes": [
+   "Wrong: this is not the reason.",
+   "Wrong: this is not its purpose.",
+   "Wrong: Terraform has no inventory file.",
+   "Correct: a shared state avoids conflicting views."
+  ],
+  "key_concept": "Share state so the team has one source of truth.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "어려움",
+  "question": "Which task is a better match for Ansible than for Terraform?",
+  "choices": [
+   "Tracking resources in a state file",
+   "Using providers to call cloud APIs for new resources",
+   "Writing HCL resource blocks",
+   "Running ordered configuration tasks on an existing set of switches"
+  ],
+  "answer": "D",
+  "explanation": "Ansible is task based and works well to configure existing devices. Terraform keeps a state file and uses providers to create and manage infrastructure resources.",
+  "option_notes": [
+   "Wrong: this is a Terraform feature.",
+   "Wrong: this is a Terraform strength.",
+   "Wrong: this is Terraform syntax.",
+   "Correct: Ansible executes tasks on hosts."
+  ],
+  "key_concept": "Ansible = tasks on hosts; Terraform = resources and state.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "6.6",
+  "difficulty": "어려움",
+  "question": "Which statement about Ansible control node requirements is correct?",
+  "choices": [
+   "Every managed device needs an Ansible agent",
+   "The control node must be a Cisco router",
+   "The control node needs Ansible installed, but the managed devices do not need an agent",
+   "The control node must run a routing protocol"
+  ],
+  "answer": "C",
+  "explanation": "Ansible is installed only on the control node. It reaches managed nodes through SSH or APIs, so no agent has to be deployed.",
+  "option_notes": [
+   "Wrong: Ansible is agentless.",
+   "Wrong: it can be any supported system.",
+   "Correct: only the control node has the software.",
+   "Wrong: this is unrelated."
+  ],
+  "key_concept": "Ansible software lives only on the control node.",
+  "cli_example": "",
+  "tip": ""
+ }
+]

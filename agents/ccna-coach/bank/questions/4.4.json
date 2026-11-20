@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "4.4",
+  "difficulty": "쉬움",
+  "question": "What is the main purpose of SNMP?",
+  "choices": [
+   "Monitor and manage network devices",
+   "Assign IP addresses to hosts",
+   "Translate names to addresses",
+   "Encrypt remote CLI sessions"
+  ],
+  "answer": "A",
+  "explanation": "The Simple Network Management Protocol lets a network management station poll devices for status and statistics and receive alerts. It is widely used for monitoring.",
+  "option_notes": [
+   "Correct: SNMP lets a manager read and change device information.",
+   "Wrong: That is DHCP.",
+   "Wrong: That is DNS.",
+   "Wrong: That is SSH."
+  ],
+  "key_concept": "SNMP = monitoring and management of devices.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "쉬움",
+  "question": "Which UDP ports does SNMP use for agent queries and for traps?",
+  "choices": [
+   "162 for queries and 161 for traps",
+   "161 for queries and 162 for traps",
+   "514 for queries and 69 for traps",
+   "22 for queries and 23 for traps"
+  ],
+  "answer": "B",
+  "explanation": "An SNMP agent listens on UDP 161 for Get and Set requests. Traps and informs are sent to the manager on UDP 162.",
+  "option_notes": [
+   "Wrong: The port numbers are reversed.",
+   "Correct: Agents listen on 161; managers receive traps on 162.",
+   "Wrong: 514 is syslog and 69 is TFTP.",
+   "Wrong: These are SSH and Telnet."
+  ],
+  "key_concept": "SNMP: UDP 161 (poll), UDP 162 (traps).",
+  "cli_example": "",
+  "tip": "161 = agent, 162 = trap."
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "쉬움",
+  "question": "In SNMP, what is the role of the network management station (NMS)?",
+  "choices": [
+   "It stores the MIB on every router",
+   "It forwards traffic between subnets",
+   "It polls agents and receives notifications",
+   "It assigns community strings to hosts"
+  ],
+  "answer": "C",
+  "explanation": "The manager (NMS) sends requests to SNMP agents running on managed devices and collects their responses and traps. Agents hold the data in the MIB.",
+  "option_notes": [
+   "Wrong: Each agent keeps its own MIB data.",
+   "Wrong: That is the role of a router.",
+   "Correct: The manager runs the management application.",
+   "Wrong: Community strings are configured on devices."
+  ],
+  "key_concept": "Manager polls; agent answers and sends traps.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "쉬움",
+  "question": "What is a MIB in SNMP?",
+  "choices": [
+   "A message sent when an event occurs",
+   "A password for read access",
+   "A protocol for secure transfer",
+   "A database of managed objects on a device"
+  ],
+  "answer": "D",
+  "explanation": "The Management Information Base is a hierarchical collection of objects, each identified by an OID. The agent exposes its MIB values to the manager.",
+  "option_notes": [
+   "Wrong: That is a trap.",
+   "Wrong: That is a community string.",
+   "Wrong: The MIB is a data structure, not a protocol.",
+   "Correct: It organizes variables such as interface counters in a tree."
+  ],
+  "key_concept": "MIB = tree of managed objects identified by OIDs.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "쉬움",
+  "question": "Which SNMP message is sent by an agent to the manager without being asked, to report an event such as a link failure?",
+  "choices": [
+   "Trap",
+   "Get",
+   "Set",
+   "Walk"
+  ],
+  "answer": "A",
+  "explanation": "Traps let the agent report events immediately instead of waiting for the manager to poll. They are sent to UDP port 162 on the manager.",
+  "option_notes": [
+   "Correct: A trap is an unsolicited notification.",
+   "Wrong: Get is a request sent by the manager.",
+   "Wrong: Set is a request to change a value.",
+   "Wrong: Walk is a manager-side series of requests."
+  ],
+  "key_concept": "Trap = unsolicited agent-to-manager alert.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "쉬움",
+  "question": "What provides basic authentication in SNMPv1 and SNMPv2c?",
+  "choices": [
+   "A digital certificate",
+   "A community string",
+   "A username and encryption key",
+   "A pre-shared IPsec key"
+  ],
+  "answer": "B",
+  "explanation": "SNMPv1 and v2c use community strings such as read-only and read-write. They are sent in clear text, so they offer weak security.",
+  "option_notes": [
+   "Wrong: Certificates are not used by v1 or v2c.",
+   "Correct: It works like a password sent with each request.",
+   "Wrong: This describes SNMPv3.",
+   "Wrong: IPsec is not part of SNMP."
+  ],
+  "key_concept": "v1/v2c: community strings in clear text.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "쉬움",
+  "question": "Which SNMP version supports both authentication and encryption?",
+  "choices": [
+   "SNMPv1",
+   "SNMPv2c",
+   "SNMPv3",
+   "SNMPv2"
+  ],
+  "answer": "C",
+  "explanation": "SNMPv3 offers message integrity, authentication and encryption through the authPriv security level. It is the recommended version for secure management.",
+  "option_notes": [
+   "Wrong: v1 has only community strings.",
+   "Wrong: v2c still uses community strings.",
+   "Correct: v3 adds user-based security with authentication and privacy.",
+   "Wrong: Classic v2 is not used in practice and has no encryption."
+  ],
+  "key_concept": "Only SNMPv3 offers encryption.",
+  "cli_example": "",
+  "tip": "v3 = secure."
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "쉬움",
+  "question": "Which SNMP operation does a manager use to retrieve the value of a specific object?",
+  "choices": [
+   "Trap",
+   "Set",
+   "Inform acknowledgment",
+   "Get"
+  ],
+  "answer": "D",
+  "explanation": "Get requests a single object, GetNext retrieves the next object in the MIB, and GetBulk (v2c and later) retrieves many objects at once.",
+  "option_notes": [
+   "Wrong: A trap is sent by the agent.",
+   "Wrong: Set modifies a value.",
+   "Wrong: This is not a retrieval operation.",
+   "Correct: The manager asks the agent for a variable."
+  ],
+  "key_concept": "Get reads, Set writes.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "쉬움",
+  "question": "Which command configures a read-only SNMP community string on a Cisco router?",
+  "choices": [
+   "snmp-server community Cisco123 ro",
+   "snmp community Cisco123 read",
+   "snmp-server password Cisco123 ro",
+   "enable snmp Cisco123 ro"
+  ],
+  "answer": "A",
+  "explanation": "snmp-server community string {ro|rw} creates the community. ro allows only Get operations, while rw also allows Set operations.",
+  "option_notes": [
+   "Correct: ro permits read access only.",
+   "Wrong: The command begins with snmp-server.",
+   "Wrong: There is no such command.",
+   "Wrong: This is not IOS syntax."
+  ],
+  "key_concept": "snmp-server community <string> ro|rw",
+  "cli_example": "Router(config)# snmp-server community Cisco123 ro",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "쉬움",
+  "question": "Which SNMP operation allows a manager to change a configuration value on an agent?",
+  "choices": [
+   "Get",
+   "Set",
+   "Trap",
+   "GetBulk"
+  ],
+  "answer": "B",
+  "explanation": "The Set operation requires write access, such as an rw community or an SNMPv3 user with write view. Using rw communities is risky if not protected.",
+  "option_notes": [
+   "Wrong: Get only reads values.",
+   "Correct: Set writes a value into an object.",
+   "Wrong: Traps only report events.",
+   "Wrong: GetBulk only reads large amounts of data."
+  ],
+  "key_concept": "Set needs write access.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "보통",
+  "question": "Why are SNMPv1 and SNMPv2c considered insecure?",
+  "choices": [
+   "They use TCP port 161",
+   "They do not support traps",
+   "Community strings are sent in clear text",
+   "They require telnet access"
+  ],
+  "answer": "C",
+  "explanation": "Community strings travel unencrypted and there is no per-message authentication. SNMPv3 solves this with authentication and encryption.",
+  "option_notes": [
+   "Wrong: They use UDP.",
+   "Wrong: They both support traps.",
+   "Correct: Anyone capturing packets can read them.",
+   "Wrong: SNMP does not use Telnet."
+  ],
+  "key_concept": "v1/v2c = clear text community strings.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "보통",
+  "question": "What is the difference between an SNMP trap and an SNMP inform?",
+  "choices": [
+   "A trap is acknowledged; an inform is not",
+   "Traps use TCP; informs use UDP",
+   "Traps are sent by managers; informs by agents",
+   "An inform is acknowledged by the manager; a trap is not"
+  ],
+  "answer": "D",
+  "explanation": "Traps are unreliable one-way messages. Informs (SNMPv2c and later) expect an acknowledgment and can be resent, at the cost of more memory and traffic on the agent.",
+  "option_notes": [
+   "Wrong: It is the other way around.",
+   "Wrong: Both use UDP.",
+   "Wrong: Both are sent by agents.",
+   "Correct: Informs are retransmitted until acknowledged."
+  ],
+  "key_concept": "Inform = acknowledged trap.",
+  "cli_example": "",
+  "tip": "Reliable = inform."
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "보통",
+  "question": "What identifies a specific managed object within the MIB tree?",
+  "choices": [
+   "An object identifier (OID)",
+   "A community string",
+   "A trap number",
+   "A VLAN ID"
+  ],
+  "answer": "A",
+  "explanation": "Each variable in the MIB has an OID such as 1.3.6.1.2.1.2.2.1.8 for interface operational status. Managers use OIDs in Get requests.",
+  "option_notes": [
+   "Correct: It is a dotted number path from the root of the tree.",
+   "Wrong: This is used for authentication.",
+   "Wrong: Trap numbers do not identify objects.",
+   "Wrong: VLAN IDs are unrelated to MIB objects."
+  ],
+  "key_concept": "OID = unique address of a MIB object.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "보통",
+  "question": "Which SNMP operation, introduced in SNMPv2c, efficiently retrieves large blocks of data such as a whole table?",
+  "choices": [
+   "GetNext",
+   "GetBulk",
+   "Inform",
+   "Set"
+  ],
+  "answer": "B",
+  "explanation": "GetBulk reduces the number of requests needed to read tables such as the interface or routing table. It is not available in SNMPv1.",
+  "option_notes": [
+   "Wrong: GetNext retrieves one object at a time and exists in v1.",
+   "Correct: It returns many values in one response.",
+   "Wrong: Inform sends acknowledged notifications.",
+   "Wrong: Set writes values."
+  ],
+  "key_concept": "GetBulk is v2c and later.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "보통",
+  "question": "What does this command do?\nsnmp-server host 10.1.1.100 traps version 2c Cisco123",
+  "choices": [
+   "It lets 10.1.1.100 poll the router with Get requests",
+   "It enables SNMPv3 for 10.1.1.100",
+   "It sends traps to 10.1.1.100 using SNMPv2c and community Cisco123",
+   "It blocks SNMP traffic from 10.1.1.100"
+  ],
+  "answer": "C",
+  "explanation": "snmp-server host defines the manager that receives traps or informs, along with the version and community string. Notification types are enabled with snmp-server enable traps.",
+  "option_notes": [
+   "Wrong: Polling access is set with snmp-server community.",
+   "Wrong: The version is 2c.",
+   "Correct: It defines the notification destination.",
+   "Wrong: This is not an ACL."
+  ],
+  "key_concept": "snmp-server host defines the trap receiver.",
+  "cli_example": "Router(config)# snmp-server host 10.1.1.100 traps version 2c Cisco123\nRouter(config)# snmp-server enable traps",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "보통",
+  "question": "Which SNMPv3 security level provides both authentication and encryption?",
+  "choices": [
+   "noAuthNoPriv",
+   "authNoPriv",
+   "privNoAuth",
+   "authPriv"
+  ],
+  "answer": "D",
+  "explanation": "SNMPv3 has three levels: noAuthNoPriv (username only), authNoPriv (authentication with MD5 or SHA) and authPriv (authentication plus encryption such as AES).",
+  "option_notes": [
+   "Wrong: It offers neither authentication nor encryption.",
+   "Wrong: It authenticates but does not encrypt.",
+   "Wrong: This level does not exist.",
+   "Correct: It authenticates the user and encrypts the message."
+  ],
+  "key_concept": "authPriv = auth + privacy.",
+  "cli_example": "Router(config)# snmp-server group ADMIN v3 priv",
+  "tip": "Priv means encryption."
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "보통",
+  "question": "What risk does configuring snmp-server community Cisco123 rw introduce?",
+  "choices": [
+   "Anyone who knows the string can change device configuration over SNMP",
+   "The device can no longer send traps",
+   "SNMP switches to TCP",
+   "Syslog messages stop"
+  ],
+  "answer": "A",
+  "explanation": "A read-write community allows Set requests, so a guessed or sniffed string could let an attacker modify settings. Use ro where possible, add an ACL, or use SNMPv3.",
+  "option_notes": [
+   "Correct: rw permits Set operations.",
+   "Wrong: Traps are unaffected.",
+   "Wrong: The transport does not change.",
+   "Wrong: Syslog is unrelated."
+  ],
+  "key_concept": "rw communities should be avoided or restricted.",
+  "cli_example": "Router(config)# snmp-server community Cisco123 rw",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "보통",
+  "question": "Which command enables a router to send SNMP notifications such as link up and link down?",
+  "choices": [
+   "snmp-server community",
+   "snmp-server enable traps",
+   "logging trap",
+   "snmp-server location"
+  ],
+  "answer": "B",
+  "explanation": "snmp-server enable traps activates notifications, optionally by type such as snmp linkdown linkup. A destination must also be defined with snmp-server host.",
+  "option_notes": [
+   "Wrong: This sets access credentials.",
+   "Correct: It turns on trap types globally.",
+   "Wrong: This controls syslog severity.",
+   "Wrong: This only sets descriptive text."
+  ],
+  "key_concept": "Enable traps and define a host.",
+  "cli_example": "Router(config)# snmp-server enable traps snmp linkdown linkup",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "보통",
+  "question": "Which device runs the SNMP agent?",
+  "choices": [
+   "The network management station only",
+   "The DHCP server only",
+   "The managed device such as a router or switch",
+   "The end user's web browser"
+  ],
+  "answer": "C",
+  "explanation": "Agents run on managed devices and respond to manager requests. The NMS contains the manager software that sends requests and displays results.",
+  "option_notes": [
+   "Wrong: The NMS runs the manager.",
+   "Wrong: The DHCP server role is unrelated.",
+   "Correct: The agent collects and provides local data.",
+   "Wrong: Browsers do not run SNMP agents."
+  ],
+  "key_concept": "Agent = on device; manager = NMS.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "보통",
+  "question": "What is the purpose of the commands snmp-server location and snmp-server contact?",
+  "choices": [
+   "They restrict which hosts can poll the device",
+   "They enable SNMPv3",
+   "They configure the trap destination",
+   "They store descriptive information readable through SNMP"
+  ],
+  "answer": "D",
+  "explanation": "These commands set informational values in the system group of MIB-II. They do not change device behavior.",
+  "option_notes": [
+   "Wrong: Access restriction needs an ACL.",
+   "Wrong: They only set text strings.",
+   "Wrong: That is snmp-server host.",
+   "Correct: They fill the sysLocation and sysContact objects."
+  ],
+  "key_concept": "location and contact are informational.",
+  "cli_example": "Router(config)# snmp-server location Seoul-DC\nRouter(config)# snmp-server contact admin@example.com",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "어려움",
+  "question": "An NMS can poll a router with Get requests but all Set requests fail. The router has the command snmp-server community Cisco123 ro. What is the cause?",
+  "choices": [
+   "The community is read-only",
+   "SNMP uses the wrong UDP port",
+   "The router lacks an IP address",
+   "The MIB is empty"
+  ],
+  "answer": "A",
+  "explanation": "A read-only community allows Get, GetNext and GetBulk but rejects Set. A read-write community or an SNMPv3 user with write access is needed for Set.",
+  "option_notes": [
+   "Correct: ro does not permit Set operations.",
+   "Wrong: If the port were wrong, Get would fail too.",
+   "Wrong: Get requests are succeeding.",
+   "Wrong: Get responses show data is present."
+  ],
+  "key_concept": "ro = no Set.",
+  "cli_example": "Router(config)# snmp-server community Cisco123 rw",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "어려움",
+  "question": "A router should send traps to an NMS but none arrive. SNMP configuration is correct. A firewall sits between them. Which port must it permit?",
+  "choices": [
+   "UDP 161 toward the NMS",
+   "UDP 162 toward the NMS",
+   "TCP 162 toward the NMS",
+   "UDP 514 toward the NMS"
+  ],
+  "answer": "B",
+  "explanation": "Traps and informs travel from the agent to UDP port 162 on the manager. Polling uses UDP 161 toward the agent, so the two directions need different permits.",
+  "option_notes": [
+   "Wrong: 161 is used toward the agent for polls.",
+   "Correct: Traps are sent to UDP 162 on the manager.",
+   "Wrong: SNMP uses UDP.",
+   "Wrong: 514 is syslog."
+  ],
+  "key_concept": "Allow UDP 162 for traps, UDP 161 for polling.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "어려움",
+  "question": "An administrator configures SNMPv3 on a router. Which sequence is the correct logical order?",
+  "choices": [
+   "Create a user, then create a community string",
+   "Create a trap host, then create an OID",
+   "Create a group, then create a user that belongs to the group",
+   "Enable SNMP traps only"
+  ],
+  "answer": "C",
+  "explanation": "In SNMPv3 the group defines the security model and level, and the user (with authentication and privacy keys) is mapped to the group. snmp-server group is entered first.",
+  "option_notes": [
+   "Wrong: SNMPv3 does not use community strings.",
+   "Wrong: OIDs are not created by the administrator.",
+   "Correct: A user must be assigned to an existing group.",
+   "Wrong: v3 users and groups must still be configured."
+  ],
+  "key_concept": "SNMPv3 uses groups and users.",
+  "cli_example": "Router(config)# snmp-server group ADMIN v3 priv\nRouter(config)# snmp-server user bob ADMIN v3 auth sha Cisco123 priv aes 128 Cisco456",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "어려움",
+  "question": "A company wants to learn immediately when a link goes down rather than waiting for a five-minute polling cycle. Which method fits best?",
+  "choices": [
+   "Increase the Get polling frequency to 1 hour",
+   "Use SNMP Set requests",
+   "Use only community string rotation",
+   "SNMP traps or informs"
+  ],
+  "answer": "D",
+  "explanation": "Polling can miss or delay events. Traps (or acknowledged informs) push the notification immediately. Many designs combine polling for trends and traps for events.",
+  "option_notes": [
+   "Wrong: This makes detection slower.",
+   "Wrong: Set modifies values, not events.",
+   "Wrong: This does not report events.",
+   "Correct: The agent sends an event as soon as it happens."
+  ],
+  "key_concept": "Traps give near real-time event notification.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "어려움",
+  "question": "What does the 10 mean in this command?\nsnmp-server community Cisco123 RO 10",
+  "choices": [
+   "It names ACL 10, which limits which hosts may use the community",
+   "It sets the SNMP version to 10",
+   "It sets the polling interval to 10 seconds",
+   "It sets the trap queue length to 10"
+  ],
+  "answer": "A",
+  "explanation": "The final argument references a standard ACL. Only source addresses permitted by that ACL can use the community string. This is a basic way to protect v1 and v2c.",
+  "option_notes": [
+   "Correct: The optional access list restricts allowed managers.",
+   "Wrong: SNMP has no version 10.",
+   "Wrong: The agent does not poll.",
+   "Wrong: Queue length is set with another command."
+  ],
+  "key_concept": "ACL on a community restricts managers.",
+  "cli_example": "Router(config)# access-list 10 permit 10.1.1.100\nRouter(config)# snmp-server community Cisco123 RO 10",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "어려움",
+  "question": "Which statement about informs compared with traps is true?",
+  "choices": [
+   "Informs are faster because they use TCP",
+   "Informs use more memory because the agent keeps them until acknowledged",
+   "Informs work only in SNMPv1",
+   "Informs are never retransmitted"
+  ],
+  "answer": "B",
+  "explanation": "Because the agent must hold an inform until the manager acknowledges it, informs increase resource use on the agent and traffic on the network but give reliable delivery.",
+  "option_notes": [
+   "Wrong: Informs use UDP.",
+   "Correct: Unacknowledged informs are retransmitted.",
+   "Wrong: They were introduced after v1.",
+   "Wrong: Retransmission is their key feature."
+  ],
+  "key_concept": "Inform = reliable but costlier.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "어려움",
+  "question": "Which versions of SNMP provide the GetBulk operation and 64-bit counters?",
+  "choices": [
+   "Only SNMPv1",
+   "Only SNMPv3",
+   "SNMPv2c and SNMPv3",
+   "None of the versions"
+  ],
+  "answer": "C",
+  "explanation": "SNMPv2c introduced GetBulk, informs and 64-bit counters, which matter for high-speed interfaces. SNMPv3 keeps these features and adds security.",
+  "option_notes": [
+   "Wrong: v1 lacks both features.",
+   "Wrong: v2c also has them.",
+   "Correct: They were added after v1.",
+   "Wrong: Both versions include them."
+  ],
+  "key_concept": "v2c added GetBulk, informs, 64-bit counters.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "어려움",
+  "question": "On show snmp, the counter Bad community names keeps increasing. What does it most likely indicate?",
+  "choices": [
+   "The router lacks a MIB",
+   "The device has no IP address",
+   "SNMPv3 encryption failed",
+   "A manager is using an incorrect community string"
+  ],
+  "answer": "D",
+  "explanation": "The agent counts requests that carry a community name it does not know. Check the string configured on the NMS and on the router.",
+  "option_notes": [
+   "Wrong: The MIB is built in.",
+   "Wrong: Requests would not arrive at all.",
+   "Wrong: Community names are used in v1 and v2c.",
+   "Correct: The agent rejects requests with the wrong string."
+  ],
+  "key_concept": "Bad community names = wrong string.",
+  "cli_example": "Router# show snmp",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "어려움",
+  "question": "Which OID subtree is used for Cisco enterprise-specific MIB objects?",
+  "choices": [
+   "1.3.6.1.4.1.9",
+   "1.3.6.1.2.1",
+   "1.3.6.1.4.1.311",
+   "1.3.6.1.6.3"
+  ],
+  "answer": "A",
+  "explanation": "Vendor-specific objects live under 1.3.6.1.4.1, followed by the vendor enterprise number. Cisco uses 9. Standard objects such as interface counters live under 1.3.6.1.2.1.",
+  "option_notes": [
+   "Correct: Cisco's enterprise number is 9 under the private enterprises branch.",
+   "Wrong: This is the standard MIB-II subtree.",
+   "Wrong: This is the Microsoft enterprise subtree.",
+   "Wrong: This is the SNMPv3 framework subtree."
+  ],
+  "key_concept": "Cisco enterprise OID prefix: 1.3.6.1.4.1.9.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.4",
+  "difficulty": "어려움",
+  "question": "A security policy requires that SNMP messages be authenticated but encryption is not required. Which SNMPv3 level meets exactly this need?",
+  "choices": [
+   "noAuthNoPriv",
+   "authNoPriv",
+   "authPriv",
+   "SNMPv2c with a community string"
+  ],
+  "answer": "B",
+  "explanation": "authNoPriv uses MD5 or SHA to authenticate the user and protect message integrity without encrypting the payload. authPriv adds encryption.",
+  "option_notes": [
+   "Wrong: It performs no authentication.",
+   "Correct: It authenticates users but does not encrypt.",
+   "Wrong: It also encrypts, which exceeds the requirement.",
+   "Wrong: It does not offer user authentication."
+  ],
+  "key_concept": "authNoPriv = integrity and auth only.",
+  "cli_example": "",
+  "tip": ""
+ }
+]

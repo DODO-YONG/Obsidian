@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "3.3",
+  "difficulty": "쉬움",
+  "question": "Which command configures a default static route on a Cisco router with next hop 192.168.1.1?",
+  "choices": [
+   "ip default-route 192.168.1.1",
+   "ip route 0.0.0.0 0.0.0.0 192.168.1.1",
+   "ip route default 192.168.1.1",
+   "ip gateway 192.168.1.1"
+  ],
+  "answer": "B",
+  "explanation": "A default static route uses network 0.0.0.0 and mask 0.0.0.0, followed by the next hop or exit interface. It matches any destination that has no more specific route.",
+  "option_notes": [
+   "Wrong: ip default-route is not an IOS command.",
+   "Correct: The all-zeros network and mask match every destination, so this is the default route.",
+   "Wrong: The keyword 'default' is not valid in ip route.",
+   "Wrong: ip gateway is not an IOS routing command."
+  ],
+  "key_concept": "ip route 0.0.0.0 0.0.0.0 <next-hop>",
+  "cli_example": "ip route 0.0.0.0 0.0.0.0 192.168.1.1",
+  "tip": "The default route is a /0."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "쉬움",
+  "question": "Which command creates an IPv6 default static route using next hop 2001:DB8:1::1?",
+  "choices": [
+   "ipv6 route ::/0 2001:DB8:1::1",
+   "ip route ::/0 2001:DB8:1::1",
+   "ipv6 route 0.0.0.0/0 2001:DB8:1::1",
+   "ipv6 default-route 2001:DB8:1::1"
+  ],
+  "answer": "A",
+  "explanation": "IPv6 static routes use ipv6 route followed by prefix/length and the next hop or interface. The IPv6 default route is ::/0.",
+  "option_notes": [
+   "Correct: The IPv6 default prefix is ::/0 and the command begins with ipv6 route.",
+   "Wrong: IPv6 routes use ipv6 route, not ip route.",
+   "Wrong: 0.0.0.0/0 is the IPv4 default prefix.",
+   "Wrong: ipv6 default-route is not a valid command."
+  ],
+  "key_concept": "ipv6 route ::/0 <next-hop>",
+  "cli_example": "ipv6 route ::/0 2001:DB8:1::1",
+  "tip": "Routing must be enabled with ipv6 unicast-routing."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "쉬움",
+  "question": "What must be enabled globally before a Cisco router can forward IPv6 packets?",
+  "choices": [
+   "ip routing",
+   "ipv6 enable",
+   "ip classless",
+   "ipv6 unicast-routing"
+  ],
+  "answer": "D",
+  "explanation": "A Cisco router does not forward IPv6 packets until ipv6 unicast-routing is entered in global configuration mode. Without it, IPv6 static routes will not forward traffic.",
+  "option_notes": [
+   "Wrong: ip routing is for IPv4 and is on by default on routers.",
+   "Wrong: ipv6 enable is an interface command that creates a link-local address.",
+   "Wrong: ip classless concerns IPv4 route lookups.",
+   "Correct: ipv6 unicast-routing turns on IPv6 forwarding."
+  ],
+  "key_concept": "ipv6 unicast-routing",
+  "cli_example": "ipv6 unicast-routing",
+  "tip": "Needed for routing and RA messages."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "쉬움",
+  "question": "What is the default administrative distance of a static route?",
+  "choices": [
+   "0",
+   "5",
+   "1",
+   "110"
+  ],
+  "answer": "C",
+  "explanation": "A static route has a default AD of 1, so it is preferred over all dynamic protocols unless you change it.",
+  "option_notes": [
+   "Wrong: 0 is for connected networks.",
+   "Wrong: 5 is the EIGRP summary AD.",
+   "Correct: Static routes have AD 1.",
+   "Wrong: 110 is OSPF."
+  ],
+  "key_concept": "Static AD = 1.",
+  "cli_example": "",
+  "tip": "Floating static = AD above 1."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "쉬움",
+  "question": "What is a static route to a single host called, and what mask does it use for IPv4?",
+  "choices": [
+   "Network route with mask 255.255.255.0",
+   "Host route with mask 255.255.255.255",
+   "Default route with mask 0.0.0.0",
+   "Summary route with mask 255.255.0.0"
+  ],
+  "answer": "B",
+  "explanation": "A host route has the full 32-bit mask 255.255.255.255. In IPv6 a host route uses /128. It is the most specific route possible.",
+  "option_notes": [
+   "Wrong: A network route covers a subnet, not just a host.",
+   "Correct: A host route matches exactly one address using a /32 mask.",
+   "Wrong: A default route matches all destinations.",
+   "Wrong: A summary route covers several subnets."
+  ],
+  "key_concept": "IPv4 host = /32; IPv6 host = /128.",
+  "cli_example": "ip route 10.1.1.5 255.255.255.255 192.168.1.2",
+  "tip": "Host routes win by longest match."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "쉬움",
+  "question": "Which command displays only the static routes in the IPv4 routing table?",
+  "choices": [
+   "show ip route static",
+   "show ip static",
+   "show static routes",
+   "show running-config ip route static"
+  ],
+  "answer": "A",
+  "explanation": "You can filter the routing table by source with show ip route <protocol>. For static routes use show ip route static.",
+  "option_notes": [
+   "Correct: show ip route static filters the table by protocol.",
+   "Wrong: show ip static is not valid.",
+   "Wrong: show static routes is not valid.",
+   "Wrong: This is not a valid command."
+  ],
+  "key_concept": "show ip route static",
+  "cli_example": "show ip route static",
+  "tip": "Also: show ipv6 route static."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "쉬움",
+  "question": "Which of the following is a floating static route?",
+  "choices": [
+   "A static route using the exit interface only",
+   "A static route to a host",
+   "A static route with a /0 mask",
+   "A static route configured with a higher administrative distance than the primary route"
+  ],
+  "answer": "D",
+  "explanation": "A floating static route is a backup. It has an AD higher than the preferred route, such as 5 or 200, so it appears only if the primary route fails.",
+  "option_notes": [
+   "Wrong: Using an exit interface is just a way of specifying the route.",
+   "Wrong: A host route is a /32 route, unrelated to floating behavior.",
+   "Wrong: A /0 route is a default route.",
+   "Correct: Setting a higher AD keeps the route as a backup until the primary disappears."
+  ],
+  "key_concept": "Floating = higher AD = backup.",
+  "cli_example": "ip route 0.0.0.0 0.0.0.0 10.2.2.2 5",
+  "tip": "AD goes at the end of ip route."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "쉬움",
+  "question": "Which show command verifies the IPv6 routing table?",
+  "choices": [
+   "show ip route ipv6",
+   "show ipv6 table",
+   "show ipv6 route",
+   "show route ipv6"
+  ],
+  "answer": "C",
+  "explanation": "The IPv6 routing table is displayed with show ipv6 route. Entries use codes such as C, L, S and O.",
+  "option_notes": [
+   "Wrong: This syntax is invalid.",
+   "Wrong: show ipv6 table is not an IOS command.",
+   "Correct: show ipv6 route displays IPv6 routes.",
+   "Wrong: show route ipv6 is not an IOS command."
+  ],
+  "key_concept": "show ipv6 route",
+  "cli_example": "show ipv6 route",
+  "tip": "Same codes as IPv4."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "쉬움",
+  "question": "Which static route type is used to reach a specific subnet, such as 172.16.5.0/24?",
+  "choices": [
+   "Default route",
+   "Network route",
+   "Host route",
+   "Summary route only"
+  ],
+  "answer": "B",
+  "explanation": "A network static route uses the network address and the subnet mask of a particular destination subnet.",
+  "option_notes": [
+   "Wrong: A default route matches all destinations.",
+   "Correct: A network route specifies the subnet address and mask of the destination.",
+   "Wrong: A host route matches one address.",
+   "Wrong: Summary routes cover several subnets, not a single one."
+  ],
+  "key_concept": "Network route = subnet + mask.",
+  "cli_example": "ip route 172.16.5.0 255.255.255.0 10.1.1.2",
+  "tip": "Match the mask to the subnet."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "쉬움",
+  "question": "Which command correctly configures a static route to 192.168.20.0/24 through exit interface Serial0/0/0?",
+  "choices": [
+   "ip route 192.168.20.0 255.255.255.0 serial 0/0/0",
+   "ip route 192.168.20.0/24 serial0/0/0",
+   "ip route 255.255.255.0 192.168.20.0 serial 0/0/0",
+   "route static 192.168.20.0 serial 0/0/0"
+  ],
+  "answer": "A",
+  "explanation": "The syntax is ip route <network> <mask> {next-hop | exit-interface}. On point-to-point serial links, the exit interface is fine.",
+  "option_notes": [
+   "Correct: Network, mask, then the exit interface is correct syntax.",
+   "Wrong: IPv4 ip route uses dotted decimal masks, not /24 notation.",
+   "Wrong: The network and mask are in the wrong order.",
+   "Wrong: route static is not an IOS command."
+  ],
+  "key_concept": "ip route net mask next-hop|interface",
+  "cli_example": "ip route 192.168.20.0 255.255.255.0 serial 0/0/0",
+  "tip": "Use dotted masks for IPv4."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "보통",
+  "question": "Which two items are acceptable ways to specify the path in an IPv4 static route?",
+  "choices": [
+   "MAC address or VLAN ID",
+   "Router ID or area ID",
+   "Hostname or domain",
+   "Next-hop IP address or exit interface"
+  ],
+  "answer": "D",
+  "explanation": "The ip route command accepts either the next-hop IP address, an exit interface or both. The last form is called a fully specified static route.",
+  "option_notes": [
+   "Wrong: MAC addresses and VLAN IDs are Layer 2 values.",
+   "Wrong: Router ID and area ID belong to OSPF.",
+   "Wrong: Names are not used in ip route.",
+   "Correct: A static route points to a next hop address or a local exit interface."
+  ],
+  "key_concept": "Next hop, exit interface, or both.",
+  "cli_example": "",
+  "tip": "Fully specified = both."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "보통",
+  "question": "A static route is configured with a next hop that is not directly connected, 10.9.9.9. What is this type of lookup called?",
+  "choices": [
+   "Longest prefix lookup",
+   "Floating lookup",
+   "Recursive lookup",
+   "Summary lookup"
+  ],
+  "answer": "C",
+  "explanation": "When a static route uses only a next-hop IP, the router must find an exit interface by looking up the next hop address. This is a recursive lookup. Using an exit interface avoids it but is not recommended on Ethernet.",
+  "option_notes": [
+   "Wrong: Longest prefix is the match selection method.",
+   "Wrong: Floating refers to higher AD routes.",
+   "Correct: The router must perform a second lookup to find the exit interface for the next hop.",
+   "Wrong: Summarization combines prefixes."
+  ],
+  "key_concept": "Next hop only = recursive lookup.",
+  "cli_example": "",
+  "tip": "Ethernet prefers next hop or fully specified."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "보통",
+  "question": "R1 has the command ip route 10.20.0.0 255.255.0.0 GigabitEthernet0/1. What is shown in the routing table?",
+  "choices": [
+   "C 10.20.0.0/16 is directly connected, GigabitEthernet0/1",
+   "S 10.20.0.0/16 is directly connected, GigabitEthernet0/1",
+   "S 10.20.0.0/16 [1/0] via GigabitEthernet0/1 with an AD of 0",
+   "L 10.20.0.0/16 is directly connected"
+  ],
+  "answer": "B",
+  "explanation": "Static routes that use only an exit interface appear as 'S x.x.x.x/y is directly connected, interface'. They remain static routes with AD 1.",
+  "option_notes": [
+   "Wrong: C is used only for an interface network.",
+   "Correct: Static routes with an exit interface display as S ... is directly connected.",
+   "Wrong: A static route with an exit interface still has AD 1.",
+   "Wrong: L is a local /32 route."
+  ],
+  "key_concept": "Exit-interface static routes show 'directly connected' but keep code S.",
+  "cli_example": "show ip route static",
+  "tip": "Exit interface only is not recommended on Ethernet."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "보통",
+  "question": "Which command creates a backup default route that is used only if the primary default route is lost, assuming the primary uses AD 1?",
+  "choices": [
+   "ip route 0.0.0.0 0.0.0.0 10.2.2.2 10",
+   "ip route 0.0.0.0 0.0.0.0 10.2.2.2 0",
+   "ip route 0.0.0.0 0.0.0.0 10.2.2.2 1",
+   "ip route 0.0.0.0 0.0.0.0 10.2.2.2 backup"
+  ],
+  "answer": "A",
+  "explanation": "Floating static routes need an AD higher than the primary route. With the primary at AD 1, any value greater than 1 works as long as it is lower than other sources you want to beat.",
+  "option_notes": [
+   "Correct: An AD of 10 is higher than 1, making it a floating route.",
+   "Wrong: AD 0 would be preferred over the primary.",
+   "Wrong: AD 1 equals the primary and would load balance.",
+   "Wrong: The backup keyword does not exist."
+  ],
+  "key_concept": "Backup route: AD higher than primary.",
+  "cli_example": "ip route 0.0.0.0 0.0.0.0 10.2.2.2 10",
+  "tip": "Choose AD carefully relative to dynamic protocols."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "보통",
+  "question": "Which IPv6 static route configuration is correct when the next hop is a link-local address?",
+  "choices": [
+   "ipv6 route 2001:DB8:2::/64 FE80::2",
+   "ip route 2001:DB8:2::/64 FE80::2",
+   "ipv6 route 2001:DB8:2::/64 255.255.255.0 FE80::2",
+   "ipv6 route 2001:DB8:2::/64 GigabitEthernet0/0 FE80::2"
+  ],
+  "answer": "D",
+  "explanation": "A link-local address is not unique on the router, so an interface is mandatory when it is used as the next hop. A global next hop can be used without an exit interface.",
+  "option_notes": [
+   "Wrong: Without the interface, the router cannot tell which link the link-local address is on.",
+   "Wrong: ip route is for IPv4.",
+   "Wrong: IPv6 uses prefix length, not dotted masks.",
+   "Correct: A link-local next hop requires the exit interface because the address is only unique per link."
+  ],
+  "key_concept": "Link-local next hop => include the interface.",
+  "cli_example": "ipv6 route 2001:DB8:2::/64 GigabitEthernet0/0 FE80::2",
+  "tip": "Fully specified route."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "보통",
+  "question": "What is the purpose of using a summary static route?",
+  "choices": [
+   "Provide a backup path with a higher AD",
+   "Match only one host address",
+   "Represent several contiguous networks with one routing table entry",
+   "Replace the connected routes"
+  ],
+  "answer": "C",
+  "explanation": "Summarization combines multiple contiguous prefixes into one route with a shorter mask. It simplifies the routing table.",
+  "option_notes": [
+   "Wrong: Backup paths are floating static routes.",
+   "Wrong: Single hosts use /32 routes.",
+   "Correct: A summary route reduces the number of entries by covering several subnets.",
+   "Wrong: Connected routes remain."
+  ],
+  "key_concept": "Summary = one route for many subnets.",
+  "cli_example": "ip route 192.168.0.0 255.255.252.0 10.1.1.2",
+  "tip": "Summarize contiguous blocks."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "보통",
+  "question": "Which prefix summarizes 192.168.0.0/24, 192.168.1.0/24, 192.168.2.0/24 and 192.168.3.0/24 exactly?",
+  "choices": [
+   "192.168.0.0/23",
+   "192.168.0.0/22",
+   "192.168.0.0/21",
+   "192.168.0.0/24"
+  ],
+  "answer": "B",
+  "explanation": "Four contiguous /24 blocks aligned on a multiple of four fit in a /22, which has a third-octet block size of 4.",
+  "option_notes": [
+   "Wrong: A /23 covers only two /24 networks.",
+   "Correct: A /22 covers four /24 networks: 0 through 3 in the third octet.",
+   "Wrong: A /21 covers eight /24 networks.",
+   "Wrong: A /24 covers one network."
+  ],
+  "key_concept": "/22 = 4 x /24.",
+  "cli_example": "ip route 192.168.0.0 255.255.252.0 10.1.1.2",
+  "tip": "Block size = 256 - mask octet."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "보통",
+  "question": "Which command configures a static route to the host 2001:DB8:5::10 via next hop 2001:DB8:1::2?",
+  "choices": [
+   "ipv6 route 2001:DB8:5::10/128 2001:DB8:1::2",
+   "ipv6 route 2001:DB8:5::10/64 2001:DB8:1::2",
+   "ipv6 route 2001:DB8:5::10/32 2001:DB8:1::2",
+   "ipv6 route 2001:DB8:5::10/0 2001:DB8:1::2"
+  ],
+  "answer": "A",
+  "explanation": "An IPv6 host route uses a /128 prefix length, so it matches only that single address.",
+  "option_notes": [
+   "Correct: IPv6 host routes use /128.",
+   "Wrong: /64 would cover the whole subnet.",
+   "Wrong: /32 would cover a far larger prefix.",
+   "Wrong: /0 would be a default route."
+  ],
+  "key_concept": "IPv6 host route = /128.",
+  "cli_example": "ipv6 route 2001:DB8:5::10/128 2001:DB8:1::2",
+  "tip": "Know /128 and /32 for IPv4."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "보통",
+  "question": "When is a static default route most commonly used?",
+  "choices": [
+   "Connecting multiple OSPF areas",
+   "Replacing connected networks",
+   "Providing equal-cost load balancing inside the LAN",
+   "Connecting a stub network to its only ISP or upstream router"
+  ],
+  "answer": "D",
+  "explanation": "A default route sends all traffic that has no specific match to one next hop. It is ideal for stub networks and edge routers pointing to an ISP.",
+  "option_notes": [
+   "Wrong: Multiple areas typically use dynamic routing.",
+   "Wrong: Connected routes remain automatically.",
+   "Wrong: Default routes do not provide LAN load balancing.",
+   "Correct: A stub site has only one exit, so one default route is enough."
+  ],
+  "key_concept": "Default route = one exit.",
+  "cli_example": "ip route 0.0.0.0 0.0.0.0 203.0.113.1",
+  "tip": "Stub = default route."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "보통",
+  "question": "Which result occurs if a static route uses next hop 10.1.1.2 and the interface toward 10.1.1.0/24 goes down?",
+  "choices": [
+   "The static route stays in the table indefinitely",
+   "The static route AD becomes 255",
+   "The static route is removed from the routing table",
+   "The router converts it to a connected route"
+  ],
+  "answer": "C",
+  "explanation": "Static routes depend on reachability of the next hop (or exit interface). If the supporting connected route disappears, the static route is removed.",
+  "option_notes": [
+   "Wrong: It is removed because the next hop is no longer reachable.",
+   "Wrong: The AD does not change.",
+   "Correct: With no valid path to the next hop, the route is withdrawn.",
+   "Wrong: Static routes do not become connected."
+  ],
+  "key_concept": "Static route needs valid next hop/interface.",
+  "cli_example": "show ip route static",
+  "tip": "Use floating static for backup."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "어려움",
+  "question": "Refer to the configuration and output. The ping to 10.2.2.2 from R1 works, but R1 cannot reach 172.16.0.0/16. What is the problem?\n\nR1(config)# ip route 172.16.0.0 255.255.0.0 10.2.2.20\nR1# show ip route 10.2.2.0\nC    10.2.2.0/24 is directly connected, Gi0/1",
+  "choices": [
+   "The mask 255.255.0.0 is invalid",
+   "The static route is not installed because 10.2.2.20 is a typo or the neighbor is not at that address, so traffic is not forwarded properly",
+   "The router needs ip routing disabled",
+   "The AD must be 0"
+  ],
+  "answer": "B",
+  "explanation": "The next hop used in the static route must be the address of the neighbor router. Here the neighbor is 10.2.2.2 but 10.2.2.20 was configured. The route may appear in the table because 10.2.2.20 is in a connected subnet, but ARP fails.",
+  "option_notes": [
+   "Wrong: 255.255.0.0 is a valid mask for a /16.",
+   "Correct: The route may be installed but the next hop 10.2.2.20 is not the neighbor 10.2.2.2, so the packets go nowhere.",
+   "Wrong: ip routing is already required for routing.",
+   "Wrong: AD 0 is for connected routes."
+  ],
+  "key_concept": "Verify the next hop equals the neighbor's address.",
+  "cli_example": "ip route 172.16.0.0 255.255.0.0 10.2.2.2",
+  "tip": "Typos in next hops are common."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "어려움",
+  "question": "R1 has the following. Which route is used to reach 192.168.50.5 when the primary link is up?\n\nip route 192.168.50.0 255.255.255.0 10.1.1.2\nip route 192.168.50.0 255.255.255.0 10.2.2.2 5",
+  "choices": [
+   "Via 10.1.1.2 only",
+   "Via 10.2.2.2 only",
+   "Via both next hops, load balanced",
+   "Neither, because of the conflict"
+  ],
+  "answer": "A",
+  "explanation": "The route with the lowest AD (1) is installed. The route via 10.2.2.2 has AD 5 and is installed only if the first route disappears.",
+  "option_notes": [
+   "Correct: The first route has AD 1 and the second is a floating route with AD 5.",
+   "Wrong: The AD 5 route is a backup.",
+   "Wrong: Different ADs prevent load balancing.",
+   "Wrong: Both routes are valid, only one is installed."
+  ],
+  "key_concept": "Lower AD installed; higher AD floating.",
+  "cli_example": "show ip route 192.168.50.0",
+  "tip": "Floating routes do not appear in the table until needed."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "어려움",
+  "question": "A floating static default route is configured with AD 130. The primary default route is learned through OSPF (AD 110). The OSPF default route is lost. What happens?",
+  "choices": [
+   "The router drops all packets",
+   "The static route is never installed",
+   "The router uses OSPF AD 130",
+   "The static default route is installed"
+  ],
+  "answer": "D",
+  "explanation": "A floating static must have an AD higher than the dynamic route it backs up. 130 is higher than 110, so the static route is hidden until OSPF's route is withdrawn.",
+  "option_notes": [
+   "Wrong: With a default static route available, packets are forwarded.",
+   "Wrong: It is installed when the lower AD route disappears.",
+   "Wrong: The OSPF AD does not change.",
+   "Correct: Once the OSPF route is gone, the static route (AD 130) becomes the best default route."
+  ],
+  "key_concept": "Floating AD must exceed the dynamic protocol AD.",
+  "cli_example": "ip route 0.0.0.0 0.0.0.0 10.2.2.2 130",
+  "tip": "Use AD above the protocol's AD."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "어려움",
+  "question": "A technician wants the floating static route to back up an EIGRP route (AD 90). Which AD is valid?",
+  "choices": [
+   "89",
+   "90",
+   "91 or higher",
+   "1"
+  ],
+  "answer": "C",
+  "explanation": "To act as a backup, a floating static route needs an AD greater than the AD of the primary route. With EIGRP internal routes at 90, 91 or more works.",
+  "option_notes": [
+   "Wrong: 89 would be preferred over EIGRP.",
+   "Wrong: 90 equals EIGRP's AD, so it would not reliably act as a backup.",
+   "Correct: The AD must be greater than 90 so EIGRP is preferred.",
+   "Wrong: 1 is the default static and would override EIGRP."
+  ],
+  "key_concept": "Floating AD > primary AD.",
+  "cli_example": "ip route 10.0.0.0 255.0.0.0 10.2.2.2 91",
+  "tip": "Don't use equal AD values."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "어려움",
+  "question": "Refer to the output. Why is the static route to 10.50.0.0/16 not shown in the routing table?\n\nip route 10.50.0.0 255.255.0.0 192.168.99.2\nR1# show ip interface brief\nGi0/0  192.168.1.1  YES manual up   up\nGi0/1  192.168.2.1  YES manual down down",
+  "choices": [
+   "The AD of the static route is too high",
+   "No route to the next hop 192.168.99.2 exists, so the static route cannot be installed",
+   "Static routes are never displayed in the table",
+   "10.50.0.0 is a private network and not allowed"
+  ],
+  "answer": "B",
+  "explanation": "A static route is installed only if its next hop is reachable. None of the router's up interfaces is in the 192.168.99.0 subnet and no other route covers it, so the static route is not installed.",
+  "option_notes": [
+   "Wrong: The default AD of 1 is not the problem.",
+   "Correct: The next hop 192.168.99.2 is not reachable through any connected or learned route.",
+   "Wrong: Static routes are shown in the table when valid.",
+   "Wrong: Private addresses can be routed internally."
+  ],
+  "key_concept": "Next hop must resolve to an active interface.",
+  "cli_example": "show ip route 192.168.99.2",
+  "tip": "Check next-hop reachability."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "어려움",
+  "question": "A static route to 10.0.0.0/8 with an exit interface of Null0 is configured. What is the usual purpose?",
+  "choices": [
+   "Discard traffic to that prefix, or prevent routing loops when summarizing",
+   "Create a backup link",
+   "Forward traffic to the default gateway",
+   "Redistribute the route into OSPF automatically"
+  ],
+  "answer": "A",
+  "explanation": "A route to Null0 drops matching packets. It is used to block traffic or to create a summary route that avoids loops when a more specific route is missing.",
+  "option_notes": [
+   "Correct: Null0 silently drops packets that match the route; it is used to block prefixes or to anchor summaries.",
+   "Wrong: Null0 does not forward traffic anywhere.",
+   "Wrong: Packets are dropped, not forwarded.",
+   "Wrong: Redistribution requires explicit configuration."
+  ],
+  "key_concept": "Null0 = discard.",
+  "cli_example": "ip route 10.0.0.0 255.0.0.0 Null0",
+  "tip": "Null0 is a virtual bit bucket."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "어려움",
+  "question": "R1 has the following default routes. Which one is used when both next hops are reachable?\n\nip route 0.0.0.0 0.0.0.0 10.1.1.1 100\nip route 0.0.0.0 0.0.0.0 10.2.2.2 120",
+  "choices": [
+   "10.2.2.2",
+   "Both, load balanced",
+   "Neither",
+   "10.1.1.1"
+  ],
+  "answer": "D",
+  "explanation": "Both are floating static routes, but they still compete with each other. The lower AD (100) is installed and the higher AD (120) is a backup.",
+  "option_notes": [
+   "Wrong: AD 120 is higher and used only as a backup.",
+   "Wrong: The ADs differ so they are not load balanced.",
+   "Wrong: One route is installed.",
+   "Correct: The route with AD 100 is lower and is installed."
+  ],
+  "key_concept": "Lowest AD among competing routes wins.",
+  "cli_example": "show ip route static",
+  "tip": "Check the AD in the brackets."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "어려움",
+  "question": "A network engineer wants to configure an IPv6 static route on R1 for 2001:DB8:10::/64 via exit interface GigabitEthernet0/1 on an Ethernet link. Which statement is true?",
+  "choices": [
+   "The exit interface only is always best on Ethernet",
+   "IPv6 static routes need no next hop",
+   "A fully specified route with a next-hop address is recommended on Ethernet links",
+   "The route must use ip route"
+  ],
+  "answer": "C",
+  "explanation": "With only an Ethernet exit interface, the router tries to resolve each destination by Neighbor Discovery, which is inefficient and requires the next device to respond. A next hop or both parameters is better.",
+  "option_notes": [
+   "Wrong: Exit interface only forces NDP for each destination and is not recommended.",
+   "Wrong: A next hop or interface is required.",
+   "Correct: On multi-access links, specifying a next hop avoids neighbor discovery for every destination.",
+   "Wrong: IPv6 uses ipv6 route."
+  ],
+  "key_concept": "Ethernet: use next hop or fully specified.",
+  "cli_example": "ipv6 route 2001:DB8:10::/64 GigabitEthernet0/1 2001:DB8:1::2",
+  "tip": "Same advice for IPv4 and ARP."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "어려움",
+  "question": "A router has the command ipv6 route 2001:DB8:3::/64 2001:DB8:1::2 and show ipv6 route static displays the route, yet transit IPv6 packets are not forwarded. Which command is most likely missing?",
+  "choices": [
+   "ip routing",
+   "ipv6 unicast-routing",
+   "ipv6 cef disable",
+   "ipv6 route-forward enable"
+  ],
+  "answer": "B",
+  "explanation": "The IPv6 routing process must be enabled globally with ipv6 unicast-routing. The static route can be configured before that, but forwarding will not occur until it is enabled.",
+  "option_notes": [
+   "Wrong: ip routing concerns IPv4.",
+   "Correct: Without ipv6 unicast-routing, the router does not forward IPv6 packets even if routes exist.",
+   "Wrong: Disabling CEF is not required for forwarding.",
+   "Wrong: This is not a real IOS command."
+  ],
+  "key_concept": "ipv6 unicast-routing is required to forward IPv6.",
+  "cli_example": "ipv6 unicast-routing",
+  "tip": "Check it first when IPv6 routing fails."
+ },
+ {
+  "sub": "3.3",
+  "difficulty": "어려움",
+  "question": "Which single static route summarizes the eight networks from 10.1.0.0/24 through 10.1.7.0/24 without including other subnets?",
+  "choices": [
+   "ip route 10.1.0.0 255.255.248.0 192.168.1.2",
+   "ip route 10.1.0.0 255.255.252.0 192.168.1.2",
+   "ip route 10.1.0.0 255.255.240.0 192.168.1.2",
+   "ip route 10.1.0.0 255.255.255.248 192.168.1.2"
+  ],
+  "answer": "A",
+  "explanation": "Eight /24 blocks require a block size of 8 in the third octet, which is mask 255.255.248.0 (/21). The network 10.1.0.0 is aligned on a multiple of 8.",
+  "option_notes": [
+   "Correct: 255.255.248.0 is /21, which covers 8 contiguous /24 networks (0-7).",
+   "Wrong: A /22 covers only four /24 networks.",
+   "Wrong: A /20 covers sixteen /24 networks.",
+   "Wrong: A /29 mask covers only 8 addresses."
+  ],
+  "key_concept": "/21 = 8 x /24 networks.",
+  "cli_example": "ip route 10.1.0.0 255.255.248.0 192.168.1.2",
+  "tip": "256 - 248 = 8."
+ }
+]

@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "1.6",
+  "difficulty": "쉬움",
+  "question": "What is the dotted-decimal subnet mask for a /24 prefix?",
+  "choices": [
+   "255.255.0.0",
+   "255.255.255.0",
+   "255.255.255.128",
+   "255.255.255.192"
+  ],
+  "answer": "B",
+  "explanation": "A /24 prefix has 24 network bits, which is three full octets of 1s (255.255.255) and a final octet of 0. 255.255.0.0 is /16, 255.255.255.128 is /25 and 255.255.255.192 is /26.",
+  "option_notes": [
+   "Wrong: 255.255.0.0 is /16.",
+   "Correct: /24 equals 255.255.255.0.",
+   "Wrong: 255.255.255.128 is /25.",
+   "Wrong: 255.255.255.192 is /26."
+  ],
+  "key_concept": "/24 = 255.255.255.0.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "쉬움",
+  "question": "How many usable host addresses are available in a 192.168.1.0/24 subnet?",
+  "choices": [
+   "254",
+   "256",
+   "255",
+   "253"
+  ],
+  "answer": "A",
+  "explanation": "A /24 has 8 host bits, so 2^8 = 256 addresses. The network address and the broadcast address are reserved, which leaves 256 - 2 = 254 usable host addresses.",
+  "option_notes": [
+   "Correct: 2^8 - 2 = 254 usable hosts.",
+   "Wrong: 256 is the total number of addresses, not the usable hosts.",
+   "Wrong: 255 forgets to subtract the network address.",
+   "Wrong: 253 subtracts too many addresses."
+  ],
+  "key_concept": "Usable hosts = 2^h - 2.",
+  "cli_example": "",
+  "tip": "Always subtract 2 for network and broadcast."
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "쉬움",
+  "question": "What is the network address of the host 192.168.10.77/24?",
+  "choices": [
+   "192.168.10.77",
+   "192.168.10.1",
+   "192.168.0.0",
+   "192.168.10.0"
+  ],
+  "answer": "D",
+  "explanation": "With a /24 mask the first three octets are the network portion and the host portion is the last octet. Setting the host bits to 0 gives 192.168.10.0.",
+  "option_notes": [
+   "Wrong: 192.168.10.77 is the host address itself.",
+   "Wrong: 192.168.10.1 is the first usable host, not the network address.",
+   "Wrong: 192.168.0.0 is a /16 network address.",
+   "Correct: The host bits set to 0 give 192.168.10.0."
+  ],
+  "key_concept": "Network address = host bits all 0.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "쉬움",
+  "question": "What is the broadcast address of the subnet 192.168.1.0/24?",
+  "choices": [
+   "192.168.1.254",
+   "192.168.1.0",
+   "192.168.1.255",
+   "255.255.255.255"
+  ],
+  "answer": "C",
+  "explanation": "The directed broadcast address of a subnet has all host bits set to 1. For 192.168.1.0/24 that is 192.168.1.255. 192.168.1.254 is the last usable host, and 255.255.255.255 is the limited broadcast.",
+  "option_notes": [
+   "Wrong: 192.168.1.254 is the last usable host.",
+   "Wrong: 192.168.1.0 is the network address.",
+   "Correct: All host bits set to 1 give 192.168.1.255.",
+   "Wrong: 255.255.255.255 is the limited broadcast, not this subnet's directed broadcast."
+  ],
+  "key_concept": "Broadcast = host bits all 1.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "쉬움",
+  "question": "Which address is a valid host address in the subnet 10.1.1.0/24?",
+  "choices": [
+   "10.1.1.0",
+   "10.1.1.254",
+   "10.1.1.255",
+   "10.1.2.1"
+  ],
+  "answer": "B",
+  "explanation": "In 10.1.1.0/24 the usable range is 10.1.1.1 to 10.1.1.254. 10.1.1.0 is the network address, 10.1.1.255 is the broadcast address and 10.1.2.1 belongs to a different subnet.",
+  "option_notes": [
+   "Wrong: 10.1.1.0 is the network address.",
+   "Correct: 10.1.1.254 is the last usable host.",
+   "Wrong: 10.1.1.255 is the broadcast address.",
+   "Wrong: 10.1.2.1 is in the 10.1.2.0/24 subnet."
+  ],
+  "key_concept": "Usable range excludes network and broadcast addresses.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "쉬움",
+  "question": "How many usable hosts does a /30 subnet provide?",
+  "choices": [
+   "2",
+   "4",
+   "6",
+   "1"
+  ],
+  "answer": "A",
+  "explanation": "A /30 leaves 2 host bits, giving 4 addresses. Subtracting the network and broadcast addresses leaves 2 usable hosts. This is why /30 is common for point-to-point links.",
+  "option_notes": [
+   "Correct: 2^2 - 2 = 2 usable hosts.",
+   "Wrong: 4 is the total number of addresses.",
+   "Wrong: 6 usable hosts is a /29.",
+   "Wrong: /30 provides two usable hosts, not one."
+  ],
+  "key_concept": "/30 = 2 usable hosts, ideal for point-to-point links.",
+  "cli_example": "",
+  "tip": "Know: /30 = 2, /29 = 6, /28 = 14, /27 = 30."
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "쉬움",
+  "question": "What is the prefix length for the subnet mask 255.255.255.128?",
+  "choices": [
+   "/24",
+   "/26",
+   "/27",
+   "/25"
+  ],
+  "answer": "D",
+  "explanation": "255.255.255.128 has 24 bits in the first three octets plus 1 bit (128) in the last octet, so the prefix length is /25.",
+  "option_notes": [
+   "Wrong: /24 is 255.255.255.0.",
+   "Wrong: /26 is 255.255.255.192.",
+   "Wrong: /27 is 255.255.255.224.",
+   "Correct: 24 + 1 bit = /25."
+  ],
+  "key_concept": "128 = 1 extra bit.",
+  "cli_example": "",
+  "tip": "Last-octet values: 128=/25, 192=/26, 224=/27, 240=/28, 248=/29, 252=/30."
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "쉬움",
+  "question": "What is the default subnet mask for a classful Class B network?",
+  "choices": [
+   "255.0.0.0",
+   "255.255.255.0",
+   "255.255.0.0",
+   "255.255.255.255"
+  ],
+  "answer": "C",
+  "explanation": "Class B addresses (128.0.0.0 to 191.255.255.255) use a default mask of 255.255.0.0, which is /16. Class A uses /8 and Class C uses /24.",
+  "option_notes": [
+   "Wrong: 255.0.0.0 is the Class A default mask.",
+   "Wrong: 255.255.255.0 is the Class C default mask.",
+   "Correct: Class B uses /16.",
+   "Wrong: 255.255.255.255 is a host mask (/32)."
+  ],
+  "key_concept": "Class A /8, B /16, C /24.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "쉬움",
+  "question": "Which address range is used for APIPA (link-local addressing) on an IPv4 host that cannot reach a DHCP server?",
+  "choices": [
+   "127.0.0.0/8",
+   "169.254.0.0/16",
+   "192.168.0.0/16",
+   "224.0.0.0/4"
+  ],
+  "answer": "B",
+  "explanation": "A host that fails to get a DHCP lease can assign itself an address in 169.254.0.0/16. 127.0.0.0/8 is loopback, 192.168.0.0/16 is private and 224.0.0.0/4 is multicast.",
+  "option_notes": [
+   "Wrong: 127.0.0.0/8 is loopback.",
+   "Correct: APIPA uses 169.254.0.0/16.",
+   "Wrong: 192.168.0.0/16 is a private range.",
+   "Wrong: 224.0.0.0/4 is multicast."
+  ],
+  "key_concept": "169.254.x.x means DHCP failed.",
+  "cli_example": "",
+  "tip": "Seeing 169.254.x.x on a client points to a DHCP problem."
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "쉬움",
+  "question": "Which IPv4 address class does the address 172.16.5.1 belong to?",
+  "choices": [
+   "Class B",
+   "Class A",
+   "Class C",
+   "Class D"
+  ],
+  "answer": "A",
+  "explanation": "Class A covers first octets 1 to 126, Class B covers 128 to 191, Class C covers 192 to 223 and Class D covers 224 to 239. The first octet 172 falls in the Class B range.",
+  "option_notes": [
+   "Correct: 172 lies in the 128 to 191 Class B range.",
+   "Wrong: Class A is 1 to 126.",
+   "Wrong: Class C is 192 to 223.",
+   "Wrong: Class D (224 to 239) is multicast."
+  ],
+  "key_concept": "First octet 128-191 = Class B.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "보통",
+  "question": "How many usable host addresses does a /27 subnet provide?",
+  "choices": [
+   "32",
+   "28",
+   "62",
+   "30"
+  ],
+  "answer": "D",
+  "explanation": "A /27 has 5 host bits, so 2^5 = 32 addresses. Minus the network and broadcast addresses, that leaves 30 usable hosts. 62 hosts is a /26.",
+  "option_notes": [
+   "Wrong: 32 includes the network and broadcast addresses.",
+   "Wrong: 28 is not a power-of-two calculation.",
+   "Wrong: 62 hosts is a /26.",
+   "Correct: 2^5 - 2 = 30."
+  ],
+  "key_concept": "/27 = 30 hosts.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "보통",
+  "question": "A host has the address 172.16.45.200/20. What are the network address and broadcast address of its subnet?",
+  "choices": [
+   "Network 172.16.40.0, broadcast 172.16.47.255",
+   "Network 172.16.32.0, broadcast 172.16.45.255",
+   "Network 172.16.32.0, broadcast 172.16.47.255",
+   "Network 172.16.45.0, broadcast 172.16.45.255"
+  ],
+  "answer": "C",
+  "explanation": "A /20 mask is 255.255.240.0, so the block size in the third octet is 16. The multiples of 16 are 32 and 48, and 45 lies between them, so the network is 172.16.32.0. The next network is 172.16.48.0, so the broadcast is 172.16.47.255.",
+  "option_notes": [
+   "Wrong: 172.16.40.0 is not a multiple of 16.",
+   "Wrong: The broadcast must be at the end of the block, not at 45.255.",
+   "Correct: Block size 16 gives network 32 and broadcast 47.255.",
+   "Wrong: That would be a /24 network."
+  ],
+  "key_concept": "Block size = 256 - mask octet value.",
+  "cli_example": "",
+  "tip": "For /20 the interesting octet is the third one."
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "보통",
+  "question": "A subnet must support at least 50 hosts. Which is the smallest mask that satisfies the requirement?",
+  "choices": [
+   "255.255.255.224 (/27)",
+   "255.255.255.192 (/26)",
+   "255.255.255.128 (/25)",
+   "255.255.255.240 (/28)"
+  ],
+  "answer": "B",
+  "explanation": "A /26 has 6 host bits, so 2^6 - 2 = 62 usable hosts, which is the smallest block that holds 50. A /27 supports only 30 hosts and a /28 only 14. A /25 works but wastes addresses.",
+  "option_notes": [
+   "Wrong: /27 provides only 30 hosts.",
+   "Correct: /26 provides 62 usable hosts.",
+   "Wrong: /25 works but is not the smallest.",
+   "Wrong: /28 provides only 14 hosts."
+  ],
+  "key_concept": "Find the smallest h where 2^h - 2 >= hosts.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "보통",
+  "question": "What is the broadcast address of the subnet that contains host 192.168.20.130/26?",
+  "choices": [
+   "192.168.20.191",
+   "192.168.20.255",
+   "192.168.20.129",
+   "192.168.20.190"
+  ],
+  "answer": "A",
+  "explanation": "A /26 has a block size of 64. The subnets are .0, .64, .128 and .192. The host .130 lies in the .128 subnet, so the broadcast is the address just before the next subnet, which is 192.168.20.191.",
+  "option_notes": [
+   "Correct: The .128 subnet ends at .191.",
+   "Wrong: 192.168.20.255 is the broadcast for the .192/26 subnet.",
+   "Wrong: 192.168.20.129 is the first usable host.",
+   "Wrong: 192.168.20.190 is the last usable host, not the broadcast."
+  ],
+  "key_concept": "Broadcast = next network - 1.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "보통",
+  "question": "How many subnets are created when 192.168.1.0/24 is divided using a /27 mask?",
+  "choices": [
+   "4",
+   "16",
+   "32",
+   "8"
+  ],
+  "answer": "D",
+  "explanation": "Going from /24 to /27 borrows 3 bits, giving 2^3 = 8 subnets. Each subnet has 32 addresses (30 usable hosts).",
+  "option_notes": [
+   "Wrong: 4 subnets would need only 2 borrowed bits (/26).",
+   "Wrong: 16 subnets would need 4 borrowed bits (/28).",
+   "Wrong: 32 is the number of addresses per subnet, not the number of subnets.",
+   "Correct: 2^3 = 8 subnets."
+  ],
+  "key_concept": "Subnets = 2^(borrowed bits).",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "보통",
+  "question": "For the subnet 10.10.10.64/28, what are the first and last usable host addresses?",
+  "choices": [
+   "10.10.10.64 and 10.10.10.79",
+   "10.10.10.65 and 10.10.10.79",
+   "10.10.10.65 and 10.10.10.78",
+   "10.10.10.66 and 10.10.10.77"
+  ],
+  "answer": "C",
+  "explanation": "A /28 has a block size of 16, so the subnet spans 10.10.10.64 to 10.10.10.79. The network address is .64 and the broadcast is .79, so the usable range is .65 to .78 (14 hosts).",
+  "option_notes": [
+   "Wrong: That range includes the network and broadcast addresses.",
+   "Wrong: 10.10.10.79 is the broadcast address.",
+   "Correct: Usable hosts run from .65 to .78.",
+   "Wrong: That range leaves out valid hosts .65 and .78."
+  ],
+  "key_concept": "Usable range = network + 1 to broadcast - 1.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "보통",
+  "question": "Which host is on the same subnet as 172.16.8.20/22?",
+  "choices": [
+   "172.16.12.1",
+   "172.16.11.250",
+   "172.16.7.255",
+   "172.16.16.2"
+  ],
+  "answer": "B",
+  "explanation": "A /22 mask is 255.255.252.0, so the third-octet block size is 4. The subnet containing 172.16.8.20 is 172.16.8.0 to 172.16.11.255, and 172.16.11.250 falls inside it. The other hosts fall in other subnets.",
+  "option_notes": [
+   "Wrong: 172.16.12.1 belongs to the next /22 subnet.",
+   "Correct: It lies within 172.16.8.0 to 172.16.11.255.",
+   "Wrong: 172.16.7.255 belongs to the previous subnet.",
+   "Wrong: 172.16.16.2 is in a different /22 subnet."
+  ],
+  "key_concept": "For /22 the third octet block size is 4.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "보통",
+  "question": "What is the wildcard mask that corresponds to the subnet mask 255.255.255.224?",
+  "choices": [
+   "0.0.0.31",
+   "0.0.0.224",
+   "0.0.0.32",
+   "0.0.0.30"
+  ],
+  "answer": "A",
+  "explanation": "A wildcard mask is the inverse of the subnet mask. 255 - 224 = 31 in the last octet, so the wildcard is 0.0.0.31.",
+  "option_notes": [
+   "Correct: 255.255.255.255 - 255.255.255.224 = 0.0.0.31.",
+   "Wrong: 0.0.0.224 repeats the subnet mask value.",
+   "Wrong: 0.0.0.32 is the block size, not the wildcard.",
+   "Wrong: 0.0.0.30 is the number of usable hosts."
+  ],
+  "key_concept": "Wildcard = 255.255.255.255 minus the mask.",
+  "cli_example": "access-list 10 permit 192.168.1.0 0.0.0.31",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "보통",
+  "question": "A PC is configured with IP 192.168.1.100, mask 255.255.255.192 and default gateway 192.168.1.129. The PC cannot reach remote networks. What is the cause?",
+  "choices": [
+   "The PC address is a broadcast address",
+   "The mask is invalid",
+   "The default gateway is the network address",
+   "The default gateway is not in the same subnet as the PC"
+  ],
+  "answer": "D",
+  "explanation": "With /26 the PC at .100 is in the 192.168.1.64/26 subnet (.64 to .127). The gateway 192.168.1.129 is in the .128/26 subnet, so the PC cannot ARP for it directly. The gateway must be inside the PC's own subnet.",
+  "option_notes": [
+   "Wrong: The PC address .100 is a normal usable host address.",
+   "Wrong: 255.255.255.192 is a valid mask.",
+   "Wrong: The .128 subnet network address is .128, not .129.",
+   "Correct: The gateway .129 is outside .64 to .127."
+  ],
+  "key_concept": "The default gateway must be on the local subnet.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "보통",
+  "question": "Which subnet mask gives exactly 6 usable host addresses per subnet?",
+  "choices": [
+   "255.255.255.240",
+   "255.255.255.252",
+   "255.255.255.248",
+   "255.255.255.224"
+  ],
+  "answer": "C",
+  "explanation": "Six usable hosts need 3 host bits because 2^3 - 2 = 6. A mask with 3 host bits is /29, or 255.255.255.248. /28 gives 14 hosts, /30 gives 2 and /27 gives 30.",
+  "option_notes": [
+   "Wrong: /28 gives 14 hosts.",
+   "Wrong: /30 gives 2 hosts.",
+   "Correct: /29 leaves 3 host bits and gives 6 hosts.",
+   "Wrong: /27 gives 30 hosts."
+  ],
+  "key_concept": "/29 = 6 hosts.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "어려움",
+  "question": "A network designer must split 192.168.10.0/24 using VLSM for four LANs needing 100, 50, 25 and 10 hosts. Which set of prefix lengths fits the requirements most efficiently?",
+  "choices": [
+   "/26, /26, /27, /28",
+   "/25, /26, /27, /28",
+   "/25, /25, /26, /27",
+   "/24, /25, /26, /27"
+  ],
+  "answer": "B",
+  "explanation": "100 hosts need 7 host bits (/25, 126 hosts), 50 hosts need 6 bits (/26, 62 hosts), 25 hosts need 5 bits (/27, 30 hosts) and 10 hosts need 4 bits (/28, 14 hosts). The total is 128 + 64 + 32 + 16 = 240 addresses, which fits in the /24.",
+  "option_notes": [
+   "Wrong: A /26 has only 62 hosts, too few for 100.",
+   "Correct: Each prefix is the smallest that fits its requirement.",
+   "Wrong: This wastes addresses and does not fit the smallest-block rule.",
+   "Wrong: A /24 cannot be used because it would consume the whole network."
+  ],
+  "key_concept": "VLSM: allocate largest subnets first with the smallest fitting block.",
+  "cli_example": "",
+  "tip": "Sort requirements largest to smallest."
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "어려움",
+  "question": "The 172.16.0.0/16 network is divided into /19 subnets, with the subnet zero counted as the first subnet. What is the fifth subnet?",
+  "choices": [
+   "172.16.128.0/19",
+   "172.16.96.0/19",
+   "172.16.160.0/19",
+   "172.16.120.0/19"
+  ],
+  "answer": "A",
+  "explanation": "A /19 mask (255.255.224.0) gives a third-octet block size of 32. The subnets are 0, 32, 64, 96 and 128, so the fifth is 172.16.128.0/19.",
+  "option_notes": [
+   "Correct: Subnets start at 0, 32, 64, 96 and then 128.",
+   "Wrong: 172.16.96.0 is the fourth subnet.",
+   "Wrong: 172.16.160.0 is the sixth subnet.",
+   "Wrong: 120 is not a multiple of 32."
+  ],
+  "key_concept": "Count in block-size steps from the base network.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "어려움",
+  "question": "What is the last usable host address in the subnet 10.45.200.0/21?",
+  "choices": [
+   "10.45.207.255",
+   "10.45.200.254",
+   "10.45.208.254",
+   "10.45.207.254"
+  ],
+  "answer": "D",
+  "explanation": "A /21 mask is 255.255.248.0, giving a third-octet block size of 8. The subnet 10.45.200.0/21 spans 200 to 207 in the third octet. The broadcast is 10.45.207.255 so the last usable host is 10.45.207.254.",
+  "option_notes": [
+   "Wrong: 10.45.207.255 is the broadcast address.",
+   "Wrong: 10.45.200.254 is not the end of the /21 range.",
+   "Wrong: 10.45.208.254 is in the next subnet.",
+   "Correct: The range ends at 10.45.207.255 as broadcast, so .254 is the last host."
+  ],
+  "key_concept": "Broadcast - 1 = last usable host.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "어려움",
+  "question": "Two routers are connected on a point-to-point link. R1 Gi0/0 is 10.1.1.1/30 and R2 Gi0/0 is configured as 10.1.1.4/30. The link does not work. Why?",
+  "choices": [
+   "10.1.1.1/30 is a broadcast address",
+   "A /30 cannot be used on a router",
+   "10.1.1.4/30 is the network address of the next /30 subnet and is in a different subnet",
+   "The two addresses are in the same subnet but share a gateway"
+  ],
+  "answer": "C",
+  "explanation": "A /30 has a block size of 4. 10.1.1.1 is in the subnet 10.1.1.0/30 (hosts .1 and .2). 10.1.1.4 is the network address of 10.1.1.4/30, which is a different subnet, so R2 cannot be used and the routers are not on the same subnet.",
+  "option_notes": [
+   "Wrong: 10.1.1.1 is a valid host address.",
+   "Wrong: /30 is commonly used on router point-to-point links.",
+   "Correct: Address .4 is a different subnet's network address.",
+   "Wrong: The addresses are in different subnets."
+  ],
+  "key_concept": "/30 blocks: .0-.3, .4-.7, .8-.11 ...",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "어려움",
+  "question": "Which summary route correctly summarizes the networks 192.168.0.0/24, 192.168.1.0/24, 192.168.2.0/24 and 192.168.3.0/24 with no extra addresses?",
+  "choices": [
+   "192.168.0.0/23",
+   "192.168.0.0/22",
+   "192.168.0.0/21",
+   "192.168.0.0/24"
+  ],
+  "answer": "B",
+  "explanation": "Four consecutive /24 networks starting at a multiple of 4 in the third octet summarize to one /22 (255.255.252.0). A /23 covers only two of them, a /21 covers eight and a /24 covers only one.",
+  "option_notes": [
+   "Wrong: /23 covers only .0 and .1.",
+   "Correct: /22 covers 192.168.0.0 to 192.168.3.255 exactly.",
+   "Wrong: /21 would include extra networks .4 to .7.",
+   "Wrong: /24 covers only 192.168.0.0."
+  ],
+  "key_concept": "Summarize by finding the common prefix bits.",
+  "cli_example": "ip route 10.0.0.0 255.255.0.0 192.168.0.0",
+  "tip": "Count bits: 4 networks = 2 bits, so /24 - 2 = /22."
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "어려움",
+  "question": "Which host is in the same subnet as 10.1.3.20/23?",
+  "choices": [
+   "10.1.2.255",
+   "10.1.4.1",
+   "10.1.1.255",
+   "10.1.0.20"
+  ],
+  "answer": "A",
+  "explanation": "A /23 mask (255.255.254.0) has a third-octet block size of 2. The subnet for 10.1.3.20 is 10.1.2.0/23, which spans 10.1.2.0 to 10.1.3.255. Only 10.1.2.255 falls inside that range.",
+  "option_notes": [
+   "Correct: 10.1.2.255 lies in 10.1.2.0 to 10.1.3.255.",
+   "Wrong: 10.1.4.1 is in the next subnet.",
+   "Wrong: 10.1.1.255 is in the previous subnet.",
+   "Wrong: 10.1.0.20 is two subnets away."
+  ],
+  "key_concept": "/23 spans two consecutive third-octet values starting at an even number.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "어려움",
+  "question": "A router interface is configured as follows. What will IOS do?\n\nR1(config)# interface GigabitEthernet0/0\nR1(config-if)# ip address 192.168.1.1 255.255.255.0\nR1(config-if)# interface GigabitEthernet0/1\nR1(config-if)# ip address 192.168.1.65 255.255.255.192",
+  "choices": [
+   "Accept both and route between them",
+   "Accept the second command and shut down Gi0/0",
+   "Accept both and use the longer mask for Gi0/0",
+   "Reject the second command with an overlapping subnet error"
+  ],
+  "answer": "D",
+  "explanation": "A router cannot have two interfaces in overlapping subnets. 192.168.1.64/26 lies inside 192.168.1.0/24, so IOS replies with a message like '% 192.168.1.64 overlaps with GigabitEthernet0/0' and rejects the command.",
+  "option_notes": [
+   "Wrong: Overlapping subnets are not routed.",
+   "Wrong: IOS does not shut interfaces down for this.",
+   "Wrong: IOS does not pick the longer mask for interface addressing.",
+   "Correct: IOS refuses overlapping subnets on separate interfaces."
+  ],
+  "key_concept": "Interfaces on one router must be in different non-overlapping subnets.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "어려움",
+  "question": "The 172.16.0.0/16 network is subnetted with the mask 255.255.255.224. How many subnets and how many usable hosts per subnet result?",
+  "choices": [
+   "2048 subnets and 32 usable hosts per subnet",
+   "256 subnets and 30 usable hosts per subnet",
+   "2048 subnets and 30 usable hosts per subnet",
+   "1024 subnets and 62 usable hosts per subnet"
+  ],
+  "answer": "C",
+  "explanation": "255.255.255.224 is /27. Going from /16 to /27 borrows 11 bits, giving 2^11 = 2048 subnets. With 5 host bits each subnet has 2^5 - 2 = 30 usable hosts.",
+  "option_notes": [
+   "Wrong: 32 counts the network and broadcast addresses.",
+   "Wrong: 256 subnets would need only 8 borrowed bits.",
+   "Correct: 2^11 subnets and 2^5 - 2 hosts.",
+   "Wrong: 62 hosts would be a /26."
+  ],
+  "key_concept": "Subnets = 2^(new prefix - old prefix).",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "어려움",
+  "question": "An administrator enters 'ip address 192.168.5.31 255.255.255.224' on a router interface and receives an error. What is the reason?",
+  "choices": [
+   "192.168.5.31 is the network address",
+   "192.168.5.31 is the broadcast address of the 192.168.5.0/27 subnet",
+   "The mask 255.255.255.224 is not valid on a router",
+   "192.168.5.31 is a private address that is not allowed"
+  ],
+  "answer": "B",
+  "explanation": "With /27 the block size is 32, so 192.168.5.0/27 spans .0 to .31. The last address, .31, is the broadcast address and cannot be assigned to an interface. IOS reports a bad mask or invalid address.",
+  "option_notes": [
+   "Wrong: The network address is .0, not .31.",
+   "Correct: The all-ones host address is the broadcast.",
+   "Wrong: The mask is valid.",
+   "Wrong: Private addresses are allowed on interfaces."
+  ],
+  "key_concept": "Do not assign the network or broadcast address to a host.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.6",
+  "difficulty": "어려움",
+  "question": "What are the network and broadcast addresses of the subnet containing host 172.20.150.5/19?",
+  "choices": [
+   "Network 172.20.128.0 and broadcast 172.20.159.255",
+   "Network 172.20.144.0 and broadcast 172.20.159.255",
+   "Network 172.20.150.0 and broadcast 172.20.150.255",
+   "Network 172.20.128.0 and broadcast 172.20.255.255"
+  ],
+  "answer": "A",
+  "explanation": "A /19 mask is 255.255.224.0 with a block size of 32 in the third octet. The multiples of 32 around 150 are 128 and 160, so the subnet is 172.20.128.0 and the broadcast is 172.20.159.255.",
+  "option_notes": [
+   "Correct: Block size 32 places 150 in 128 to 159.",
+   "Wrong: 144 is not a multiple of 32.",
+   "Wrong: That is a /24 range.",
+   "Wrong: The broadcast must be 159.255, not 255.255."
+  ],
+  "key_concept": "Find the multiple of the block size at or below the host's octet.",
+  "cli_example": "",
+  "tip": ""
+ }
+]

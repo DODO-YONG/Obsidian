@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "2.7",
+  "difficulty": "쉬움",
+  "question": "Which WLC port is used for out-of-band management and is not used for client data traffic?",
+  "choices": [
+   "Distribution system port",
+   "Service port",
+   "Redundancy port",
+   "Console port"
+  ],
+  "answer": "B",
+  "explanation": "The service port is used for initial setup, recovery and out-of-band management. It connects to a switch access port in a management network and does not carry user traffic.",
+  "option_notes": [
+   "Wrong: Distribution system ports carry client and CAPWAP data.",
+   "Correct: The service port is a dedicated management port separate from the data path.",
+   "Wrong: The redundancy port connects HA WLC pairs.",
+   "Wrong: The console port is a serial CLI port, not an Ethernet management port."
+  ],
+  "key_concept": "Service port = out-of-band management.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "쉬움",
+  "question": "Which WLC ports carry client data traffic and CAPWAP tunnels and connect to the switch infrastructure?",
+  "choices": [
+   "Distribution system ports",
+   "Service port",
+   "Console port",
+   "Redundancy port"
+  ],
+  "answer": "A",
+  "explanation": "Distribution system ports are usually connected to the switch as 802.1Q trunks. They carry traffic for multiple VLANs and can be combined in a LAG.",
+  "option_notes": [
+   "Correct: Distribution system ports are the data ports to the wired network.",
+   "Wrong: The service port is for management only.",
+   "Wrong: The console port is a serial port.",
+   "Wrong: The redundancy port is for HA synchronization."
+  ],
+  "key_concept": "Distribution ports = data, usually trunks.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "쉬움",
+  "question": "A lightweight AP operates in local mode. Which type of switch port is normally used to connect it?",
+  "choices": [
+   "Trunk port",
+   "Routed port with OSPF",
+   "EtherChannel port-channel",
+   "Access port"
+  ],
+  "answer": "D",
+  "explanation": "The AP only needs IP connectivity to the WLC. All client VLANs terminate at the WLC, so a normal access port in the AP management VLAN is enough.",
+  "option_notes": [
+   "Wrong: A trunk is needed for FlexConnect local switching.",
+   "Wrong: Routing protocols are not run on the AP link.",
+   "Wrong: APs normally use a single link.",
+   "Correct: Local mode tunnels all client traffic in CAPWAP, so the AP needs only one VLAN."
+  ],
+  "key_concept": "Local mode AP = access port.",
+  "cli_example": "interface gi0/5\n switchport mode access\n switchport access vlan 100",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "쉬움",
+  "question": "Which IEEE standard is PoE (up to 15.4 W per port)?",
+  "choices": [
+   "802.3at",
+   "802.11ac",
+   "802.3af",
+   "802.1X"
+  ],
+  "answer": "C",
+  "explanation": "802.3af is PoE (15.4 W), 802.3at is PoE+ (30 W) and 802.3bt is PoE++ (up to 60 or 90 W). Many APs run on PoE or PoE+.",
+  "option_notes": [
+   "Wrong: 802.3at (PoE+) provides up to 30 W.",
+   "Wrong: 802.11ac is a Wi-Fi standard.",
+   "Correct: 802.3af provides up to 15.4 W at the switch port.",
+   "Wrong: 802.1X is port authentication."
+  ],
+  "key_concept": "af = 15.4 W; at = 30 W; bt = 60/90 W.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "쉬움",
+  "question": "What is the purpose of a LAG on a wireless LAN controller?",
+  "choices": [
+   "To connect two WLCs for redundancy",
+   "To bundle multiple distribution ports into one logical link",
+   "To encrypt CAPWAP tunnels",
+   "To assign VLANs to SSIDs"
+  ],
+  "answer": "B",
+  "explanation": "LAG (Link Aggregation) provides more bandwidth and link redundancy for the WLC data ports. The switch ports must be configured as an EtherChannel.",
+  "option_notes": [
+   "Wrong: Two WLCs use a redundancy port for HA.",
+   "Correct: LAG groups the distribution ports like an EtherChannel.",
+   "Wrong: Encryption is done with DTLS.",
+   "Wrong: That is done with dynamic interfaces."
+  ],
+  "key_concept": "LAG = EtherChannel for the WLC.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "쉬움",
+  "question": "Which tool does an administrator use to access a WLC CLI locally when there is no network connectivity?",
+  "choices": [
+   "The console port",
+   "The service port",
+   "The distribution port",
+   "The redundancy port"
+  ],
+  "answer": "A",
+  "explanation": "A console cable provides access without a network. It is useful for initial configuration and recovery.",
+  "option_notes": [
+   "Correct: The console port gives local serial CLI access.",
+   "Wrong: The service port needs IP connectivity.",
+   "Wrong: Distribution ports need IP connectivity.",
+   "Wrong: The redundancy port is for HA."
+  ],
+  "key_concept": "Console = local serial access.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "쉬움",
+  "question": "An AP is placed in a ceiling where there is no power outlet. Which solution provides power over the Ethernet cable?",
+  "choices": [
+   "A longer patch cable",
+   "A console cable",
+   "An SFP module",
+   "A PoE switch port or a PoE injector"
+  ],
+  "answer": "D",
+  "explanation": "If the access switch does not support PoE, a midspan PoE injector can supply power between the switch and AP.",
+  "option_notes": [
+   "Wrong: Cable length does not provide power.",
+   "Wrong: A console cable is not for power.",
+   "Wrong: An SFP module does not add power.",
+   "Correct: PoE delivers power over the data cable."
+  ],
+  "key_concept": "PoE switch or injector powers APs.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "쉬움",
+  "question": "Which WLC interface is used on AireOS controllers to map a WLAN to a VLAN?",
+  "choices": [
+   "Service port interface",
+   "Virtual interface",
+   "Dynamic interface",
+   "Console interface"
+  ],
+  "answer": "C",
+  "explanation": "On AireOS, each client VLAN is represented on the controller by a dynamic interface. A WLAN is then assigned to that interface.",
+  "option_notes": [
+   "Wrong: The service port interface is for management.",
+   "Wrong: The virtual interface is used for specific services such as DHCP relay.",
+   "Correct: Dynamic interfaces are associated with VLANs and WLANs.",
+   "Wrong: The console is a hardware port."
+  ],
+  "key_concept": "Dynamic interface = VLAN for client traffic.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "쉬움",
+  "question": "What is the maximum length of a copper Ethernet cable run between an AP and a switch?",
+  "choices": [
+   "50 meters",
+   "100 meters",
+   "300 meters",
+   "1000 meters"
+  ],
+  "answer": "B",
+  "explanation": "Twisted-pair Ethernet supports up to 100 meters. For longer distances, use fiber or an intermediate switch.",
+  "option_notes": [
+   "Wrong: That is lower than the standard.",
+   "Correct: UTP Ethernet is limited to 100 m.",
+   "Wrong: That is above the limit.",
+   "Wrong: That would need fiber."
+  ],
+  "key_concept": "Copper Ethernet max 100 m.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "쉬움",
+  "question": "How are the WLC distribution system ports typically connected to the switch to carry multiple WLAN VLANs?",
+  "choices": [
+   "Using 802.1Q trunks",
+   "Using access ports in VLAN 1",
+   "Using console cables",
+   "Using routed ports with no IP address"
+  ],
+  "answer": "A",
+  "explanation": "The WLC connects to the switch with a trunk that carries the management VLAN and all client VLANs used by WLANs.",
+  "option_notes": [
+   "Correct: A trunk carries multiple VLANs.",
+   "Wrong: Access ports carry a single VLAN.",
+   "Wrong: Console cables are for CLI.",
+   "Wrong: Routed ports do not carry VLANs."
+  ],
+  "key_concept": "WLC data ports = trunk.",
+  "cli_example": "interface gi0/1\n switchport mode trunk",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "보통",
+  "question": "A Cisco AireOS WLC uses LAG with its distribution ports. How must the connected switch ports be configured?",
+  "choices": [
+   "As an EtherChannel using LACP active",
+   "As an EtherChannel using PAgP desirable",
+   "As separate trunks without a port-channel",
+   "As an EtherChannel using channel-group mode on"
+  ],
+  "answer": "D",
+  "explanation": "LAG on AireOS controllers does not use a negotiation protocol. The switch side uses static EtherChannel (mode on) as a trunk.",
+  "option_notes": [
+   "Wrong: AireOS LAG does not negotiate LACP.",
+   "Wrong: AireOS LAG does not negotiate PAgP.",
+   "Wrong: A LAG needs a matching bundle on the switch.",
+   "Correct: AireOS LAG is static, so the switch must use mode on."
+  ],
+  "key_concept": "AireOS LAG = static EtherChannel (on).",
+  "cli_example": "interface range gi0/1 - 2\n switchport mode trunk\n channel-group 1 mode on",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "보통",
+  "question": "Which switch port type is typically used to connect the WLC service port?",
+  "choices": [
+   "802.1Q trunk with all VLANs",
+   "Port-channel with LACP",
+   "Access port in a management VLAN",
+   "SPAN destination port"
+  ],
+  "answer": "C",
+  "explanation": "The service port is separate from the data path, so a simple access port is used. It cannot carry multiple VLANs.",
+  "option_notes": [
+   "Wrong: The service port does not need trunking.",
+   "Wrong: The service port is a single link.",
+   "Correct: The service port is a single management connection and uses an access port.",
+   "Wrong: A SPAN port is for monitoring."
+  ],
+  "key_concept": "Service port = access port.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "보통",
+  "question": "Which PoE standard provides up to 30 W at the switch port and is commonly known as PoE+?",
+  "choices": [
+   "802.3af",
+   "802.3at",
+   "802.3bt",
+   "802.3ad"
+  ],
+  "answer": "B",
+  "explanation": "Newer APs with many radios may need PoE+ to run all features. 802.3ad is LACP, not PoE.",
+  "option_notes": [
+   "Wrong: 802.3af is 15.4 W.",
+   "Correct: 802.3at = PoE+, 30 W.",
+   "Wrong: 802.3bt provides 60 W or 90 W.",
+   "Wrong: 802.3ad is link aggregation."
+  ],
+  "key_concept": "at = PoE+ = 30 W.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "보통",
+  "question": "A FlexConnect AP uses local switching for WLANs mapped to VLANs 10 and 20. How should the AP switch port be configured?",
+  "choices": [
+   "As an 802.1Q trunk that allows VLANs 10 and 20",
+   "As an access port in VLAN 10",
+   "As a routed port",
+   "As a SPAN destination"
+  ],
+  "answer": "A",
+  "explanation": "With FlexConnect local switching, client VLANs are not tunneled to the WLC. The AP uplink must carry those VLANs with a trunk, and the AP management VLAN is usually the native VLAN.",
+  "option_notes": [
+   "Correct: Local switching puts client traffic directly onto VLANs at the AP, so it needs a trunk.",
+   "Wrong: An access port carries one VLAN.",
+   "Wrong: Routed ports carry no VLANs.",
+   "Wrong: SPAN ports are for monitoring."
+  ],
+  "key_concept": "FlexConnect local switching = trunk.",
+  "cli_example": "interface gi0/5\n switchport mode trunk\n switchport trunk native vlan 100\n switchport trunk allowed vlan 10,20,100",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "보통",
+  "question": "Which WLC port is used to connect a pair of controllers for high availability synchronization?",
+  "choices": [
+   "Service port",
+   "Distribution port",
+   "Console port",
+   "Redundancy port"
+  ],
+  "answer": "D",
+  "explanation": "In an HA pair, the redundancy port carries synchronization information between the active and standby controllers.",
+  "option_notes": [
+   "Wrong: The service port is for management.",
+   "Wrong: Distribution ports carry data to the network.",
+   "Wrong: Console is a serial port.",
+   "Correct: The redundancy port links HA peers."
+  ],
+  "key_concept": "Redundancy port = HA link.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "보통",
+  "question": "What is an advantage of using LAG on the WLC?",
+  "choices": [
+   "The WLC can serve more than 100 APs without a license",
+   "APs no longer need CAPWAP",
+   "Traffic continues if one link fails, and bandwidth is shared across links",
+   "The service port gets more bandwidth"
+  ],
+  "answer": "C",
+  "explanation": "When ports are bundled, the failure of one port does not interrupt the WLC. Traffic is hashed across the active links.",
+  "option_notes": [
+   "Wrong: LAG does not change licensing.",
+   "Wrong: CAPWAP is still used.",
+   "Correct: LAG provides redundancy and more bandwidth.",
+   "Wrong: The service port is not part of LAG."
+  ],
+  "key_concept": "LAG = redundancy + bandwidth.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "보통",
+  "question": "Which interface type is used on an AireOS WLC for CAPWAP communication with APs and for in-band management?",
+  "choices": [
+   "Service port interface",
+   "Management interface",
+   "Virtual interface",
+   "Redundancy management interface"
+  ],
+  "answer": "B",
+  "explanation": "APs discover and join the WLC management IP. Administrators also reach the GUI and SSH on that interface.",
+  "option_notes": [
+   "Wrong: The service port is out-of-band.",
+   "Correct: The management interface is used for AP join and in-band management.",
+   "Wrong: The virtual interface is used for services like relay and web auth.",
+   "Wrong: The redundancy management interface is for HA."
+  ],
+  "key_concept": "Management interface = AP join + in-band management.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "보통",
+  "question": "Which statement is true about the cabling between an AP and the access switch?",
+  "choices": [
+   "A single Ethernet cable can carry both data and PoE power",
+   "The AP requires a separate power adapter in all cases",
+   "The AP needs a serial cable for data",
+   "The AP must use fiber"
+  ],
+  "answer": "A",
+  "explanation": "APs normally need one wired uplink. With PoE, the same cable also powers the AP, which simplifies installation.",
+  "option_notes": [
+   "Correct: PoE sends power and data over the same twisted pair cable.",
+   "Wrong: PoE removes the need for an adapter.",
+   "Wrong: Data uses Ethernet.",
+   "Wrong: Most APs use copper Ethernet."
+  ],
+  "key_concept": "One cable = data + power.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "보통",
+  "question": "Which command shows the PoE state and power drawn by each switch port?",
+  "choices": [
+   "show interfaces status",
+   "show poe",
+   "show environment power",
+   "show power inline"
+  ],
+  "answer": "D",
+  "explanation": "Use show power inline to confirm whether an AP is powered, how many watts it draws and the remaining PoE budget.",
+  "option_notes": [
+   "Wrong: That shows link status, not PoE data.",
+   "Wrong: Not an IOS command.",
+   "Wrong: That shows power supply information, not per-port PoE.",
+   "Correct: show power inline lists admin/oper state, power and device class per port."
+  ],
+  "key_concept": "show power inline = PoE status.",
+  "cli_example": "SW1# show power inline",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "보통",
+  "question": "Which command on a Cisco switch interface enables PoE negotiation with a connected AP?",
+  "choices": [
+   "power inline never",
+   "poe enable",
+   "power inline auto",
+   "switchport power on"
+  ],
+  "answer": "C",
+  "explanation": "On Catalyst switches the default is power inline auto. If the port was set to never, the AP will not power on.",
+  "option_notes": [
+   "Wrong: never disables PoE on the port.",
+   "Wrong: Not an IOS command.",
+   "Correct: power inline auto is the default and powers a detected PD.",
+   "Wrong: Not an IOS command."
+  ],
+  "key_concept": "power inline auto = PoE on.",
+  "cli_example": "SW1(config-if)# power inline auto\nSW1# show power inline",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "어려움",
+  "question": "An administrator enables LAG on an AireOS WLC and configures a matching static EtherChannel on the switch. The WLC remains in the old configuration. What must be done on the WLC?",
+  "choices": [
+   "Disable the service port",
+   "Save the configuration and reboot the controller",
+   "Configure LACP active on the WLC",
+   "Reset the CAPWAP tunnels only"
+  ],
+  "answer": "B",
+  "explanation": "On AireOS, a change to LAG takes effect only after a reboot. Before rebooting, configure the switch so the connection is not lost.",
+  "option_notes": [
+   "Wrong: The service port is unrelated.",
+   "Correct: Enabling or disabling LAG requires a controller reboot to take effect.",
+   "Wrong: AireOS LAG does not use LACP.",
+   "Wrong: CAPWAP restarts do not change port bundling."
+  ],
+  "key_concept": "AireOS LAG change requires reboot.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "어려움",
+  "question": "A new SSID is mapped to VLAN 30 through a dynamic interface on the WLC. Clients connect but never receive an IP address. VLANs 10 and 20 work. What is the most likely cause?",
+  "choices": [
+   "VLAN 30 is not allowed on the trunk between the WLC and the switch",
+   "The WLC service port is down",
+   "The AP port is configured as access in VLAN 30",
+   "The DHCP option 43 is missing"
+  ],
+  "answer": "A",
+  "explanation": "Client traffic from a local-mode AP arrives at the WLC and is placed on the dynamic interface VLAN. The switch trunk toward the WLC must allow every client VLAN.",
+  "option_notes": [
+   "Correct: Without VLAN 30 on the WLC trunk, DHCP traffic cannot reach the VLAN.",
+   "Wrong: The service port is not part of the data path.",
+   "Wrong: In local mode the AP uses its management VLAN only.",
+   "Wrong: Option 43 only helps APs find the WLC."
+  ],
+  "key_concept": "Trunk to WLC must allow all client VLANs.",
+  "cli_example": "interface gi0/1\n switchport trunk allowed vlan add 30",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "어려움",
+  "question": "An AP is installed 130 meters away from the nearest switch with a copper cable. The AP does not work reliably. What is the best solution?",
+  "choices": [
+   "Replace the cable with a longer Cat 6 cable",
+   "Enable PoE+ on the port",
+   "Change the port to a trunk",
+   "Use fiber with a media converter, or add a closer switch"
+  ],
+  "answer": "D",
+  "explanation": "For distances beyond 100 m, use fiber or add an intermediate switch. Cable category does not extend the limit.",
+  "option_notes": [
+   "Wrong: Cat 6 has the same 100 m limit.",
+   "Wrong: PoE+ does not extend distance.",
+   "Wrong: Trunk mode does not affect distance.",
+   "Correct: The copper limit is 100 m."
+  ],
+  "key_concept": "Over 100 m = fiber or another switch.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "어려움",
+  "question": "The access switch shows no link on the port to a new AP, and the AP has no power. Output of show power inline shows Admin 'off'. Which fix is best?",
+  "choices": [
+   "Enter no switchport",
+   "Enter spanning-tree portfast",
+   "Enter power inline auto on the interface",
+   "Enter switchport mode trunk"
+  ],
+  "answer": "C",
+  "explanation": "A port with power inline never will not power an AP. Setting power inline auto allows detection and power delivery.",
+  "option_notes": [
+   "Wrong: no switchport makes the port routed.",
+   "Wrong: PortFast does not provide power.",
+   "Correct: Admin off means PoE was disabled on the port.",
+   "Wrong: Trunk mode does not provide power."
+  ],
+  "key_concept": "Admin off/never = fix with power inline auto.",
+  "cli_example": "SW1(config-if)# power inline auto\nSW1# show power inline",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "어려움",
+  "question": "A switch has a 370 W PoE budget. Each AP requires 15.4 W. What is the maximum number of APs the switch can power?",
+  "choices": [
+   "23",
+   "24",
+   "30",
+   "37"
+  ],
+  "answer": "B",
+  "explanation": "24 x 15.4 W = 369.6 W, which fits in 370 W. The 25th AP would require 385 W, exceeding the budget.",
+  "option_notes": [
+   "Wrong: 23 would leave unused power.",
+   "Correct: 370 / 15.4 is about 24.03, so 24 APs.",
+   "Wrong: 30 would exceed the budget.",
+   "Wrong: 37 assumes 10 W per AP."
+  ],
+  "key_concept": "Budget / device power = number of PDs.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "어려움",
+  "question": "Which statement about the WLC service port is true?",
+  "choices": [
+   "It is an out-of-band management interface that does not carry client or CAPWAP traffic",
+   "It carries client data to the network",
+   "It bundles with distribution ports in LAG",
+   "It is used to terminate APs"
+  ],
+  "answer": "A",
+  "explanation": "The service port is used for initial setup and recovery. It is usually connected to an access port in a dedicated management network.",
+  "option_notes": [
+   "Correct: The service port is separate from the data path.",
+   "Wrong: Client data uses the distribution system ports.",
+   "Wrong: The service port is not part of LAG.",
+   "Wrong: APs join through the management interface."
+  ],
+  "key_concept": "Service port is outside the data path.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "어려움",
+  "question": "Which statement about the WLC virtual interface on AireOS is correct?",
+  "choices": [
+   "It terminates all APs",
+   "It is the out-of-band management interface",
+   "It carries traffic for one VLAN",
+   "It is used for services such as DHCP relay and web authentication redirection, with a nonroutable IP address"
+  ],
+  "answer": "D",
+  "explanation": "The virtual interface address (often 192.0.2.1) is shared by controllers in a mobility group. It is not reachable from outside.",
+  "option_notes": [
+   "Wrong: APs join the management interface.",
+   "Wrong: The service port is out-of-band.",
+   "Wrong: Dynamic interfaces map to VLANs.",
+   "Correct: The virtual interface supports client-facing services with an address not routed on the network."
+  ],
+  "key_concept": "Virtual interface = relay and web auth.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "어려움",
+  "question": "A FlexConnect AP is connected to a trunk port. Which native VLAN setting is typical?",
+  "choices": [
+   "The native VLAN is a client VLAN",
+   "The native VLAN must be VLAN 1",
+   "The native VLAN is the AP management VLAN",
+   "There is no native VLAN on trunks"
+  ],
+  "answer": "C",
+  "explanation": "On a FlexConnect AP, the management traffic and CAPWAP use the native VLAN, and local client VLANs are tagged on the trunk.",
+  "option_notes": [
+   "Wrong: Client VLANs are tagged.",
+   "Wrong: The native VLAN can be any VLAN.",
+   "Correct: The AP's own traffic is sent untagged in the native VLAN.",
+   "Wrong: Trunks do have a native VLAN."
+  ],
+  "key_concept": "FlexConnect trunk: native = AP management VLAN.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "어려움",
+  "question": "On an AireOS WLC with LAG enabled, which statement about the distribution ports is true?",
+  "choices": [
+   "Only two ports are in the LAG; the rest operate separately",
+   "All distribution ports are part of the LAG; a mix of LAG and non-LAG distribution ports is not supported",
+   "LAG requires the service port to be in the bundle",
+   "Each port needs a different IP address"
+  ],
+  "answer": "B",
+  "explanation": "Enabling LAG makes all distribution system ports work as a single logical port. The switch must bundle all of the connected ports.",
+  "option_notes": [
+   "Wrong: Partial bundling is not supported.",
+   "Correct: When LAG is enabled, it includes all distribution ports.",
+   "Wrong: The service port is never in the LAG.",
+   "Wrong: The LAG shares one logical interface."
+  ],
+  "key_concept": "LAG = all distribution ports together.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.7",
+  "difficulty": "어려움",
+  "question": "APs are in VLAN 100 (10.10.100.0/24) and the WLC management interface is 10.10.1.5/24 in VLAN 1. The APs can obtain an IP address but never join the WLC. Which condition must be met for the join to succeed?",
+  "choices": [
+   "Layer 3 routing between the AP subnet and the WLC management subnet, permitting CAPWAP UDP 5246 and 5247",
+   "The AP and WLC must be in the same VLAN",
+   "The AP port must be a trunk",
+   "The WLC service port must be in VLAN 100"
+  ],
+  "answer": "A",
+  "explanation": "An AP uses IP to reach the WLC management address, so a router or Layer 3 switch must forward the traffic. The CAPWAP ports must not be blocked by ACLs.",
+  "option_notes": [
+   "Correct: APs can join over a routed path as long as CAPWAP traffic is allowed.",
+   "Wrong: APs may be on a different subnet from the WLC.",
+   "Wrong: A trunk is not needed in local mode.",
+   "Wrong: The service port is not involved in AP join."
+  ],
+  "key_concept": "AP join works across L3 if CAPWAP is permitted.",
+  "cli_example": "",
+  "tip": ""
+ }
+]

@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "2.4",
+  "difficulty": "쉬움",
+  "question": "What is the main purpose of an EtherChannel?",
+  "choices": [
+   "Split one physical link into several VLANs",
+   "Combine multiple physical links into one logical link for more bandwidth and redundancy",
+   "Encrypt traffic between two switches",
+   "Remove the need for Spanning Tree on the network"
+  ],
+  "answer": "B",
+  "explanation": "EtherChannel bundles 2 to 8 active Ethernet links into one logical interface. It increases bandwidth and provides redundancy if a member link fails. STP treats the bundle as one link.",
+  "option_notes": [
+   "Wrong: VLANs divide a network logically; EtherChannel is not about that.",
+   "Correct: EtherChannel bundles several physical ports into a single logical port-channel.",
+   "Wrong: EtherChannel does not provide encryption.",
+   "Wrong: STP is still needed for the rest of the topology."
+  ],
+  "key_concept": "EtherChannel = several links acting as one logical link.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "쉬움",
+  "question": "Which protocol is the open IEEE standard (802.3ad) for negotiating EtherChannels?",
+  "choices": [
+   "LACP",
+   "PAgP",
+   "DTP",
+   "CDP"
+  ],
+  "answer": "A",
+  "explanation": "LACP (Link Aggregation Control Protocol) is vendor neutral and works with non-Cisco devices. PAgP only works between Cisco devices.",
+  "option_notes": [
+   "Correct: LACP is the IEEE standard for link aggregation.",
+   "Wrong: PAgP is Cisco proprietary.",
+   "Wrong: DTP negotiates trunking.",
+   "Wrong: CDP is a neighbor discovery protocol."
+  ],
+  "key_concept": "LACP = IEEE; PAgP = Cisco.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "쉬움",
+  "question": "Which two modes belong to LACP?",
+  "choices": [
+   "desirable and auto",
+   "on and off",
+   "active and desirable",
+   "active and passive"
+  ],
+  "answer": "D",
+  "explanation": "LACP modes are active (actively sends LACP packets) and passive (only responds). PAgP modes are desirable and auto. The static mode is on.",
+  "option_notes": [
+   "Wrong: desirable and auto are PAgP modes.",
+   "Wrong: on is static; off is not a negotiation mode.",
+   "Wrong: desirable belongs to PAgP, not LACP.",
+   "Correct: LACP uses active and passive modes."
+  ],
+  "key_concept": "LACP: active/passive. PAgP: desirable/auto.",
+  "cli_example": "",
+  "tip": "Active/passive = LACP; desirable/auto = PAgP."
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "쉬움",
+  "question": "Which two modes belong to PAgP?",
+  "choices": [
+   "active and passive",
+   "on and active",
+   "desirable and auto",
+   "passive and desirable"
+  ],
+  "answer": "C",
+  "explanation": "PAgP is Cisco proprietary. Desirable actively negotiates, like LACP active. Auto only responds, like LACP passive.",
+  "option_notes": [
+   "Wrong: Those are LACP modes.",
+   "Wrong: on is static and active is an LACP mode.",
+   "Correct: PAgP uses desirable and auto.",
+   "Wrong: passive is LACP and desirable is PAgP; they cannot be mixed."
+  ],
+  "key_concept": "PAgP desirable ~ LACP active; auto ~ passive.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "쉬움",
+  "question": "Which command places GigabitEthernet0/1 in EtherChannel group 1 using LACP and actively negotiates?",
+  "choices": [
+   "channel-group 1 mode desirable",
+   "channel-group 1 mode active",
+   "channel-group 1 mode auto",
+   "port-channel 1 mode active"
+  ],
+  "answer": "B",
+  "explanation": "Under each physical interface, use channel-group <number> mode <mode>. IOS automatically creates the matching Port-channel interface.",
+  "option_notes": [
+   "Wrong: Desirable is a PAgP mode.",
+   "Correct: channel-group 1 mode active uses LACP active mode.",
+   "Wrong: Auto is a PAgP mode.",
+   "Wrong: port-channel is not the interface command used to join a group."
+  ],
+  "key_concept": "channel-group N mode active|passive|desirable|auto|on",
+  "cli_example": "SW1(config)# interface range gi0/1 - 2\nSW1(config-if-range)# channel-group 1 mode active",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "쉬움",
+  "question": "What is the maximum number of active physical links that can be bundled in a standard EtherChannel on Cisco switches (CCNA level)?",
+  "choices": [
+   "8",
+   "2",
+   "4",
+   "16"
+  ],
+  "answer": "A",
+  "explanation": "EtherChannel supports up to eight compatible active ports in one bundle. Some platforms support extra standby LACP links, but only eight are active at the same time.",
+  "option_notes": [
+   "Correct: A standard EtherChannel bundles up to eight active links.",
+   "Wrong: Two links is the minimum, not the maximum.",
+   "Wrong: Four is not the limit.",
+   "Wrong: Sixteen is only possible with LACP hot-standby links on some platforms, of which only 8 are active."
+  ],
+  "key_concept": "Up to 8 active links per EtherChannel.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "쉬움",
+  "question": "Which command displays a summary of all EtherChannels, including member port states?",
+  "choices": [
+   "show interfaces trunk",
+   "show spanning-tree summary",
+   "show vlan brief",
+   "show etherchannel summary"
+  ],
+  "answer": "D",
+  "explanation": "show etherchannel summary is the main verification command. It shows the group, the Port-channel flags (such as SU), the protocol (LACP, PAgP or none) and each member's flag (such as P for bundled).",
+  "option_notes": [
+   "Wrong: That shows trunk ports.",
+   "Wrong: That shows STP counters.",
+   "Wrong: That shows VLAN-to-port assignments.",
+   "Correct: show etherchannel summary lists each port-channel, protocol and member flags."
+  ],
+  "key_concept": "show etherchannel summary = main verification command.",
+  "cli_example": "SW1# show etherchannel summary",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "쉬움",
+  "question": "How does Spanning Tree Protocol treat an EtherChannel bundle?",
+  "choices": [
+   "As separate links, blocking all but one",
+   "As a link that is always blocking",
+   "As a single logical link",
+   "STP is automatically disabled on the bundle"
+  ],
+  "answer": "C",
+  "explanation": "Without EtherChannel, STP would block redundant parallel links. When bundled, STP runs on the Port-channel interface and sees only one link, so all member links can forward.",
+  "option_notes": [
+   "Wrong: That would waste the extra bandwidth; the bundle exists to avoid it.",
+   "Wrong: The bundle is not forced to block.",
+   "Correct: STP sees the port-channel as one logical port.",
+   "Wrong: STP is not disabled."
+  ],
+  "key_concept": "EtherChannel avoids STP blocking of parallel links.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "쉬움",
+  "question": "Which EtherChannel mode forms a bundle without sending any negotiation protocol?",
+  "choices": [
+   "active",
+   "on",
+   "desirable",
+   "auto"
+  ],
+  "answer": "B",
+  "explanation": "With mode on, the ports are put in the channel unconditionally. The other end must also be set to on. If the other side is running a negotiation protocol, the bundle will not form.",
+  "option_notes": [
+   "Wrong: Active sends LACP packets.",
+   "Correct: The on mode statically forces the bundle without LACP or PAgP.",
+   "Wrong: Desirable sends PAgP packets.",
+   "Wrong: Auto responds to PAgP packets."
+  ],
+  "key_concept": "mode on = static, no protocol.",
+  "cli_example": "SW1(config-if)# channel-group 1 mode on",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "쉬움",
+  "question": "What logical interface is created when you configure channel-group 5 on a physical interface?",
+  "choices": [
+   "Port-channel 5",
+   "Bundle 5",
+   "VLAN 5",
+   "Loopback 5"
+  ],
+  "answer": "A",
+  "explanation": "The channel-group number matches the Port-channel interface number. Settings such as trunk mode or allowed VLANs are applied on the Port-channel interface.",
+  "option_notes": [
+   "Correct: IOS creates Port-channel 5 as the logical interface.",
+   "Wrong: Bundle is not an IOS interface type in this context.",
+   "Wrong: VLAN 5 is an SVI, not related.",
+   "Wrong: Loopbacks are separate virtual interfaces."
+  ],
+  "key_concept": "channel-group N creates interface Port-channel N.",
+  "cli_example": "SW1# show interfaces port-channel 5",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "보통",
+  "question": "Which pair of modes on two directly connected switches will form an LACP EtherChannel?",
+  "choices": [
+   "passive on both sides",
+   "desirable on one side and active on the other",
+   "auto on one side and passive on the other",
+   "active on one side and passive on the other"
+  ],
+  "answer": "D",
+  "explanation": "LACP forms when active-active or active-passive is configured. PAgP forms with desirable-desirable or desirable-auto. Passive-passive and auto-auto never form.",
+  "option_notes": [
+   "Wrong: Two passive sides wait for each other and never start negotiation.",
+   "Wrong: Desirable is PAgP and active is LACP; they are incompatible.",
+   "Wrong: Auto is PAgP and passive is LACP; neither starts negotiating.",
+   "Correct: At least one side must be active, and both sides must run the same protocol."
+  ],
+  "key_concept": "At least one side must initiate (active/desirable).",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "보통",
+  "question": "Which pair of modes on two directly connected switches will form a PAgP EtherChannel?",
+  "choices": [
+   "auto on both sides",
+   "active on one side and auto on the other",
+   "desirable on one side and auto on the other",
+   "desirable on one side and passive on the other"
+  ],
+  "answer": "C",
+  "explanation": "PAgP combinations that work are desirable-desirable and desirable-auto. Auto-auto does not form.",
+  "option_notes": [
+   "Wrong: Two auto sides wait for the other to start.",
+   "Wrong: Active is LACP and auto is PAgP; protocols differ.",
+   "Correct: Desirable initiates and auto responds, so the bundle forms.",
+   "Wrong: Passive is LACP, desirable is PAgP; protocols differ."
+  ],
+  "key_concept": "PAgP: desirable-auto works; auto-auto does not.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "보통",
+  "question": "In the output of show etherchannel summary, what does the flag SU next to Po1 mean?",
+  "choices": [
+   "The port-channel is suspended and unused",
+   "The port-channel is a Layer 2 channel and is in use",
+   "The port-channel is a Layer 3 channel in use",
+   "The port-channel is stand-alone and down"
+  ],
+  "answer": "B",
+  "explanation": "Port-channel flags: S - Layer 2, R - Layer 3, U - in use, D - down. SU is normal for a working Layer 2 EtherChannel. A Layer 3 channel in use shows RU.",
+  "option_notes": [
+   "Wrong: Suspended is shown with a lowercase s on member ports.",
+   "Correct: S means Layer 2 and U means in use.",
+   "Wrong: Layer 3 would be shown as R.",
+   "Wrong: Down would be shown with D."
+  ],
+  "key_concept": "SU = working L2 channel; RU = working L3 channel.",
+  "cli_example": "SW1# show etherchannel summary",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "보통",
+  "question": "Which of the following must match on all member interfaces of the same EtherChannel?",
+  "choices": [
+   "Speed and duplex",
+   "Interface description",
+   "Interface number on each switch",
+   "Hostname of the neighbor switch"
+  ],
+  "answer": "A",
+  "explanation": "All member ports must match in speed, duplex, VLAN/trunking mode, native VLAN and allowed VLANs. Otherwise they may not join the bundle or may be suspended.",
+  "option_notes": [
+   "Correct: Members must have consistent speed, duplex and switchport settings.",
+   "Wrong: Descriptions are only labels.",
+   "Wrong: Port numbers on the two switches can differ.",
+   "Wrong: Neighbor hostnames are irrelevant."
+  ],
+  "key_concept": "Speed, duplex, VLAN and trunk settings must match.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "보통",
+  "question": "Which configuration creates a Layer 3 EtherChannel on a multilayer switch?",
+  "choices": [
+   "Configure switchport mode trunk on the member ports",
+   "Configure an IP address on each member interface",
+   "Configure the VLAN IP address on each member port",
+   "Configure no switchport and an IP address on the Port-channel interface"
+  ],
+  "answer": "D",
+  "explanation": "Make the member ports routed with no switchport, join them to the group, and then configure no switchport and an IP address on interface Port-channel. The result is a routed EtherChannel.",
+  "option_notes": [
+   "Wrong: Trunking makes a Layer 2 channel.",
+   "Wrong: The IP address goes on the port-channel, not on members.",
+   "Wrong: A VLAN interface (SVI) is not a routed EtherChannel.",
+   "Correct: A Layer 3 channel is a routed port-channel with the IP address on the Port-channel interface."
+  ],
+  "key_concept": "L3 EtherChannel: no switchport, IP on Port-channel.",
+  "cli_example": "interface range gi0/1 - 2\n no switchport\n channel-group 1 mode active\ninterface port-channel 1\n no switchport\n ip address 10.1.1.1 255.255.255.252",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "보통",
+  "question": "A trunk configuration with switchport trunk allowed vlan 10,20 is entered on interface Port-channel 1. What is the effect?",
+  "choices": [
+   "Nothing; it must be entered on each member port separately",
+   "It applies only to the first member port",
+   "The setting is applied to the member ports of the bundle",
+   "It is applied only to the neighbor switch"
+  ],
+  "answer": "C",
+  "explanation": "Layer 2 settings applied to a Port-channel interface are inherited by all members. Cisco recommends configuring parameters on the Port-channel so all members stay consistent.",
+  "option_notes": [
+   "Wrong: IOS copies port-channel settings to members automatically.",
+   "Wrong: It applies to all members, not just the first.",
+   "Correct: Configuration on the Port-channel interface is pushed to the physical members.",
+   "Wrong: Commands are never sent to the neighbor."
+  ],
+  "key_concept": "Configure on the Port-channel to keep members consistent.",
+  "cli_example": "SW1(config)# interface port-channel 1\nSW1(config-if)# switchport mode trunk",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "보통",
+  "question": "A single FTP transfer between one client and one server across a 4-link EtherChannel only uses about 1 Gbps of the 4 Gbps available. Why?",
+  "choices": [
+   "EtherChannel only activates one link until it fails",
+   "The hash sends all frames of one flow over the same member link",
+   "STP blocks three of the links",
+   "The links are in LACP passive mode"
+  ],
+  "answer": "B",
+  "explanation": "Frames are distributed across members using a hash of fields such as source and destination MAC or IP addresses. One conversation always yields the same hash, so it stays on one link. Many flows are needed to use all links.",
+  "option_notes": [
+   "Wrong: All links are active in a bundle.",
+   "Correct: EtherChannel load balancing hashes addresses, so a single flow always uses the same link.",
+   "Wrong: STP sees the bundle as one link and blocks none.",
+   "Wrong: Mode does not affect load distribution."
+  ],
+  "key_concept": "Load balancing is per-flow, not per-packet.",
+  "cli_example": "SW1(config)# port-channel load-balance src-dst-ip",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "보통",
+  "question": "Which command changes the EtherChannel load-balancing method to use source and destination IP addresses?",
+  "choices": [
+   "port-channel load-balance src-dst-ip",
+   "channel-group load-balance src-dst-ip",
+   "etherchannel balance ip",
+   "lacp load-balance ip"
+  ],
+  "answer": "A",
+  "explanation": "port-channel load-balance <method> is a global configuration command. Methods include src-mac, dst-mac, src-dst-mac, src-ip, dst-ip and src-dst-ip, depending on platform.",
+  "option_notes": [
+   "Correct: port-channel load-balance is the global command.",
+   "Wrong: channel-group does not accept this keyword.",
+   "Wrong: etherchannel balance is not an IOS command.",
+   "Wrong: lacp has no load-balance command."
+  ],
+  "key_concept": "Global command: port-channel load-balance.",
+  "cli_example": "SW1(config)# port-channel load-balance src-dst-ip",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "보통",
+  "question": "SW1 is set to mode on for the EtherChannel and SW2 is set to mode active. What is the result?",
+  "choices": [
+   "A LACP EtherChannel forms because SW2 is active",
+   "A PAgP EtherChannel forms",
+   "An EtherChannel forms and uses the on mode on both ends",
+   "No EtherChannel forms because on does not exchange negotiation packets"
+  ],
+  "answer": "D",
+  "explanation": "Mode on does not use LACP or PAgP, so it only forms a bundle with another on-mode peer. An on/active mismatch leaves the channel down and can lead to STP issues.",
+  "option_notes": [
+   "Wrong: SW1 never sends LACP packets and ignores them.",
+   "Wrong: PAgP is not involved.",
+   "Wrong: SW2 will not switch to static on its own.",
+   "Correct: on only forms with on; it cannot negotiate with active."
+  ],
+  "key_concept": "on only pairs with on.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "보통",
+  "question": "What does the flag D mean in Po1(SD) shown in the output of show etherchannel summary?",
+  "choices": [
+   "The port-channel is a Layer 3 channel that is down",
+   "The port-channel is in use and the members are bundled",
+   "The port-channel is a Layer 2 channel that is down",
+   "The port-channel is dynamic"
+  ],
+  "answer": "C",
+  "explanation": "SD means Layer 2 and down: no member port is bundled and active. Check that member links are up and the neighbor configuration matches.",
+  "option_notes": [
+   "Wrong: Layer 3 would show R.",
+   "Wrong: In use would show U.",
+   "Correct: S = Layer 2 and D = down.",
+   "Wrong: D does not mean dynamic."
+  ],
+  "key_concept": "SD = Layer 2, down.",
+  "cli_example": "SW1# show etherchannel summary",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "어려움",
+  "question": "Refer to the output. Gi0/2 shows the s flag while Gi0/1 is bundled. Which is the most likely reason?\n\nSW1# show etherchannel summary\nFlags:  D - down        P - bundled in port-channel\n        I - stand-alone s - suspended\n        S - Layer2      U - in use      R - Layer3\n\nGroup  Port-channel  Protocol    Ports\n------+-------------+-----------+---------------------------\n1      Po1(SU)         LACP      Gi0/1(P)    Gi0/2(s)",
+  "choices": [
+   "Gi0/2 is administratively shut down",
+   "Gi0/2 has a configuration, such as speed, duplex or VLAN mode, that differs from the port-channel",
+   "Gi0/2 is operating as a stand-alone port",
+   "Gi0/2 is a hot-standby LACP member"
+  ],
+  "answer": "B",
+  "explanation": "Flags: P bundled, s suspended, I stand-alone, D down, H hot-standby. A suspended member is usually inconsistent with the other members or the neighbor. Compare the interface configuration with show running-config.",
+  "option_notes": [
+   "Wrong: A shutdown port would show D.",
+   "Correct: A lowercase s means suspended, usually from a configuration mismatch.",
+   "Wrong: Stand-alone would be shown as I.",
+   "Wrong: Hot standby is shown as H."
+  ],
+  "key_concept": "(s) suspended = mismatch.",
+  "cli_example": "SW1# show running-config interface gi0/2",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "어려움",
+  "question": "SW1 has Gi0/1 and Gi0/2 configured with channel-group 1 mode active. SW2 has no channel-group on its connected ports. What is the likely flag for the SW1 member ports in show etherchannel summary?",
+  "choices": [
+   "I (stand-alone)",
+   "P (bundled)",
+   "H (hot-standby)",
+   "R (Layer 3)"
+  ],
+  "answer": "A",
+  "explanation": "With active mode, SW1 sends LACP packets but SW2 does not answer. After a timeout, the ports work as stand-alone (I) ports and the channel is not formed.",
+  "option_notes": [
+   "Correct: No LACP packets are received, so the ports act as individual ports.",
+   "Wrong: They cannot bundle without a peer.",
+   "Wrong: Hot-standby applies when more than 8 links are present.",
+   "Wrong: R refers to a Layer 3 channel."
+  ],
+  "key_concept": "I = stand-alone, usually no negotiation peer.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "어려움",
+  "question": "A 4-link LACP EtherChannel carries traffic between two switches. One member link fails. What is the impact on Spanning Tree?",
+  "choices": [
+   "STP recalculates the topology and blocks another link",
+   "The entire bundle goes down",
+   "STP elects a new root bridge",
+   "No STP topology change; traffic is redistributed over the remaining links"
+  ],
+  "answer": "D",
+  "explanation": "EtherChannel handles member failure internally. The hash is redistributed over the remaining links in a fraction of a second, and bandwidth is reduced. That is why EtherChannel converges faster than STP.",
+  "option_notes": [
+   "Wrong: STP is not involved in member link failure.",
+   "Wrong: The bundle stays up with fewer members.",
+   "Wrong: The root bridge election is unaffected.",
+   "Correct: STP sees one logical port, so a member failure does not alter the STP topology."
+  ],
+  "key_concept": "Member failure is invisible to STP.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "어려움",
+  "question": "SW1 is configured with channel-group 2 mode desirable and SW2 is configured with channel-group 2 mode active on the connected ports. What is the result?",
+  "choices": [
+   "A PAgP EtherChannel forms",
+   "An LACP EtherChannel forms",
+   "No EtherChannel forms because the protocols are different",
+   "A static EtherChannel forms"
+  ],
+  "answer": "C",
+  "explanation": "Both ends must use the same negotiation protocol. Desirable/auto belong to PAgP and active/passive to LACP. A mix leaves the ports unbundled.",
+  "option_notes": [
+   "Wrong: SW2 does not understand PAgP packets.",
+   "Wrong: SW1 does not understand LACP packets.",
+   "Correct: SW1 runs PAgP and SW2 runs LACP; they are incompatible.",
+   "Wrong: Static mode requires on."
+  ],
+  "key_concept": "Same protocol on both ends or no bundle.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "어려움",
+  "question": "Two switches are connected by 10 links configured with LACP. Which switch decides which ports are active when more ports exist than the maximum?",
+  "choices": [
+   "The switch with the higher LACP system priority",
+   "The switch with the lower LACP system priority",
+   "The switch with the higher MAC address",
+   "The switch with the most ports"
+  ],
+  "answer": "B",
+  "explanation": "LACP elects one switch as decision maker based on lacp system-priority (default 32768; lower wins, MAC is the tiebreaker). That switch picks the active links using the LACP port priorities.",
+  "option_notes": [
+   "Wrong: A higher priority number loses.",
+   "Correct: The lower system priority wins and chooses the active ports.",
+   "Wrong: The MAC address is only a tiebreaker, and lower wins.",
+   "Wrong: Port count is not used."
+  ],
+  "key_concept": "Lower LACP system priority is in control.",
+  "cli_example": "SW1(config)# lacp system-priority 100",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "어려움",
+  "question": "Which command makes a specific member port preferred as an active link in an LACP bundle?",
+  "choices": [
+   "lacp port-priority 100 (lower value)",
+   "lacp port-priority 65535",
+   "port-channel priority 1",
+   "spanning-tree port-priority 1"
+  ],
+  "answer": "A",
+  "explanation": "lacp port-priority sets the priority of an interface. Lower numbers are preferred when more links exist than the platform supports as active, which determines the active and standby ports.",
+  "option_notes": [
+   "Correct: A lower LACP port priority value is preferred.",
+   "Wrong: The highest value is least preferred.",
+   "Wrong: That is not an IOS command.",
+   "Wrong: STP port priority controls STP, not LACP."
+  ],
+  "key_concept": "Lower lacp port-priority = more preferred.",
+  "cli_example": "SW1(config-if)# lacp port-priority 100",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "어려움",
+  "question": "After configuring an EtherChannel with mode on on SW1 only, the SW2 ports appear in err-disabled state with the reason channel-misconfig. What is the cause?",
+  "choices": [
+   "The ports were configured with LACP passive on both ends",
+   "The speed is auto on both switches",
+   "The native VLAN is correct on both sides",
+   "One side is bundled with on while the other side is not configured for the EtherChannel"
+  ],
+  "answer": "D",
+  "explanation": "The channel-misconfig error means the EtherChannel guard saw a bundle on one side and individual ports on the other, which could create loops. Make both sides consistent and shut/no shut the ports.",
+  "option_notes": [
+   "Wrong: Passive on both ends would not create channel-misconfig errors.",
+   "Wrong: Auto speed is not a cause.",
+   "Wrong: Matching native VLANs are not a cause.",
+   "Correct: STP EtherChannel guard detects the one-sided bundle and err-disables the port."
+  ],
+  "key_concept": "channel-misconfig = inconsistent EtherChannel configuration.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "어려움",
+  "question": "An administrator enters channel-protocol lacp on an interface and then tries channel-group 1 mode desirable. What happens?",
+  "choices": [
+   "The port joins group 1 using PAgP",
+   "The port joins group 1 using LACP active",
+   "The switch rejects the command because desirable is a PAgP mode",
+   "The switch ignores channel-protocol lacp"
+  ],
+  "answer": "C",
+  "explanation": "channel-protocol sets the protocol for the interface. Only active and passive are accepted afterwards. Mixing desirable/auto with LACP is rejected.",
+  "option_notes": [
+   "Wrong: The port is limited to LACP.",
+   "Wrong: desirable is not an LACP mode.",
+   "Correct: channel-protocol lacp restricts the interface to LACP modes.",
+   "Wrong: The channel-protocol command is enforced."
+  ],
+  "key_concept": "channel-protocol locks the protocol family.",
+  "cli_example": "SW1(config-if)# channel-protocol lacp\nSW1(config-if)# channel-group 1 mode active",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "어려움",
+  "question": "A port-channel has two members. show etherchannel summary shows Po1(SU) with Gi0/1(P) and Gi0/2(D). Which statement is correct?",
+  "choices": [
+   "The EtherChannel is down",
+   "The EtherChannel is up and carrying traffic only on Gi0/1",
+   "Gi0/2 is carrying all the traffic",
+   "Gi0/1 is suspended"
+  ],
+  "answer": "B",
+  "explanation": "Po1(SU) shows a working Layer 2 channel. Gi0/1(P) is bundled; Gi0/2(D) is down, probably cable or shutdown. Bandwidth is reduced, but connectivity continues.",
+  "option_notes": [
+   "Wrong: Po1 flag U means it is in use.",
+   "Correct: The channel is SU and Gi0/1 is bundled, so it passes traffic while Gi0/2 is down.",
+   "Wrong: A down port cannot carry traffic.",
+   "Wrong: P means bundled, not suspended."
+  ],
+  "key_concept": "A channel can stay up with a down member.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.4",
+  "difficulty": "어려움",
+  "question": "In the output of show etherchannel summary, the Protocol column displays a dash (-) for Po1. What does this indicate?",
+  "choices": [
+   "The EtherChannel was formed statically with mode on",
+   "LACP is in use",
+   "PAgP is in use",
+   "The bundle is down"
+  ],
+  "answer": "A",
+  "explanation": "The protocol column shows LACP, PAgP or - for static on. Static mode means the ports are forced into the channel without checks.",
+  "option_notes": [
+   "Correct: A dash means no negotiation protocol is running.",
+   "Wrong: LACP would be displayed as LACP.",
+   "Wrong: PAgP would be displayed as PAgP.",
+   "Wrong: Down is shown via the flags."
+  ],
+  "key_concept": "Protocol '-' = static on.",
+  "cli_example": "SW1# show etherchannel summary",
+  "tip": ""
+ }
+]

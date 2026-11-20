@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "3.1",
+  "difficulty": "쉬움",
+  "question": "In a Cisco routing table, what does the code C represent?",
+  "choices": [
+   "A static route",
+   "A directly connected network",
+   "A route learned through OSPF",
+   "A candidate default route"
+  ],
+  "answer": "B",
+  "explanation": "The code C identifies a connected route, created automatically when an interface has an IP address and is up. A matching L route is also created for the interface's own address.",
+  "option_notes": [
+   "Wrong: Static routes use S.",
+   "Correct: C marks the network of an interface that is up/up and has an IP address.",
+   "Wrong: OSPF routes use O.",
+   "Wrong: Candidate defaults are marked with an asterisk (*)."
+  ],
+  "key_concept": "C = connected.",
+  "cli_example": "",
+  "tip": "Learn codes: C, L, S, O, D, R, B."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "쉬움",
+  "question": "Which routing table code identifies a route configured manually with the ip route command?",
+  "choices": [
+   "S",
+   "C",
+   "L",
+   "D"
+  ],
+  "answer": "A",
+  "explanation": "Static routes entered with ip route appear with the code S. They have an administrative distance of 1 by default.",
+  "option_notes": [
+   "Correct: S stands for static route.",
+   "Wrong: C is a connected network.",
+   "Wrong: L is a local host route for the router's own interface address.",
+   "Wrong: D is an EIGRP route."
+  ],
+  "key_concept": "S = static (AD 1).",
+  "cli_example": "ip route 10.1.1.0 255.255.255.0 192.168.1.2",
+  "tip": "Default static AD = 1."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "쉬움",
+  "question": "What does the L code in a routing table entry represent?",
+  "choices": [
+   "A link-state route",
+   "A load-balanced route",
+   "A learned default route",
+   "A local host route (/32) for an IP address assigned to a router interface"
+  ],
+  "answer": "D",
+  "explanation": "Since IOS 15, the router adds an L entry with a /32 prefix for every interface IP address. It lets the router recognize packets destined to itself.",
+  "option_notes": [
+   "Wrong: Link-state routes would be OSPF (O) or IS-IS (i).",
+   "Wrong: Load balancing has no separate code.",
+   "Wrong: Default routes use the * marker.",
+   "Correct: L routes are /32 entries for the router's own interface addresses."
+  ],
+  "key_concept": "L = local /32 of an interface address.",
+  "cli_example": "",
+  "tip": "Each interface gets a C and an L route."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "쉬움",
+  "question": "Which administrative distance is assigned to a directly connected network by default?",
+  "choices": [
+   "1",
+   "90",
+   "0",
+   "110"
+  ],
+  "answer": "C",
+  "explanation": "Administrative distance expresses how trustworthy a route source is. Lower is better. Connected networks have an AD of 0.",
+  "option_notes": [
+   "Wrong: AD 1 is the default for static routes.",
+   "Wrong: AD 90 is for internal EIGRP.",
+   "Correct: A connected network is the most trusted source with AD 0.",
+   "Wrong: AD 110 is for OSPF."
+  ],
+  "key_concept": "Connected = 0, static = 1.",
+  "cli_example": "",
+  "tip": "AD: 0, 1, 20, 90, 110, 120."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "쉬움",
+  "question": "What is the default administrative distance of OSPF?",
+  "choices": [
+   "90",
+   "110",
+   "120",
+   "100"
+  ],
+  "answer": "B",
+  "explanation": "The AD for OSPF is 110. This value is compared with other routing sources when several protocols offer a route to the same prefix. Lower wins.",
+  "option_notes": [
+   "Wrong: 90 is internal EIGRP.",
+   "Correct: OSPF uses AD 110 for all its routes (intra-area, inter-area, external).",
+   "Wrong: 120 is RIP.",
+   "Wrong: 100 is the IGRP value, which is not used in CCNA routers."
+  ],
+  "key_concept": "OSPF = 110.",
+  "cli_example": "",
+  "tip": "Memorize: EIGRP 90, OSPF 110, RIP 120."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "쉬움",
+  "question": "What is the default administrative distance of RIP?",
+  "choices": [
+   "120",
+   "110",
+   "90",
+   "1"
+  ],
+  "answer": "A",
+  "explanation": "RIP has a default AD of 120. This is higher than OSPF and EIGRP, so those are preferred if they offer the same prefix.",
+  "option_notes": [
+   "Correct: RIP uses AD 120.",
+   "Wrong: 110 is OSPF.",
+   "Wrong: 90 is EIGRP.",
+   "Wrong: 1 is a static route."
+  ],
+  "key_concept": "RIP = 120.",
+  "cli_example": "",
+  "tip": "Order: EIGRP < OSPF < RIP."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "쉬움",
+  "question": "Which command displays the IPv4 routing table on a Cisco router?",
+  "choices": [
+   "show route table",
+   "show ip interface brief",
+   "show running-config route",
+   "show ip route"
+  ],
+  "answer": "D",
+  "explanation": "Use show ip route in privileged EXEC mode. It displays the codes legend, the gateway of last resort and every route with its AD, metric and next hop.",
+  "option_notes": [
+   "Wrong: show route table is not an IOS command.",
+   "Wrong: show ip interface brief shows interface IP and status, not routes.",
+   "Wrong: The running-config shows configured commands, not the table.",
+   "Correct: show ip route lists the routes, codes, AD/metric and next hops."
+  ],
+  "key_concept": "show ip route",
+  "cli_example": "show ip route\nshow ip route 10.1.1.0",
+  "tip": "Also try show ip route <protocol>."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "쉬움",
+  "question": "In the routing table entry O 10.2.2.0/24 [110/2] via 10.1.1.2, what does the number 2 represent?",
+  "choices": [
+   "The administrative distance",
+   "The number of equal-cost paths",
+   "The metric",
+   "The interface number"
+  ],
+  "answer": "C",
+  "explanation": "The bracket shows [administrative distance / metric]. Here 110 is the AD of OSPF and 2 is the OSPF cost. The next hop is 10.1.1.2.",
+  "option_notes": [
+   "Wrong: The AD is the first number, 110.",
+   "Wrong: Equal-cost paths are shown as multiple entries, not this value.",
+   "Correct: In [AD/metric], the second number is the metric (OSPF cost here).",
+   "Wrong: The interface appears at the end of the line."
+  ],
+  "key_concept": "[AD/metric]",
+  "cli_example": "",
+  "tip": "Read the brackets as AD first, metric second."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "쉬움",
+  "question": "Which term describes the IP address of the next router to which a packet is sent on its way to the destination?",
+  "choices": [
+   "Gateway of last resort",
+   "Next hop",
+   "Prefix",
+   "Metric"
+  ],
+  "answer": "B",
+  "explanation": "Each route needs a way to reach the destination. A next-hop address or an exit interface gives that. The routing table shows it as 'via <address>'.",
+  "option_notes": [
+   "Wrong: The gateway of last resort is the default route's next hop.",
+   "Correct: The next hop is the neighbor address that forwards the packet toward the destination.",
+   "Wrong: The prefix is the destination network.",
+   "Wrong: The metric is the route's cost value."
+  ],
+  "key_concept": "Next hop = next router.",
+  "cli_example": "",
+  "tip": "via X.X.X.X = next hop."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "쉬움",
+  "question": "What does the asterisk (*) in front of a route such as S* 0.0.0.0/0 [1/0] via 192.168.1.1 mean?",
+  "choices": [
+   "It is the candidate default route",
+   "It is an expired route",
+   "It is a summary route",
+   "It is a floating static route"
+  ],
+  "answer": "A",
+  "explanation": "The asterisk shows the route is a candidate default. If it is chosen, the table lists 'Gateway of last resort is ... to network 0.0.0.0'.",
+  "option_notes": [
+   "Correct: * marks a candidate default route, used as the gateway of last resort.",
+   "Wrong: Expired routes are removed from the table.",
+   "Wrong: Summary routes are not marked with *.",
+   "Wrong: Floating static routes are shown only when active and have an AD above 1."
+  ],
+  "key_concept": "* = candidate default.",
+  "cli_example": "",
+  "tip": "Gateway of last resort = default route."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "보통",
+  "question": "Refer to the output. Which statement is true about the route to 172.16.5.0/24?\n\nO    172.16.5.0/24 [110/65] via 10.0.0.2, 00:03:11, GigabitEthernet0/1",
+  "choices": [
+   "It is a static route with a metric of 110",
+   "It is a connected route with AD 65",
+   "It was learned from EIGRP with AD 110",
+   "It was learned from OSPF and has a cost of 65"
+  ],
+  "answer": "D",
+  "explanation": "Breaking down the line: O = OSPF, 172.16.5.0/24 = prefix, [110/65] = AD and metric, via 10.0.0.2 = next hop, 00:03:11 = age, GigabitEthernet0/1 = outgoing interface.",
+  "option_notes": [
+   "Wrong: A static route would have code S and AD 1 unless changed.",
+   "Wrong: A connected route would use C and AD 0.",
+   "Wrong: EIGRP uses D and AD 90.",
+   "Correct: The code O means OSPF; 110 is the AD and 65 the metric (cost)."
+  ],
+  "key_concept": "Parse the entry field by field.",
+  "cli_example": "show ip route 172.16.5.0",
+  "tip": "Know each field's position."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "보통",
+  "question": "What is the default administrative distance of an external BGP (eBGP) route?",
+  "choices": [
+   "200",
+   "90",
+   "20",
+   "170"
+  ],
+  "answer": "C",
+  "explanation": "eBGP routes have AD 20, while iBGP routes use 200. This difference helps prefer routes learned from other autonomous systems.",
+  "option_notes": [
+   "Wrong: 200 is the AD for iBGP.",
+   "Wrong: 90 is internal EIGRP.",
+   "Correct: eBGP is assigned AD 20.",
+   "Wrong: 170 is external EIGRP."
+  ],
+  "key_concept": "eBGP 20, iBGP 200.",
+  "cli_example": "",
+  "tip": "Know both BGP values."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "보통",
+  "question": "What is the default administrative distance of a static route that uses a next-hop address?",
+  "choices": [
+   "0",
+   "1",
+   "5",
+   "110"
+  ],
+  "answer": "B",
+  "explanation": "The default AD for an ip route statement is 1. The administrator can add a number at the end of the command to change it, which is how a floating static route is created.",
+  "option_notes": [
+   "Wrong: AD 0 is for connected networks.",
+   "Correct: Static routes default to AD 1.",
+   "Wrong: 5 is the AD for EIGRP summary routes.",
+   "Wrong: 110 is OSPF."
+  ],
+  "key_concept": "Static = 1; floating = higher AD.",
+  "cli_example": "ip route 10.5.5.0 255.255.255.0 10.1.1.2 200",
+  "tip": "AD at the end of ip route."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "보통",
+  "question": "In the routing table, which routes are shown with the codes O IA and O E2?",
+  "choices": [
+   "OSPF inter-area and OSPF external type 2 routes",
+   "OSPF internal and EIGRP external routes",
+   "RIP internal and RIP external routes",
+   "Static and connected routes"
+  ],
+  "answer": "A",
+  "explanation": "OSPF routes carry extra tags. Plain O means intra-area, O IA means inter-area, and O E1 or O E2 mean external routes redistributed into OSPF.",
+  "option_notes": [
+   "Correct: O IA is an OSPF inter-area route; O E2 is an OSPF external type 2 route.",
+   "Wrong: EIGRP external routes use D EX.",
+   "Wrong: RIP has no IA/E2 route types.",
+   "Wrong: Static and connected routes are S and C."
+  ],
+  "key_concept": "O, O IA, O E1, O E2.",
+  "cli_example": "",
+  "tip": "E2 is the default external type."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "보통",
+  "question": "The router has this entry: D EX 10.9.0.0/16 [170/307200] via 10.1.1.2. What does it represent?",
+  "choices": [
+   "An internal EIGRP route with AD 90",
+   "A RIP route with AD 120",
+   "An external OSPF route with AD 110",
+   "An external EIGRP route with AD 170"
+  ],
+  "answer": "D",
+  "explanation": "EIGRP internal routes use AD 90 and the code D. Routes redistributed into EIGRP appear as D EX with AD 170. The number 307200 is the EIGRP composite metric.",
+  "option_notes": [
+   "Wrong: Internal EIGRP has the code D and AD 90.",
+   "Wrong: RIP would be R with AD 120.",
+   "Wrong: OSPF external routes are O E1 or O E2.",
+   "Correct: D EX means an EIGRP external route, which has AD 170."
+  ],
+  "key_concept": "D = AD 90, D EX = AD 170.",
+  "cli_example": "",
+  "tip": "Know EIGRP internal vs external AD."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "보통",
+  "question": "Which two values together identify a route's preference when the same prefix is offered by different routing protocols?",
+  "choices": [
+   "Metric first, then administrative distance",
+   "Next-hop IP address, then interface speed",
+   "Administrative distance first, then metric within the same protocol",
+   "Prefix length, then hop count only"
+  ],
+  "answer": "C",
+  "explanation": "For identical prefixes, the router installs the route with the lowest AD. When the AD is equal because the routes come from the same protocol, the lowest metric wins.",
+  "option_notes": [
+   "Wrong: Metrics from different protocols cannot be compared, so AD comes first.",
+   "Wrong: Next hop and speed are not the selection criteria.",
+   "Correct: AD decides between protocols; the metric decides among routes of the same protocol.",
+   "Wrong: Prefix length is considered first for different prefixes, and hop count is only RIP's metric."
+  ],
+  "key_concept": "Lowest AD wins, then lowest metric.",
+  "cli_example": "",
+  "tip": "AD = trust; metric = best path within a protocol."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "보통",
+  "question": "What does the line Gateway of last resort is 192.168.1.1 to network 0.0.0.0 indicate?",
+  "choices": [
+   "The router has no route to any network",
+   "The router has a default route and will send unknown destinations to 192.168.1.1",
+   "The router will drop packets for unknown destinations",
+   "192.168.1.1 is the router's loopback address"
+  ],
+  "answer": "B",
+  "explanation": "When a default route 0.0.0.0/0 is installed and marked as a candidate, the table header shows the gateway of last resort. Packets that match no more specific route use it.",
+  "option_notes": [
+   "Wrong: The router has at least the default route.",
+   "Correct: The gateway of last resort is the next hop of the default route.",
+   "Wrong: With a default route, unknown destinations are sent to the gateway, not dropped.",
+   "Wrong: The address is a next hop, not a loopback."
+  ],
+  "key_concept": "Gateway of last resort = default route's next hop.",
+  "cli_example": "show ip route",
+  "tip": "No default route: 'Gateway of last resort is not set'."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "보통",
+  "question": "Which statement about the age field (such as 00:03:11) in a routing table entry is true?",
+  "choices": [
+   "It shows how long the route has been in the table",
+   "It shows the metric of the route",
+   "It shows the AD of the route",
+   "It is the TTL of packets using the route"
+  ],
+  "answer": "A",
+  "explanation": "Dynamic routes display a time value. It indicates how long since the route was installed or last updated. Connected and static routes do not show an age.",
+  "option_notes": [
+   "Correct: The timer shows the time since the route was learned or last updated.",
+   "Wrong: The metric appears inside brackets.",
+   "Wrong: The AD also appears inside brackets.",
+   "Wrong: TTL is a packet header field."
+  ],
+  "key_concept": "Age = time in the table.",
+  "cli_example": "",
+  "tip": "Connected and static routes have no age."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "보통",
+  "question": "A router interface has the address 192.168.10.1/24 and is up/up. Which two routes appear automatically in the routing table?",
+  "choices": [
+   "S 192.168.10.0/24 and L 192.168.10.0/24",
+   "C 192.168.10.1/32 and L 192.168.10.0/24",
+   "D 192.168.10.0/24 and C 192.168.10.1/32",
+   "C 192.168.10.0/24 and L 192.168.10.1/32"
+  ],
+  "answer": "D",
+  "explanation": "For each active interface, IOS creates a C route for the network and an L route /32 for the interface address. Both have AD 0.",
+  "option_notes": [
+   "Wrong: Static routes are not created automatically.",
+   "Wrong: The prefixes are swapped; C covers the network and L covers the host address.",
+   "Wrong: D routes are EIGRP and need configuration.",
+   "Correct: The router installs a connected network route and a local host route for the interface address."
+  ],
+  "key_concept": "C = network, L = interface address /32.",
+  "cli_example": "",
+  "tip": "Both are created with an up/up interface."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "보통",
+  "question": "How are equal-cost routes shown in the routing table for the same prefix?",
+  "choices": [
+   "Only the first route is displayed",
+   "Two separate prefixes with different masks",
+   "Multiple next-hop lines under a single route entry",
+   "With different administrative distances"
+  ],
+  "answer": "C",
+  "explanation": "When a routing protocol finds several paths with the same metric, they are installed together. The show ip route output lists each next hop under the prefix. Traffic is load balanced across them.",
+  "option_notes": [
+   "Wrong: All equal-cost routes appear.",
+   "Wrong: They have the same prefix and mask.",
+   "Correct: Load balanced routes list several 'via' lines under one prefix.",
+   "Wrong: They share the same AD and metric."
+  ],
+  "key_concept": "Equal-cost = multiple via lines.",
+  "cli_example": "",
+  "tip": "OSPF supports up to 4 equal paths by default."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "어려움",
+  "question": "Refer to the output. Which statement is true?\n\nR1# show ip route 10.4.4.0\nRouting entry for 10.4.4.0/24\n  Known via \"ospf 1\", distance 110, metric 20, type intra area\n  Last update from 10.1.1.2 on GigabitEthernet0/1, 00:00:45 ago\n  Routing Descriptor Blocks:\n  * 10.1.1.2, from 4.4.4.4, 00:00:45 ago, via GigabitEthernet0/1\n      Route metric is 20, traffic share count is 1",
+  "choices": [
+   "The next hop is 4.4.4.4 and the advertising router ID is 10.1.1.2",
+   "The next hop is 10.1.1.2 and the advertising router ID is 4.4.4.4",
+   "The route is a static route learned from 4.4.4.4",
+   "The administrative distance is 20"
+  ],
+  "answer": "B",
+  "explanation": "The detailed output shows the source protocol, AD (distance 110) and metric (20). In the descriptor block, the first address is the next hop, and 'from' is the originating router's ID. An asterisk marks the active descriptor used for the next packet.",
+  "option_notes": [
+   "Wrong: The next hop and the advertising router are reversed in this option.",
+   "Correct: The address after the asterisk is the next hop; 'from' shows the router that advertised the route (its router ID).",
+   "Wrong: The route is known via OSPF, not static.",
+   "Wrong: The distance is 110; 20 is the metric."
+  ],
+  "key_concept": "Distinguish next hop from 'from' router ID.",
+  "cli_example": "show ip route <prefix>",
+  "tip": "Use the detailed view for troubleshooting."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "어려움",
+  "question": "A router has the following routes for 10.0.0.0/8: one from EIGRP and one from OSPF. The EIGRP route has an AD of 90 and a metric of 2000000. The OSPF route has an AD of 110 and a metric of 2. Which route is installed?",
+  "choices": [
+   "The EIGRP route, because its AD is lower",
+   "The OSPF route, because its metric is lower",
+   "Both routes are installed and load balanced",
+   "Neither route, because the metrics differ in type"
+  ],
+  "answer": "A",
+  "explanation": "The router compares administrative distance between routing sources first. The EIGRP route's AD of 90 beats OSPF at 110. The metric values are not compared since they use different calculation methods.",
+  "option_notes": [
+   "Correct: AD is compared first for different sources, and 90 is lower than 110.",
+   "Wrong: Metrics from different protocols are never compared.",
+   "Wrong: Load balancing only applies to equal AD and metric within a protocol.",
+   "Wrong: One route is still chosen using AD."
+  ],
+  "key_concept": "Different protocols: compare AD only.",
+  "cli_example": "",
+  "tip": "Do not compare metrics across protocols."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "어려움",
+  "question": "R1 shows only the following entries for 192.168.1.0. Which statement is correct?\n\nC    192.168.1.0/24 is directly connected, GigabitEthernet0/0\nL    192.168.1.1/32 is directly connected, GigabitEthernet0/0\n",
+  "choices": [
+   "The router has a default route to 192.168.1.1",
+   "192.168.1.1 is a next hop learned from OSPF",
+   "The interface address is 192.168.1.0",
+   "The router's own interface address is 192.168.1.1 and it is on the 192.168.1.0/24 network"
+  ],
+  "answer": "D",
+  "explanation": "C routes list the subnet and the local interface. L routes list the exact host address of the interface as /32. No AD or metric brackets are shown for these because they are directly connected.",
+  "option_notes": [
+   "Wrong: A default route would show 0.0.0.0/0.",
+   "Wrong: OSPF routes show code O and an AD/metric.",
+   "Wrong: 192.168.1.0 is the network address, not the interface address.",
+   "Correct: The L entry is the interface's own address and the C entry is its network."
+  ],
+  "key_concept": "C = network, L = own address.",
+  "cli_example": "",
+  "tip": "Connected and local entries have no brackets."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "어려움",
+  "question": "Which route would the router prefer to install for 10.10.10.0/24 if all four sources were available?",
+  "choices": [
+   "A route learned through OSPF",
+   "A route learned through RIP",
+   "A route learned through internal EIGRP",
+   "A route learned through iBGP"
+  ],
+  "answer": "C",
+  "explanation": "Among the options, EIGRP internal (90) is preferred over OSPF (110), RIP (120) and iBGP (200). The router installs the source with the lowest AD.",
+  "option_notes": [
+   "Wrong: OSPF has AD 110.",
+   "Wrong: RIP has AD 120.",
+   "Correct: Internal EIGRP has AD 90, the lowest among these options.",
+   "Wrong: iBGP has AD 200."
+  ],
+  "key_concept": "Order: connected 0, static 1, eBGP 20, EIGRP 90, OSPF 110, RIP 120, EIGRP ext 170, iBGP 200.",
+  "cli_example": "",
+  "tip": "Learn the AD list in order."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "어려움",
+  "question": "A router shows the line S 10.20.0.0/16 [1/0] via 10.1.1.2. What can be said about the metric field?",
+  "choices": [
+   "It is 1 because it equals the AD",
+   "It is 0 because static routes do not have a calculated metric",
+   "It is the interface bandwidth",
+   "It is the number of hops"
+  ],
+  "answer": "B",
+  "explanation": "Static routes show [1/0]. The 1 is the AD and the 0 is the metric, which is unused because static routes are not computed by a protocol. They are selected by AD and prefix length.",
+  "option_notes": [
+   "Wrong: The first number is AD; metric is separate.",
+   "Correct: For static routes, the metric is shown as 0.",
+   "Wrong: Bandwidth is not used for static routes.",
+   "Wrong: Hop count is not tracked for static routes."
+  ],
+  "key_concept": "Static route = [1/0].",
+  "cli_example": "",
+  "tip": "[1/0] means static with next hop."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "어려움",
+  "question": "The command show ip route shows 'Gateway of last resort is not set'. What does this mean and what is the effect?",
+  "choices": [
+   "No default route is installed, so packets without a matching route are dropped",
+   "The router has a default route using OSPF",
+   "The router will forward unknown packets to the DHCP server",
+   "The default gateway on hosts is missing"
+  ],
+  "answer": "A",
+  "explanation": "A router without a matching specific route or default route drops the packet and may send an ICMP destination unreachable. The gateway of last resort line reports whether a default route is available.",
+  "option_notes": [
+   "Correct: Without a default route, packets that match no entry are discarded.",
+   "Wrong: If a default route existed, the gateway would be set.",
+   "Wrong: DHCP servers are not used to forward unknown packets.",
+   "Wrong: This relates to the router's routing table, not hosts."
+  ],
+  "key_concept": "No default = unknown destinations dropped.",
+  "cli_example": "ip route 0.0.0.0 0.0.0.0 192.168.1.1",
+  "tip": "Add 0.0.0.0/0 to set it."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "어려움",
+  "question": "A router learns 10.1.0.0/16 from OSPF and has a static route for the same prefix configured with AD 150. Which statement is correct?",
+  "choices": [
+   "The static route is installed because static routes always win",
+   "Both are installed for load balancing",
+   "Neither is installed due to the conflict",
+   "The OSPF route is installed because AD 110 is lower than 150"
+  ],
+  "answer": "D",
+  "explanation": "By raising the static route's AD above the dynamic protocol's AD, you create a floating static route. It stays out of the table until the OSPF route disappears.",
+  "option_notes": [
+   "Wrong: Static routes win only with the default AD of 1.",
+   "Wrong: Load balancing needs equal AD and metric.",
+   "Wrong: One route is always chosen.",
+   "Correct: Lowest AD wins: OSPF 110 beats the static route's 150."
+  ],
+  "key_concept": "Higher AD = backup (floating).",
+  "cli_example": "ip route 10.1.0.0 255.255.0.0 10.2.2.2 150",
+  "tip": "Floating static: AD above the primary."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "어려움",
+  "question": "In the entry O E2 172.16.0.0/16 [110/20] via 10.1.1.2, what does E2 indicate about how the metric is calculated?",
+  "choices": [
+   "The metric includes the full internal path cost plus the external cost",
+   "The route is an inter-area route",
+   "The metric is the external cost only and is not increased by internal OSPF cost",
+   "The route is from EIGRP"
+  ],
+  "answer": "C",
+  "explanation": "OSPF external type 2 (E2) routes carry the cost assigned at redistribution and it does not change as the route crosses the OSPF domain. E1 adds the internal cost to the external cost. E2 is the default type.",
+  "option_notes": [
+   "Wrong: Adding internal cost describes E1 routes.",
+   "Wrong: Inter-area routes are O IA.",
+   "Correct: Type 2 external routes keep the external metric as-is across the OSPF domain.",
+   "Wrong: EIGRP uses D EX."
+  ],
+  "key_concept": "E2 = fixed external cost; E1 = external + internal.",
+  "cli_example": "",
+  "tip": "E2 is the default for redistributed routes."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "어려움",
+  "question": "A packet to 10.9.9.9 arrives at a router. The table has only: C 10.1.1.0/24 via Gi0/0, S* 0.0.0.0/0 [1/0] via 10.1.1.2. What happens?",
+  "choices": [
+   "The packet is dropped",
+   "The packet is forwarded to 10.1.1.2 using the default route",
+   "The packet is sent out Gi0/0 as a broadcast",
+   "The router sends an ARP for 10.9.9.9 on Gi0/0"
+  ],
+  "answer": "B",
+  "explanation": "The router performs a lookup and only the default route matches. It forwards the packet to the next hop 10.1.1.2, ARPing for that next-hop address if needed.",
+  "option_notes": [
+   "Wrong: The default route exists, so the packet is not dropped.",
+   "Correct: No specific route exists, so the default route is used and the packet goes to 10.1.1.2.",
+   "Wrong: Routers do not forward unicast packets as broadcasts.",
+   "Wrong: The router ARPs for the next hop 10.1.1.2, not the final destination."
+  ],
+  "key_concept": "Default route matches anything.",
+  "cli_example": "",
+  "tip": "ARP is for the next hop, not the destination."
+ },
+ {
+  "sub": "3.1",
+  "difficulty": "어려움",
+  "question": "A router shows R 10.7.0.0/16 [120/3] via 10.1.1.2, 00:00:12, GigabitEthernet0/1. Which statement is correct?",
+  "choices": [
+   "The route was learned from RIP and the destination is 3 hops away",
+   "The route was learned from RIP with an AD of 3",
+   "The route was learned from OSPF with a cost of 120",
+   "The route is a connected route with metric 3"
+  ],
+  "answer": "A",
+  "explanation": "The code R identifies RIP. In [120/3], 120 is the administrative distance and 3 is the metric, which for RIP is the hop count. RIP considers 16 hops unreachable.",
+  "option_notes": [
+   "Correct: R is RIP, 120 is its AD and 3 is the hop-count metric.",
+   "Wrong: The AD is 120 and the metric is 3, not the reverse.",
+   "Wrong: OSPF routes use the code O and AD 110.",
+   "Wrong: Connected routes use C and have no brackets."
+  ],
+  "key_concept": "RIP: AD 120, metric = hops.",
+  "cli_example": "",
+  "tip": "Max usable RIP metric is 15."
+ }
+]

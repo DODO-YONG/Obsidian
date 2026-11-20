@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "2.3",
+  "difficulty": "쉬움",
+  "question": "Which protocol is a Cisco-proprietary Layer 2 protocol used to discover directly connected Cisco devices?",
+  "choices": [
+   "LLDP",
+   "CDP",
+   "DTP",
+   "LACP"
+  ],
+  "answer": "B",
+  "explanation": "CDP (Cisco Discovery Protocol) is a Cisco-proprietary Layer 2 protocol that advertises device information to directly connected neighbors. It works between Cisco devices and any device that supports it. It is enabled by default on Cisco IOS devices.",
+  "option_notes": [
+   "Wrong: LLDP is the vendor-neutral IEEE standard, not Cisco-proprietary.",
+   "Correct: Cisco Discovery Protocol is proprietary to Cisco and runs at Layer 2.",
+   "Wrong: DTP negotiates trunking, not neighbor discovery.",
+   "Wrong: LACP negotiates EtherChannel bundles."
+  ],
+  "key_concept": "CDP = Cisco proprietary neighbor discovery.",
+  "cli_example": "show cdp neighbors",
+  "tip": "Proprietary = CDP. Open standard = LLDP."
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "쉬움",
+  "question": "Which neighbor discovery protocol is an open, vendor-neutral standard defined by IEEE 802.1AB?",
+  "choices": [
+   "LLDP",
+   "CDP",
+   "VTP",
+   "HSRP"
+  ],
+  "answer": "A",
+  "explanation": "LLDP (Link Layer Discovery Protocol) is the IEEE 802.1AB standard. Because it is vendor neutral, it lets Cisco devices discover neighbors from other vendors, such as other switches, phones and servers.",
+  "option_notes": [
+   "Correct: LLDP is defined in IEEE 802.1AB and works across vendors.",
+   "Wrong: CDP is Cisco proprietary.",
+   "Wrong: VTP distributes VLAN information.",
+   "Wrong: HSRP is a Cisco first-hop redundancy protocol."
+  ],
+  "key_concept": "LLDP = IEEE 802.1AB, vendor neutral.",
+  "cli_example": "",
+  "tip": "IEEE 802.1AB = LLDP."
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "쉬움",
+  "question": "What is the default CDP advertisement (update) timer on a Cisco IOS device?",
+  "choices": [
+   "30 seconds",
+   "120 seconds",
+   "180 seconds",
+   "60 seconds"
+  ],
+  "answer": "D",
+  "explanation": "CDP sends advertisements every 60 seconds and the default holdtime is 180 seconds. LLDP uses 30 seconds and 120 seconds. Mixing up the two sets of timers is a common exam trap.",
+  "option_notes": [
+   "Wrong: 30 seconds is the default LLDP timer.",
+   "Wrong: 120 seconds is the default LLDP holdtime.",
+   "Wrong: 180 seconds is the default CDP holdtime, not the update timer.",
+   "Correct: CDP sends advertisements every 60 seconds by default."
+  ],
+  "key_concept": "CDP timer 60 s, holdtime 180 s.",
+  "cli_example": "R1(config)# cdp timer 60\nR1(config)# cdp holdtime 180",
+  "tip": "CDP 60/180. LLDP 30/120."
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "쉬움",
+  "question": "Which statement about the default state of LLDP on a Cisco IOS switch is correct?",
+  "choices": [
+   "LLDP is enabled globally and on every interface",
+   "LLDP is enabled only on trunk ports",
+   "LLDP is disabled globally until lldp run is entered",
+   "LLDP is enabled only when CDP is disabled"
+  ],
+  "answer": "C",
+  "explanation": "CDP is enabled by default on Cisco IOS devices, but LLDP is disabled by default. You enable it globally with the lldp run command. After that, LLDP transmits and receives on all supported interfaces by default.",
+  "option_notes": [
+   "Wrong: LLDP is off by default, unlike CDP.",
+   "Wrong: The default is not tied to trunk ports.",
+   "Correct: On Cisco IOS, LLDP must be turned on globally with lldp run.",
+   "Wrong: CDP and LLDP are independent of each other."
+  ],
+  "key_concept": "LLDP is off by default; CDP is on by default.",
+  "cli_example": "SW1(config)# lldp run",
+  "tip": "CDP on by default, LLDP off by default."
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "쉬움",
+  "question": "Which global configuration command enables LLDP on a Cisco IOS switch?",
+  "choices": [
+   "lldp enable",
+   "lldp run",
+   "cdp run",
+   "lldp transmit"
+  ],
+  "answer": "B",
+  "explanation": "Use lldp run in global configuration mode to enable LLDP, and no lldp run to disable it. The lldp transmit and lldp receive commands are used on interfaces to control each direction.",
+  "option_notes": [
+   "Wrong: lldp enable is not the IOS global command.",
+   "Correct: lldp run enables LLDP globally.",
+   "Wrong: cdp run enables CDP, not LLDP.",
+   "Wrong: lldp transmit is an interface-level command."
+  ],
+  "key_concept": "lldp run enables LLDP globally.",
+  "cli_example": "SW1(config)# lldp run",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "쉬움",
+  "question": "Which command disables CDP on a single interface only?",
+  "choices": [
+   "no cdp enable",
+   "no cdp run",
+   "cdp disable",
+   "no cdp timer"
+  ],
+  "answer": "A",
+  "explanation": "CDP can be disabled globally with no cdp run or per interface with no cdp enable. Disabling it on interfaces that face untrusted networks reduces the information exposed.",
+  "option_notes": [
+   "Correct: no cdp enable in interface configuration mode stops CDP on that interface.",
+   "Wrong: no cdp run disables CDP on the whole device.",
+   "Wrong: cdp disable is not a valid IOS command.",
+   "Wrong: no cdp timer resets the timer, it does not disable CDP."
+  ],
+  "key_concept": "Per interface: no cdp enable. Global: no cdp run.",
+  "cli_example": "SW1(config)# interface gi0/1\nSW1(config-if)# no cdp enable",
+  "tip": "no cdp run = global, no cdp enable = interface."
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "쉬움",
+  "question": "Which command disables CDP for the entire device?",
+  "choices": [
+   "no cdp enable",
+   "no cdp advertise-v2",
+   "cdp holdtime 0",
+   "no cdp run"
+  ],
+  "answer": "D",
+  "explanation": "The no cdp run global command stops CDP on all interfaces. To turn it back on, use cdp run.",
+  "option_notes": [
+   "Wrong: no cdp enable only affects one interface.",
+   "Wrong: no cdp advertise-v2 only stops version 2 advertisements.",
+   "Wrong: A holdtime of 0 is not the way to disable CDP.",
+   "Correct: no cdp run in global configuration mode turns CDP off everywhere."
+  ],
+  "key_concept": "no cdp run turns CDP off globally.",
+  "cli_example": "R1(config)# no cdp run",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "쉬움",
+  "question": "At which OSI layer do CDP and LLDP operate?",
+  "choices": [
+   "Layer 1",
+   "Layer 3",
+   "Layer 2",
+   "Layer 4"
+  ],
+  "answer": "C",
+  "explanation": "CDP and LLDP are Layer 2 protocols. Their frames are not routed, so they only reach directly connected neighbors. This is why they can work even when no IP address is configured.",
+  "option_notes": [
+   "Wrong: Layer 1 is the physical medium, no protocol messages there.",
+   "Wrong: They do not use IP, so they are not Layer 3 protocols.",
+   "Correct: Both protocols send Layer 2 frames to a multicast address on the local link.",
+   "Wrong: They do not use TCP or UDP ports."
+  ],
+  "key_concept": "CDP and LLDP are Layer 2 and only reach direct neighbors.",
+  "cli_example": "",
+  "tip": "Layer 2 = not routed = direct neighbors only."
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "쉬움",
+  "question": "Which information can an administrator learn about a neighbor from the show cdp neighbors command?",
+  "choices": [
+   "The neighbor's running configuration",
+   "The neighbor's platform and its connected port ID",
+   "The neighbor's enable secret",
+   "The neighbor's routing table"
+  ],
+  "answer": "B",
+  "explanation": "show cdp neighbors displays Device ID, Local Interface, Holdtime, Capability, Platform and Port ID for each directly connected neighbor. It does not reveal configuration or secrets.",
+  "option_notes": [
+   "Wrong: CDP does not share configurations.",
+   "Correct: The output lists device ID, local interface, holdtime, capability, platform and port ID.",
+   "Wrong: CDP never shares passwords.",
+   "Wrong: CDP does not carry routing table data."
+  ],
+  "key_concept": "show cdp neighbors lists device ID, local intf, platform, port ID.",
+  "cli_example": "SW1# show cdp neighbors",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "쉬움",
+  "question": "Which command shows the neighbor's IP address and IOS version learned through CDP?",
+  "choices": [
+   "show cdp neighbors detail",
+   "show cdp neighbors",
+   "show cdp traffic",
+   "show interfaces status"
+  ],
+  "answer": "A",
+  "explanation": "show cdp neighbors detail adds the neighbor's management/entry IP address, software version, VTP domain, duplex and more. It is useful for finding the IP address of an unknown device to connect to it.",
+  "option_notes": [
+   "Correct: The detail keyword adds the IP address, IOS version and other fields.",
+   "Wrong: The plain command only shows a summary table.",
+   "Wrong: show cdp traffic shows CDP packet counters.",
+   "Wrong: show interfaces status shows port state, not neighbors."
+  ],
+  "key_concept": "Use detail to get neighbor IP address and software version.",
+  "cli_example": "SW1# show cdp neighbors detail",
+  "tip": "show cdp entry * gives the same detail."
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "보통",
+  "question": "Refer to the output below. Which local interface on SW1 connects to the Gigabit port 0/0/1 of R2?\n\nSW1# show cdp neighbors\nCapability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge\n                  S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone\n\nDevice ID    Local Intrfce   Holdtime  Capability  Platform    Port ID\nSW2          Gig 0/1         150       S I         WS-C2960    Gig 0/24\nR2           Gig 0/2         165       R B         ISR4331     Gig 0/0/1",
+  "choices": [
+   "GigabitEthernet0/1",
+   "GigabitEthernet0/24",
+   "GigabitEthernet0/0/1",
+   "GigabitEthernet0/2"
+  ],
+  "answer": "D",
+  "explanation": "In show cdp neighbors, Local Intrfce is the port on the device you are logged into and Port ID is the port on the neighbor. For R2, the local port is Gig 0/2 and the remote port is Gig 0/0/1.",
+  "option_notes": [
+   "Wrong: Gig 0/1 connects to SW2.",
+   "Wrong: Gig 0/24 is the remote port on SW2.",
+   "Wrong: Gig 0/0/1 is the remote port on R2, not a local interface.",
+   "Correct: The R2 line shows Local Intrfce Gig 0/2 and Port ID Gig 0/0/1."
+  ],
+  "key_concept": "Local Intrfce = my port; Port ID = neighbor's port.",
+  "cli_example": "SW1# show cdp neighbors",
+  "tip": "Do not mix up Local Intrfce and Port ID."
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "보통",
+  "question": "What are the default LLDP timers on a Cisco IOS device?",
+  "choices": [
+   "Transmit every 60 seconds with a holdtime of 180 seconds",
+   "Transmit every 30 seconds with a holdtime of 180 seconds",
+   "Transmit every 30 seconds with a holdtime of 120 seconds",
+   "Transmit every 60 seconds with a holdtime of 120 seconds"
+  ],
+  "answer": "C",
+  "explanation": "LLDP sends frames every 30 seconds and a neighbor is aged out after 120 seconds without an update. CDP uses 60 and 180 seconds. You can change them with lldp timer and lldp holdtime.",
+  "option_notes": [
+   "Wrong: 60/180 are the CDP defaults.",
+   "Wrong: Holdtime 180 is the CDP value.",
+   "Correct: LLDP defaults are 30 seconds for the timer and 120 seconds for the holdtime.",
+   "Wrong: This mixes the CDP timer with the LLDP holdtime."
+  ],
+  "key_concept": "LLDP 30/120 vs CDP 60/180.",
+  "cli_example": "SW1(config)# lldp timer 30\nSW1(config)# lldp holdtime 120",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "보통",
+  "question": "A neighbor stops sending CDP advertisements and the default holdtime is in use. After how long does the local device remove the neighbor entry?",
+  "choices": [
+   "After 60 seconds",
+   "After 180 seconds without an advertisement",
+   "After 120 seconds",
+   "Immediately when the next advertisement is missed"
+  ],
+  "answer": "B",
+  "explanation": "Each received CDP advertisement carries a holdtime value. The receiving device counts it down and removes the neighbor if no new advertisement arrives before it reaches zero. The default is 180 seconds, which is three missed 60-second updates.",
+  "option_notes": [
+   "Wrong: 60 seconds is only the advertisement interval.",
+   "Correct: The holdtime default is 180 seconds.",
+   "Wrong: 120 seconds is the LLDP holdtime.",
+   "Wrong: The entry stays until the holdtime counts down to zero."
+  ],
+  "key_concept": "CDP entries expire after the holdtime (default 180 s).",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "보통",
+  "question": "Which LLDP extension is used by IP phones to learn the voice VLAN and negotiate PoE power with a switch?",
+  "choices": [
+   "LLDP-MED",
+   "LLDP-ECN",
+   "CDP Version 3",
+   "LLDP-NAT"
+  ],
+  "answer": "A",
+  "explanation": "LLDP-MED extends LLDP for endpoints such as IP phones. It can advertise the voice VLAN, QoS settings and PoE requirements. Cisco phones also do this with CDP.",
+  "option_notes": [
+   "Correct: LLDP-MED (Media Endpoint Discovery) supports voice VLAN, PoE and location data.",
+   "Wrong: LLDP-ECN is not a CCNA protocol extension.",
+   "Wrong: CDP has no version 3 used for this.",
+   "Wrong: LLDP-NAT does not exist."
+  ],
+  "key_concept": "LLDP-MED = voice VLAN and PoE info for endpoints.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "보통",
+  "question": "A Cisco switch is connected to a non-Cisco switch. show cdp neighbors on the Cisco switch shows nothing for it. Which action lets the Cisco switch discover that neighbor?",
+  "choices": [
+   "Enable CDP version 3",
+   "Configure a trunk between them",
+   "Change the CDP timer to 30",
+   "Enable LLDP on both devices"
+  ],
+  "answer": "D",
+  "explanation": "CDP is proprietary, so most non-Cisco devices do not send it. Enabling LLDP on both ends (lldp run on the Cisco switch) lets them exchange neighbor information. Then use show lldp neighbors.",
+  "option_notes": [
+   "Wrong: There is no CDP version 3 to enable here.",
+   "Wrong: Trunking does not affect discovery protocols.",
+   "Wrong: Changing timers will not make a non-supporting device respond.",
+   "Correct: A non-Cisco device does not speak CDP but usually supports LLDP."
+  ],
+  "key_concept": "Multi-vendor discovery needs LLDP.",
+  "cli_example": "SW1(config)# lldp run\nSW1# show lldp neighbors",
+  "tip": "Mixed-vendor network = LLDP."
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "보통",
+  "question": "Which MAC multicast address do CDP frames use as the destination?",
+  "choices": [
+   "01:80:C2:00:00:0E",
+   "FF:FF:FF:FF:FF:FF",
+   "01:00:0C:CC:CC:CC",
+   "01:00:5E:00:00:05"
+  ],
+  "answer": "C",
+  "explanation": "CDP frames go to 0100.0ccc.cccc and LLDP frames go to 0180.c200.000e. Both are link-local multicast addresses, so switches do not forward them as normal traffic.",
+  "option_notes": [
+   "Wrong: 0180.c200.000e is used by LLDP.",
+   "Wrong: FF:FF:FF:FF:FF:FF is the broadcast address.",
+   "Correct: CDP uses 01:00:0C:CC:CC:CC (0100.0ccc.cccc).",
+   "Wrong: 01:00:5E prefixes IPv4 multicast MAC addresses."
+  ],
+  "key_concept": "CDP 0100.0ccc.cccc; LLDP 0180.c200.000e.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "보통",
+  "question": "Why is it recommended to disable CDP on interfaces that face untrusted or external networks?",
+  "choices": [
+   "CDP consumes all available bandwidth on the link",
+   "CDP advertises device details such as platform, IOS version and IP address",
+   "CDP prevents the interface from forwarding user traffic",
+   "CDP forces the port into a trunk"
+  ],
+  "answer": "B",
+  "explanation": "CDP and LLDP reveal model, software version, addresses and port names. On untrusted ports (such as links to an ISP or user areas) disable them with no cdp enable and no lldp transmit/receive.",
+  "option_notes": [
+   "Wrong: CDP sends tiny frames once a minute.",
+   "Correct: The information in CDP packets helps an attacker map and target the network.",
+   "Wrong: CDP does not block user traffic.",
+   "Wrong: CDP has nothing to do with trunking."
+  ],
+  "key_concept": "Disable discovery protocols on untrusted ports for security.",
+  "cli_example": "SW1(config-if)# no cdp enable\nSW1(config-if)# no lldp transmit\nSW1(config-if)# no lldp receive",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "보통",
+  "question": "Which command shows which interfaces have CDP enabled, along with the CDP timers?",
+  "choices": [
+   "show cdp interface",
+   "show cdp neighbors detail",
+   "show cdp traffic",
+   "show lldp"
+  ],
+  "answer": "A",
+  "explanation": "show cdp interface displays each interface with its CDP encapsulation, update timer and holdtime. It confirms whether CDP is active on a port. show cdp traffic shows sent and received packet counts.",
+  "option_notes": [
+   "Correct: show cdp interface lists CDP status, encapsulation, timer and holdtime per interface.",
+   "Wrong: That command lists neighbors, not interface settings.",
+   "Wrong: That command shows packet counters.",
+   "Wrong: show lldp shows LLDP, not CDP."
+  ],
+  "key_concept": "show cdp interface = per-interface CDP settings.",
+  "cli_example": "SW1# show cdp interface",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "보통",
+  "question": "Which command stops an interface from sending LLDP frames but still lets it receive them?",
+  "choices": [
+   "no lldp receive",
+   "no lldp run",
+   "no cdp enable",
+   "no lldp transmit"
+  ],
+  "answer": "D",
+  "explanation": "LLDP can be controlled per interface in each direction. no lldp transmit stops sending and no lldp receive stops accepting. Both default to enabled once LLDP is on.",
+  "option_notes": [
+   "Wrong: no lldp receive stops processing of incoming frames instead.",
+   "Wrong: no lldp run disables LLDP globally.",
+   "Wrong: no cdp enable affects CDP only.",
+   "Correct: lldp transmit controls sending on the interface."
+  ],
+  "key_concept": "lldp transmit / lldp receive are per-interface and independent.",
+  "cli_example": "SW1(config-if)# no lldp transmit",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "보통",
+  "question": "What does the Capability column show in show cdp neighbors output?",
+  "choices": [
+   "The bandwidth of the link",
+   "The VLANs allowed on the link",
+   "The functional role of the neighbor, such as Router or Switch",
+   "The speed of the neighbor's CPU"
+  ],
+  "answer": "C",
+  "explanation": "The Capability field uses codes like R (Router), S (Switch), H (Host), I (IGMP) and P (Phone). It helps identify the type of device at the other end of the link.",
+  "option_notes": [
+   "Wrong: Bandwidth is not shown in the summary.",
+   "Wrong: VLAN lists are not part of this output.",
+   "Correct: Capability codes such as R, S, I and P describe what the neighbor does.",
+   "Wrong: CPU speed is not advertised in the summary."
+  ],
+  "key_concept": "Capability codes: R router, S switch, P phone, H host.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "어려움",
+  "question": "SW2 has lldp run configured and is connected to SW1 with a working link. On SW1, show lldp neighbors returns no entries. LLDP has not been configured on SW1. Which action makes SW2 appear in the show lldp neighbors output of SW1?",
+  "choices": [
+   "Enter lldp receive on the SW1 interface",
+   "Enter lldp run on SW1",
+   "Enter cdp run on SW1",
+   "Enter lldp holdtime 180 on SW2"
+  ],
+  "answer": "B",
+  "explanation": "With LLDP disabled globally, SW1 does not process LLDP frames, so its neighbor table stays empty. The fix is lldp run on SW1. After that, SW2 should appear within the LLDP update interval of up to 30 seconds.",
+  "option_notes": [
+   "Wrong: The interface-level command only works after LLDP is enabled globally and is already the default.",
+   "Correct: LLDP is disabled by default on IOS, so SW1 must enable it globally.",
+   "Wrong: CDP is a different protocol and does not populate the LLDP table.",
+   "Wrong: The holdtime does not affect whether SW1 processes frames."
+  ],
+  "key_concept": "LLDP must be enabled globally on both sides.",
+  "cli_example": "SW1(config)# lldp run\nSW1# show lldp neighbors",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "어려움",
+  "question": "Refer to the output.\n\nSW1# show cdp neighbors detail\nDevice ID: SW2\nEntry address(es):\n  IP address: 10.1.1.2\nPlatform: cisco WS-C2960-24TT-L,  Capabilities: Switch IGMP\nInterface: GigabitEthernet0/1,  Port ID (outgoing port): GigabitEthernet0/24\nHoldtime : 160 sec\n\nAn administrator wants to verify the cable between SW1 and SW2. Which statement is correct?",
+  "choices": [
+   "SW1 Gi0/1 is connected to Gi0/24 on SW2, and SW2 can be reached at 10.1.1.2",
+   "SW1 Gi0/24 is connected to Gi0/1 on SW2, and SW2 can be reached at 10.1.1.2",
+   "SW1 Gi0/1 is connected to Gi0/24 on SW2, and 10.1.1.2 is the SW1 address",
+   "SW2 will be removed from the table in 24 seconds"
+  ],
+  "answer": "A",
+  "explanation": "In CDP output, Interface is the local port and Port ID (outgoing port) is the port on the neighbor. The entry address is the neighbor's management IP. The holdtime counts down from 180 and has 160 seconds remaining.",
+  "option_notes": [
+   "Correct: Interface is the local port; Port ID is the neighbor's port; the entry address belongs to the neighbor.",
+   "Wrong: This reverses the local and remote ports.",
+   "Wrong: The entry address belongs to the neighbor, not the local device.",
+   "Wrong: The holdtime is 160 seconds, not 24."
+  ],
+  "key_concept": "Detail output: Interface = local, Port ID = remote.",
+  "cli_example": "SW1# show cdp neighbors detail",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "어려움",
+  "question": "A network contains R1 connected to R2 and R2 connected to R3, all Cisco routers with default CDP settings. Which neighbors appear in show cdp neighbors on R1?",
+  "choices": [
+   "R2 and R3",
+   "Only R3",
+   "No neighbors, because routers do not forward CDP",
+   "Only R2"
+  ],
+  "answer": "D",
+  "explanation": "CDP only discovers directly connected neighbors. R2 does not relay R3's advertisements to R1. To see R3 you must log in to R2 and run show cdp neighbors there, or use show cdp neighbors detail to find the IP and connect to it.",
+  "option_notes": [
+   "Wrong: R3 is two hops away and not learned by R1.",
+   "Wrong: R1 is directly connected to R2, not R3.",
+   "Wrong: R1 still learns about R2, it just does not pass the info on.",
+   "Correct: CDP frames are Layer 2 and are never forwarded by a router, so only directly connected devices are seen."
+  ],
+  "key_concept": "CDP/LLDP show only directly connected devices.",
+  "cli_example": "",
+  "tip": "Hop-by-hop discovery: log into each device."
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "어려움",
+  "question": "R1 Gi0/0 has no IP address and is in the administratively down state. SW1 is connected to that port and show cdp neighbors on SW1 does not list R1. What must be done to make R1 appear?",
+  "choices": [
+   "Configure an IP address on R1 Gi0/0 first, then CDP will start",
+   "Enter cdp enable on SW1",
+   "Enter no shutdown on R1 Gi0/0; an IP address is not required",
+   "Enter lldp run on SW1"
+  ],
+  "answer": "C",
+  "explanation": "An administratively down port does not send any frames. After no shutdown, CDP frames are sent even if no IP address is set, because CDP is Layer 2. The administrator can then see R1 in the neighbors table.",
+  "option_notes": [
+   "Wrong: CDP is Layer 2 and works without an IP address.",
+   "Wrong: CDP is enabled by default on SW1; the fault is on the R1 side.",
+   "Correct: CDP needs the interface to be up, but it does not need an IP address.",
+   "Wrong: LLDP is a different protocol and R1 is not sending it."
+  ],
+  "key_concept": "CDP needs an up interface, not an IP address.",
+  "cli_example": "R1(config)# interface gi0/0\nR1(config-if)# no shutdown",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "어려움",
+  "question": "Which statement correctly contrasts CDP and LLDP on Cisco IOS devices?",
+  "choices": [
+   "CDP is an IEEE standard and off by default; LLDP is proprietary and on by default",
+   "CDP is proprietary and on by default; LLDP is an IEEE standard and off by default",
+   "Both are proprietary and on by default",
+   "Both are IEEE standards and off by default"
+  ],
+  "answer": "B",
+  "explanation": "Know both the origin and the defaults: CDP = Cisco, default on, 60/180 timers. LLDP = IEEE 802.1AB, default off, 30/120 timers.",
+  "option_notes": [
+   "Wrong: This reverses the properties of the two protocols.",
+   "Correct: CDP is Cisco proprietary and enabled by default; LLDP is IEEE 802.1AB and must be enabled with lldp run.",
+   "Wrong: LLDP is not proprietary and is off by default.",
+   "Wrong: CDP is not an IEEE standard and is on by default."
+  ],
+  "key_concept": "CDP proprietary/on; LLDP standard/off.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "어려움",
+  "question": "R1 interface Gi0/0 is configured with no lldp receive and LLDP is enabled globally on R1 and on the connected switch SW1. What is the result?",
+  "choices": [
+   "SW1 lists R1 as a neighbor, but R1 does not list SW1",
+   "Neither device lists the other",
+   "R1 lists SW1, but SW1 does not list R1",
+   "R1 stops sending LLDP frames on that interface"
+  ],
+  "answer": "A",
+  "explanation": "LLDP receive and transmit are independent per interface. With no lldp receive, R1 builds no neighbor entries on Gi0/0, but its own frames still reach SW1, so SW1 sees R1.",
+  "option_notes": [
+   "Correct: no lldp receive makes R1 ignore incoming frames but R1 still transmits.",
+   "Wrong: R1 still transmits, so SW1 learns about R1.",
+   "Wrong: This reverses the direction of the effect.",
+   "Wrong: Sending is controlled by lldp transmit, not lldp receive."
+  ],
+  "key_concept": "lldp receive affects learning; lldp transmit affects advertising.",
+  "cli_example": "R1(config-if)# no lldp receive",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "어려움",
+  "question": "An administrator enters no cdp run on SW1. What happens on SW2, which is directly connected and has CDP enabled?",
+  "choices": [
+   "SW1 is removed immediately from the SW2 CDP table",
+   "SW2 also disables CDP automatically",
+   "SW1 keeps being listed because CDP entries never age out",
+   "SW1 is removed from the SW2 CDP table after the holdtime expires"
+  ],
+  "answer": "D",
+  "explanation": "CDP has no explicit withdrawal. When SW1 stops advertising, SW2's entry counts down from the holdtime (up to 180 seconds by default) and then disappears.",
+  "option_notes": [
+   "Wrong: There is no goodbye message, so the entry ages out.",
+   "Wrong: CDP does not disable itself on neighbors.",
+   "Wrong: Entries do expire after the holdtime.",
+   "Correct: SW1 stops sending advertisements and SW2 keeps the entry until its holdtime counter reaches zero."
+  ],
+  "key_concept": "CDP entries age out via the holdtime.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "어려움",
+  "question": "A company connects a Cisco switch to a server running an LLDP agent. The admin wants the switch to learn the server but never advertise itself. Which interface configuration achieves this, assuming lldp run is already configured?",
+  "choices": [
+   "no lldp receive",
+   "no cdp enable",
+   "no lldp transmit",
+   "lldp holdtime 0"
+  ],
+  "answer": "C",
+  "explanation": "Use no lldp transmit on the port. The switch still receives LLDP frames from the server and shows it in show lldp neighbors, but it sends none of its own information.",
+  "option_notes": [
+   "Wrong: This would stop learning the server, which is the opposite goal.",
+   "Wrong: This affects CDP only.",
+   "Correct: Stopping transmission keeps the switch silent while it still receives from the server.",
+   "Wrong: Holdtime 0 is not a way to stop advertisements."
+  ],
+  "key_concept": "no lldp transmit = listen only.",
+  "cli_example": "SW1(config-if)# no lldp transmit",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "어려움",
+  "question": "In show lldp neighbors, which capability code is displayed for a wireless access point?",
+  "choices": [
+   "R",
+   "W",
+   "T",
+   "S"
+  ],
+  "answer": "B",
+  "explanation": "LLDP capability codes include R (Router), B (Bridge), T (Telephone), C (DOCSIS cable device), W (WLAN access point), P (Repeater), S (Station) and O (Other). They differ from the CDP codes.",
+  "option_notes": [
+   "Wrong: R is Router.",
+   "Correct: LLDP uses W for WLAN Access Point.",
+   "Wrong: T is Telephone.",
+   "Wrong: S is Station only."
+  ],
+  "key_concept": "LLDP capability: W = WLAN AP, T = telephone.",
+  "cli_example": "SW1# show lldp neighbors",
+  "tip": ""
+ },
+ {
+  "sub": "2.3",
+  "difficulty": "어려움",
+  "question": "An administrator wants LLDP to wait before initializing on an interface after the interface is brought up, for example 3 seconds. Which command accomplishes this?",
+  "choices": [
+   "lldp reinit 3",
+   "lldp holdtime 3",
+   "lldp timer 3",
+   "lldp delay 3"
+  ],
+  "answer": "A",
+  "explanation": "lldp reinit <seconds> specifies the delay for LLDP to initialize on any interface (default 2 seconds). It is different from lldp timer (transmit interval) and lldp holdtime (neighbor expiry).",
+  "option_notes": [
+   "Correct: lldp reinit sets the LLDP initialization delay on interfaces.",
+   "Wrong: Holdtime is how long a neighbor entry remains valid.",
+   "Wrong: Timer is the transmit interval.",
+   "Wrong: lldp delay is not an IOS command."
+  ],
+  "key_concept": "lldp reinit = init delay; timer = send interval; holdtime = expiry.",
+  "cli_example": "SW1(config)# lldp reinit 3",
+  "tip": ""
+ }
+]

@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "3.4",
+  "difficulty": "쉬움",
+  "question": "What are the default OSPF Hello and Dead timers on an Ethernet (broadcast) interface?",
+  "choices": [
+   "Hello 30 seconds, Dead 120 seconds",
+   "Hello 10 seconds, Dead 40 seconds",
+   "Hello 5 seconds, Dead 20 seconds",
+   "Hello 60 seconds, Dead 180 seconds"
+  ],
+  "answer": "B",
+  "explanation": "OSPF routers send Hello packets every 10 seconds on Ethernet. If no Hello is heard for 40 seconds, the neighbor is declared down. Both timers must match between neighbors.",
+  "option_notes": [
+   "Wrong: 30/120 are the defaults for non-broadcast multi-access networks.",
+   "Correct: On broadcast and point-to-point networks, Hello is 10 s and Dead is 4 times Hello, or 40 s.",
+   "Wrong: 5/20 is not a default.",
+   "Wrong: 60/180 are not OSPF defaults."
+  ],
+  "key_concept": "10/40 on Ethernet.",
+  "cli_example": "show ip ospf interface g0/0",
+  "tip": "Dead = 4 x Hello."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "쉬움",
+  "question": "Which multicast address is used by OSPF to reach all OSPF routers?",
+  "choices": [
+   "224.0.0.5",
+   "224.0.0.6",
+   "224.0.0.9",
+   "224.0.0.10"
+  ],
+  "answer": "A",
+  "explanation": "OSPF Hello packets are sent to 224.0.0.5. Updates from non-DR routers to the DR and BDR use 224.0.0.6. OSPF runs directly over IP protocol 89.",
+  "option_notes": [
+   "Correct: 224.0.0.5 is AllSPFRouters.",
+   "Wrong: 224.0.0.6 is AllDRouters, used to send to DR and BDR.",
+   "Wrong: 224.0.0.9 is used by RIPv2.",
+   "Wrong: 224.0.0.10 is used by EIGRP."
+  ],
+  "key_concept": "224.0.0.5 all OSPF routers; .6 DR/BDR.",
+  "cli_example": "",
+  "tip": "EIGRP uses .10, RIP uses .9."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "쉬움",
+  "question": "Which OSPF neighbor state indicates that the routers have fully exchanged their link-state databases?",
+  "choices": [
+   "2-Way",
+   "Init",
+   "Exchange",
+   "Full"
+  ],
+  "answer": "D",
+  "explanation": "OSPF neighbors move through Down, Init, 2-Way, ExStart, Exchange, Loading and Full. Full indicates that the routers are adjacent and synchronized.",
+  "option_notes": [
+   "Wrong: 2-Way means bidirectional communication has been established but not database exchange.",
+   "Wrong: Init means a Hello has been received but the router's own ID is not yet in it.",
+   "Wrong: Exchange means DBD packets are being exchanged.",
+   "Correct: Full means the LSDBs are synchronized and adjacency is complete."
+  ],
+  "key_concept": "Full = fully adjacent.",
+  "cli_example": "show ip ospf neighbor",
+  "tip": "DROTHERs stay in 2-Way with each other."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "쉬움",
+  "question": "Which command enables OSPF process 10 on a Cisco router?",
+  "choices": [
+   "ospf process 10",
+   "ip ospf 10 enable",
+   "router ospf 10",
+   "enable ospf 10"
+  ],
+  "answer": "C",
+  "explanation": "The router ospf command takes a locally significant process ID. Neighbors do not need to use the same process ID.",
+  "option_notes": [
+   "Wrong: ospf process is not a valid command.",
+   "Wrong: ip ospf <pid> area <area> is an interface command and needs an area.",
+   "Correct: router ospf <process-id> starts the OSPF process in global configuration mode.",
+   "Wrong: enable ospf is not a valid command."
+  ],
+  "key_concept": "router ospf <process-id>",
+  "cli_example": "router ospf 10",
+  "tip": "Process ID is locally significant."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "쉬움",
+  "question": "Which OSPF router is elected as the DR on a multi-access network by default?",
+  "choices": [
+   "The router with the lowest router ID",
+   "The router with the highest OSPF priority, then the highest router ID",
+   "The router with the lowest priority",
+   "The first router to boot only"
+  ],
+  "answer": "B",
+  "explanation": "On broadcast networks, routers elect a DR and BDR. The highest priority wins, with the highest router ID as a tiebreaker. Priority 0 means the router never becomes DR.",
+  "option_notes": [
+   "Wrong: A lower router ID is less preferred.",
+   "Correct: Priority is compared first and router ID is the tiebreaker, both highest wins.",
+   "Wrong: Lower priority is less preferred.",
+   "Wrong: Boot order matters only because election is non-preemptive, not as a rule."
+  ],
+  "key_concept": "Highest priority, then highest RID.",
+  "cli_example": "show ip ospf interface",
+  "tip": "Default priority = 1."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "쉬움",
+  "question": "What is the default OSPF interface priority on Cisco routers?",
+  "choices": [
+   "1",
+   "0",
+   "100",
+   "255"
+  ],
+  "answer": "A",
+  "explanation": "Every OSPF-enabled interface has a default priority of 1. Raising it makes a router more likely to win the DR election. A priority of 0 excludes the router from the election.",
+  "option_notes": [
+   "Correct: The default priority is 1.",
+   "Wrong: 0 prevents a router from becoming DR or BDR.",
+   "Wrong: 100 is not the default.",
+   "Wrong: 255 is not the default."
+  ],
+  "key_concept": "Default priority = 1; 0 = never DR.",
+  "cli_example": "interface g0/0\n ip ospf priority 100",
+  "tip": "Priority range is 0-255."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "쉬움",
+  "question": "What does the OSPF router ID look like and what is its format?",
+  "choices": [
+   "A 48-bit MAC address",
+   "A 128-bit IPv6 address",
+   "A 16-bit process number",
+   "A 32-bit value written like an IPv4 address"
+  ],
+  "answer": "D",
+  "explanation": "The router ID uniquely identifies an OSPF router. It is a 32-bit value in dotted-decimal format and can be set manually with the router-id command.",
+  "option_notes": [
+   "Wrong: MAC addresses are 48 bits and not used as OSPF IDs.",
+   "Wrong: The ID is not an IPv6 address.",
+   "Wrong: The process ID is separate and locally significant.",
+   "Correct: The router ID is a 32-bit number shown in dotted decimal."
+  ],
+  "key_concept": "RID = 32-bit dotted decimal.",
+  "cli_example": "router ospf 1\n router-id 1.1.1.1",
+  "tip": "RID need not be reachable."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "쉬움",
+  "question": "Which command lists a router's OSPF neighbors and their states?",
+  "choices": [
+   "show ip ospf database",
+   "show ip protocols neighbors",
+   "show ip ospf neighbor",
+   "show ospf adjacencies"
+  ],
+  "answer": "C",
+  "explanation": "The show ip ospf neighbor command is the main tool for checking adjacencies. FULL/DR or FULL/BDR indicates a complete adjacency.",
+  "option_notes": [
+   "Wrong: show ip ospf database displays the LSDB.",
+   "Wrong: This is not a valid command.",
+   "Correct: show ip ospf neighbor shows neighbor ID, priority, state, dead time, address and interface.",
+   "Wrong: This is not a valid IOS command."
+  ],
+  "key_concept": "show ip ospf neighbor",
+  "cli_example": "show ip ospf neighbor",
+  "tip": "Look at the State column."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "쉬움",
+  "question": "Which command prevents OSPF Hello packets from being sent out a LAN interface while still advertising that network?",
+  "choices": [
+   "no ip ospf hello",
+   "passive-interface GigabitEthernet0/0",
+   "shutdown",
+   "ip ospf network passive"
+  ],
+  "answer": "B",
+  "explanation": "The passive-interface command under the OSPF process stops adjacency formation on the interface. The connected network remains in OSPF. It is used on LAN links with no other routers.",
+  "option_notes": [
+   "Wrong: There is no such command to stop Hello this way.",
+   "Correct: A passive interface is still advertised but does not send or process Hellos.",
+   "Wrong: Shutdown would remove the interface and network from the routing.",
+   "Wrong: There is no passive keyword in ip ospf network."
+  ],
+  "key_concept": "passive-interface <int>",
+  "cli_example": "router ospf 1\n passive-interface g0/0",
+  "tip": "Use on user LAN interfaces."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "쉬움",
+  "question": "Which wildcard mask matches the network 192.168.10.0/24 in an OSPF network command?",
+  "choices": [
+   "0.0.0.255",
+   "255.255.255.0",
+   "0.0.255.255",
+   "255.255.255.255"
+  ],
+  "answer": "A",
+  "explanation": "The network command uses wildcard masks, which are the inverse of subnet masks. For a /24, the wildcard is 0.0.0.255.",
+  "option_notes": [
+   "Correct: The wildcard mask of a /24 is 0.0.0.255.",
+   "Wrong: 255.255.255.0 is the subnet mask, not a wildcard.",
+   "Wrong: 0.0.255.255 matches a /16.",
+   "Wrong: 255.255.255.255 would match everything."
+  ],
+  "key_concept": "Wildcard = inverse of subnet mask.",
+  "cli_example": "network 192.168.10.0 0.0.0.255 area 0",
+  "tip": "255 - subnet octet."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "보통",
+  "question": "Which parameters must match for two routers to become OSPF neighbors on the same Ethernet segment?",
+  "choices": [
+   "Router ID and process ID",
+   "Priority and cost",
+   "Interface speed and duplex only",
+   "Area ID, Hello/Dead timers, subnet and authentication"
+  ],
+  "answer": "D",
+  "explanation": "OSPF Hellos must agree on area, timers, network (subnet and mask), authentication and stub flag. Router IDs must be different.",
+  "option_notes": [
+   "Wrong: Router IDs must be unique, not matching, and process IDs are locally significant.",
+   "Wrong: Priority and cost can differ.",
+   "Wrong: Speed and duplex are Layer 1/2 settings and not OSPF requirements.",
+   "Correct: These must be the same on both ends for the adjacency to form."
+  ],
+  "key_concept": "Match: area, timers, subnet, auth, stub flag.",
+  "cli_example": "show ip ospf interface",
+  "tip": "Mismatch = no neighbor."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "보통",
+  "question": "Which show output indicates that a neighbor is the DR?\n\nNeighbor ID  Pri  State     Dead Time  Address    Interface\n2.2.2.2       1   FULL/DR   00:00:35   10.1.1.2   Gi0/0\n3.3.3.3       1   FULL/BDR  00:00:38   10.1.1.3   Gi0/0",
+  "choices": [
+   "Neighbor 3.3.3.3 is the DR",
+   "The local router is the DR",
+   "Neighbor 2.2.2.2 is the DR",
+   "No DR exists"
+  ],
+  "answer": "C",
+  "explanation": "The role after the slash in the State column tells you the neighbor's role on that segment. FULL/DR means the neighbor is the DR. FULL/BDR is the BDR.",
+  "option_notes": [
+   "Wrong: 3.3.3.3 is shown as BDR.",
+   "Wrong: The local router is not shown in its own neighbor list; it would be DROTHER here.",
+   "Correct: The state field FULL/DR shows that neighbor is the DR.",
+   "Wrong: A DR and BDR exist."
+  ],
+  "key_concept": "State column shows neighbor role.",
+  "cli_example": "show ip ospf neighbor",
+  "tip": "Neighbor shows its role, not yours."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "보통",
+  "question": "How is the OSPF router ID chosen if no router-id command is configured and no loopback exists?",
+  "choices": [
+   "Lowest IP address on any interface",
+   "Highest IP address on an active physical interface",
+   "The MAC address of the first interface",
+   "The process ID"
+  ],
+  "answer": "B",
+  "explanation": "IOS order: the manually configured router-id, then the highest loopback IP, then the highest IP on an active interface. The ID is chosen when the OSPF process starts.",
+  "option_notes": [
+   "Wrong: Lowest is not used.",
+   "Correct: Without a loopback or manual setting, the highest active interface IP is used.",
+   "Wrong: MAC addresses are not used.",
+   "Wrong: The process ID is unrelated."
+  ],
+  "key_concept": "router-id > loopback > highest active interface.",
+  "cli_example": "show ip ospf | include ID",
+  "tip": "Loopback is stable and preferred."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "보통",
+  "question": "R1 has interfaces: Gi0/0 10.1.1.1, Gi0/1 192.168.5.1, Loopback0 172.16.0.1, Loopback1 172.16.0.9. No router-id is configured. What router ID will R1 use?",
+  "choices": [
+   "172.16.0.9",
+   "192.168.5.1",
+   "10.1.1.1",
+   "172.16.0.1"
+  ],
+  "answer": "A",
+  "explanation": "Loopback addresses take precedence over physical interfaces. Among loopbacks, the highest IP wins, here 172.16.0.9.",
+  "option_notes": [
+   "Correct: The highest loopback IP address is selected over physical interfaces.",
+   "Wrong: The physical interface is used only when there is no loopback.",
+   "Wrong: 10.1.1.1 is the lowest address.",
+   "Wrong: 172.16.0.1 is a loopback but not the highest."
+  ],
+  "key_concept": "Highest loopback IP wins.",
+  "cli_example": "",
+  "tip": "Loopback always beats physical."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "보통",
+  "question": "After changing the OSPF router ID with the router-id command, the old ID still shows. What must be done?",
+  "choices": [
+   "Wait for the Dead timer",
+   "Remove the network statements",
+   "Change the process ID",
+   "Clear the OSPF process or reload the router"
+  ],
+  "answer": "D",
+  "explanation": "An OSPF router ID in use is not changed automatically. Use clear ip ospf process to restart the process with the new ID. IOS also warns about this.",
+  "option_notes": [
+   "Wrong: The Dead timer does not apply the change.",
+   "Wrong: Network statements do not affect the ID.",
+   "Wrong: The process ID is unrelated to the router ID.",
+   "Correct: clear ip ospf process (or reload) is needed for the new ID to be used."
+  ],
+  "key_concept": "Restart the OSPF process to apply a new RID.",
+  "cli_example": "router ospf 1\n router-id 1.1.1.1\nend\nclear ip ospf process",
+  "tip": "Set router-id before neighbors form."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "보통",
+  "question": "Which command changes the cost of an OSPF interface?",
+  "choices": [
+   "ospf cost 50",
+   "bandwidth cost 50",
+   "ip ospf cost 50",
+   "ip cost ospf 50"
+  ],
+  "answer": "C",
+  "explanation": "You can set the cost directly under the interface with ip ospf cost, or indirectly with the bandwidth command or the auto-cost reference-bandwidth command.",
+  "option_notes": [
+   "Wrong: ospf cost is not valid on the interface.",
+   "Wrong: bandwidth sets the value used for calculation, but it is not a cost command.",
+   "Correct: ip ospf cost is the interface command to set a manual cost.",
+   "Wrong: This syntax is invalid."
+  ],
+  "key_concept": "ip ospf cost <value>",
+  "cli_example": "interface g0/0\n ip ospf cost 50",
+  "tip": "Manual cost overrides calculation."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "보통",
+  "question": "What is the OSPF cost of a Gigabit Ethernet interface using the default reference bandwidth of 100 Mbps?",
+  "choices": [
+   "10",
+   "1",
+   "100",
+   "0"
+  ],
+  "answer": "B",
+  "explanation": "OSPF cost is the reference bandwidth divided by interface bandwidth, with a minimum of 1. FastEthernet and Gigabit both end up with cost 1 unless the reference bandwidth is changed.",
+  "option_notes": [
+   "Wrong: 10 would be the cost for a 10 Mbps interface.",
+   "Correct: Cost = 100 Mbps / 1000 Mbps = 0.1, which rounds up to 1.",
+   "Wrong: 100 would apply to a 1 Mbps interface.",
+   "Wrong: The minimum OSPF cost is 1."
+  ],
+  "key_concept": "Cost = ref BW / interface BW, min 1.",
+  "cli_example": "router ospf 1\n auto-cost reference-bandwidth 10000",
+  "tip": "Change reference BW consistently on all routers."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "보통",
+  "question": "Which command correctly places interface g0/1 in OSPF area 0 without using a network statement?",
+  "choices": [
+   "ip ospf 1 area 0",
+   "ospf 1 area 0",
+   "network g0/1 area 0",
+   "ip ospf area 0 1"
+  ],
+  "answer": "A",
+  "explanation": "OSPFv2 can be enabled directly on an interface using ip ospf process-id area area-id. It is an alternative to the network command.",
+  "option_notes": [
+   "Correct: The interface-level command is ip ospf <process-id> area <area-id>.",
+   "Wrong: The ip keyword is required.",
+   "Wrong: The network command takes an address and wildcard, not an interface name.",
+   "Wrong: The process ID and area are in the wrong order."
+  ],
+  "key_concept": "ip ospf <pid> area <area>",
+  "cli_example": "interface g0/1\n ip ospf 1 area 0",
+  "tip": "Interface-level enable also works with passive-interface."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "보통",
+  "question": "What is the purpose of the DR and BDR on a multi-access OSPF network?",
+  "choices": [
+   "Increase interface bandwidth",
+   "Hold the routing table for all routers",
+   "Select the router ID",
+   "Reduce the number of adjacencies and the LSA flooding"
+  ],
+  "answer": "D",
+  "explanation": "Without a DR, every router would form a full mesh of adjacencies. The DR acts as a central point for LSA exchange, with the BDR as backup.",
+  "option_notes": [
+   "Wrong: DR/BDR does not change bandwidth.",
+   "Wrong: Every router keeps its own table.",
+   "Wrong: Router IDs are independent of the election.",
+   "Correct: All routers form adjacencies only with the DR and BDR, which cuts down the flooding."
+  ],
+  "key_concept": "DR/BDR reduce adjacencies.",
+  "cli_example": "",
+  "tip": "DROTHER-DROTHER stay in 2-Way."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "보통",
+  "question": "Which OSPF neighbor state do two DROTHER routers on the same Ethernet segment normally stay in?",
+  "choices": [
+   "Full",
+   "ExStart",
+   "2-Way",
+   "Loading"
+  ],
+  "answer": "C",
+  "explanation": "On a broadcast segment, a router that is neither DR nor BDR is a DROTHER. It becomes Full only with the DR and BDR. With other DROTHERs the state remains 2-Way.",
+  "option_notes": [
+   "Wrong: Full is formed with the DR and BDR.",
+   "Wrong: ExStart is a transitional state.",
+   "Correct: DROTHERs only form full adjacencies with the DR and BDR, so they stay in 2-Way with each other.",
+   "Wrong: Loading is a transitional state."
+  ],
+  "key_concept": "DROTHER-DROTHER = 2-Way.",
+  "cli_example": "show ip ospf neighbor",
+  "tip": "This is normal, not a problem."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "어려움",
+  "question": "Two routers on the same Ethernet link are stuck in the INIT state. R1 sees R2's Hellos but R2 never sees R1's. Which cause is most likely?",
+  "choices": [
+   "A different OSPF process ID on the routers",
+   "A one-way problem such as an ACL blocking multicast 224.0.0.5 toward R2",
+   "Different router priorities",
+   "Different interface costs"
+  ],
+  "answer": "B",
+  "explanation": "INIT means a Hello was received from a neighbor, but the neighbor has not listed this router in its Hello. That points to one-way communication, for example an ACL or filtering issue.",
+  "option_notes": [
+   "Wrong: Process IDs are locally significant.",
+   "Correct: INIT means Hellos are received but the router's own ID has not been seen in the neighbor's Hello, which suggests a one-way path.",
+   "Wrong: Priority doesn't prevent neighbor formation.",
+   "Wrong: Cost does not affect adjacency."
+  ],
+  "key_concept": "INIT = one-way Hello.",
+  "cli_example": "show ip ospf neighbor\nshow access-lists",
+  "tip": "Check ACLs and Layer 2 issues."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "어려움",
+  "question": "Two routers are stuck in the EXSTART state. Which problem is the most likely cause?",
+  "choices": [
+   "MTU mismatch between the interfaces",
+   "Different Hello timers",
+   "Different area IDs",
+   "Duplicate router IDs"
+  ],
+  "answer": "A",
+  "explanation": "ExStart is where routers elect master and slave and begin DBD exchange. An MTU mismatch causes DBD packets to be dropped or rejected so the adjacency does not progress.",
+  "option_notes": [
+   "Correct: An MTU mismatch prevents DBD exchange, so the neighbors stay in ExStart/Exchange.",
+   "Wrong: Hello timer mismatch prevents neighbors from reaching 2-Way.",
+   "Wrong: Different areas prevent Hello acceptance.",
+   "Wrong: Duplicate router IDs can cause problems but the classic ExStart cause is MTU."
+  ],
+  "key_concept": "Stuck in ExStart/Exchange: check MTU.",
+  "cli_example": "show interfaces g0/0 | include MTU\nip ospf mtu-ignore",
+  "tip": "Match MTU or use mtu-ignore."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "어려움",
+  "question": "R1 and R2 are both configured as follows, but no adjacency forms. What is wrong?\n\nR1: interface g0/0 ip address 10.1.1.1 255.255.255.0 / ip ospf hello-interval 5\nR2: interface g0/0 ip address 10.1.1.2 255.255.255.0 (default timers)",
+  "choices": [
+   "The subnets are different",
+   "The routers need different process IDs",
+   "R1 needs a higher priority",
+   "Hello and Dead timers do not match"
+  ],
+  "answer": "D",
+  "explanation": "Changing the Hello interval also changes the Dead interval to four times the value. R1 has 5/20 and R2 has 10/40, so Hellos are rejected.",
+  "option_notes": [
+   "Wrong: Both addresses are in 10.1.1.0/24.",
+   "Wrong: Process IDs may be the same or different.",
+   "Wrong: Priority does not block adjacency.",
+   "Correct: R1 uses a 5 s Hello (Dead becomes 20 s), R2 uses 10/40, so timers mismatch."
+  ],
+  "key_concept": "Timers must match.",
+  "cli_example": "show ip ospf interface g0/0",
+  "tip": "Dead interval auto-adjusts."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "어려움",
+  "question": "On a broadcast segment, R1 (priority 1, RID 3.3.3.3) is DR. A new router R4 (priority 200) joins. What happens?",
+  "choices": [
+   "R4 immediately becomes DR",
+   "R4 becomes BDR then DR after 40 seconds",
+   "R1 remains DR because OSPF DR election is non-preemptive",
+   "The election restarts and R4 is DR on the next Hello"
+  ],
+  "answer": "C",
+  "explanation": "The election is non-preemptive. Once a DR exists, a router with a higher priority does not take over. The new router would only become DR if the existing DR/BDR go down or the process is cleared.",
+  "option_notes": [
+   "Wrong: The existing DR is not replaced.",
+   "Wrong: No timer promotes R4.",
+   "Correct: A DR stays DR until it fails or the OSPF process is reset.",
+   "Wrong: The election does not restart when a router joins."
+  ],
+  "key_concept": "DR election is non-preemptive.",
+  "cli_example": "clear ip ospf process",
+  "tip": "Reset to re-run election."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "어려움",
+  "question": "Which router becomes DR on a segment where all routers boot together, with priorities and RIDs as follows? R1: priority 1, RID 4.4.4.4. R2: priority 100, RID 1.1.1.1. R3: priority 0, RID 9.9.9.9.",
+  "choices": [
+   "R1",
+   "R2",
+   "R3",
+   "The router with the highest IP address on the segment"
+  ],
+  "answer": "B",
+  "explanation": "Priority is compared first. R3 with priority 0 cannot be DR or BDR. R2 has the highest priority (100) and wins, with R1 becoming BDR.",
+  "option_notes": [
+   "Wrong: R1 has a lower priority.",
+   "Correct: R2 has the highest priority among eligible routers.",
+   "Wrong: Priority 0 makes R3 ineligible.",
+   "Wrong: Priority is compared first and RID only as a tiebreaker."
+  ],
+  "key_concept": "Priority first, RID second, 0 = ineligible.",
+  "cli_example": "",
+  "tip": "Do not use RID unless priorities tie."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "어려움",
+  "question": "Refer to the output. What does this tell you about R1's interface?\n\nGi0/0 is up, line protocol is up\n Internet Address 10.1.1.1/24, Area 0\n Process ID 1, Router ID 1.1.1.1, Network Type BROADCAST, Cost: 1\n Transmit Delay is 1 sec, State DROTHER, Priority 1\n Designated Router (ID) 3.3.3.3, Interface address 10.1.1.3\n Backup Designated router (ID) 2.2.2.2, Interface address 10.1.1.2",
+  "choices": [
+   "R1 is neither DR nor BDR and will form Full adjacencies only with 3.3.3.3 and 2.2.2.2",
+   "R1 is the DR with router ID 3.3.3.3",
+   "R1 is the BDR",
+   "R1 is a DROTHER and forms Full adjacencies with every router"
+  ],
+  "answer": "A",
+  "explanation": "The State shows DROTHER. The DR is 3.3.3.3 and the BDR is 2.2.2.2. R1 exchanges full databases with those two only.",
+  "option_notes": [
+   "Correct: DROTHER routers form Full adjacency only with the DR and BDR.",
+   "Wrong: The DR is 3.3.3.3, not R1.",
+   "Wrong: The BDR is 2.2.2.2, not R1.",
+   "Wrong: DROTHERs stay in 2-Way with other DROTHERs."
+  ],
+  "key_concept": "State DROTHER = not DR/BDR.",
+  "cli_example": "show ip ospf interface g0/0",
+  "tip": "Read State, DR and BDR lines."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "어려움",
+  "question": "Which configuration advertises 10.1.1.0/24 and 10.1.2.0/24 into area 0 and keeps the LAN interface g0/2 (10.1.2.1/24) from forming neighbors?",
+  "choices": [
+   "network 10.1.0.0 255.255.0.0 area 0 and passive-interface g0/2",
+   "network 10.1.1.0 0.0.0.255 area 0 and shutdown g0/2",
+   "network 10.1.0.0 0.0.255.255 area 0 and no network 10.1.2.0",
+   "network 10.1.0.0 0.0.255.255 area 0 and passive-interface g0/2"
+  ],
+  "answer": "D",
+  "explanation": "The network command with a wildcard mask enables OSPF on interfaces whose address falls in the range. Passive-interface keeps the network advertised but stops Hellos.",
+  "option_notes": [
+   "Wrong: The network command requires wildcard masks, not subnet masks.",
+   "Wrong: Shutdown would remove the interface and 10.1.2.0 from OSPF.",
+   "Wrong: This would not advertise 10.1.2.0.",
+   "Correct: The wildcard 0.0.255.255 covers both subnets and passive-interface stops Hellos on g0/2."
+  ],
+  "key_concept": "Network + wildcard; passive for LANs.",
+  "cli_example": "router ospf 1\n network 10.1.0.0 0.0.255.255 area 0\n passive-interface g0/2",
+  "tip": "Wildcard, not subnet mask."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "어려움",
+  "question": "R1 is the DR. Which OSPF event occurs when R1 fails on a broadcast segment with a BDR present?",
+  "choices": [
+   "The router with the highest RID becomes DR directly",
+   "The segment loses all neighbors until reconfiguration",
+   "The BDR becomes DR and a new BDR is elected",
+   "The process ID decides the new DR"
+  ],
+  "answer": "C",
+  "explanation": "The BDR monitors the DR. If the DR fails, the BDR takes over immediately, and a new BDR is elected by priority and RID.",
+  "option_notes": [
+   "Wrong: The BDR is promoted regardless of the highest RID.",
+   "Wrong: OSPF recovers automatically.",
+   "Correct: The BDR is promoted and a new BDR is elected from the remaining routers.",
+   "Wrong: Process IDs are not part of the election."
+  ],
+  "key_concept": "BDR takes over, then new BDR election.",
+  "cli_example": "",
+  "tip": "BDR exists for fast failover."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "어려움",
+  "question": "Two OSPF routers have the same router ID 1.1.1.1. What is the likely result?",
+  "choices": [
+   "Both routers become DR",
+   "Routing instability and missing routes because LSAs are overwritten",
+   "OSPF elects a new ID automatically",
+   "The routers form a faster adjacency"
+  ],
+  "answer": "B",
+  "explanation": "Router IDs must be unique in an OSPF domain. Two routers with the same ID produce conflicting LSAs, so the LSDB is inconsistent and neighbors may not form.",
+  "option_notes": [
+   "Wrong: Duplicate IDs do not make routers DR.",
+   "Correct: Duplicate IDs cause LSAs to be seen as updates of the same router, causing missing routes and flapping.",
+   "Wrong: OSPF does not auto-change IDs on conflict.",
+   "Wrong: Adjacency does not improve."
+  ],
+  "key_concept": "RIDs must be unique.",
+  "cli_example": "show ip ospf database",
+  "tip": "Fix by setting router-id and clearing."
+ },
+ {
+  "sub": "3.4",
+  "difficulty": "어려움",
+  "question": "Which interface configuration will make R1 never be elected as DR or BDR on its Ethernet LAN?",
+  "choices": [
+   "ip ospf priority 0",
+   "ip ospf priority 255",
+   "ip ospf cost 0",
+   "ip ospf network non-broadcast"
+  ],
+  "answer": "A",
+  "explanation": "A priority of 0 makes the router ineligible. It will stay a DROTHER. Priority values range from 0 to 255.",
+  "option_notes": [
+   "Correct: Priority 0 removes the router from the DR/BDR election.",
+   "Wrong: Priority 255 makes it the most likely to be DR.",
+   "Wrong: Cost does not affect election.",
+   "Wrong: Non-broadcast changes network type and timers, not just election eligibility."
+  ],
+  "key_concept": "Priority 0 = never DR/BDR.",
+  "cli_example": "interface g0/0\n ip ospf priority 0",
+  "tip": "Apply before the election."
+ }
+]

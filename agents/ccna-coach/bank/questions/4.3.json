@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "4.3",
+  "difficulty": "쉬움",
+  "question": "In which order do the four DHCP messages occur when a client obtains an address for the first time?",
+  "choices": [
+   "Discover, Offer, Request, Acknowledge",
+   "Request, Offer, Discover, Acknowledge",
+   "Offer, Discover, Acknowledge, Request",
+   "Discover, Request, Offer, Acknowledge"
+  ],
+  "answer": "A",
+  "explanation": "A client broadcasts a DHCPDISCOVER, a server answers with a DHCPOFFER, the client broadcasts a DHCPREQUEST for the offered address, and the server confirms with a DHCPACK. The first letters spell DORA.",
+  "option_notes": [
+   "Correct: This is the DORA sequence.",
+   "Wrong: A client cannot request before it discovers a server.",
+   "Wrong: The client always starts the exchange with a Discover.",
+   "Wrong: The server Offer comes before the client Request."
+  ],
+  "key_concept": "DHCP process is DORA: Discover, Offer, Request, Acknowledge.",
+  "cli_example": "",
+  "tip": "Remember DORA."
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "쉬움",
+  "question": "Which UDP port does a DHCP server listen on?",
+  "choices": [
+   "UDP 68",
+   "UDP 67",
+   "UDP 53",
+   "UDP 69"
+  ],
+  "answer": "B",
+  "explanation": "DHCP uses UDP port 67 on the server side and UDP port 68 on the client side. Clients send DHCPDISCOVER from port 68 to port 67.",
+  "option_notes": [
+   "Wrong: This is the DHCP client port.",
+   "Correct: DHCP servers (and relay agents) use UDP 67.",
+   "Wrong: This is DNS.",
+   "Wrong: This is TFTP."
+  ],
+  "key_concept": "DHCP server = UDP 67, DHCP client = UDP 68.",
+  "cli_example": "",
+  "tip": "Server 67, client 68."
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "쉬움",
+  "question": "What is the main purpose of DNS?",
+  "choices": [
+   "Assign IP addresses automatically to hosts",
+   "Synchronize clocks between devices",
+   "Translate hostnames to IP addresses",
+   "Translate private addresses to public addresses"
+  ],
+  "answer": "C",
+  "explanation": "The Domain Name System maps human-friendly names to IP addresses so users do not need to remember numbers. It is a hierarchical, distributed database.",
+  "option_notes": [
+   "Wrong: That is DHCP.",
+   "Wrong: That is NTP.",
+   "Correct: DNS resolves names such as www.example.com to IP addresses.",
+   "Wrong: That is NAT."
+  ],
+  "key_concept": "DNS maps names to IP addresses.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "쉬움",
+  "question": "Which DNS record type maps a hostname to an IPv4 address?",
+  "choices": [
+   "AAAA",
+   "MX",
+   "CNAME",
+   "A"
+  ],
+  "answer": "D",
+  "explanation": "An A record maps a name to a 32-bit IPv4 address. AAAA (quad-A) records do the same for 128-bit IPv6 addresses.",
+  "option_notes": [
+   "Wrong: An AAAA record holds an IPv6 address.",
+   "Wrong: An MX record identifies a mail server.",
+   "Wrong: A CNAME record is an alias to another name.",
+   "Correct: An A record holds an IPv4 address."
+  ],
+  "key_concept": "A = IPv4 address, AAAA = IPv6 address.",
+  "cli_example": "",
+  "tip": "A for IPv4, AAAA for IPv6."
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "쉬움",
+  "question": "Which command configures a Cisco router to use the DNS server 8.8.8.8?",
+  "choices": [
+   "ip name-server 8.8.8.8",
+   "ip dns-server 8.8.8.8",
+   "ip helper-address 8.8.8.8",
+   "ip domain-name 8.8.8.8"
+  ],
+  "answer": "A",
+  "explanation": "On IOS, ip name-server followed by up to six addresses tells the router where to send DNS queries. ip domain-name only sets the default domain suffix.",
+  "option_notes": [
+   "Correct: This global command defines the DNS server.",
+   "Wrong: This is not a valid IOS command.",
+   "Wrong: This forwards DHCP broadcasts, not DNS queries.",
+   "Wrong: This sets the default domain name, not a server."
+  ],
+  "key_concept": "ip name-server defines DNS servers on a router.",
+  "cli_example": "Router(config)# ip name-server 8.8.8.8",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "쉬움",
+  "question": "How does a DHCP client send its first DHCPDISCOVER message?",
+  "choices": [
+   "As a unicast to the default gateway",
+   "As a broadcast to 255.255.255.255",
+   "As a multicast to 224.0.0.9",
+   "As a unicast to the DNS server"
+  ],
+  "answer": "B",
+  "explanation": "A new client has no IP address, so it uses source 0.0.0.0 and destination 255.255.255.255 (and a broadcast MAC address). This lets any DHCP server on the local segment hear it.",
+  "option_notes": [
+   "Wrong: The client has no gateway yet.",
+   "Correct: The client has no IP address yet and does not know the server address.",
+   "Wrong: That is the RIPv2 multicast address.",
+   "Wrong: DNS is not involved in DHCP discovery."
+  ],
+  "key_concept": "DHCPDISCOVER is a broadcast from 0.0.0.0.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "쉬움",
+  "question": "Which DNS record type holds an IPv6 address for a hostname?",
+  "choices": [
+   "A",
+   "PTR",
+   "AAAA",
+   "NS"
+  ],
+  "answer": "C",
+  "explanation": "AAAA is pronounced quad-A because an IPv6 address is four times as long as an IPv4 address. A dual-stack host may query both A and AAAA records.",
+  "option_notes": [
+   "Wrong: A records hold IPv4 addresses.",
+   "Wrong: PTR records map an address back to a name.",
+   "Correct: AAAA records map names to 128-bit IPv6 addresses.",
+   "Wrong: NS records name an authoritative name server."
+  ],
+  "key_concept": "AAAA = IPv6.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "쉬움",
+  "question": "Which command prevents a router DHCP server from handing out addresses 192.168.1.1 through 192.168.1.10?",
+  "choices": [
+   "ip dhcp exclude 192.168.1.1 192.168.1.10",
+   "ip dhcp reserved 192.168.1.1 192.168.1.10",
+   "no network 192.168.1.1 192.168.1.10",
+   "ip dhcp excluded-address 192.168.1.1 192.168.1.10"
+  ],
+  "answer": "D",
+  "explanation": "Excluded addresses are reserved for static devices such as routers and servers. The command is entered in global configuration mode, normally before the pool is defined.",
+  "option_notes": [
+   "Wrong: This is not the correct IOS syntax.",
+   "Wrong: This command does not exist.",
+   "Wrong: The network command takes a network and mask.",
+   "Correct: It removes the range from the pool of assignable addresses."
+  ],
+  "key_concept": "Use ip dhcp excluded-address in global config.",
+  "cli_example": "Router(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.10",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "쉬움",
+  "question": "Which command inside an IOS DHCP pool tells clients which gateway to use?",
+  "choices": [
+   "default-router 192.168.1.1",
+   "ip default-gateway 192.168.1.1",
+   "gateway 192.168.1.1",
+   "dns-server 192.168.1.1"
+  ],
+  "answer": "A",
+  "explanation": "Inside ip dhcp pool configuration mode, default-router supplies the gateway address and dns-server supplies the DNS server. Both are handed to clients with the lease.",
+  "option_notes": [
+   "Correct: It sets DHCP option 3, the default gateway.",
+   "Wrong: This is for a Layer 2 switch or router in no-routing mode, not a pool option.",
+   "Wrong: This is not a DHCP pool command.",
+   "Wrong: This sets the DNS server option, not the gateway."
+  ],
+  "key_concept": "default-router = gateway option in a DHCP pool.",
+  "cli_example": "Router(config)# ip dhcp pool LAN\nRouter(dhcp-config)# network 192.168.1.0 255.255.255.0\nRouter(dhcp-config)# default-router 192.168.1.1\nRouter(dhcp-config)# dns-server 8.8.8.8",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "쉬움",
+  "question": "Which DHCP message does the server send to confirm that the client may use the requested address?",
+  "choices": [
+   "DHCPOFFER",
+   "DHCPACK",
+   "DHCPDISCOVER",
+   "DHCPRELEASE"
+  ],
+  "answer": "B",
+  "explanation": "After the client broadcasts a DHCPREQUEST, the server replies with a DHCPACK containing the lease time and options. The client then configures the address.",
+  "option_notes": [
+   "Wrong: The offer is sent before the client requests the address.",
+   "Correct: The acknowledgment finalizes the lease.",
+   "Wrong: The client sends this to find servers.",
+   "Wrong: The client sends this to give up its address."
+  ],
+  "key_concept": "DHCPACK finalizes the lease.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "보통",
+  "question": "Which command in a DHCP pool defines the range of addresses that the router can assign?",
+  "choices": [
+   "range 10.1.1.1 10.1.1.254",
+   "ip address 10.1.1.0 255.255.255.0",
+   "network 10.1.1.0 255.255.255.0",
+   "scope 10.1.1.0/24"
+  ],
+  "answer": "C",
+  "explanation": "An IOS DHCP pool uses the network command with a subnet and mask (or prefix length). To keep some addresses out of the pool, use ip dhcp excluded-address.",
+  "option_notes": [
+   "Wrong: IOS pools do not use a range command.",
+   "Wrong: This assigns an address to an interface.",
+   "Correct: It defines the subnet from which addresses are leased.",
+   "Wrong: This is Windows DHCP terminology, not IOS."
+  ],
+  "key_concept": "network defines the pool subnet.",
+  "cli_example": "Router(dhcp-config)# network 10.1.1.0 255.255.255.0",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "보통",
+  "question": "What does the command no ip domain-lookup do on a Cisco router?",
+  "choices": [
+   "It disables the DNS server feature",
+   "It deletes all static host entries",
+   "It blocks DNS traffic through the router",
+   "It stops the router from trying to resolve mistyped commands as hostnames"
+  ],
+  "answer": "D",
+  "explanation": "By default a router treats an unrecognized word as a hostname and tries to Telnet to it, causing a long Translating delay. no ip domain-lookup turns off that behavior.",
+  "option_notes": [
+   "Wrong: The command only affects name lookups made by the router.",
+   "Wrong: Static ip host entries are not removed.",
+   "Wrong: Transit DNS traffic is not affected.",
+   "Correct: The router no longer waits for a DNS lookup after a typo."
+  ],
+  "key_concept": "no ip domain-lookup avoids delays after typos.",
+  "cli_example": "Router(config)# no ip domain-lookup",
+  "tip": "Common lab setting."
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "보통",
+  "question": "Which DNS record type creates an alias that points one name to another name?",
+  "choices": [
+   "CNAME",
+   "MX",
+   "PTR",
+   "SOA"
+  ],
+  "answer": "A",
+  "explanation": "For example, www.example.com can be a CNAME to web1.example.com. The resolver then looks up the A or AAAA record of the target name.",
+  "option_notes": [
+   "Correct: A canonical name record points an alias to the real name.",
+   "Wrong: MX identifies the mail exchanger for a domain.",
+   "Wrong: PTR is used for reverse lookups.",
+   "Wrong: SOA holds zone authority information."
+  ],
+  "key_concept": "CNAME = alias to another name.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "보통",
+  "question": "A Windows host shows the address 169.254.37.8. What does this most likely indicate?",
+  "choices": [
+   "The DHCP server assigned the address from its pool",
+   "The host could not reach a DHCP server and used APIPA",
+   "The host uses a static address configured by the admin",
+   "The host received the address through NAT"
+  ],
+  "answer": "B",
+  "explanation": "When no DHCPOFFER is received, Windows self-assigns an address in 169.254.0.0/16 (APIPA). The host can talk only to others on the same segment.",
+  "option_notes": [
+   "Wrong: DHCP pools do not normally use link-local addresses.",
+   "Correct: 169.254.0.0/16 is the link-local range used when DHCP fails.",
+   "Wrong: Nothing suggests a static configuration.",
+   "Wrong: NAT does not assign client addresses."
+  ],
+  "key_concept": "169.254.x.x means DHCP failed.",
+  "cli_example": "",
+  "tip": "Troubleshooting hint: check the DHCP server or relay."
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "보통",
+  "question": "Which command shows the IP addresses a router DHCP server has leased and the matching MAC addresses?",
+  "choices": [
+   "show ip dhcp pool",
+   "show ip interface brief",
+   "show ip dhcp binding",
+   "show arp"
+  ],
+  "answer": "C",
+  "explanation": "show ip dhcp binding displays the bindings created by the router DHCP server. show ip dhcp pool shows totals such as leased and excluded addresses.",
+  "option_notes": [
+   "Wrong: It shows pool statistics, not each client.",
+   "Wrong: It shows interface addresses only.",
+   "Correct: It lists each leased IP address, client ID or MAC, and lease expiration.",
+   "Wrong: It shows ARP entries, not DHCP leases."
+  ],
+  "key_concept": "show ip dhcp binding lists active leases.",
+  "cli_example": "Router# show ip dhcp binding",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "보통",
+  "question": "What does the command lease 0 8 mean inside an IOS DHCP pool?",
+  "choices": [
+   "Leases last 8 days",
+   "Leases last 8 minutes",
+   "Leases never expire",
+   "Leases last 0 days and 8 hours"
+  ],
+  "answer": "D",
+  "explanation": "The syntax is lease days [hours [minutes]]. The default lease on IOS is one day. A short lease helps in networks with many temporary clients.",
+  "option_notes": [
+   "Wrong: 8 would be the first number for days.",
+   "Wrong: The second value is hours.",
+   "Wrong: That would be lease infinite.",
+   "Correct: The format is days, then hours, then minutes."
+  ],
+  "key_concept": "lease takes days, hours, minutes.",
+  "cli_example": "Router(dhcp-config)# lease 0 8",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "보통",
+  "question": "Which transport protocol and port are used for a normal DNS query?",
+  "choices": [
+   "UDP 53",
+   "TCP 53 only",
+   "UDP 5353",
+   "TCP 443"
+  ],
+  "answer": "A",
+  "explanation": "DNS uses UDP 53 for most queries. It falls back to TCP 53 for zone transfers and for responses that are too large for UDP.",
+  "option_notes": [
+   "Correct: Queries and responses are normally small enough for UDP.",
+   "Wrong: TCP 53 is used for zone transfers and large responses, not normal queries.",
+   "Wrong: That is multicast DNS.",
+   "Wrong: That is HTTPS."
+  ],
+  "key_concept": "DNS: UDP 53 queries, TCP 53 zone transfers.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "보통",
+  "question": "A DHCP server sends a DHCPNAK. What does it mean?",
+  "choices": [
+   "The server has no free addresses and drops the packet silently",
+   "The server refuses the client's requested address",
+   "The client released its lease successfully",
+   "The server confirms the lease"
+  ],
+  "answer": "B",
+  "explanation": "A DHCPNAK says the requested address is invalid or no longer available, for example when the client moved to another subnet. The client restarts with a DHCPDISCOVER.",
+  "option_notes": [
+   "Wrong: A NAK is an explicit message, not a silent drop.",
+   "Correct: The client must start the process again.",
+   "Wrong: That is a DHCPRELEASE from the client.",
+   "Wrong: That is a DHCPACK."
+  ],
+  "key_concept": "DHCPNAK = server declines the request.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "보통",
+  "question": "In which configuration mode must ip dhcp excluded-address be entered?",
+  "choices": [
+   "DHCP pool configuration mode",
+   "Interface configuration mode",
+   "Global configuration mode",
+   "Privileged EXEC mode"
+  ],
+  "answer": "C",
+  "explanation": "Excluded addresses apply to all pools on the router, so the command is entered in global configuration mode. It is best entered before the pool so no excluded address is leased.",
+  "option_notes": [
+   "Wrong: Pool mode holds commands such as network and default-router.",
+   "Wrong: It is not an interface command.",
+   "Correct: It is a global command, not a pool subcommand.",
+   "Wrong: Configuration commands cannot be entered in EXEC mode."
+  ],
+  "key_concept": "excluded-address is a global command.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "보통",
+  "question": "A client on a subnet gets an address from a router DHCP server but cannot reach other networks. The pool contains only network and dns-server commands. What is missing?",
+  "choices": [
+   "lease infinite",
+   "ip dhcp excluded-address",
+   "service dhcp",
+   "default-router"
+  ],
+  "answer": "D",
+  "explanation": "The client received an address and DNS server, so DHCP is working, but without default-router (option 3) it cannot leave its subnet. Add the command to the pool.",
+  "option_notes": [
+   "Wrong: The lease length does not affect gateway reachability.",
+   "Wrong: Exclusions do not provide a gateway.",
+   "Wrong: The server already issues addresses, so the service is running.",
+   "Correct: Without a gateway option the client has no route to other subnets."
+  ],
+  "key_concept": "default-router gives clients a gateway.",
+  "cli_example": "Router(dhcp-config)# default-router 192.168.1.1",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "어려움",
+  "question": "A router has this configuration. The first client requests an address. Which address will it most likely receive?\n\nip dhcp excluded-address 10.1.1.1 10.1.1.50\nip dhcp pool LAN\n network 10.1.1.0 255.255.255.0",
+  "choices": [
+   "10.1.1.51",
+   "10.1.1.1",
+   "10.1.1.0",
+   "10.1.1.254"
+  ],
+  "answer": "A",
+  "explanation": "Addresses 10.1.1.1 to 10.1.1.50 are excluded, so the lowest available address is 10.1.1.51. The router DHCP server assigns from the bottom of the range upward.",
+  "option_notes": [
+   "Correct: The first non-excluded address in the subnet is assigned.",
+   "Wrong: This address is excluded.",
+   "Wrong: This is the network address and is never assigned.",
+   "Wrong: The server normally hands out the lowest free address first."
+  ],
+  "key_concept": "The server skips excluded addresses and assigns the lowest free one.",
+  "cli_example": "Router(config)# ip dhcp excluded-address 10.1.1.1 10.1.1.50",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "어려움",
+  "question": "A pool uses network 192.168.5.0 255.255.255.0 and the command ip dhcp excluded-address 192.168.5.1 192.168.5.20 is configured. What is the maximum number of clients that can hold a lease at the same time?",
+  "choices": [
+   "254",
+   "234",
+   "235",
+   "256"
+  ],
+  "answer": "B",
+  "explanation": "A /24 has 254 usable host addresses. The exclusion removes 20, leaving 234 assignable addresses. The network and broadcast addresses are never leased.",
+  "option_notes": [
+   "Wrong: This ignores the exclusion.",
+   "Correct: 254 usable addresses minus 20 excluded addresses.",
+   "Wrong: The excluded range 1 to 20 contains exactly 20 addresses.",
+   "Wrong: This includes the network and broadcast addresses."
+  ],
+  "key_concept": "Usable /24 hosts = 254; subtract the excluded range.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "어려움",
+  "question": "A DHCP client was given an 8-day lease. At which point does it first try to renew the lease, and how?",
+  "choices": [
+   "After 7 days, by broadcasting a DHCPDISCOVER",
+   "After 8 days, by sending DHCPRELEASE",
+   "After 4 days, by unicasting a DHCPREQUEST to the original server",
+   "After 2 days, by unicasting a DHCPOFFER"
+  ],
+  "answer": "C",
+  "explanation": "The renewal timer T1 is 50 percent of the lease (4 days). The client unicasts a DHCPREQUEST to its server. If this fails, at T2 (87.5 percent, 7 days) it broadcasts a request to any server.",
+  "option_notes": [
+   "Wrong: Rebinding at 87.5 percent is a broadcast, but it is not the first attempt.",
+   "Wrong: A release gives up the address.",
+   "Correct: T1 is 50 percent of the lease and renewal is unicast.",
+   "Wrong: Clients do not send offers."
+  ],
+  "key_concept": "T1 = 50 percent unicast renew; T2 = 87.5 percent broadcast rebind.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "어려움",
+  "question": "A router interface must obtain its address from an ISP DHCP server. Which configuration does this?",
+  "choices": [
+   "interface g0/1\n ip dhcp pool ISP\n no shutdown",
+   "interface g0/1\n ip helper-address dhcp\n no shutdown",
+   "interface g0/1\n ip address 0.0.0.0 0.0.0.0\n no shutdown",
+   "interface g0/1\n ip address dhcp\n no shutdown"
+  ],
+  "answer": "D",
+  "explanation": "ip address dhcp makes the interface request an address, mask and optionally a default route from a DHCP server. The Method column of show ip interface brief then shows DHCP.",
+  "option_notes": [
+   "Wrong: A pool makes the router a server, not a client.",
+   "Wrong: helper-address needs a server IP and forwards broadcasts.",
+   "Wrong: This is not valid DHCP client configuration.",
+   "Correct: The interface acts as a DHCP client."
+  ],
+  "key_concept": "ip address dhcp = interface is a DHCP client.",
+  "cli_example": "interface g0/1\n ip address dhcp\n no shutdown",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "어려움",
+  "question": "Why does a DHCP client broadcast its DHCPREQUEST even though it already knows which server sent the accepted offer?",
+  "choices": [
+   "So that other servers learn their offers were declined",
+   "Because the client still has no MAC address",
+   "Because DHCP uses TCP and requires a broadcast handshake",
+   "Because the router would drop a unicast request"
+  ],
+  "answer": "A",
+  "explanation": "Several servers may answer a Discover. The broadcast DHCPREQUEST contains the server identifier of the chosen offer, so the other servers can release the addresses they offered.",
+  "option_notes": [
+   "Correct: The request names the chosen server and also informs all others.",
+   "Wrong: The client always has a MAC address.",
+   "Wrong: DHCP uses UDP.",
+   "Wrong: Routers are not involved on the local segment."
+  ],
+  "key_concept": "DHCPREQUEST is broadcast so all servers see the choice.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "어려움",
+  "question": "From a PC, ping 8.8.8.8 succeeds but ping www.example.com fails with a host-not-found error. What is the most likely problem?",
+  "choices": [
+   "The default gateway is missing",
+   "DNS resolution is failing",
+   "The subnet mask is wrong",
+   "The switch port is in the wrong VLAN"
+  ],
+  "answer": "B",
+  "explanation": "Pinging an IP address bypasses DNS. If that works and names fail, check the DNS server address given by DHCP or configured statically, and whether the DNS server is reachable.",
+  "option_notes": [
+   "Wrong: Without a gateway ping 8.8.8.8 would fail.",
+   "Correct: IP connectivity works, but the name cannot be resolved.",
+   "Wrong: A wrong mask would likely break remote pings.",
+   "Wrong: The remote ping success shows the path works."
+  ],
+  "key_concept": "IP ping works, name ping fails: suspect DNS.",
+  "cli_example": "",
+  "tip": "Common troubleshooting pattern."
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "어려움",
+  "question": "Which command creates a static name-to-address mapping on a Cisco router so that the name SERVER1 resolves to 10.1.1.10 without DNS?",
+  "choices": [
+   "ip name-server SERVER1 10.1.1.10",
+   "ip domain-name SERVER1 10.1.1.10",
+   "ip host SERVER1 10.1.1.10",
+   "hostname SERVER1 10.1.1.10"
+  ],
+  "answer": "C",
+  "explanation": "The ip host command builds a local static table used before any DNS query. It is useful in labs for names such as R2 mapped to its address.",
+  "option_notes": [
+   "Wrong: This defines DNS servers and does not take a name.",
+   "Wrong: This sets a default domain only.",
+   "Correct: It adds an entry to the local host table.",
+   "Wrong: hostname sets the router name and takes no address."
+  ],
+  "key_concept": "ip host = local static DNS entry.",
+  "cli_example": "Router(config)# ip host SERVER1 10.1.1.10",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "어려움",
+  "question": "An engineer mistypes a command on a router with default settings and no DNS server. The console freezes for a while after a Translating message. What causes this and how can it be avoided?",
+  "choices": [
+   "The router is rebooting; use no service dhcp",
+   "The router is loading a config from TFTP; use no boot network",
+   "The router is syncing its clock; use no ntp",
+   "The router tries to resolve the word as a hostname; use no ip domain-lookup"
+  ],
+  "answer": "D",
+  "explanation": "An unrecognized single word is interpreted as a hostname to Telnet to. With no DNS server the router broadcasts the lookup and waits for a timeout. no ip domain-lookup disables this.",
+  "option_notes": [
+   "Wrong: Nothing is rebooting.",
+   "Wrong: TFTP is not involved here.",
+   "Wrong: NTP does not cause this message.",
+   "Correct: The unknown word is treated as a Telnet destination name."
+  ],
+  "key_concept": "Typos trigger DNS lookups unless domain-lookup is disabled.",
+  "cli_example": "Router(config)# no ip domain-lookup",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "어려움",
+  "question": "How does a client usually resolve a name using DNS?",
+  "choices": [
+   "It sends a recursive query to its local DNS server, which queries other servers on its behalf",
+   "It broadcasts the query to every host on the subnet",
+   "It queries the root servers itself with iterative queries",
+   "It asks its default gateway to translate the name"
+  ],
+  "answer": "A",
+  "explanation": "A client stub resolver asks the configured DNS server for the final answer. That server walks the DNS hierarchy (root, top-level domain, authoritative) using iterative queries and caches the result.",
+  "option_notes": [
+   "Correct: The local resolver follows referrals until it finds the answer.",
+   "Wrong: DNS queries are sent to a configured server.",
+   "Wrong: The client normally relies on its resolver.",
+   "Wrong: Gateways do not normally act as DNS servers for clients."
+  ],
+  "key_concept": "Clients send recursive queries; resolvers do iterative lookups.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.3",
+  "difficulty": "어려움",
+  "question": "A pool is configured on router R1, but clients on VLAN 10 receive no address. Output of show ip dhcp pool shows the pool network 10.10.20.0/24, while VLAN 10 uses 10.10.10.0/24 and R1 interface VLAN 10 is 10.10.10.1. What is the problem?",
+  "choices": [
+   "The lease time is too short",
+   "The pool network does not match the client subnet",
+   "DNS is not configured",
+   "The excluded range is too small"
+  ],
+  "answer": "B",
+  "explanation": "A router DHCP server picks the pool whose network matches the interface that received the request. With no matching pool, no offer is sent. Correct the network command to 10.10.10.0 255.255.255.0.",
+  "option_notes": [
+   "Wrong: Lease length does not stop assignment.",
+   "Correct: The server only assigns addresses from the pool matching the receiving interface subnet.",
+   "Wrong: Missing DNS would not stop address assignment.",
+   "Wrong: Exclusions do not cause a subnet mismatch."
+  ],
+  "key_concept": "The pool network must match the client subnet.",
+  "cli_example": "Router(dhcp-config)# network 10.10.10.0 255.255.255.0",
+  "tip": ""
+ }
+]

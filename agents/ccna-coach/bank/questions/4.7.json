@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "4.7",
+  "difficulty": "쉬움",
+  "question": "What is the main goal of QoS?",
+  "choices": [
+   "Give priority and predictable treatment to important traffic during congestion",
+   "Encrypt all traffic",
+   "Increase the physical link speed",
+   "Assign IP addresses"
+  ],
+  "answer": "A",
+  "explanation": "QoS tools classify traffic and apply different treatment so voice and critical applications perform well when links are congested.",
+  "option_notes": [
+   "Correct: QoS manages bandwidth, delay, jitter and loss.",
+   "Wrong: That is security, not QoS.",
+   "Wrong: QoS does not add bandwidth.",
+   "Wrong: That is DHCP."
+  ],
+  "key_concept": "QoS manages treatment under congestion.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "쉬움",
+  "question": "Which type of traffic is most sensitive to delay and jitter?",
+  "choices": [
+   "Email",
+   "Voice over IP",
+   "File backup",
+   "Web browsing"
+  ],
+  "answer": "B",
+  "explanation": "VoIP and video conferencing are real-time. Delay, jitter and packet loss quickly degrade quality.",
+  "option_notes": [
+   "Wrong: Email tolerates delay.",
+   "Correct: Real-time voice needs low delay and jitter.",
+   "Wrong: Bulk transfers tolerate delay.",
+   "Wrong: Moderately tolerant of delay."
+  ],
+  "key_concept": "Voice = low delay, low jitter, low loss.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "쉬움",
+  "question": "What does classification do in QoS?",
+  "choices": [
+   "Drops packets that exceed a rate",
+   "Delays packets to smooth a rate",
+   "Identifies traffic and places it into classes",
+   "Encrypts packets"
+  ],
+  "answer": "C",
+  "explanation": "Classification is the first step. After traffic is classified it can be marked and given treatment.",
+  "option_notes": [
+   "Wrong: That is policing.",
+   "Wrong: That is shaping.",
+   "Correct: It matches packets by ACL, protocol or marking.",
+   "Wrong: Not a QoS function."
+  ],
+  "key_concept": "Classify first, then mark and treat.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "쉬움",
+  "question": "What does marking do in QoS?",
+  "choices": [
+   "Blocks unwanted traffic",
+   "Creates VLANs",
+   "Measures link speed",
+   "Sets a value in the packet or frame header to indicate the class"
+  ],
+  "answer": "D",
+  "explanation": "Marking writes a value such as DSCP in the IP header or CoS in the 802.1Q tag so later devices can treat the traffic accordingly.",
+  "option_notes": [
+   "Wrong: That is an ACL.",
+   "Wrong: Unrelated.",
+   "Wrong: Marking does not measure.",
+   "Correct: For example a DSCP or CoS value."
+  ],
+  "key_concept": "Marking = writing DSCP/CoS values.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "쉬움",
+  "question": "Which DSCP value and name is commonly used for voice bearer traffic?",
+  "choices": [
+   "EF (46)",
+   "AF11 (10)",
+   "CS1 (8)",
+   "Default (0)"
+  ],
+  "answer": "A",
+  "explanation": "EF provides low loss, delay and jitter. Voice RTP packets are typically marked DSCP 46.",
+  "option_notes": [
+   "Correct: Expedited Forwarding is used for voice.",
+   "Wrong: This is a low-priority assured class.",
+   "Wrong: This is scavenger or bulk.",
+   "Wrong: This is best effort."
+  ],
+  "key_concept": "Voice = EF = 46.",
+  "cli_example": "",
+  "tip": "EF is 46."
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "쉬움",
+  "question": "What is the main difference between policing and shaping?",
+  "choices": [
+   "Policing buffers excess traffic; shaping drops it",
+   "Policing drops or remarks excess traffic; shaping buffers it",
+   "Both always drop excess",
+   "Both only mark traffic"
+  ],
+  "answer": "B",
+  "explanation": "A policer enforces a rate by dropping or re-marking. A shaper queues excess packets and sends them later, causing delay but fewer drops.",
+  "option_notes": [
+   "Wrong: Reversed.",
+   "Correct: Shaping delays traffic to smooth the rate.",
+   "Wrong: Shaping queues it.",
+   "Wrong: They enforce a rate."
+  ],
+  "key_concept": "Policing drops, shaping delays.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "쉬움",
+  "question": "Which queuing mechanism gives voice strict priority?",
+  "choices": [
+   "FIFO",
+   "Tail drop",
+   "LLQ (low latency queuing)",
+   "RIP"
+  ],
+  "answer": "C",
+  "explanation": "LLQ includes a strict priority queue that is always served first, typically used for voice.",
+  "option_notes": [
+   "Wrong: It treats all packets the same.",
+   "Wrong: It is a drop behavior, not a queue type.",
+   "Correct: It adds a priority queue to CBWFQ.",
+   "Wrong: It is a routing protocol."
+  ],
+  "key_concept": "LLQ = CBWFQ + priority queue.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "쉬움",
+  "question": "When does QoS queuing take effect?",
+  "choices": [
+   "Only when the interface is down",
+   "Only for broadcasts",
+   "Only at boot time",
+   "When an interface is congested"
+  ],
+  "answer": "D",
+  "explanation": "If there is no congestion packets leave immediately. QoS queuing matters when the egress is busy.",
+  "option_notes": [
+   "Wrong: A down interface sends nothing.",
+   "Wrong: Not limited to broadcasts.",
+   "Wrong: QoS applies continuously.",
+   "Correct: Queues are used when packets arrive faster than they can leave."
+  ],
+  "key_concept": "Queuing matters during congestion.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "쉬움",
+  "question": "Which four characteristics are managed by QoS?",
+  "choices": [
+   "Bandwidth, delay, jitter and loss",
+   "Color, size, shape and weight",
+   "Speed, duplex, VLAN and MTU",
+   "Cost, hop count, AD and metric"
+  ],
+  "answer": "A",
+  "explanation": "QoS addresses bandwidth shortages, delay, jitter (variation in delay) and packet loss.",
+  "option_notes": [
+   "Correct: These define traffic performance.",
+   "Wrong: These are not network metrics.",
+   "Wrong: These are interface parameters.",
+   "Wrong: These are routing terms."
+  ],
+  "key_concept": "BDJL: bandwidth, delay, jitter, loss.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "쉬움",
+  "question": "How many bits does the CoS field in an 802.1Q tag have?",
+  "choices": [
+   "6 bits",
+   "3 bits",
+   "2 bits",
+   "12 bits"
+  ],
+  "answer": "B",
+  "explanation": "The Priority Code Point (CoS) is 3 bits in the 802.1Q tag. DSCP in the IP header has 6 bits.",
+  "option_notes": [
+   "Wrong: This is DSCP.",
+   "Correct: It allows values 0 to 7.",
+   "Wrong: Too small.",
+   "Wrong: This is the VLAN ID."
+  ],
+  "key_concept": "CoS = 3 bits, DSCP = 6 bits.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "보통",
+  "question": "How many bits does the DSCP field use in the IP header?",
+  "choices": [
+   "3 bits",
+   "8 bits",
+   "6 bits",
+   "12 bits"
+  ],
+  "answer": "C",
+  "explanation": "DSCP gives 64 possible values (0 to 63). The remaining 2 bits of the byte are used for ECN.",
+  "option_notes": [
+   "Wrong: That is IP precedence or CoS.",
+   "Wrong: That is the entire ToS byte.",
+   "Correct: DSCP uses the upper 6 bits of the ToS byte.",
+   "Wrong: Too large."
+  ],
+  "key_concept": "DSCP = 6 bits.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "보통",
+  "question": "What is the decimal DSCP value of AF41?",
+  "choices": [
+   "46",
+   "41",
+   "26",
+   "34"
+  ],
+  "answer": "D",
+  "explanation": "Assured Forwarding class 4 with low drop preference is 100010 in binary, which is 34. AF31 is 26 and AF21 is 18.",
+  "option_notes": [
+   "Wrong: This is EF.",
+   "Wrong: The name digits are not the decimal value.",
+   "Wrong: This is AF31.",
+   "Correct: AFxy = 8x + 2y, so 8*4 + 2*1 = 34."
+  ],
+  "key_concept": "AFxy = 8x + 2y.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "보통",
+  "question": "What is the trust boundary in QoS?",
+  "choices": [
+   "The point where a device begins to trust QoS markings",
+   "The point where traffic is encrypted",
+   "The maximum bandwidth of a link",
+   "The boundary between VLANs"
+  ],
+  "answer": "A",
+  "explanation": "Markings from untrusted devices are re-marked. A common boundary is the Cisco IP phone or the access switch port.",
+  "option_notes": [
+   "Correct: Beyond this point markings are accepted.",
+   "Wrong: Unrelated to QoS.",
+   "Wrong: A rate is not a trust boundary.",
+   "Wrong: VLANs are not trust boundaries."
+  ],
+  "key_concept": "Trust boundary = where markings are trusted.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "보통",
+  "question": "Which QoS tool can be applied to inbound traffic on an interface?",
+  "choices": [
+   "Shaping",
+   "Policing",
+   "LLQ egress queuing",
+   "WRED on ingress only"
+  ],
+  "answer": "B",
+  "explanation": "Policers work on both input and output. Shapers and queues buffer packets for departure, so they are used outbound.",
+  "option_notes": [
+   "Wrong: Shaping is generally outbound.",
+   "Correct: It can enforce a rate in either direction.",
+   "Wrong: Queuing applies outbound.",
+   "Wrong: WRED is outbound."
+  ],
+  "key_concept": "Shaping = outbound only.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "보통",
+  "question": "What does CBWFQ provide?",
+  "choices": [
+   "Strict priority for all classes",
+   "Encryption per class",
+   "A guaranteed minimum bandwidth for each class",
+   "Header compression only"
+  ],
+  "answer": "C",
+  "explanation": "Class-Based Weighted Fair Queuing assigns each class a queue with a bandwidth guarantee during congestion.",
+  "option_notes": [
+   "Wrong: That is LLQ for one class.",
+   "Wrong: Unrelated.",
+   "Correct: Each class gets a defined share.",
+   "Wrong: Not its function."
+  ],
+  "key_concept": "CBWFQ = per-class bandwidth guarantee.",
+  "cli_example": "policy-map WAN\n class CRITICAL\n  bandwidth percent 30",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "보통",
+  "question": "Which measure describes the variation in delay between packets?",
+  "choices": [
+   "Latency",
+   "Throughput",
+   "Loss",
+   "Jitter"
+  ],
+  "answer": "D",
+  "explanation": "Jitter harms voice because packets arrive at uneven intervals. Jitter buffers hide small variations.",
+  "option_notes": [
+   "Wrong: It is the delay itself.",
+   "Wrong: It is the data rate.",
+   "Wrong: It is dropped packets.",
+   "Correct: It is delay variation."
+  ],
+  "key_concept": "Jitter = delay variation.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "보통",
+  "question": "What is the recommended maximum one-way delay for voice?",
+  "choices": [
+   "150 ms",
+   "10 ms",
+   "1 second",
+   "500 ms"
+  ],
+  "answer": "A",
+  "explanation": "Voice guidelines are one-way delay up to 150 ms, jitter under 30 ms, and loss under 1 percent.",
+  "option_notes": [
+   "Correct: This is the common guideline.",
+   "Wrong: Too strict.",
+   "Wrong: Too high for voice.",
+   "Wrong: Too high for voice."
+  ],
+  "key_concept": "Voice: 150 ms delay, 30 ms jitter, 1 percent loss.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "보통",
+  "question": "What does WRED do?",
+  "choices": [
+   "Drops all packets when the queue is full",
+   "Randomly drops packets before the queue is full",
+   "Marks all traffic EF",
+   "Encrypts a queue"
+  ],
+  "answer": "B",
+  "explanation": "Weighted Random Early Detection drops lower-priority traffic early as the queue fills, so TCP flows slow down gradually.",
+  "option_notes": [
+   "Wrong: That is tail drop.",
+   "Correct: It avoids global TCP synchronization.",
+   "Wrong: It does not mark EF.",
+   "Wrong: Unrelated."
+  ],
+  "key_concept": "WRED = early random drop.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "보통",
+  "question": "Which three steps make up the Modular QoS CLI (MQC)?",
+  "choices": [
+   "access-list, route-map, ip policy",
+   "vlan, trunk, switchport",
+   "class-map, policy-map, service-policy",
+   "ip nat, pool, overload"
+  ],
+  "answer": "C",
+  "explanation": "A class-map matches traffic, a policy-map applies actions to classes, and a service-policy attaches the policy to an interface.",
+  "option_notes": [
+   "Wrong: This is policy-based routing.",
+   "Wrong: These are Layer 2 commands.",
+   "Correct: Define classes, actions, then attach.",
+   "Wrong: This is NAT."
+  ],
+  "key_concept": "MQC = class-map, policy-map, service-policy.",
+  "cli_example": "class-map match-any VOICE\n match dscp ef\npolicy-map WAN\n class VOICE\n  priority percent 20\ninterface g0/0\n service-policy output WAN",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "보통",
+  "question": "What is the DSCP value for default (best effort) traffic?",
+  "choices": [
+   "8",
+   "46",
+   "63",
+   "0"
+  ],
+  "answer": "D",
+  "explanation": "Unmarked traffic has DSCP 0 and receives best-effort treatment.",
+  "option_notes": [
+   "Wrong: This is CS1.",
+   "Wrong: This is EF.",
+   "Wrong: This is a rarely used top value.",
+   "Correct: The default forwarding class."
+  ],
+  "key_concept": "Default DSCP = 0.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "어려움",
+  "question": "Examine the policy. What happens to voice during congestion?\npolicy-map WAN\n class VOICE\n  priority percent 20\n class DATA\n  bandwidth percent 40",
+  "choices": [
+   "Voice gets strict priority but is limited to 20 percent when congested",
+   "Voice gets unlimited priority",
+   "Voice is dropped first",
+   "Voice shares equally with data"
+  ],
+  "answer": "A",
+  "explanation": "The priority command creates an LLQ. During congestion it is also policed so it cannot starve other classes.",
+  "option_notes": [
+   "Correct: The priority queue is policed under congestion.",
+   "Wrong: It is policed at its configured rate.",
+   "Wrong: Priority traffic is served first.",
+   "Wrong: It has a strict priority queue."
+  ],
+  "key_concept": "LLQ is policed during congestion.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "어려움",
+  "question": "A router interface runs at 10 Mbps. The service provider limits to 2 Mbps. Which tool avoids drops at the provider by sending at 2 Mbps?",
+  "choices": [
+   "Policing to 10 Mbps",
+   "Shaping to 2 Mbps",
+   "Marking EF",
+   "Classification only"
+  ],
+  "answer": "B",
+  "explanation": "Shaping queues excess so output matches the committed rate. Without it the provider policer would drop the excess.",
+  "option_notes": [
+   "Wrong: Does not smooth to 2 Mbps.",
+   "Correct: It buffers bursts and sends at the rate.",
+   "Wrong: Marking does not limit rate.",
+   "Wrong: Classification does not limit rate."
+  ],
+  "key_concept": "Shape to the provider rate.",
+  "cli_example": "policy-map SHAPE\n class class-default\n  shape average 2000000\ninterface g0/0\n service-policy output SHAPE",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "어려움",
+  "question": "Bulk FTP causes choppy voice calls on a congested WAN link with FIFO queuing. What is the best fix?",
+  "choices": [
+   "Increase the voice codec delay",
+   "Disable TCP",
+   "Classify voice and give it LLQ priority",
+   "Mark all traffic EF"
+  ],
+  "answer": "C",
+  "explanation": "FIFO makes voice wait behind large data packets. LLQ lets voice bypass the queue.",
+  "option_notes": [
+   "Wrong: Does not fix congestion delay.",
+   "Wrong: TCP is not the fix.",
+   "Correct: Voice is sent first.",
+   "Wrong: If everything is EF nothing is prioritized."
+  ],
+  "key_concept": "Use LLQ for voice.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "어려움",
+  "question": "What does this policer do?\npolice 1000000 conform-action transmit exceed-action drop",
+  "choices": [
+   "Buffers excess traffic",
+   "Marks excess as EF",
+   "Blocks all traffic",
+   "Sends traffic up to 1 Mbps and drops the rest"
+  ],
+  "answer": "D",
+  "explanation": "A policer drops traffic above the rate. Use exceed-action set-dscp-transmit to remark instead.",
+  "option_notes": [
+   "Wrong: That is shaping.",
+   "Wrong: exceed-action is drop.",
+   "Wrong: Conforming traffic passes.",
+   "Correct: Conforming traffic is transmitted."
+  ],
+  "key_concept": "Policer: conform and exceed actions.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "어려움",
+  "question": "Where is a service-policy applied to shape WAN traffic leaving the router?",
+  "choices": [
+   "service-policy output on the WAN interface",
+   "service-policy input on the WAN interface",
+   "service-policy input on a loopback",
+   "ip policy route-map on the LAN"
+  ],
+  "answer": "A",
+  "explanation": "Egress interface and output direction is used for queuing and shaping.",
+  "option_notes": [
+   "Correct: Shaping applies outbound.",
+   "Wrong: Shaping is not applied to inbound.",
+   "Wrong: Loopbacks do not shape.",
+   "Wrong: This is PBR."
+  ],
+  "key_concept": "Shape outbound.",
+  "cli_example": "interface s0/0/0\n service-policy output SHAPE",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "어려움",
+  "question": "Within the AF1 class, which marking is most likely to be dropped first during congestion?",
+  "choices": [
+   "AF11",
+   "AF13",
+   "AF12",
+   "EF"
+  ],
+  "answer": "B",
+  "explanation": "In AFxy, y is the drop precedence from 1 (low) to 3 (high). AF13 is dropped before AF12 and AF11.",
+  "option_notes": [
+   "Wrong: It has the lowest drop preference.",
+   "Correct: It has the highest drop preference.",
+   "Wrong: It has medium drop preference.",
+   "Wrong: Priority traffic is not subject to this drop preference."
+  ],
+  "key_concept": "Higher AF second digit = higher drop.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "어려움",
+  "question": "A PC marks its traffic DSCP EF to gain priority. The access switch uses a trust boundary at the IP phone. What should the switch do?",
+  "choices": [
+   "Trust and forward EF",
+   "Drop the traffic",
+   "Re-mark or ignore the PC markings",
+   "Convert to CoS 7"
+  ],
+  "answer": "C",
+  "explanation": "Trust only markings from trusted devices. Re-mark untrusted traffic to default.",
+  "option_notes": [
+   "Wrong: Users could abuse priority.",
+   "Wrong: Normal behavior is re-marking.",
+   "Correct: Untrusted devices must not gain priority.",
+   "Wrong: Gives excess priority."
+  ],
+  "key_concept": "Re-mark untrusted markings.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "어려움",
+  "question": "A class-map has two match lines and no match-any or match-all keyword:\nclass-map VOICE\n match dscp ef\n match protocol rtp\nHow is traffic matched?",
+  "choices": [
+   "Traffic must match either condition",
+   "Traffic is matched randomly",
+   "No traffic is matched",
+   "Traffic must match both conditions"
+  ],
+  "answer": "D",
+  "explanation": "On IOS a class-map defaults to match-all. Use match-any to match one of several conditions.",
+  "option_notes": [
+   "Wrong: That requires match-any.",
+   "Wrong: Not valid.",
+   "Wrong: It matches if both are true.",
+   "Correct: The default is match-all."
+  ],
+  "key_concept": "Default class-map = match-all.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "어려움",
+  "question": "Why does WRED improve TCP throughput on a congested link compared with tail drop?",
+  "choices": [
+   "Early random drops avoid all TCP flows slowing down together",
+   "It increases link speed",
+   "It removes jitter completely",
+   "It encrypts TCP sessions"
+  ],
+  "answer": "A",
+  "explanation": "With tail drop many flows lose packets simultaneously and back off together. WRED spreads the drops.",
+  "option_notes": [
+   "Correct: This prevents global synchronization.",
+   "Wrong: Does not change speed.",
+   "Wrong: Does not eliminate jitter.",
+   "Wrong: Unrelated."
+  ],
+  "key_concept": "WRED prevents global synchronization.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.7",
+  "difficulty": "어려움",
+  "question": "A router shapes an interface with shape average 2000000. A burst of traffic arrives faster than 2 Mbps for 100 ms. What happens to the excess packets?",
+  "choices": [
+   "They are immediately dropped",
+   "They are queued and sent later, adding delay",
+   "They are marked EF",
+   "They are sent immediately at line rate"
+  ],
+  "answer": "B",
+  "explanation": "Shaping smooths output to the configured rate by holding packets in a queue. If the queue fills, packets are tail-dropped, but short bursts are absorbed.",
+  "option_notes": [
+   "Wrong: This describes policing.",
+   "Correct: Shaping buffers excess traffic.",
+   "Wrong: Marking is not done by shaping.",
+   "Wrong: This would exceed the shaped rate."
+  ],
+  "key_concept": "Shaping = buffering plus delay.",
+  "cli_example": "",
+  "tip": ""
+ }
+]

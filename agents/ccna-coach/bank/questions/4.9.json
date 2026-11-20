@@ -1,0 +1,662 @@
+[
+  {
+    "sub": "4.9",
+    "difficulty": "쉬움",
+    "question": "Which port and transport protocol does TFTP use?",
+    "choices": [
+      "UDP 69",
+      "TCP 69",
+      "TCP 21",
+      "UDP 161"
+    ],
+    "answer": "A",
+    "explanation": "TFTP (Trivial File Transfer Protocol) uses UDP port 69 for the first request. The server then answers from a different, ephemeral port, but 69 is the well-known port to remember. TCP 21 is FTP control and UDP 161 is SNMP.",
+    "option_notes": [
+      "Correct: TFTP uses UDP port 69.",
+      "Wrong: TFTP does not use TCP.",
+      "Wrong: TCP 21 is the FTP control connection.",
+      "Wrong: UDP 161 is SNMP."
+    ],
+    "key_concept": "TFTP = UDP 69.",
+    "cli_example": "",
+    "tip": "TFTP = UDP 69. FTP = TCP 20/21."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "쉬움",
+    "question": "Which ports does FTP use?",
+    "choices": [
+      "UDP 69 for control and UDP 20 for data",
+      "TCP 21 for control and TCP 20 for data in active mode",
+      "TCP 22 and TCP 23",
+      "TCP 80 and TCP 443"
+    ],
+    "answer": "B",
+    "explanation": "FTP uses two TCP connections. The control connection uses TCP 21 for commands and login, and in active mode the server opens the data connection from TCP 20. In passive mode the data port is chosen by the server instead.",
+    "option_notes": [
+      "Wrong: FTP uses TCP, and UDP 69 is TFTP.",
+      "Correct: TCP 21 is control and TCP 20 is data in active mode.",
+      "Wrong: TCP 22 is SSH and TCP 23 is Telnet.",
+      "Wrong: TCP 80 is HTTP and TCP 443 is HTTPS."
+    ],
+    "key_concept": "FTP: 21 control, 20 data.",
+    "cli_example": "",
+    "tip": "FTP = 21 control, 20 data (active mode)."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "쉬움",
+    "question": "Which transport protocol does FTP use?",
+    "choices": [
+      "UDP",
+      "ICMP",
+      "TCP",
+      "OSPF"
+    ],
+    "answer": "C",
+    "explanation": "FTP runs over TCP, which gives it reliable delivery, windowing and retransmission. This is also why FTP is usually better than TFTP for large files. ICMP and OSPF are not transport protocols that carry FTP.",
+    "option_notes": [
+      "Wrong: UDP is used by TFTP, not FTP.",
+      "Wrong: ICMP is a network layer control protocol.",
+      "Correct: FTP uses TCP ports 20 and 21.",
+      "Wrong: OSPF is a routing protocol."
+    ],
+    "key_concept": "FTP = TCP.",
+    "cli_example": "",
+    "tip": "FTP = TCP, TFTP = UDP."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "쉬움",
+    "question": "Which file transfer protocol has no authentication?",
+    "choices": [
+      "FTP",
+      "SCP",
+      "SFTP",
+      "TFTP"
+    ],
+    "answer": "D",
+    "explanation": "TFTP has no username or password, so anyone who can reach the server can read or write files it allows. It is meant for simple, trusted transfers. FTP requires a username and password, while SCP and SFTP use SSH.",
+    "option_notes": [
+      "Wrong: FTP asks for a username and password.",
+      "Wrong: SCP uses SSH authentication.",
+      "Wrong: SFTP uses SSH authentication.",
+      "Correct: TFTP has no authentication."
+    ],
+    "key_concept": "TFTP: no authentication.",
+    "cli_example": "",
+    "tip": "No authentication = TFTP."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "쉬움",
+    "question": "Which command copies the running configuration to a TFTP server?",
+    "choices": [
+      "copy running-config tftp:",
+      "copy tftp: flash:",
+      "copy startup-config running-config",
+      "backup tftp running"
+    ],
+    "answer": "A",
+    "explanation": "The command is copy <source> <destination>. copy running-config tftp: sends the current configuration to a TFTP server, and the router then asks for the server address and file name. It is a common way to back up the configuration.",
+    "option_notes": [
+      "Correct: it copies the running configuration to a TFTP server.",
+      "Wrong: this copies a file from TFTP to flash.",
+      "Wrong: this copies startup to running configuration locally.",
+      "Wrong: backup tftp running is not an IOS command."
+    ],
+    "key_concept": "copy running-config tftp:",
+    "cli_example": "R1# copy running-config tftp:\nAddress or name of remote host []? 10.1.1.10\nDestination filename [r1-confg]?",
+    "tip": "Source first, destination second."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "쉬움",
+    "question": "Which command copies an IOS image from a TFTP server to flash?",
+    "choices": [
+      "copy flash: tftp:",
+      "copy tftp: flash:",
+      "copy running-config tftp:",
+      "copy ftp: tftp:"
+    ],
+    "answer": "B",
+    "explanation": "copy tftp: flash: downloads a file, such as an IOS image, from a TFTP server to the router's flash. The command is always copy source destination, so the server is first and flash is second.",
+    "option_notes": [
+      "Wrong: this copies flash to the TFTP server, the reverse direction.",
+      "Correct: it copies from the TFTP server to flash.",
+      "Wrong: this backs up the running configuration, not an image.",
+      "Wrong: copy ftp: tftp: is not a normal image upgrade command."
+    ],
+    "key_concept": "copy <source> <destination>",
+    "cli_example": "R1# copy tftp: flash:\nAddress or name of remote host []? 10.1.1.10\nSource filename []? c2900-image.bin",
+    "tip": "Read it as 'from tftp to flash'."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "쉬움",
+    "question": "Which protocol requires a username and password?",
+    "choices": [
+      "TFTP",
+      "ICMP",
+      "FTP",
+      "ARP"
+    ],
+    "answer": "C",
+    "explanation": "FTP requires a username and password on its control connection. TFTP does not have any login. ICMP and ARP are not file transfer protocols.",
+    "option_notes": [
+      "Wrong: TFTP has no authentication.",
+      "Wrong: ICMP does not transfer files or use accounts.",
+      "Correct: FTP authenticates users with a username and password.",
+      "Wrong: ARP maps IP addresses to MAC addresses."
+    ],
+    "key_concept": "FTP authenticates; TFTP does not.",
+    "cli_example": "",
+    "tip": "FTP asks for credentials; TFTP never does."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "쉬움",
+    "question": "Which protocol provides secure file transfer using SSH?",
+    "choices": [
+      "TFTP",
+      "Telnet",
+      "DHCP",
+      "SCP"
+    ],
+    "answer": "D",
+    "explanation": "SCP (Secure Copy) runs over SSH, so the files and credentials are encrypted. TFTP and Telnet send data in clear text, and DHCP assigns addresses rather than transferring files. SCP also uses TCP port 22.",
+    "option_notes": [
+      "Wrong: TFTP is not encrypted.",
+      "Wrong: Telnet is a clear text remote access protocol.",
+      "Wrong: DHCP provides IP addressing.",
+      "Correct: SCP uses SSH to copy files securely."
+    ],
+    "key_concept": "SCP = secure copy over SSH.",
+    "cli_example": "R1(config)# ip scp server enable",
+    "tip": "Secure file copy = SCP or SFTP (both over SSH)."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "쉬움",
+    "question": "Which transport protocol does TFTP use?",
+    "choices": [
+      "UDP",
+      "TCP",
+      "IP only",
+      "ARP"
+    ],
+    "answer": "A",
+    "explanation": "TFTP uses UDP, which is connectionless and has low overhead. Because UDP gives no reliability, TFTP adds its own acknowledgment of each block. It does not use TCP.",
+    "option_notes": [
+      "Correct: TFTP is carried in UDP datagrams.",
+      "Wrong: TFTP does not use TCP; FTP does.",
+      "Wrong: IP alone has no ports, and TFTP needs a transport protocol.",
+      "Wrong: ARP is not a transport protocol."
+    ],
+    "key_concept": "TFTP = UDP.",
+    "cli_example": "",
+    "tip": "TFTP = UDP 69, FTP = TCP 21."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "쉬움",
+    "question": "What is a common use of TFTP in networks?",
+    "choices": [
+      "Secure web browsing",
+      "Transferring IOS images and configuration files",
+      "Address assignment",
+      "Time synchronization"
+    ],
+    "answer": "B",
+    "explanation": "TFTP is simple and light, so it is commonly used to copy IOS images and configuration files to and from network devices, and for network boot. It is not used for web browsing, address assignment (DHCP) or time (NTP).",
+    "option_notes": [
+      "Wrong: secure web browsing uses HTTPS.",
+      "Correct: TFTP is commonly used to transfer IOS images and configuration files.",
+      "Wrong: address assignment is done by DHCP.",
+      "Wrong: time synchronization is done by NTP."
+    ],
+    "key_concept": "TFTP is for simple transfers.",
+    "cli_example": "",
+    "tip": "TFTP = simple file copy of IOS and config."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "보통",
+    "question": "How large is the default data block in TFTP transfers?",
+    "choices": [
+      "1500 bytes",
+      "64 KB",
+      "512 bytes",
+      "65535 bytes"
+    ],
+    "answer": "C",
+    "explanation": "TFTP sends data in blocks of 512 bytes by default, and the sender waits for an acknowledgment of each block before sending the next one. This lockstep makes it slow for large files.",
+    "option_notes": [
+      "Wrong: 1500 bytes is the typical Ethernet MTU, not the TFTP block size.",
+      "Wrong: 64 KB is not the default TFTP block.",
+      "Correct: the default TFTP data block is 512 bytes.",
+      "Wrong: 65535 is the maximum UDP port or IP length, not a block size."
+    ],
+    "key_concept": "TFTP blocks 512 bytes, lockstep.",
+    "cli_example": "",
+    "tip": "512-byte blocks + ACK each block = slow."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "보통",
+    "question": "Which command sets the username used when a router copies files via FTP?",
+    "choices": [
+      "ftp user admin",
+      "ip tftp username admin",
+      "copy ftp username admin",
+      "ip ftp username admin"
+    ],
+    "answer": "D",
+    "explanation": "ip ftp username sets the username the router uses for FTP transfers, and ip ftp password sets the matching password. The router then uses them for copy ftp: commands without prompting.",
+    "option_notes": [
+      "Wrong: ftp user admin is not an IOS command.",
+      "Wrong: TFTP has no usernames, so ip tftp username does not exist.",
+      "Wrong: copy ftp username admin is not valid syntax; the username is set globally.",
+      "Correct: ip ftp username admin sets the FTP login name."
+    ],
+    "key_concept": "ip ftp username / ip ftp password.",
+    "cli_example": "R1(config)# ip ftp username admin\nR1(config)# ip ftp password Cisco123\nR1# copy ftp: flash:",
+    "tip": "Pair: ip ftp username + ip ftp password."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "보통",
+    "question": "Which command checks free space before copying a new IOS image?",
+    "choices": [
+      "show flash:",
+      "show tftp",
+      "show ip ftp",
+      "show version only"
+    ],
+    "answer": "A",
+    "explanation": "show flash: lists the files in flash and shows total and free space. Check it before copying a large IOS image so you know whether old files must be deleted first. show version shows the total flash size but not the free space.",
+    "option_notes": [
+      "Correct: show flash: displays files and free space.",
+      "Wrong: show tftp is not a command.",
+      "Wrong: show ip ftp is not a command.",
+      "Wrong: show version alone does not show free flash space."
+    ],
+    "key_concept": "Check flash space first.",
+    "cli_example": "R1# show flash:",
+    "tip": "Check space first or you may get 'Not enough space on device'."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "보통",
+    "question": "What does a timeout error during copy tftp indicate?",
+    "choices": [
+      "The image is too small",
+      "The server is unreachable or not responding",
+      "The password is wrong",
+      "The flash is full"
+    ],
+    "answer": "B",
+    "explanation": "A timeout means the router sent requests and got no reply. The usual causes are no reachability, a wrong server address, a stopped TFTP service or a firewall blocking UDP 69. A small image or wrong password would not cause a timeout.",
+    "option_notes": [
+      "Wrong: a small image never causes a timeout.",
+      "Correct: a timeout means the server is unreachable or not answering.",
+      "Wrong: TFTP has no password.",
+      "Wrong: a full flash gives a not enough space error, not a timeout."
+    ],
+    "key_concept": "Timeout = reachability.",
+    "cli_example": "",
+    "tip": "Timeout = check ping, server running and UDP 69 allowed."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "보통",
+    "question": "How many connections does FTP use during a transfer?",
+    "choices": [
+      "One",
+      "Three",
+      "Two: control and data",
+      "None"
+    ],
+    "answer": "C",
+    "explanation": "FTP uses two connections. The control connection carries commands and login and stays open, and a separate data connection carries the file or directory listing. This is different from TFTP, which has no separate control channel.",
+    "option_notes": [
+      "Wrong: FTP does not use only one connection.",
+      "Wrong: it does not use three connections.",
+      "Correct: FTP uses a control connection and a data connection.",
+      "Wrong: file transfer requires at least one connection."
+    ],
+    "key_concept": "FTP = control + data.",
+    "cli_example": "",
+    "tip": "FTP = control + data (two TCP connections)."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "보통",
+    "question": "Which command backs up the startup configuration to a TFTP server?",
+    "choices": [
+      "copy tftp: startup-config",
+      "copy running-config flash:",
+      "write network",
+      "copy startup-config tftp:"
+    ],
+    "answer": "D",
+    "explanation": "copy startup-config tftp: backs up the saved configuration to a TFTP server. The router then asks for the server address and destination filename. copy tftp: startup-config does the opposite.",
+    "option_notes": [
+      "Wrong: this restores a file to startup-config instead of backing it up.",
+      "Wrong: this saves running configuration to flash, not to a server.",
+      "Wrong: write network is an old command for running-config, not startup-config.",
+      "Correct: it copies the startup configuration to the TFTP server."
+    ],
+    "key_concept": "copy startup-config tftp:",
+    "cli_example": "R1# copy startup-config tftp:",
+    "tip": "Direction matters: source first, destination second."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "보통",
+    "question": "When copying a configuration file from TFTP to running-config, what happens?",
+    "choices": [
+      "It is merged with the existing configuration",
+      "It replaces the running config",
+      "It reloads",
+      "It deletes flash"
+    ],
+    "answer": "A",
+    "explanation": "Copying a file into running-config merges it with the existing configuration instead of replacing it. Existing commands that are not in the file remain. Copying into startup-config, by contrast, replaces the saved file.",
+    "option_notes": [
+      "Correct: it is merged with the existing running configuration.",
+      "Wrong: running-config is not replaced; startup-config is.",
+      "Wrong: no automatic reload happens.",
+      "Wrong: flash is not deleted."
+    ],
+    "key_concept": "running-config copy merges.",
+    "cli_example": "R1# copy tftp: running-config",
+    "tip": "To running-config = merge. To startup-config = overwrite."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "보통",
+    "question": "Which command verifies the integrity of an IOS image with an MD5 hash?",
+    "choices": [
+      "show md5 image",
+      "verify /md5 flash:image.bin",
+      "check flash",
+      "copy md5"
+    ],
+    "answer": "B",
+    "explanation": "verify /md5 flash:image.bin calculates the MD5 hash of the file in flash. Compare it with the hash published by the vendor to confirm that the image was not damaged or changed. Do this before booting a new image.",
+    "option_notes": [
+      "Wrong: show md5 image is not an IOS command.",
+      "Correct: verify /md5 checks the image hash.",
+      "Wrong: check flash is not valid.",
+      "Wrong: copy md5 is not valid."
+    ],
+    "key_concept": "verify /md5",
+    "cli_example": "R1# verify /md5 flash:c2900-image.bin",
+    "tip": "verify /md5 = integrity check of the IOS file."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "보통",
+    "question": "Which statement about TFTP security is correct?",
+    "choices": [
+      "It encrypts files",
+      "It requires a password",
+      "It sends data in clear text without authentication",
+      "It uses SSH"
+    ],
+    "answer": "C",
+    "explanation": "TFTP has no encryption and no authentication, so files and any secrets inside them travel in clear text, and anyone who can reach the server can request files. It is acceptable only on trusted networks. It does not use SSH.",
+    "option_notes": [
+      "Wrong: TFTP does not encrypt files.",
+      "Wrong: TFTP does not require a password.",
+      "Correct: TFTP sends data in clear text with no authentication.",
+      "Wrong: SCP and SFTP use SSH, TFTP does not."
+    ],
+    "key_concept": "TFTP is insecure.",
+    "cli_example": "",
+    "tip": "TFTP: clear text, no auth. Use SCP for secure transfers."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "어려움",
+    "question": "Why is a large IOS image copy over TFTP usually slower than over FTP?",
+    "choices": [
+      "TFTP uses TCP windowing",
+      "TFTP encrypts",
+      "TFTP uses ICMP",
+      "TFTP waits for an acknowledgment of each block"
+    ],
+    "answer": "D",
+    "explanation": "TFTP is a lockstep protocol: it sends one block and waits for its acknowledgment before sending the next. This stop-and-wait behavior makes large transfers slow. FTP runs over TCP, which uses windowing to send many segments before waiting.",
+    "option_notes": [
+      "Wrong: TFTP uses UDP, so it has no TCP windowing.",
+      "Wrong: TFTP does not encrypt, and encryption is not the cause of slowness.",
+      "Wrong: TFTP does not use ICMP.",
+      "Correct: TFTP waits for an acknowledgment of each block."
+    ],
+    "key_concept": "TFTP lockstep is slow.",
+    "cli_example": "",
+    "tip": "TFTP = stop and wait; FTP/TCP = windowing."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "어려움",
+    "question": "Output shows !!!!.!!! during copy tftp. What does the dot represent?",
+    "choices": [
+      "A timed-out packet",
+      "A successful block",
+      "A checksum error",
+      "A routing loop"
+    ],
+    "answer": "A",
+    "explanation": "During copy tftp, each exclamation point (!) means a block was transferred successfully, and each dot (.) means a timeout for a packet. Occasional dots with continuing exclamation marks mean the transfer recovered. Many dots in a row mean a connectivity problem.",
+    "option_notes": [
+      "Correct: a dot means a timed-out packet.",
+      "Wrong: a successful block is shown as an exclamation point.",
+      "Wrong: a dot shows a timeout, not a checksum error.",
+      "Wrong: a dot is not a routing loop indicator."
+    ],
+    "key_concept": "! = ok, . = timeout.",
+    "cli_example": "",
+    "tip": "! = success, . = timeout."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "어려움",
+    "question": "Router displays Not enough space on device while copying a new image. What should be done?",
+    "choices": [
+      "Increase TFTP timeout",
+      "Free flash space by deleting old files",
+      "Configure ip ftp password",
+      "Change the VLAN"
+    ],
+    "answer": "B",
+    "explanation": "Not enough space on device means flash does not have enough free space for the new file. Delete old images you no longer need (after confirming the new one is safe) and try again. Changing timeouts, FTP passwords or VLANs does not add space.",
+    "option_notes": [
+      "Wrong: a longer timeout does not create flash space.",
+      "Correct: free flash space by deleting old files.",
+      "Wrong: an FTP password has nothing to do with free space.",
+      "Wrong: VLANs do not affect flash space."
+    ],
+    "key_concept": "Check flash first.",
+    "cli_example": "R1# show flash:\nR1# delete flash:old-image.bin",
+    "tip": "Use show flash: first, then delete old image with delete flash:."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "어려움",
+    "question": "Which sequence of prompts appears for copy flash: tftp:?",
+    "choices": [
+      "Username, password, VLAN",
+      "Community string and version",
+      "Source filename, address of remote host, destination filename",
+      "Domain name only"
+    ],
+    "answer": "C",
+    "explanation": "copy flash: tftp: asks interactively for the source filename, the IP address or name of the remote host, and the destination filename. No username or password is requested because TFTP has no authentication.",
+    "option_notes": [
+      "Wrong: TFTP does not ask for a username or password.",
+      "Wrong: a community string is used by SNMP.",
+      "Correct: it asks for the source filename, remote host and destination filename.",
+      "Wrong: the domain name is not requested."
+    ],
+    "key_concept": "copy prompts for host and filename.",
+    "cli_example": "R1# copy flash: tftp:\nSource filename []? image.bin\nAddress or name of remote host []? 10.1.1.10\nDestination filename [image.bin]?",
+    "tip": "TFTP prompts: file, host, destination file. No credentials."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "어려움",
+    "question": "Which statement about the TFTP transfer port is correct?",
+    "choices": [
+      "Everything stays on UDP 69",
+      "Everything uses TCP 21",
+      "The client uses UDP 53",
+      "The first request goes to UDP 69 and the server replies from a different port"
+    ],
+    "answer": "D",
+    "explanation": "The client sends its first request to the server on UDP 69. The server then picks a new ephemeral UDP port and replies from it, and the rest of the transfer continues between those two ports. A firewall must allow this return traffic.",
+    "option_notes": [
+      "Wrong: only the first request uses UDP 69, not the whole transfer.",
+      "Wrong: TFTP uses UDP, not TCP 21.",
+      "Wrong: UDP 53 is DNS.",
+      "Correct: the request goes to UDP 69 and the server replies from a different port."
+    ],
+    "key_concept": "TFTP switches ports after the request.",
+    "cli_example": "",
+    "tip": "Request to 69; reply from a random port."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "어려움",
+    "question": "In FTP passive mode, who initiates the data connection?",
+    "choices": [
+      "The client",
+      "The server",
+      "Neither",
+      "The router default gateway"
+    ],
+    "answer": "A",
+    "explanation": "In passive mode the client opens both the control connection and the data connection. The server tells the client which port to use for data and the client connects to it, which works better through firewalls and NAT. In active mode the server initiates the data connection from port 20.",
+    "option_notes": [
+      "Correct: in passive mode the client initiates the data connection.",
+      "Wrong: the server initiates data only in active mode.",
+      "Wrong: one side always initiates the connection.",
+      "Wrong: the default gateway does not initiate FTP connections."
+    ],
+    "key_concept": "Passive = client initiates data.",
+    "cli_example": "",
+    "tip": "Passive = client connects to a server-chosen port. Active = server connects from port 20."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "어려움",
+    "question": "After copying a new IOS image to flash, which commands make the router boot it?",
+    "choices": [
+      "copy tftp: flash: again",
+      "boot system flash:image.bin, copy running-config startup-config, reload",
+      "ip ssh version 2",
+      "clock set"
+    ],
+    "answer": "B",
+    "explanation": "After copying the new image, boot system flash:image.bin tells the router which file to load at the next boot. Then save the configuration with copy running-config startup-config and reload. Copying the file again, setting the SSH version or setting the clock does not select the boot image.",
+    "option_notes": [
+      "Wrong: copying again does not change the boot image.",
+      "Correct: boot system, save the configuration and reload.",
+      "Wrong: ip ssh version 2 has nothing to do with booting.",
+      "Wrong: clock set only sets the time."
+    ],
+    "key_concept": "boot system then reload.",
+    "cli_example": "R1(config)# boot system flash:image.bin\nR1# copy running-config startup-config\nR1# reload",
+    "tip": "Copy, verify, boot system, save, reload."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "어려움",
+    "question": "Which is the best reason to prefer SCP over FTP for config backups across the Internet?",
+    "choices": [
+      "SCP uses UDP",
+      "SCP is built on TFTP",
+      "SCP encrypts the data and credentials",
+      "SCP needs no authentication"
+    ],
+    "answer": "C",
+    "explanation": "SCP runs over SSH, so both the credentials and the file data are encrypted. FTP sends the username, password and data in clear text, so on an untrusted network like the Internet SCP is the safer choice. SCP uses TCP, not UDP, and does require authentication.",
+    "option_notes": [
+      "Wrong: SCP uses TCP port 22.",
+      "Wrong: SCP is built on SSH, not TFTP.",
+      "Correct: SCP encrypts both data and credentials.",
+      "Wrong: SCP does require authentication."
+    ],
+    "key_concept": "Use encrypted protocols.",
+    "cli_example": "R1(config)# ip scp server enable",
+    "tip": "Over the Internet: encrypted protocols only (SCP, SFTP, HTTPS)."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "어려움",
+    "question": "A TFTP copy fails but ping to the server works. Which is a likely cause?",
+    "choices": [
+      "The server needs TCP 21",
+      "The router lacks SSH keys",
+      "The VLAN is trunked",
+      "The TFTP server is not running or UDP 69 is blocked"
+    ],
+    "answer": "D",
+    "explanation": "If ping works, Layer 3 reachability is fine, so the problem is at the application or transport layer. The TFTP server service may be stopped, or a firewall or ACL may block UDP 69 and the return traffic. A server also needs a writable path for uploads.",
+    "option_notes": [
+      "Wrong: TFTP does not use TCP 21.",
+      "Wrong: SSH keys are not needed for TFTP.",
+      "Wrong: trunking does not explain a failure when ping works.",
+      "Correct: the TFTP service is down or UDP 69 is blocked."
+    ],
+    "key_concept": "Check the service and firewall.",
+    "cli_example": "",
+    "tip": "Ping OK but copy fails: check the service and UDP 69."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "보통",
+    "question": "Which statement about FTP is correct?",
+    "choices": [
+      "It authenticates users but sends credentials in clear text",
+      "It is encrypted by default",
+      "It uses UDP port 69",
+      "It needs no username"
+    ],
+    "answer": "A",
+    "explanation": "FTP has user authentication, but the username, password and data cross the network in clear text because FTP is not encrypted by default. FTPS or SFTP/SCP can add encryption. FTP uses TCP 21 and 20, not UDP 69.",
+    "option_notes": [
+      "Correct: FTP authenticates users, but sends credentials in clear text.",
+      "Wrong: FTP is not encrypted by default.",
+      "Wrong: UDP 69 is TFTP.",
+      "Wrong: FTP requires a username, though it may be anonymous."
+    ],
+    "key_concept": "FTP is authenticated but unencrypted.",
+    "cli_example": "",
+    "tip": "FTP = auth but not encrypted. TFTP = neither."
+  },
+  {
+    "sub": "4.9",
+    "difficulty": "어려움",
+    "question": "A router copies a 200 MB image. Both TFTP and FTP are available and the server is trusted on the same LAN. Which choice gives the best transfer reliability and speed?",
+    "choices": [
+      "TFTP, because it uses TCP windowing",
+      "FTP, because TCP provides windowing and retransmission",
+      "TFTP, because it sends several blocks per ACK",
+      "Telnet, because it is encrypted"
+    ],
+    "answer": "B",
+    "explanation": "FTP runs over TCP, which provides windowing, acknowledgments and retransmission, so it is faster and more reliable for large files like a 200 MB image. TFTP uses UDP and waits for an ACK of each 512-byte block. Telnet is not for file transfer.",
+    "option_notes": [
+      "Wrong: TFTP uses UDP and does not use TCP windowing.",
+      "Correct: FTP over TCP provides windowing and retransmission.",
+      "Wrong: TFTP sends one block per ACK, not several.",
+      "Wrong: Telnet is not encrypted and is not a file transfer protocol."
+    ],
+    "key_concept": "FTP is faster for large files.",
+    "cli_example": "",
+    "tip": "Large file on a trusted LAN: FTP beats TFTP."
+  }
+]

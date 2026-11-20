@@ -7,6 +7,8 @@
 
   python3 agents/ccna-coach/bank/import_bank.py --check   # 형식만 검사 (DB 안 건드림)
   python3 agents/ccna-coach/bank/import_bank.py           # 검사 후 DB에 넣기
+  python3 agents/ccna-coach/bank/import_bank.py --skip 4.8,4.9   # 일부 범위 빼고
+  python3 agents/ccna-coach/bank/import_bank.py --only 4.8,4.9   # 일부 범위만
 """
 import hashlib
 import json
@@ -60,13 +62,22 @@ def shuffle(row: dict) -> dict:
     return row
 
 
+def _arg(name: str) -> set:
+    if name in sys.argv and sys.argv.index(name) + 1 < len(sys.argv):
+        return set(sys.argv[sys.argv.index(name) + 1].split(","))
+    return set()
+
+
 def load_rows() -> tuple[list, list]:
     subs, rows, errs, seen = valid_subs(), [], [], set()
+    only, skip = _arg("--only"), _arg("--skip")
     for f in sorted((HERE / "questions").glob("*.json")):
+        if (only and f.stem not in only) or f.stem in skip:
+            continue
         for i, q in enumerate(json.loads(f.read_text())):
             where = f"{f.name}#{i + 1}"
             bad = [k for k in FIELDS if k not in q]
-            if q.get("sub") not in subs: bad.append("sub")
+            if q.get("sub") not in subs or q.get("sub") != f.stem: bad.append("sub(파일 이름과 같아야 함)")
             if q.get("difficulty") not in DIFFS: bad.append("difficulty")
             if not isinstance(q.get("choices"), list) or len(q["choices"]) != 4: bad.append("choices(4)")
             if q.get("answer") not in ("A", "B", "C", "D"): bad.append("answer(A-D)")

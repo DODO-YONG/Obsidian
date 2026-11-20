@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "4.6",
+  "difficulty": "쉬움",
+  "question": "What is the purpose of the ip helper-address command?",
+  "choices": [
+   "Forward client DHCP broadcasts to a DHCP server on another subnet",
+   "Assign addresses from a pool on the router",
+   "Block DHCP traffic",
+   "Translate private addresses"
+  ],
+  "answer": "A",
+  "explanation": "Routers do not forward broadcasts by default. ip helper-address converts the client's DHCP broadcast into a unicast sent to the configured server address.",
+  "option_notes": [
+   "Correct: It turns the router into a DHCP relay agent.",
+   "Wrong: That is a router DHCP server.",
+   "Wrong: It forwards DHCP requests.",
+   "Wrong: That is NAT."
+  ],
+  "key_concept": "ip helper-address = DHCP relay.",
+  "cli_example": "Router(config-if)# ip helper-address 10.2.2.5",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "쉬움",
+  "question": "On which interface should ip helper-address be configured?",
+  "choices": [
+   "The interface facing the DHCP server",
+   "The interface facing the DHCP clients",
+   "The loopback interface",
+   "Any interface on the server"
+  ],
+  "answer": "B",
+  "explanation": "The command is applied on the interface that receives the client broadcasts. The address given is the server's IP address.",
+  "option_notes": [
+   "Wrong: Client broadcasts do not arrive there.",
+   "Correct: It must receive the client broadcast.",
+   "Wrong: Clients are not connected to it.",
+   "Wrong: The command is for the router relay."
+  ],
+  "key_concept": "Apply helper-address on the client-side interface.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "쉬움",
+  "question": "Why is a DHCP relay agent needed when the DHCP server is on a different subnet?",
+  "choices": [
+   "DHCP does not work with IPv4",
+   "Servers cannot send unicast replies",
+   "Routers do not forward broadcast packets",
+   "Clients always need a static gateway"
+  ],
+  "answer": "C",
+  "explanation": "A DHCPDISCOVER is a local broadcast that a router will not forward. The relay agent unicasts it to the server so one server can serve many subnets.",
+  "option_notes": [
+   "Wrong: DHCP supports IPv4.",
+   "Wrong: Servers can send unicasts.",
+   "Correct: DHCP discovery messages are broadcasts.",
+   "Wrong: Clients obtain it via DHCP."
+  ],
+  "key_concept": "Broadcasts stop at routers.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "쉬움",
+  "question": "Which command makes a router interface obtain its IP address from a DHCP server?",
+  "choices": [
+   "ip dhcp client",
+   "ip helper-address dhcp",
+   "dhcp enable",
+   "ip address dhcp"
+  ],
+  "answer": "D",
+  "explanation": "On a router or Layer 3 interface ip address dhcp requests an address from a server, typically on an ISP-facing interface.",
+  "option_notes": [
+   "Wrong: This is not an IOS command.",
+   "Wrong: helper-address needs a server IP.",
+   "Wrong: This is not IOS syntax.",
+   "Correct: The interface becomes a DHCP client."
+  ],
+  "key_concept": "ip address dhcp = DHCP client.",
+  "cli_example": "Router(config-if)# ip address dhcp\nRouter(config-if)# no shutdown",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "쉬움",
+  "question": "Which type of device commonly performs the DHCP relay function?",
+  "choices": [
+   "A router or Layer 3 switch",
+   "A hub",
+   "An unmanaged Layer 2 switch",
+   "A repeater"
+  ],
+  "answer": "A",
+  "explanation": "A relay agent must be a Layer 3 device. Routers and multilayer switch SVIs commonly host the helper-address command.",
+  "option_notes": [
+   "Correct: It has an interface in the client subnet and can reach the server.",
+   "Wrong: Hubs do not process Layer 3 packets.",
+   "Wrong: It cannot forward at Layer 3.",
+   "Wrong: It only regenerates signals."
+  ],
+  "key_concept": "Relay = Layer 3 device.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "쉬움",
+  "question": "What address is given in the ip helper-address command?",
+  "choices": [
+   "The IP address of the client",
+   "The IP address of the DHCP server",
+   "The default gateway of the client",
+   "The broadcast address of the subnet"
+  ],
+  "answer": "B",
+  "explanation": "The configured address is where the forwarded DHCP message is sent. It may also be a directed broadcast, but a server IP is the usual choice.",
+  "option_notes": [
+   "Wrong: The client has no address yet.",
+   "Correct: The relay unicasts the request to this address.",
+   "Wrong: The relay is the gateway itself.",
+   "Wrong: The goal is to unicast beyond the subnet."
+  ],
+  "key_concept": "helper-address = server IP.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "쉬움",
+  "question": "Which UDP port do DHCP client requests target on the server?",
+  "choices": [
+   "UDP 68",
+   "UDP 53",
+   "UDP 67",
+   "UDP 123"
+  ],
+  "answer": "C",
+  "explanation": "Clients send from UDP 68 to UDP 67. The relay agent also listens on UDP 67.",
+  "option_notes": [
+   "Wrong: This is the client port.",
+   "Wrong: This is DNS.",
+   "Correct: This is the server port.",
+   "Wrong: This is NTP."
+  ],
+  "key_concept": "DHCP server and relay listen on UDP 67.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "쉬움",
+  "question": "A PC in VLAN 10 cannot get an address because the DHCP server is in another subnet and no relay is configured. What will the PC most likely show?",
+  "choices": [
+   "An address from the server pool",
+   "The address 255.255.255.255",
+   "The address 127.0.0.1",
+   "An APIPA address in 169.254.0.0/16"
+  ],
+  "answer": "D",
+  "explanation": "The broadcast stops at the router, so no offer returns. Windows hosts then self-assign an APIPA address.",
+  "option_notes": [
+   "Wrong: Without a relay the server never sees the request.",
+   "Wrong: This is the broadcast address.",
+   "Wrong: This is loopback.",
+   "Correct: The discovery never reaches the server."
+  ],
+  "key_concept": "No relay or server: APIPA address.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "쉬움",
+  "question": "Which output column of show ip interface brief indicates that an address was learned by DHCP?",
+  "choices": [
+   "Method shows DHCP",
+   "Status shows DHCP",
+   "Protocol shows DHCP",
+   "OK? shows DHCP"
+  ],
+  "answer": "A",
+  "explanation": "The Method column displays manual, DHCP, NVRAM and so on. A DHCP-learned address is labeled DHCP.",
+  "option_notes": [
+   "Correct: The Method column lists how the address was set.",
+   "Wrong: Status shows up or down.",
+   "Wrong: Protocol shows line protocol state.",
+   "Wrong: OK? shows YES or NO."
+  ],
+  "key_concept": "Method = DHCP for learned addresses.",
+  "cli_example": "Router# show ip interface brief",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "쉬움",
+  "question": "Which command gives a Layer 3 switch SVI a DHCP-assigned address?",
+  "choices": [
+   "interface vlan 1\n ip dhcp pool",
+   "interface vlan 1\n ip address dhcp",
+   "interface vlan 1\n ip helper-address dhcp",
+   "vlan 1\n ip address dhcp"
+  ],
+  "answer": "B",
+  "explanation": "A switch management SVI can get its address with ip address dhcp. This is common for out-of-band or test setups.",
+  "option_notes": [
+   "Wrong: A pool makes the device a server.",
+   "Correct: It uses the same command as a router interface.",
+   "Wrong: helper-address needs a server address.",
+   "Wrong: IP addresses are set on the SVI, not in VLAN configuration."
+  ],
+  "key_concept": "SVI can be a DHCP client too.",
+  "cli_example": "Switch(config)# interface vlan 1\nSwitch(config-if)# ip address dhcp\nSwitch(config-if)# no shutdown",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "보통",
+  "question": "What is the giaddr field in a relayed DHCP message?",
+  "choices": [
+   "The IP address assigned to the client",
+   "The MAC address of the server",
+   "The IP address of the relay interface that received the client broadcast",
+   "The default gateway option sent by the server"
+  ],
+  "answer": "C",
+  "explanation": "The Gateway IP Address field lets the server choose the pool matching the subnet and know where to send its reply.",
+  "option_notes": [
+   "Wrong: That is yiaddr.",
+   "Wrong: giaddr is an IP address field.",
+   "Correct: The relay writes its own address so the server knows the client subnet.",
+   "Wrong: That is option 3."
+  ],
+  "key_concept": "giaddr = relay interface IP.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "보통",
+  "question": "Which service besides DHCP is forwarded by ip helper-address by default?",
+  "choices": [
+   "HTTP (TCP 80)",
+   "SSH (TCP 22)",
+   "Telnet (TCP 23)",
+   "TFTP (UDP 69)"
+  ],
+  "answer": "D",
+  "explanation": "By default the command forwards UDP ports 37, 49, 53, 69, 137, 138 and the BOOTP/DHCP ports. TFTP and DNS are examples.",
+  "option_notes": [
+   "Wrong: Only certain UDP ports are forwarded.",
+   "Wrong: It is TCP and not forwarded.",
+   "Wrong: It is TCP and not forwarded.",
+   "Correct: TFTP is in the default forwarded list."
+  ],
+  "key_concept": "helper-address forwards several UDP broadcasts, not only DHCP.",
+  "cli_example": "",
+  "tip": "Use no ip forward-protocol udp to limit them."
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "보통",
+  "question": "R1 interface G0/0 connects to the 10.1.1.0/24 client LAN and the DHCP server is 10.2.2.5. Where is the command placed?",
+  "choices": [
+   "interface g0/0\n ip helper-address 10.2.2.5",
+   "interface g0/1 (server side)\n ip helper-address 10.1.1.1",
+   "interface g0/0\n ip helper-address 10.1.1.0",
+   "interface g0/0\n ip dhcp pool LAN"
+  ],
+  "answer": "A",
+  "explanation": "The helper address must point at the server and be on the interface receiving the broadcasts.",
+  "option_notes": [
+   "Correct: The relay is on the client-facing interface.",
+   "Wrong: This is the wrong interface and wrong address.",
+   "Wrong: The server address is needed.",
+   "Wrong: A pool makes R1 a server."
+  ],
+  "key_concept": "Client-facing interface, server address.",
+  "cli_example": "R1(config)# interface g0/0\nR1(config-if)# ip helper-address 10.2.2.5",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "보통",
+  "question": "How does the relay agent send the client's DHCPDISCOVER to the DHCP server?",
+  "choices": [
+   "As a broadcast on the server subnet",
+   "As a unicast packet to the helper address",
+   "As a multicast to 224.0.0.5",
+   "As an ICMP message"
+  ],
+  "answer": "B",
+  "explanation": "The relay converts the broadcast to a unicast, setting giaddr to its receiving interface address and sending it from its own IP to UDP 67 on the server.",
+  "option_notes": [
+   "Wrong: The helper address is used as destination.",
+   "Correct: The relay replaces the broadcast with a unicast.",
+   "Wrong: This is the OSPF multicast address.",
+   "Wrong: DHCP uses UDP."
+  ],
+  "key_concept": "Relay converts broadcast to unicast.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "보통",
+  "question": "An administrator places ip helper-address on the interface facing the DHCP server instead of the client side. What is the result?",
+  "choices": [
+   "Clients receive addresses normally",
+   "The server crashes",
+   "Clients still do not receive addresses",
+   "The router becomes a DHCP server"
+  ],
+  "answer": "C",
+  "explanation": "Only broadcasts received on an interface with the command are relayed. The client LAN interface is where the broadcasts arrive.",
+  "option_notes": [
+   "Wrong: The command is on the wrong interface.",
+   "Wrong: This has no such effect.",
+   "Correct: The relay never sees the client broadcasts.",
+   "Wrong: That needs a pool."
+  ],
+  "key_concept": "Configure it where broadcasts arrive.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "보통",
+  "question": "Which command on a router disables the DHCP server and relay functions?",
+  "choices": [
+   "no ip dhcp pool",
+   "no ip helper-address",
+   "shutdown dhcp",
+   "no service dhcp"
+  ],
+  "answer": "D",
+  "explanation": "The DHCP service is enabled by default on many IOS versions. no service dhcp turns off both server and relay agent features.",
+  "option_notes": [
+   "Wrong: Pool is not a command by itself.",
+   "Wrong: This removes one helper address.",
+   "Wrong: This is not IOS syntax.",
+   "Correct: It disables the DHCP service."
+  ],
+  "key_concept": "service dhcp enables the DHCP feature set.",
+  "cli_example": "Router(config)# no service dhcp",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "보통",
+  "question": "Clients and the DHCP server are in the same subnet. Is a relay required?",
+  "choices": [
+   "No, the broadcast reaches the server directly",
+   "Yes, always",
+   "Yes, but only for renewals",
+   "No, but only with a switch trunk"
+  ],
+  "answer": "A",
+  "explanation": "A relay is needed only when the client broadcast has to cross a Layer 3 boundary.",
+  "option_notes": [
+   "Correct: Both are in the same broadcast domain.",
+   "Wrong: A relay is only needed across subnets.",
+   "Wrong: Renewals are unicast anyway.",
+   "Wrong: Trunking is unrelated."
+  ],
+  "key_concept": "Same broadcast domain = no relay.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "보통",
+  "question": "Which line appears in the running-config of an interface that is a DHCP client?",
+  "choices": [
+   "ip address 0.0.0.0",
+   "ip address dhcp",
+   "ip helper-address dhcp",
+   "ip dhcp client"
+  ],
+  "answer": "B",
+  "explanation": "The configuration records that the address is DHCP-assigned. The learned address appears in show ip interface brief.",
+  "option_notes": [
+   "Wrong: This is not how DHCP clients show.",
+   "Correct: The interface learns its address dynamically.",
+   "Wrong: helper-address needs a server.",
+   "Wrong: This is not a valid line."
+  ],
+  "key_concept": "ip address dhcp is saved in config.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "보통",
+  "question": "Can a Layer 3 switch act as a DHCP relay agent?",
+  "choices": [
+   "No, only physical routed ports can",
+   "No, switches cannot relay",
+   "Yes, an SVI can have ip helper-address",
+   "Only with a trunk port"
+  ],
+  "answer": "C",
+  "explanation": "A multilayer switch with an SVI for each VLAN uses ip helper-address under the SVI to relay DHCP requests.",
+  "option_notes": [
+   "Wrong: SVIs support it.",
+   "Wrong: Layer 3 switches can.",
+   "Correct: SVIs are Layer 3 interfaces.",
+   "Wrong: The trunk is not required."
+  ],
+  "key_concept": "Helper-address works on SVIs.",
+  "cli_example": "Switch(config)# interface vlan 10\nSwitch(config-if)# ip helper-address 10.2.2.5",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "어려움",
+  "question": "A DHCP server has pools for 10.10.10.0/24 only. Clients in VLAN 20 (10.10.20.0/24) are relayed by R1 and fail to get addresses. What is wrong?",
+  "choices": [
+   "The relay uses UDP 68",
+   "The clients lack a MAC address",
+   "DHCP requires TCP",
+   "The server has no pool matching the giaddr subnet 10.10.20.0/24"
+  ],
+  "answer": "D",
+  "explanation": "The server compares giaddr with its pools. With no 10.10.20.0/24 pool it has nothing to offer. Create a pool for each relayed subnet.",
+  "option_notes": [
+   "Wrong: The relay uses UDP 67.",
+   "Wrong: They have MAC addresses.",
+   "Wrong: DHCP uses UDP.",
+   "Correct: The server selects the pool using giaddr."
+  ],
+  "key_concept": "One server needs a pool per subnet.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "어려움",
+  "question": "R1 has ip helper-address 10.2.2.5 on g0/0, but clients get no addresses. R1 reaches the server. Debug shows requests arrive and offers are sent but never reach clients. What is the most likely cause?",
+  "choices": [
+   "The server has no route back to the relay interface subnet",
+   "The server is using UDP 68",
+   "The clients have the wrong MAC",
+   "ip helper-address is on the wrong VLAN"
+  ],
+  "answer": "A",
+  "explanation": "The server unicasts its reply to giaddr. Without a route (or default gateway) to that network, the offer is lost.",
+  "option_notes": [
+   "Correct: The unicast reply to giaddr cannot return.",
+   "Wrong: The server uses 67.",
+   "Wrong: MAC addresses are not the cause.",
+   "Wrong: Requests are arriving at the server."
+  ],
+  "key_concept": "Server needs a return route to giaddr.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "어려움",
+  "question": "Router R1 has ip helper-address configured on a subinterface G0/0.20 for VLAN 20 but not on G0/0.10 for VLAN 10. What happens to clients?",
+  "choices": [
+   "Both VLANs get addresses",
+   "VLAN 20 clients get addresses; VLAN 10 clients do not",
+   "Neither VLAN gets addresses",
+   "VLAN 10 gets addresses but VLAN 20 does not"
+  ],
+  "answer": "B",
+  "explanation": "Each client subnet needs its own helper-address on its router subinterface or SVI in a router-on-a-stick design.",
+  "option_notes": [
+   "Wrong: The command is not shared between subinterfaces.",
+   "Correct: The command is per interface.",
+   "Wrong: VLAN 20 has relay.",
+   "Wrong: VLAN 20 has the command."
+  ],
+  "key_concept": "Per-interface configuration.",
+  "cli_example": "interface g0/0.10\n ip helper-address 10.2.2.5\ninterface g0/0.20\n ip helper-address 10.2.2.5",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "어려움",
+  "question": "A router gets its WAN address from the ISP by DHCP and is also a DHCP server for its LAN. How can the router pass the ISP DNS server to LAN clients automatically?",
+  "choices": [
+   "Use ip helper-address on the WAN interface",
+   "Use ip dns server on the LAN",
+   "Use import all in the LAN pool",
+   "Use lease infinite in the pool"
+  ],
+  "answer": "C",
+  "explanation": "The import all command in a DHCP pool copies options learned by the DHCP client interface, such as DNS and domain name, into the leases sent to LAN clients.",
+  "option_notes": [
+   "Wrong: That relays client requests and does not import options.",
+   "Wrong: This enables the router DNS server and does not import options.",
+   "Correct: It imports options such as DNS learned from the ISP.",
+   "Wrong: Lease length is unrelated."
+  ],
+  "key_concept": "import all passes ISP DHCP options to LAN clients.",
+  "cli_example": "Router(config)# ip dhcp pool LAN\nRouter(dhcp-config)# network 192.168.1.0 255.255.255.0\nRouter(dhcp-config)# default-router 192.168.1.1\nRouter(dhcp-config)# import all",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "어려움",
+  "question": "By default ip helper-address also forwards TFTP and DNS broadcasts. Which command stops forwarding of TFTP (UDP 69) while keeping DHCP relay?",
+  "choices": [
+   "no ip helper-address",
+   "no service dhcp",
+   "ip forward-protocol udp 69",
+   "no ip forward-protocol udp 69"
+  ],
+  "answer": "D",
+  "explanation": "ip forward-protocol udp controls which UDP ports are relayed by helper-address. The no form removes a port from the list, leaving DHCP relay in place.",
+  "option_notes": [
+   "Wrong: This removes the relay completely.",
+   "Wrong: This disables DHCP features.",
+   "Wrong: This keeps TFTP forwarded.",
+   "Correct: It removes UDP 69 from the forwarded list."
+  ],
+  "key_concept": "Use no ip forward-protocol udp to trim forwarded services.",
+  "cli_example": "Router(config)# no ip forward-protocol udp 69",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "어려움",
+  "question": "An ACL on a firewall between R1 and the DHCP server blocks UDP 67. What happens?",
+  "choices": [
+   "Relayed requests never reach the server and clients fail to get addresses",
+   "Clients get addresses via UDP 68",
+   "Only renewals fail",
+   "Clients use APIPA only for IPv6"
+  ],
+  "answer": "A",
+  "explanation": "The relay-to-server path must allow UDP 67 (and replies). Check ACLs and firewalls when relaying across a network.",
+  "option_notes": [
+   "Correct: The relay sends to UDP 67.",
+   "Wrong: The server is the one listening on 67.",
+   "Wrong: Initial requests fail first.",
+   "Wrong: APIPA applies to IPv4 here."
+  ],
+  "key_concept": "Allow UDP 67 end to end.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "어려움",
+  "question": "Two DHCP servers are configured as helpers on an interface:\nip helper-address 10.2.2.5\nip helper-address 10.2.2.6\nWhat does the relay do with each DHCPDISCOVER?",
+  "choices": [
+   "Sends only to the first address",
+   "Forwards a copy to both servers",
+   "Alternates between servers",
+   "Rejects the second command"
+  ],
+  "answer": "B",
+  "explanation": "Both servers may reply and the client typically chooses one offer. This gives redundancy.",
+  "option_notes": [
+   "Wrong: All are used.",
+   "Correct: Multiple helper addresses are allowed.",
+   "Wrong: It does not load balance.",
+   "Wrong: The second is accepted."
+  ],
+  "key_concept": "Multiple helpers = copies to each.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "어려움",
+  "question": "A router interface learned its address by DHCP and the server also sent a default router option. What administrative distance does the installed default route have by default?",
+  "choices": [
+   "1",
+   "0",
+   "254",
+   "110"
+  ],
+  "answer": "C",
+  "explanation": "With ip address dhcp the router installs the default gateway option as a route with AD 254 so it acts as a floating route.",
+  "option_notes": [
+   "Wrong: Static routes use AD 1.",
+   "Wrong: Connected routes use AD 0.",
+   "Correct: DHCP-learned default routes are installed with AD 254.",
+   "Wrong: OSPF uses 110."
+  ],
+  "key_concept": "DHCP default route AD is 254.",
+  "cli_example": "Router# show ip route\nS*   0.0.0.0/0 [254/0] via 192.168.1.1",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "어려움",
+  "question": "A client renews its lease at T1 and the DHCP server is on another subnet. Is the relay used for this renewal?",
+  "choices": [
+   "Yes, the relay must convert a broadcast",
+   "Yes, because DHCPOFFER is needed",
+   "No, because renewals use TCP",
+   "No, the client unicasts directly to the server"
+  ],
+  "answer": "D",
+  "explanation": "At T1 the client unicasts a DHCPREQUEST to the server that gave the lease; normal routing delivers it. A relay is needed only for broadcasts such as discovery or rebinding.",
+  "option_notes": [
+   "Wrong: Renewal is unicast at T1.",
+   "Wrong: Offers are not part of renewal.",
+   "Wrong: DHCP uses UDP.",
+   "Correct: It has an IP address and knows the server address."
+  ],
+  "key_concept": "Renewal is routed unicast.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "어려움",
+  "question": "A DHCP server replies with a DHCPOFFER to a relayed request. To which address does the server send it?",
+  "choices": [
+   "The giaddr relay address, as a unicast",
+   "255.255.255.255 on the server subnet",
+   "The client's final address directly",
+   "The default gateway of the server"
+  ],
+  "answer": "A",
+  "explanation": "The reply goes to the relay agent which delivers it onto the client LAN. This is why a route to giaddr matters.",
+  "option_notes": [
+   "Correct: The relay then forwards it to the client.",
+   "Wrong: The client is not on that subnet.",
+   "Wrong: The client has no address yet.",
+   "Wrong: The giaddr is used."
+  ],
+  "key_concept": "Offer is unicast to giaddr.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "4.6",
+  "difficulty": "보통",
+  "question": "Which command verifies that a router interface is configured with a helper address?",
+  "choices": [
+   "show ip dhcp pool",
+   "show ip interface g0/0",
+   "show running-config | include dhcp client",
+   "show vlan brief"
+  ],
+  "answer": "B",
+  "explanation": "show ip interface displays the helper address configured on the interface. show running-config also shows it.",
+  "option_notes": [
+   "Wrong: It shows pool statistics.",
+   "Correct: The output lists the Helper address.",
+   "Wrong: This is not a valid way to find it.",
+   "Wrong: It shows VLANs."
+  ],
+  "key_concept": "show ip interface shows Helper address.",
+  "cli_example": "Router# show ip interface g0/0 | include Helper",
+  "tip": ""
+ }
+]

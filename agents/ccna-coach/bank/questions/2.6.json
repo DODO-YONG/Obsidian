@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "2.6",
+  "difficulty": "쉬움",
+  "question": "Which description matches an autonomous access point?",
+  "choices": [
+   "An AP that depends on a WLC for all configuration",
+   "A self-contained AP that is configured and managed individually",
+   "An AP that only runs in monitor mode",
+   "An AP that is managed only through a cloud dashboard"
+  ],
+  "answer": "B",
+  "explanation": "An autonomous AP contains all the functions needed to run a WLAN. Each AP is configured separately through its CLI or GUI. It works for small networks but is hard to manage at scale.",
+  "option_notes": [
+   "Wrong: That describes a lightweight AP.",
+   "Correct: Autonomous APs have their own full configuration and do not need a controller.",
+   "Wrong: Monitor mode is only one operating mode of a lightweight AP.",
+   "Wrong: That describes a cloud-managed AP."
+  ],
+  "key_concept": "Autonomous = standalone, per-AP management.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "쉬움",
+  "question": "What is the purpose of the CAPWAP protocol?",
+  "choices": [
+   "It creates tunnels between lightweight APs and a wireless LAN controller",
+   "It encrypts wireless client traffic with AES",
+   "It assigns IP addresses to wireless clients",
+   "It discovers neighboring Cisco switches"
+  ],
+  "answer": "A",
+  "explanation": "CAPWAP (Control And Provisioning of Wireless Access Points) builds two tunnels from each lightweight AP to its WLC: one for control messages and one for client data.",
+  "option_notes": [
+   "Correct: CAPWAP carries control and data traffic between an AP and the WLC.",
+   "Wrong: Encryption between client and AP is done by WPA2/WPA3.",
+   "Wrong: DHCP assigns client IP addresses.",
+   "Wrong: CDP discovers neighboring switches."
+  ],
+  "key_concept": "CAPWAP = AP-to-WLC tunnel protocol.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "쉬움",
+  "question": "Which UDP ports does CAPWAP use for the control and data tunnels?",
+  "choices": [
+   "5247 for control and 5246 for data",
+   "161 for control and 162 for data",
+   "67 for control and 68 for data",
+   "5246 for control and 5247 for data"
+  ],
+  "answer": "D",
+  "explanation": "Remember: control is 5246 and data is 5247 (5246 comes first). Firewalls between APs and the WLC must allow both ports.",
+  "option_notes": [
+   "Wrong: The numbers are reversed.",
+   "Wrong: 161 and 162 are SNMP.",
+   "Wrong: 67 and 68 are DHCP.",
+   "Correct: CAPWAP control = UDP 5246; CAPWAP data = UDP 5247."
+  ],
+  "key_concept": "CAPWAP: control 5246, data 5247.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "쉬움",
+  "question": "Which operating mode is the default for a lightweight AP that joins a WLC?",
+  "choices": [
+   "FlexConnect",
+   "Monitor",
+   "Local",
+   "Sniffer"
+  ],
+  "answer": "C",
+  "explanation": "In local mode, the AP offers one or more BSSs on a channel and tunnels client traffic to the WLC over CAPWAP. It also scans other channels periodically for RRM and security.",
+  "option_notes": [
+   "Wrong: FlexConnect must be configured.",
+   "Wrong: Monitor must be configured.",
+   "Correct: Local mode is the default and serves clients through the CAPWAP tunnel.",
+   "Wrong: Sniffer must be configured."
+  ],
+  "key_concept": "Local = default mode.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "쉬움",
+  "question": "In which wireless architecture are APs managed through a web-based dashboard hosted on the internet?",
+  "choices": [
+   "Autonomous",
+   "Cloud-based",
+   "Controller-based with an on-premises WLC",
+   "Ad hoc"
+  ],
+  "answer": "B",
+  "explanation": "In a cloud-based design, APs get configuration and monitoring from a cloud dashboard. Client data traffic still goes through the local network rather than through the cloud.",
+  "option_notes": [
+   "Wrong: Autonomous APs are managed individually on site.",
+   "Correct: Cloud-based architectures, such as Cisco Meraki, manage APs through the cloud.",
+   "Wrong: The WLC is on the local network.",
+   "Wrong: Ad hoc is peer-to-peer without APs."
+  ],
+  "key_concept": "Cloud-based = managed from the internet dashboard.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "쉬움",
+  "question": "Which AP mode does not serve clients but scans channels to detect rogue devices and security threats?",
+  "choices": [
+   "Monitor",
+   "Local",
+   "FlexConnect",
+   "Bridge"
+  ],
+  "answer": "A",
+  "explanation": "A monitor-mode AP has its radios in receive-only mode. It helps detect rogue APs, IDS events and location tags but does not accept clients.",
+  "option_notes": [
+   "Correct: Monitor mode dedicates the AP to scanning for threats.",
+   "Wrong: Local mode serves clients.",
+   "Wrong: FlexConnect serves clients with local switching.",
+   "Wrong: Bridge mode links remote sites."
+  ],
+  "key_concept": "Monitor = security scanning only.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "쉬움",
+  "question": "What is the main benefit of FlexConnect mode?",
+  "choices": [
+   "The AP forwards all traffic to the WLC",
+   "The AP captures wireless frames for analysis",
+   "The AP only operates on the 5 GHz band",
+   "Clients can continue to be served and switched locally when the WAN link to the WLC fails"
+  ],
+  "answer": "D",
+  "explanation": "FlexConnect suits branch offices with a central WLC. Client traffic is switched locally at the AP onto the VLAN, and the AP can keep operating in standalone mode if the WLC is not reachable.",
+  "option_notes": [
+   "Wrong: That is local mode behavior.",
+   "Wrong: That is sniffer mode.",
+   "Wrong: FlexConnect does not limit the band.",
+   "Correct: FlexConnect allows local switching and survival of WAN outages."
+  ],
+  "key_concept": "FlexConnect = branch survivability, local switching.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "쉬움",
+  "question": "In the split-MAC architecture, which functions does the lightweight AP perform?",
+  "choices": [
+   "Client authentication policy and RF management",
+   "Roaming and mobility management",
+   "Real-time functions such as beacons, probe responses and frame encryption",
+   "VLAN creation for the whole network"
+  ],
+  "answer": "C",
+  "explanation": "Split-MAC divides tasks: the AP does real-time 802.11 functions, while the WLC does management functions such as authentication, RRM, security policy and roaming.",
+  "option_notes": [
+   "Wrong: Those are WLC functions.",
+   "Wrong: Mobility management is done by the WLC.",
+   "Correct: The AP does time-sensitive 802.11 functions.",
+   "Wrong: VLANs are not created by the AP."
+  ],
+  "key_concept": "AP = real time; WLC = management.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "쉬움",
+  "question": "Which device is required for lightweight APs to operate?",
+  "choices": [
+   "A RADIUS server only",
+   "A wireless LAN controller",
+   "A router running OSPF",
+   "A syslog server"
+  ],
+  "answer": "B",
+  "explanation": "A lightweight AP cannot operate alone. It discovers and joins a WLC, downloads its configuration and then works under the controller's control.",
+  "option_notes": [
+   "Wrong: RADIUS is optional for authentication.",
+   "Correct: Lightweight APs need a WLC for configuration and management.",
+   "Wrong: OSPF is not required.",
+   "Wrong: Syslog is optional."
+  ],
+  "key_concept": "Lightweight AP depends on a WLC.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "쉬움",
+  "question": "A company has one small office with a single AP and no controller. Which architecture is the most suitable?",
+  "choices": [
+   "Autonomous AP",
+   "Lightweight AP with a CAPWAP tunnel",
+   "FlexConnect with a remote WLC",
+   "Mesh network"
+  ],
+  "answer": "A",
+  "explanation": "For very small networks, an autonomous AP is simple and cheap. A controller adds value when there are many APs to manage.",
+  "option_notes": [
+   "Correct: A single AP with no WLC is a typical autonomous AP deployment.",
+   "Wrong: A lightweight AP needs a WLC.",
+   "Wrong: FlexConnect also needs a WLC.",
+   "Wrong: Mesh is for extending coverage wirelessly."
+  ],
+  "key_concept": "Few APs = autonomous.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "보통",
+  "question": "Which statement about lightweight APs compared to autonomous APs is true?",
+  "choices": [
+   "Lightweight APs must be configured one by one in the CLI",
+   "Lightweight APs do not support multiple SSIDs",
+   "Lightweight APs cannot support roaming",
+   "Lightweight APs get their configuration from a WLC and tunnel traffic with CAPWAP"
+  ],
+  "answer": "D",
+  "explanation": "A WLC-based design provides central configuration, RRM, roaming and security. Each lightweight AP builds CAPWAP tunnels to the WLC.",
+  "option_notes": [
+   "Wrong: That describes autonomous APs.",
+   "Wrong: They support multiple WLANs from the WLC.",
+   "Wrong: The WLC provides seamless roaming.",
+   "Correct: Lightweight APs are centrally managed."
+  ],
+  "key_concept": "Lightweight = centralized.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "보통",
+  "question": "Which AP mode is used to capture wireless frames and forward them to a PC running a packet analyzer such as Wireshark?",
+  "choices": [
+   "Monitor",
+   "Rogue detector",
+   "Sniffer",
+   "Local"
+  ],
+  "answer": "C",
+  "explanation": "In sniffer mode the AP captures packets on a channel and forwards them to a host running the analyzer. It does not serve clients.",
+  "option_notes": [
+   "Wrong: Monitor mode detects threats but does not forward captures to a PC.",
+   "Wrong: Rogue detector listens on the wired network.",
+   "Correct: Sniffer mode captures 802.11 traffic and sends it to an analyzer.",
+   "Wrong: Local mode serves clients."
+  ],
+  "key_concept": "Sniffer = packet capture for analyzers.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "보통",
+  "question": "Which statement describes an AP in rogue detector mode?",
+  "choices": [
+   "It scans all channels with its radio and serves clients",
+   "Its radio is off and it listens on the wired network for ARP information to find rogue clients and APs",
+   "It bridges two remote networks",
+   "It tunnels all client traffic to the WLC"
+  ],
+  "answer": "B",
+  "explanation": "The rogue detector AP compares ARP entries from the wired network with the rogue list from the WLC. It does not use its radio to serve clients.",
+  "option_notes": [
+   "Wrong: That is not rogue detector mode.",
+   "Correct: Rogue detector mode uses the wired side to correlate ARP messages.",
+   "Wrong: That is bridge mode.",
+   "Wrong: That is local mode."
+  ],
+  "key_concept": "Rogue detector = wired listener.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "보통",
+  "question": "Which AP mode is used to build point-to-point or point-to-multipoint wireless links between buildings?",
+  "choices": [
+   "Bridge (mesh)",
+   "Monitor",
+   "Sniffer",
+   "Local"
+  ],
+  "answer": "A",
+  "explanation": "Bridge or mesh mode lets an AP act as a wireless bridge between locations, often used outdoors where laying cable is difficult.",
+  "option_notes": [
+   "Correct: Bridge mode connects remote networks wirelessly.",
+   "Wrong: Monitor does not provide connectivity.",
+   "Wrong: Sniffer does not provide connectivity.",
+   "Wrong: Local serves clients."
+  ],
+  "key_concept": "Bridge = wireless backhaul.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "보통",
+  "question": "Which method can a lightweight AP use to learn the IP address of a WLC?",
+  "choices": [
+   "DHCP option 66",
+   "CDP",
+   "STP",
+   "DHCP option 43"
+  ],
+  "answer": "D",
+  "explanation": "An AP can discover a WLC with a broadcast, a previously stored address, DHCP option 43 or a DNS lookup for CISCO-CAPWAP-CONTROLLER.",
+  "option_notes": [
+   "Wrong: Option 66 is for a TFTP server name.",
+   "Wrong: CDP does not provide WLC address to APs.",
+   "Wrong: STP is not used for this.",
+   "Correct: DHCP option 43 can carry the WLC management IP address."
+  ],
+  "key_concept": "DHCP option 43 = WLC address.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "보통",
+  "question": "Which DNS entry can an AP resolve to find the WLC?",
+  "choices": [
+   "WLC.cisco.com",
+   "CAPWAP.local",
+   "CISCO-CAPWAP-CONTROLLER.localdomain",
+   "AP-JOIN.domain"
+  ],
+  "answer": "C",
+  "explanation": "Besides DHCP option 43, the AP tries to resolve the host name CISCO-CAPWAP-CONTROLLER.<domain> through DNS to get the WLC IP address.",
+  "option_notes": [
+   "Wrong: Not the standard name.",
+   "Wrong: Not the standard name.",
+   "Correct: The AP queries CISCO-CAPWAP-CONTROLLER in the local domain.",
+   "Wrong: Not the standard name."
+  ],
+  "key_concept": "AP finds WLC through DNS name CISCO-CAPWAP-CONTROLLER.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "보통",
+  "question": "What is a benefit of a controller-based wireless architecture?",
+  "choices": [
+   "Each AP must be configured separately",
+   "Centralized configuration, RF management and client roaming",
+   "No need for a wired network",
+   "No use of CAPWAP"
+  ],
+  "answer": "B",
+  "explanation": "A WLC centralizes policy, firmware and RRM. It also enables seamless roaming across APs and a single place to view clients.",
+  "option_notes": [
+   "Wrong: This is a disadvantage of autonomous APs.",
+   "Correct: A WLC centralizes management of APs.",
+   "Wrong: APs still need a wired uplink.",
+   "Wrong: Controller-based architectures rely on CAPWAP."
+  ],
+  "key_concept": "WLC = central control.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "보통",
+  "question": "What additional task does an AP in local mode perform on channels other than its serving channel?",
+  "choices": [
+   "It periodically scans them for RRM and rogue detection",
+   "It stops serving clients permanently",
+   "It switches to bridge mode",
+   "It forwards wired traffic to the WLC"
+  ],
+  "answer": "A",
+  "explanation": "While serving clients, a local-mode AP briefly leaves its channel to listen to neighboring channels. The WLC uses this data for RRM and detecting rogue devices.",
+  "option_notes": [
+   "Correct: Local mode APs go off-channel briefly to scan.",
+   "Wrong: Clients are still served; scanning is short.",
+   "Wrong: Mode is unchanged.",
+   "Wrong: Wired forwarding is not part of the scan."
+  ],
+  "key_concept": "Local mode includes off-channel scanning.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "보통",
+  "question": "Which part of CAPWAP traffic is always protected by DTLS?",
+  "choices": [
+   "The data tunnel only",
+   "The beacon frames sent to clients",
+   "DHCP offers",
+   "The control tunnel"
+  ],
+  "answer": "D",
+  "explanation": "CAPWAP control messages are encrypted with DTLS. DTLS for the data tunnel can be enabled when the AP and WLC support it.",
+  "option_notes": [
+   "Wrong: Data DTLS is optional.",
+   "Wrong: Beacons are not encrypted.",
+   "Wrong: DHCP is not affected.",
+   "Correct: The CAPWAP control channel is secured by DTLS; data DTLS is optional."
+  ],
+  "key_concept": "Control = DTLS; data = optional.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "보통",
+  "question": "Which wireless architecture feature does Cisco Meraki use?",
+  "choices": [
+   "Autonomous CLI-only management",
+   "An on-premises WLC with CAPWAP only",
+   "Cloud-based management of APs",
+   "Ad hoc networking"
+  ],
+  "answer": "C",
+  "explanation": "Cisco Meraki is the cloud-managed architecture. APs connect to the cloud management plane, while user traffic is forwarded locally.",
+  "option_notes": [
+   "Wrong: Meraki is not CLI-per-AP.",
+   "Wrong: The controller function is in the cloud.",
+   "Correct: Meraki APs are managed from the cloud dashboard.",
+   "Wrong: Ad hoc does not use APs."
+  ],
+  "key_concept": "Meraki = cloud-managed.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "어려움",
+  "question": "A branch AP in local mode loses its WAN connection to the headquarters WLC. What happens?",
+  "choices": [
+   "The AP continues to serve all clients indefinitely",
+   "The AP stops serving clients and searches for a WLC again",
+   "The AP switches to autonomous mode and keeps its WLAN",
+   "The AP automatically becomes a WLC"
+  ],
+  "answer": "B",
+  "explanation": "In local mode, all client traffic and control goes through the CAPWAP tunnel. Without the WLC, the AP drops clients and restarts the discovery process. FlexConnect solves this for branches.",
+  "option_notes": [
+   "Wrong: Only FlexConnect can keep serving locally switched clients.",
+   "Correct: A local-mode AP depends on the WLC for client service.",
+   "Wrong: Lightweight APs do not turn autonomous automatically.",
+   "Wrong: APs do not turn into controllers."
+  ],
+  "key_concept": "Local mode needs the WLC; FlexConnect does not.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "어려움",
+  "question": "A branch AP is in FlexConnect mode with a WLAN configured for local switching. The WAN link to the WLC goes down. What is the expected behavior?",
+  "choices": [
+   "The AP keeps forwarding client traffic locally for that WLAN in standalone mode",
+   "All clients are disconnected",
+   "The AP converts the traffic to CAPWAP and queues it",
+   "The AP turns off its radios"
+  ],
+  "answer": "A",
+  "explanation": "FlexConnect APs in standalone mode continue to serve clients on locally switched WLANs. Features that need the WLC (such as central authentication) may be limited.",
+  "option_notes": [
+   "Correct: Locally switched WLANs continue to work in standalone mode.",
+   "Wrong: That is the behavior of local mode.",
+   "Wrong: No CAPWAP tunnel is available to queue into.",
+   "Wrong: Radios stay on."
+  ],
+  "key_concept": "FlexConnect standalone mode = local survival.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "어려움",
+  "question": "New lightweight APs cannot join the WLC. The APs get an IP address and can ping the WLC, but no CAPWAP session is established. Which is the most likely cause?",
+  "choices": [
+   "The APs are not in the same VLAN as the WLC dynamic interface",
+   "TCP port 80 is blocked",
+   "STP is blocking the access ports",
+   "A firewall in the path blocks UDP ports 5246 and 5247"
+  ],
+  "answer": "D",
+  "explanation": "Ping success shows IP reachability only. CAPWAP discovery and join use UDP 5246 (control) and 5247 (data), so an ACL or firewall may be dropping them.",
+  "option_notes": [
+   "Wrong: AP-to-WLC join works across routed networks.",
+   "Wrong: The HTTP port is not needed for join.",
+   "Wrong: If STP blocked the ports, the AP would not get an IP address.",
+   "Correct: CAPWAP needs UDP 5246 and 5247; ping only proves ICMP."
+  ],
+  "key_concept": "Check UDP 5246/5247.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "어려움",
+  "question": "Which two functions are performed by the WLC rather than a lightweight AP in the split-MAC model?",
+  "choices": [
+   "Beacon transmission and frame encryption",
+   "Probe responses and ACK transmission",
+   "Client authentication policy and RF management",
+   "Frame queuing and retransmission at the radio"
+  ],
+  "answer": "C",
+  "explanation": "The WLC handles association management, authentication, security policy, RRM and roaming. The AP deals with time-critical MAC functions.",
+  "option_notes": [
+   "Wrong: Beacons and encryption are AP real-time functions.",
+   "Wrong: Probe responses and ACKs are real-time functions.",
+   "Correct: Management functions are handled centrally.",
+   "Wrong: Queuing and retransmission at the radio are done by the AP."
+  ],
+  "key_concept": "WLC does management; AP does real-time.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "어려움",
+  "question": "A lightweight AP in local mode is connected to a switch. Which switchport mode is typical for this AP?",
+  "choices": [
+   "Trunk port with all VLANs allowed",
+   "Access port in the AP's management VLAN",
+   "Routed port with no IP address",
+   "EtherChannel port-channel with LACP"
+  ],
+  "answer": "B",
+  "explanation": "In local mode, all client VLANs terminate at the WLC; the AP only needs IP connectivity in one VLAN. A FlexConnect AP with local switching needs a trunk with the client VLANs.",
+  "option_notes": [
+   "Wrong: FlexConnect with local switching needs a trunk, but local mode does not.",
+   "Correct: Local mode tunnels client traffic in CAPWAP, so one VLAN is enough.",
+   "Wrong: A routed port does not suit this AP.",
+   "Wrong: APs do not use LACP in this way."
+  ],
+  "key_concept": "Local mode = access port; FlexConnect = trunk.",
+  "cli_example": "interface gi0/5\n switchport mode access\n switchport access vlan 100",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "어려움",
+  "question": "An autonomous AP serves three SSIDs mapped to VLANs 10, 20 and 30. How should its switch port be configured?",
+  "choices": [
+   "As an 802.1Q trunk allowing VLANs 10, 20 and 30",
+   "As an access port in VLAN 10",
+   "As a routed port",
+   "As a port-channel in on mode"
+  ],
+  "answer": "A",
+  "explanation": "An autonomous AP bridges each SSID to a VLAN, so the switch port must carry all VLANs with a trunk. The AP also needs a management VLAN.",
+  "option_notes": [
+   "Correct: Multiple VLANs require a trunk.",
+   "Wrong: An access port carries one VLAN only.",
+   "Wrong: A routed port does not carry VLANs.",
+   "Wrong: EtherChannel is not required."
+  ],
+  "key_concept": "Autonomous AP with multiple SSIDs = trunk.",
+  "cli_example": "interface gi0/5\n switchport trunk encapsulation dot1q\n switchport mode trunk\n switchport trunk allowed vlan 10,20,30",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "어려움",
+  "question": "How does a cloud-based AP architecture handle user data traffic?",
+  "choices": [
+   "All data goes through the cloud management platform",
+   "All data is tunneled with CAPWAP to a local WLC",
+   "Data is dropped until the cloud connection is established",
+   "Data is forwarded locally; only management traffic goes to the cloud"
+  ],
+  "answer": "D",
+  "explanation": "In cloud-managed designs, the control and management plane is in the cloud but user traffic is switched locally onto the LAN. APs continue to work during short cloud outages.",
+  "option_notes": [
+   "Wrong: The cloud is not a data forwarding path.",
+   "Wrong: Meraki-type systems do not need a WLC.",
+   "Wrong: APs keep forwarding locally.",
+   "Correct: The cloud holds the management plane, not the data plane."
+  ],
+  "key_concept": "Cloud = management only.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "어려움",
+  "question": "A company has 300 APs across many campus buildings and wants centralized RF management and seamless roaming with the WLC in the data center. Which AP design is the best fit?",
+  "choices": [
+   "Autonomous APs with individual configuration",
+   "APs in sniffer mode",
+   "Lightweight APs in local mode joined to a WLC",
+   "Ad hoc wireless"
+  ],
+  "answer": "C",
+  "explanation": "Large campuses benefit from a WLC with lightweight APs: central policy, RRM, roaming and firmware.",
+  "option_notes": [
+   "Wrong: Autonomous APs are hard to manage at this scale.",
+   "Wrong: Sniffer mode does not serve clients.",
+   "Correct: A controller-based design handles large networks.",
+   "Wrong: Ad hoc does not use infrastructure."
+  ],
+  "key_concept": "Large networks = WLC architecture.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "어려움",
+  "question": "An administrator wants a Catalyst 9000 switch to host the wireless controller function for a small branch, with APs joining the switch over CAPWAP. Which deployment is this?",
+  "choices": [
+   "Cloud-based controller",
+   "Embedded wireless controller",
+   "Autonomous AP",
+   "FlexConnect only"
+  ],
+  "answer": "B",
+  "explanation": "In an embedded deployment, the WLC runs on a Catalyst 9000 switch. APs register to the switch with CAPWAP, which reduces the need for a separate controller device.",
+  "option_notes": [
+   "Wrong: Cloud controllers run in the cloud.",
+   "Correct: An embedded wireless controller runs on a Catalyst switch.",
+   "Wrong: Autonomous APs have no controller.",
+   "Wrong: FlexConnect is an AP mode, not a controller location."
+  ],
+  "key_concept": "Embedded WLC = controller inside a switch.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.6",
+  "difficulty": "어려움",
+  "question": "After a WAN outage, a local-mode AP cannot reach the WLC at HQ, but the branch needs wireless service during outages. Which change should be made?",
+  "choices": [
+   "Change the AP mode to FlexConnect and enable local switching",
+   "Change the AP to monitor mode",
+   "Change the AP to sniffer mode",
+   "Increase the CAPWAP data tunnel MTU"
+  ],
+  "answer": "A",
+  "explanation": "FlexConnect mode is made for branch locations. Traffic of locally switched WLANs does not depend on the WAN link to the WLC.",
+  "option_notes": [
+   "Correct: FlexConnect provides local switching and survivability.",
+   "Wrong: Monitor mode does not serve clients.",
+   "Wrong: Sniffer mode does not serve clients.",
+   "Wrong: MTU changes do not address WAN outages."
+  ],
+  "key_concept": "Branch resiliency = FlexConnect.",
+  "cli_example": "",
+  "tip": ""
+ }
+]

@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "2.8",
+  "difficulty": "쉬움",
+  "question": "Which type of management access is considered out-of-band?",
+  "choices": [
+   "Telnet to a VTY line",
+   "A direct connection to the console port",
+   "SSH to a management IP address",
+   "HTTPS to the device GUI"
+  ],
+  "answer": "B",
+  "explanation": "Out-of-band management uses a separate path, such as the console port. In-band management (Telnet, SSH, HTTP/HTTPS, SNMP) uses the network itself and fails if the network is down.",
+  "option_notes": [
+   "Wrong: Telnet uses the production network.",
+   "Correct: Console access does not depend on the network.",
+   "Wrong: SSH uses the production network.",
+   "Wrong: HTTPS uses the production network."
+  ],
+  "key_concept": "Console = out-of-band.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "쉬움",
+  "question": "Which protocol and port does Telnet use, and how is the traffic sent?",
+  "choices": [
+   "TCP 23, in clear text",
+   "TCP 22, encrypted",
+   "UDP 23, in clear text",
+   "TCP 443, encrypted"
+  ],
+  "answer": "A",
+  "explanation": "Telnet sends usernames, passwords and commands as plain text, so they can be captured on the network. SSH should replace it for remote CLI access.",
+  "option_notes": [
+   "Correct: Telnet uses TCP 23 and sends data, including passwords, unencrypted.",
+   "Wrong: TCP 22 and encryption belong to SSH.",
+   "Wrong: Telnet uses TCP, not UDP.",
+   "Wrong: TCP 443 is HTTPS."
+  ],
+  "key_concept": "Telnet = TCP 23 = insecure.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "쉬움",
+  "question": "Which protocol provides encrypted remote CLI access to a Cisco device?",
+  "choices": [
+   "Telnet",
+   "HTTP",
+   "TFTP",
+   "SSH"
+  ],
+  "answer": "D",
+  "explanation": "SSH protects credentials and commands from eavesdropping. Version 2 is recommended.",
+  "option_notes": [
+   "Wrong: Telnet is clear text.",
+   "Wrong: HTTP is clear text.",
+   "Wrong: TFTP is unencrypted file transfer.",
+   "Correct: SSH encrypts the session on TCP 22."
+  ],
+  "key_concept": "SSH = TCP 22, encrypted.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "쉬움",
+  "question": "What are the standard terminal settings for a Cisco console connection?",
+  "choices": [
+   "115200 baud, 7 data bits, even parity, 2 stop bits, XON/XOFF",
+   "4800 baud, 8 data bits, odd parity, 1 stop bit, hardware flow control",
+   "9600 baud, 8 data bits, no parity, 1 stop bit, no flow control",
+   "9600 baud, 7 data bits, no parity, 2 stop bits, no flow control"
+  ],
+  "answer": "C",
+  "explanation": "Connect with a console (rollover) cable and use a terminal program such as PuTTY or Tera Term with 9600 baud, 8 data bits, no parity, 1 stop bit and no flow control.",
+  "option_notes": [
+   "Wrong: These do not match the defaults.",
+   "Wrong: These do not match the defaults.",
+   "Correct: Cisco IOS console defaults are 9600 8N1 with no flow control.",
+   "Wrong: These do not match the defaults."
+  ],
+  "key_concept": "Console: 9600 8N1.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "쉬움",
+  "question": "Which TCP port does HTTPS use?",
+  "choices": [
+   "80",
+   "443",
+   "22",
+   "23"
+  ],
+  "answer": "B",
+  "explanation": "Secure web management of a Cisco device uses HTTPS on TCP 443 and is enabled with ip http secure-server.",
+  "option_notes": [
+   "Wrong: 80 is HTTP.",
+   "Correct: HTTPS uses TCP 443.",
+   "Wrong: 22 is SSH.",
+   "Wrong: 23 is Telnet."
+  ],
+  "key_concept": "HTTPS = 443.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "쉬움",
+  "question": "Which AAA protocol is Cisco proprietary and uses TCP port 49?",
+  "choices": [
+   "TACACS+",
+   "RADIUS",
+   "LDAP",
+   "Kerberos"
+  ],
+  "answer": "A",
+  "explanation": "TACACS+ is commonly used for device administration. It separates authentication, authorization and accounting.",
+  "option_notes": [
+   "Correct: TACACS+ is Cisco proprietary and uses TCP 49.",
+   "Wrong: RADIUS is an open standard on UDP.",
+   "Wrong: LDAP uses TCP/UDP 389.",
+   "Wrong: Kerberos uses port 88."
+  ],
+  "key_concept": "TACACS+ = Cisco, TCP 49.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "쉬움",
+  "question": "Which UDP ports does RADIUS commonly use for authentication and accounting?",
+  "choices": [
+   "49 and 50",
+   "161 and 162",
+   "514 and 520",
+   "1812 and 1813"
+  ],
+  "answer": "D",
+  "explanation": "Older implementations used 1645 and 1646. Modern RADIUS uses 1812 and 1813.",
+  "option_notes": [
+   "Wrong: Port 49 is TACACS+.",
+   "Wrong: 161/162 are SNMP.",
+   "Wrong: 514 is syslog and 520 is RIP.",
+   "Correct: RADIUS uses UDP 1812 for authentication and 1813 for accounting."
+  ],
+  "key_concept": "RADIUS 1812/1813; TACACS+ TCP 49.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "쉬움",
+  "question": "Which command generates the RSA keys needed to enable SSH on a Cisco router?",
+  "choices": [
+   "ssh generate key",
+   "ip ssh rsa",
+   "crypto key generate rsa",
+   "crypto ssh keygen"
+  ],
+  "answer": "C",
+  "explanation": "Before the key is generated, the device needs a hostname other than the default and an ip domain-name. SSH is then available.",
+  "option_notes": [
+   "Wrong: Not an IOS command.",
+   "Wrong: Not an IOS command.",
+   "Correct: crypto key generate rsa creates the key pair.",
+   "Wrong: Not an IOS command."
+  ],
+  "key_concept": "crypto key generate rsa = SSH keys.",
+  "cli_example": "R1(config)# crypto key generate rsa modulus 2048",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "쉬움",
+  "question": "Which VTY line command makes the device check credentials against the local username database?",
+  "choices": [
+   "login",
+   "login local",
+   "password local",
+   "aaa local"
+  ],
+  "answer": "B",
+  "explanation": "With login local under line vty, a user must enter a username and password defined by the username command.",
+  "option_notes": [
+   "Wrong: login alone uses the line password.",
+   "Correct: login local uses the local usernames.",
+   "Wrong: Not valid syntax.",
+   "Wrong: Not valid syntax."
+  ],
+  "key_concept": "login local = local user database.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "쉬움",
+  "question": "Which command enables a Cisco device to accept only SSH on its VTY lines?",
+  "choices": [
+   "transport input ssh",
+   "transport output ssh",
+   "login ssh",
+   "ip ssh only"
+  ],
+  "answer": "A",
+  "explanation": "By default, VTY lines may allow Telnet. transport input ssh blocks Telnet.",
+  "option_notes": [
+   "Correct: transport input ssh restricts incoming protocols to SSH.",
+   "Wrong: transport output applies to outgoing sessions.",
+   "Wrong: Not an IOS command.",
+   "Wrong: Not an IOS command."
+  ],
+  "key_concept": "transport input ssh",
+  "cli_example": "R1(config)# line vty 0 4\nR1(config-line)# transport input ssh",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "보통",
+  "question": "Which two settings must be configured before RSA keys can be generated for SSH on a router?",
+  "choices": [
+   "An enable password and a banner",
+   "A loopback interface and OSPF",
+   "A VLAN and a trunk",
+   "A host name other than the default and a domain name"
+  ],
+  "answer": "D",
+  "explanation": "The RSA key label uses hostname.domain-name. Without them the command is rejected or asks for a domain name.",
+  "option_notes": [
+   "Wrong: Banners and passwords are not required for key generation.",
+   "Wrong: Routing is unrelated.",
+   "Wrong: VLANs are unrelated.",
+   "Correct: The key name is built from hostname and domain name."
+  ],
+  "key_concept": "Hostname and domain name are needed for RSA keys.",
+  "cli_example": "R1(config)# hostname R1\nR1(config)# ip domain-name lab.local",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "보통",
+  "question": "Which command forces the router to use SSH version 2 only?",
+  "choices": [
+   "ssh version 2",
+   "crypto ssh version 2",
+   "ip ssh version 2",
+   "transport input ssh2"
+  ],
+  "answer": "C",
+  "explanation": "SSHv2 is more secure than v1. It requires an RSA key of at least 768 bits.",
+  "option_notes": [
+   "Wrong: Not an IOS command.",
+   "Wrong: Not an IOS command.",
+   "Correct: ip ssh version 2 is the global command.",
+   "Wrong: Not an IOS command."
+  ],
+  "key_concept": "ip ssh version 2",
+  "cli_example": "R1(config)# ip ssh version 2",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "보통",
+  "question": "How does TACACS+ differ from RADIUS?",
+  "choices": [
+   "TACACS+ uses UDP and encrypts only the password",
+   "TACACS+ encrypts the full packet body and separates authentication, authorization and accounting",
+   "TACACS+ combines authentication and authorization",
+   "TACACS+ is an open IEEE standard"
+  ],
+  "answer": "B",
+  "explanation": "RADIUS encrypts only the password in the access request and combines authentication and authorization. TACACS+ allows per-command authorization, so it is preferred for device administration.",
+  "option_notes": [
+   "Wrong: That describes RADIUS.",
+   "Correct: TACACS+ fully encrypts and separates the AAA functions.",
+   "Wrong: RADIUS combines authentication and authorization.",
+   "Wrong: TACACS+ is Cisco proprietary."
+  ],
+  "key_concept": "TACACS+ = full encryption, separate AAA.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "보통",
+  "question": "What does the following command do?\n\naaa authentication login default group tacacs+ local",
+  "choices": [
+   "It uses a TACACS+ server for login and falls back to local usernames if no TACACS+ server responds",
+   "It uses local usernames first and a TACACS+ server as backup",
+   "It uses only the TACACS+ server and never the local database",
+   "It uses RADIUS first and TACACS+ as backup"
+  ],
+  "answer": "A",
+  "explanation": "The method list tries group tacacs+ first. Local is used only when the server cannot be reached. A reject from the server does not trigger fallback.",
+  "option_notes": [
+   "Correct: Methods are tried in order; local is only used if the first is unavailable.",
+   "Wrong: The order is TACACS+ first.",
+   "Wrong: The local method is a fallback.",
+   "Wrong: RADIUS is not in the list."
+  ],
+  "key_concept": "AAA method list order matters.",
+  "cli_example": "aaa new-model\naaa authentication login default group tacacs+ local",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "보통",
+  "question": "Which type of management connection depends on the network being operational?",
+  "choices": [
+   "Out-of-band management",
+   "Console connection",
+   "Direct serial connection",
+   "In-band management"
+  ],
+  "answer": "D",
+  "explanation": "Telnet, SSH, HTTP, HTTPS and SNMP are in-band. If the network is down, they do not work, which is why a console is needed.",
+  "option_notes": [
+   "Wrong: Out-of-band is separate.",
+   "Wrong: Console does not use the network.",
+   "Wrong: Serial does not use the network.",
+   "Correct: In-band uses the production network."
+  ],
+  "key_concept": "In-band depends on the network.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "보통",
+  "question": "Which command limits VTY access to a specific permitted source using ACL 10?",
+  "choices": [
+   "ip access-group 10 in",
+   "access-list 10 vty",
+   "access-class 10 in",
+   "transport input 10"
+  ],
+  "answer": "C",
+  "explanation": "Under line vty 0 4, access-class 10 in restricts which sources can open sessions. The ACL itself must be defined first.",
+  "option_notes": [
+   "Wrong: ip access-group applies to interfaces.",
+   "Wrong: Not valid syntax.",
+   "Correct: access-class applies a standard ACL to a VTY line.",
+   "Wrong: Not valid syntax."
+  ],
+  "key_concept": "access-class = ACL on VTY.",
+  "cli_example": "line vty 0 4\n access-class 10 in",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "보통",
+  "question": "Which command enables secure HTTPS access to the Cisco IOS web interface?",
+  "choices": [
+   "ip http server",
+   "ip http secure-server",
+   "ip https enable",
+   "http secure on"
+  ],
+  "answer": "B",
+  "explanation": "HTTP on TCP 80 is not encrypted. HTTPS with ip http secure-server uses TLS on port 443.",
+  "option_notes": [
+   "Wrong: ip http server enables HTTP (clear text).",
+   "Correct: ip http secure-server turns on HTTPS.",
+   "Wrong: Not valid syntax.",
+   "Wrong: Not valid syntax."
+  ],
+  "key_concept": "ip http secure-server = HTTPS.",
+  "cli_example": "R1(config)# ip http secure-server\nR1(config)# no ip http server",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "보통",
+  "question": "Which command shows who is currently connected to the device through the console or VTY lines?",
+  "choices": [
+   "show users",
+   "show sessions",
+   "show line brief",
+   "show ssh users"
+  ],
+  "answer": "A",
+  "explanation": "show users displays the lines in use, the user names and the source addresses. show ssh shows SSH connections.",
+  "option_notes": [
+   "Correct: show users lists active lines and users.",
+   "Wrong: show sessions displays outgoing sessions.",
+   "Wrong: Not a valid command.",
+   "Wrong: Not a valid command."
+  ],
+  "key_concept": "show users = active user sessions.",
+  "cli_example": "R1# show users",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "보통",
+  "question": "What does the command exec-timeout 5 0 configure on a line?",
+  "choices": [
+   "Disconnects after 5 seconds",
+   "Allows 5 login attempts",
+   "Disables the session timeout",
+   "Disconnects an idle session after 5 minutes"
+  ],
+  "answer": "D",
+  "explanation": "exec-timeout minutes seconds sets the idle time. Set it to a sensible value so unattended sessions close.",
+  "option_notes": [
+   "Wrong: The first value is minutes.",
+   "Wrong: Login attempts are set by another command.",
+   "Wrong: exec-timeout 0 0 disables the timeout.",
+   "Correct: The format is minutes and seconds: 5 minutes, 0 seconds."
+  ],
+  "key_concept": "exec-timeout min sec.",
+  "cli_example": "R1(config-line)# exec-timeout 5 0",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "보통",
+  "question": "Which statement about enable secret and enable password is correct?",
+  "choices": [
+   "enable password is stronger than enable secret",
+   "Both store passwords with the same encryption",
+   "enable secret stores a hashed password and takes precedence over enable password",
+   "enable secret is stored in clear text"
+  ],
+  "answer": "C",
+  "explanation": "enable secret is stored as a hash (type 5, 8 or 9), whereas enable password is clear text or type 7. Use enable secret.",
+  "option_notes": [
+   "Wrong: enable password is weaker.",
+   "Wrong: They use different protection.",
+   "Correct: enable secret uses hashing and wins if both are configured.",
+   "Wrong: enable secret is hashed."
+  ],
+  "key_concept": "enable secret > enable password.",
+  "cli_example": "R1(config)# enable secret Cisco123",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "어려움",
+  "question": "A user cannot SSH to R1. Refer to the configuration.\n\nhostname R1\nip domain-name lab.local\ncrypto key generate rsa modulus 2048\nip ssh version 2\nline vty 0 4\n login local\n transport input ssh\n\nWhy does authentication fail?",
+  "choices": [
+   "transport input ssh blocks SSH",
+   "login local is configured, but no local username exists",
+   "ip ssh version 2 prevents SSH",
+   "The domain name is required to be public"
+  ],
+  "answer": "B",
+  "explanation": "login local checks the local username database. Without username entries, no one can log in. Add username admin secret Cisco123.",
+  "option_notes": [
+   "Wrong: transport input ssh allows SSH.",
+   "Correct: With login local, a valid username must be defined.",
+   "Wrong: SSHv2 is valid.",
+   "Wrong: The domain name can be any name."
+  ],
+  "key_concept": "login local needs username.",
+  "cli_example": "R1(config)# username admin secret Cisco123",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "어려움",
+  "question": "A user telnets to a router and receives the message 'Password required, but none set'. The VTY lines have the command login configured. What is the fix?",
+  "choices": [
+   "Configure a line password with password, or use login local with a username",
+   "Configure enable secret",
+   "Enter no login and keep the password empty",
+   "Configure ip domain-name"
+  ],
+  "answer": "A",
+  "explanation": "login makes the device check the line password. If none is set, the connection is refused. Use password Cisco123 or a local user database.",
+  "option_notes": [
+   "Correct: The login command requires a line password.",
+   "Wrong: enable secret is for privileged mode, not VTY login.",
+   "Wrong: no login would allow access with no password, which is unsafe.",
+   "Wrong: Domain name does not affect Telnet login."
+  ],
+  "key_concept": "login needs a password.",
+  "cli_example": "R1(config-line)# password Cisco123\nR1(config-line)# login",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "어려움",
+  "question": "An administrator enters ip ssh version 2 after generating a 512-bit RSA key. What is the result?",
+  "choices": [
+   "SSH version 2 works with any key size",
+   "SSH version 2 is not supported on routers",
+   "The command removes the key",
+   "The device requires an RSA key of at least 768 bits for SSH version 2"
+  ],
+  "answer": "D",
+  "explanation": "Generate a new key using crypto key generate rsa modulus 1024 or 2048 before enabling SSHv2.",
+  "option_notes": [
+   "Wrong: Key size matters for version 2.",
+   "Wrong: IOS supports SSH version 2.",
+   "Wrong: The key is not deleted.",
+   "Correct: SSHv2 needs at least 768-bit RSA keys."
+  ],
+  "key_concept": "SSHv2 needs 768+ bits.",
+  "cli_example": "R1(config)# crypto key generate rsa modulus 2048",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "어려움",
+  "question": "A router uses aaa authentication login default group tacacs+ local. The TACACS+ server is reachable but rejects a user's password. What happens?",
+  "choices": [
+   "The router tries the local database",
+   "The router tries the enable password",
+   "The login is denied; the router does not fall back to the local database",
+   "The router grants access to privileged mode"
+  ],
+  "answer": "C",
+  "explanation": "AAA uses the next method only if the previous method returns an error (such as no response). An explicit FAIL from the server stops authentication.",
+  "option_notes": [
+   "Wrong: A server reject ends the process.",
+   "Wrong: The enable password is not part of this method list.",
+   "Correct: Fallback applies only when the server does not respond, not when it rejects.",
+   "Wrong: Access is denied."
+  ],
+  "key_concept": "Fallback = server unreachable, not rejection.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "어려움",
+  "question": "A firewall allows UDP 1812 between a switch and a RADIUS server, and users authenticate successfully, but no accounting records arrive. What is the most likely reason?",
+  "choices": [
+   "UDP 49 is blocked",
+   "UDP 1813 is blocked",
+   "TCP 49 is blocked",
+   "UDP 161 is blocked"
+  ],
+  "answer": "B",
+  "explanation": "RADIUS uses separate ports: 1812 for authentication and 1813 for accounting. Permit both ports through the firewall.",
+  "option_notes": [
+   "Wrong: 49 is TACACS+.",
+   "Correct: RADIUS accounting uses UDP 1813.",
+   "Wrong: TACACS+ is not RADIUS.",
+   "Wrong: 161 is SNMP."
+  ],
+  "key_concept": "RADIUS acct = UDP 1813.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "어려움",
+  "question": "A security policy requires that each command typed by an administrator is authorized on a per-command basis by a central server. Which protocol should be used?",
+  "choices": [
+   "TACACS+",
+   "RADIUS",
+   "SNMPv2c",
+   "Telnet"
+  ],
+  "answer": "A",
+  "explanation": "TACACS+ keeps authorization separate and can permit or deny individual commands, which is why it is used for device administration.",
+  "option_notes": [
+   "Correct: TACACS+ supports per-command authorization.",
+   "Wrong: RADIUS lacks granular command authorization.",
+   "Wrong: SNMP is for management data, not authorization.",
+   "Wrong: Telnet is a transport."
+  ],
+  "key_concept": "Per-command authorization = TACACS+.",
+  "cli_example": "aaa authorization commands 15 default group tacacs+ local",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "어려움",
+  "question": "An engineer configures line vty 0 4 with exec-timeout 0 0. What is the effect?",
+  "choices": [
+   "Sessions are disconnected immediately",
+   "Sessions are disconnected after 1 hour",
+   "Telnet is disabled",
+   "Idle sessions never time out"
+  ],
+  "answer": "D",
+  "explanation": "Disabling the timeout leaves unattended sessions open, which is a security risk. Use a value like exec-timeout 10 0.",
+  "option_notes": [
+   "Wrong: Not immediate.",
+   "Wrong: Not a 1 hour timeout.",
+   "Wrong: Telnet is not affected.",
+   "Correct: A value of 0 0 disables the idle timeout."
+  ],
+  "key_concept": "exec-timeout 0 0 = never.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "어려움",
+  "question": "Which VTY configuration prevents all remote CLI sessions (Telnet and SSH) to the device?",
+  "choices": [
+   "transport input all",
+   "transport output none",
+   "transport input none",
+   "login none"
+  ],
+  "answer": "C",
+  "explanation": "With transport input none on all VTY lines, only the console (or AUX) can be used to manage the device.",
+  "option_notes": [
+   "Wrong: transport input all allows everything.",
+   "Wrong: transport output affects outgoing sessions.",
+   "Correct: transport input none blocks incoming sessions.",
+   "Wrong: Not valid syntax."
+  ],
+  "key_concept": "transport input none blocks VTY.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "어려움",
+  "question": "Which ACL entry allows only the 10.1.1.0/24 subnet to open VTY sessions when applied with access-class?",
+  "choices": [
+   "access-list 10 permit 10.1.1.0 255.255.255.0",
+   "access-list 10 permit 10.1.1.0 0.0.0.255",
+   "access-list 10 permit 10.1.1.0 0.0.0.0",
+   "access-list 10 deny 10.1.1.0 0.0.0.255"
+  ],
+  "answer": "B",
+  "explanation": "The implicit deny at the end blocks everyone else. Apply the ACL to the VTY lines with access-class 10 in.",
+  "option_notes": [
+   "Wrong: A subnet mask is not valid in an ACL.",
+   "Correct: A standard ACL uses a wildcard mask: 0.0.0.255 for a /24.",
+   "Wrong: That permits one host only.",
+   "Wrong: Deny would block the subnet."
+  ],
+  "key_concept": "ACL uses wildcard mask.",
+  "cli_example": "access-list 10 permit 10.1.1.0 0.0.0.255\nline vty 0 4\n access-class 10 in",
+  "tip": ""
+ },
+ {
+  "sub": "2.8",
+  "difficulty": "어려움",
+  "question": "Which statement about service password-encryption is correct?",
+  "choices": [
+   "It applies weak type 7 encryption to line passwords that can be easily reversed",
+   "It hashes all passwords with SHA-256",
+   "It replaces enable secret",
+   "It encrypts SSH sessions"
+  ],
+  "answer": "A",
+  "explanation": "It only stops casual viewing of passwords in the running config. It should not be relied on for security.",
+  "option_notes": [
+   "Correct: service password-encryption uses a reversible algorithm.",
+   "Wrong: Type 7 is reversible, not SHA-256.",
+   "Wrong: It does not replace enable secret.",
+   "Wrong: It does not encrypt traffic."
+  ],
+  "key_concept": "Type 7 is weak.",
+  "cli_example": "R1(config)# service password-encryption",
+  "tip": ""
+ }
+]

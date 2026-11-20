@@ -1,0 +1,662 @@
+[
+ {
+  "sub": "1.4",
+  "difficulty": "쉬움",
+  "question": "Collisions can occur only on an Ethernet link that is operating in which mode?",
+  "choices": [
+   "Full duplex",
+   "Half duplex",
+   "Trunk mode",
+   "Auto-MDIX mode"
+  ],
+  "answer": "B",
+  "explanation": "Half-duplex Ethernet shares one transmit path and uses CSMA/CD, so two stations can transmit at once and collide. Full duplex uses separate transmit and receive paths, so collisions cannot happen. Trunking and Auto-MDIX are unrelated to collisions.",
+  "option_notes": [
+   "Wrong: Full duplex has no collisions.",
+   "Correct: Collisions happen on half-duplex links using CSMA/CD.",
+   "Wrong: Trunk mode is about VLAN tagging, not collisions.",
+   "Wrong: Auto-MDIX only adapts pin usage."
+  ],
+  "key_concept": "Collisions = half duplex only.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "쉬움",
+  "question": "A switch interface counter for frames that fail the frame check sequence (FCS) calculation is called what?",
+  "choices": [
+   "CRC errors",
+   "Giants",
+   "Runts",
+   "Output drops"
+  ],
+  "answer": "A",
+  "explanation": "When a frame arrives with an FCS that does not match the computed value, the interface counts it as a CRC error. Many CRC errors usually point to a physical issue such as a bad cable, interference or a duplex mismatch. Giants and runts count frames by size.",
+  "option_notes": [
+   "Correct: CRC counts frames that fail the FCS check.",
+   "Wrong: Giants are frames larger than the maximum size.",
+   "Wrong: Runts are frames smaller than 64 bytes.",
+   "Wrong: Output drops are frames discarded in the transmit queue."
+  ],
+  "key_concept": "CRC errors = FCS failure.",
+  "cli_example": "show interfaces gigabitEthernet 0/1",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "쉬움",
+  "question": "What is a runt frame?",
+  "choices": [
+   "A frame larger than 1518 bytes",
+   "A frame with a duplicate MAC address",
+   "A frame sent after an administratively down interface",
+   "A frame smaller than the 64-byte Ethernet minimum"
+  ],
+  "answer": "D",
+  "explanation": "The minimum Ethernet frame size is 64 bytes. A frame smaller than that is a runt and is discarded. Runts are often caused by collisions or a duplex mismatch.",
+  "option_notes": [
+   "Wrong: That describes a giant, not a runt.",
+   "Wrong: Duplicate MAC addresses are unrelated to frame size.",
+   "Wrong: An admin-down port does not send frames.",
+   "Correct: Runts are shorter than 64 bytes."
+  ],
+  "key_concept": "Runt < 64 bytes; giant > 1518 bytes.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "쉬움",
+  "question": "What is a giant frame on a standard Ethernet interface?",
+  "choices": [
+   "A frame smaller than 64 bytes",
+   "A frame addressed to a broadcast MAC",
+   "A frame larger than the maximum allowed size of 1518 bytes (excluding tagging)",
+   "A frame that has a bad CRC"
+  ],
+  "answer": "C",
+  "explanation": "A giant is a frame that exceeds the maximum Ethernet frame size (1518 bytes, or 1522 with an 802.1Q tag). Giants can appear when a device sends jumbo frames to a port not configured for them. Runts are the too-small frames.",
+  "option_notes": [
+   "Wrong: That describes a runt.",
+   "Wrong: Broadcasts are normal frames.",
+   "Correct: Giants exceed the maximum frame size.",
+   "Wrong: A bad CRC is counted separately as a CRC error."
+  ],
+  "key_concept": "Giant = too big; runt = too small.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "쉬움",
+  "question": "A switch interface shows 'GigabitEthernet0/2 is administratively down, line protocol is down'. What does this mean?",
+  "choices": [
+   "The cable is unplugged",
+   "The interface was shut down with the shutdown command",
+   "A duplex mismatch exists",
+   "The neighbor is running a different speed"
+  ],
+  "answer": "B",
+  "explanation": "The status 'administratively down' means an administrator configured shutdown on the interface. To bring it up, enter no shutdown. A disconnected cable would show 'down/down' without the 'administratively' keyword.",
+  "option_notes": [
+   "Wrong: An unplugged cable shows plain down.",
+   "Correct: Administratively down means shutdown is configured.",
+   "Wrong: A duplex mismatch leaves the port up.",
+   "Wrong: A speed mismatch is not shown as administratively down."
+  ],
+  "key_concept": "administratively down = shutdown command.",
+  "cli_example": "interface GigabitEthernet0/2\n no shutdown",
+  "tip": "Admin down is a Layer 1 status set by configuration."
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "쉬움",
+  "question": "A switch interface shows 'down/down' and no link light. Which layer should you check first?",
+  "choices": [
+   "Layer 1, for example the cable and connectors",
+   "Layer 3, for example the IP address",
+   "Layer 4, for example the TCP port",
+   "Layer 7, for example DNS"
+  ],
+  "answer": "A",
+  "explanation": "A down/down interface means the physical link is not established. Check the cable, connectors, remote device power and ports before looking at higher layers. IP, TCP and DNS settings cannot bring up a physical link.",
+  "option_notes": [
+   "Correct: Down/down points to Layer 1.",
+   "Wrong: IP addressing is not required for link status.",
+   "Wrong: TCP ports do not affect the link state.",
+   "Wrong: DNS has no effect on physical link."
+  ],
+  "key_concept": "Down/down = physical layer problem.",
+  "cli_example": "show interfaces status",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "쉬움",
+  "question": "Which interface commands manually set a switch port to 100 Mbps full duplex?",
+  "choices": [
+   "speed 100M and duplex 2",
+   "bandwidth 100 and duplex auto",
+   "mdix 100 and duplex full",
+   "speed 100 and duplex full"
+  ],
+  "answer": "D",
+  "explanation": "The commands speed 100 and duplex full set speed in Mbps and duplex mode. The bandwidth command only changes a routing metric value and does not change the port speed. There is no mdix speed option.",
+  "option_notes": [
+   "Wrong: Those keywords are not valid IOS syntax.",
+   "Wrong: bandwidth does not change the actual port speed.",
+   "Wrong: mdix does not take a speed value.",
+   "Correct: speed 100 and duplex full are valid IOS commands."
+  ],
+  "key_concept": "speed and duplex set port speed and duplex.",
+  "cli_example": "interface GigabitEthernet0/1\n speed 100\n duplex full",
+  "tip": "Set both ends the same."
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "쉬움",
+  "question": "Which command displays a one-line summary of each switch port, including status, VLAN, duplex and speed?",
+  "choices": [
+   "show ip interface brief",
+   "show vlan",
+   "show interfaces status",
+   "show mac address-table"
+  ],
+  "answer": "C",
+  "explanation": "show interfaces status lists each port with connection status, VLAN, duplex, speed and media type. show ip interface brief shows IP addresses and Layer 1/2 status but not duplex or speed. show vlan lists VLANs and ports.",
+  "option_notes": [
+   "Wrong: show ip interface brief does not display duplex or speed.",
+   "Wrong: show vlan lists VLAN membership only.",
+   "Correct: It shows status, VLAN, duplex and speed.",
+   "Wrong: The MAC table lists learned addresses."
+  ],
+  "key_concept": "show interfaces status is the quick port summary.",
+  "cli_example": "show interfaces status",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "쉬움",
+  "question": "A switch port enters the err-disabled state. What does this mean?",
+  "choices": [
+   "The port is operating at half duplex",
+   "The switch shut the port down because of an error condition such as a security violation",
+   "The port is waiting for a DHCP lease",
+   "The port is in a trunking mode"
+  ],
+  "answer": "B",
+  "explanation": "Err-disabled is a protective state in which the switch disables a port after detecting a problem such as a port security violation or BPDU guard trigger. The port forwards no traffic until it is recovered.",
+  "option_notes": [
+   "Wrong: Half duplex is not the err-disabled state.",
+   "Correct: Err-disabled is an automatic protective shutdown.",
+   "Wrong: DHCP does not put a port in err-disabled.",
+   "Wrong: Trunk mode is a normal operating mode."
+  ],
+  "key_concept": "err-disabled = automatically shut down by the switch.",
+  "cli_example": "show interfaces status err-disabled",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "쉬움",
+  "question": "Which feature lets two connected Ethernet devices agree on speed and duplex automatically?",
+  "choices": [
+   "Auto-negotiation",
+   "Spanning Tree Protocol",
+   "VLAN Trunking Protocol",
+   "Port mirroring"
+  ],
+  "answer": "A",
+  "explanation": "Auto-negotiation lets two link partners exchange their capabilities and choose the best common speed and duplex mode. STP prevents loops, VTP distributes VLAN information and port mirroring copies traffic for analysis.",
+  "option_notes": [
+   "Correct: Auto-negotiation selects speed and duplex.",
+   "Wrong: STP prevents Layer 2 loops.",
+   "Wrong: VTP distributes VLAN information.",
+   "Wrong: Port mirroring copies traffic to another port."
+  ],
+  "key_concept": "Auto-negotiation picks speed and duplex.",
+  "cli_example": "interface GigabitEthernet0/1\n speed auto\n duplex auto",
+  "tip": "Best practice: leave both ends on auto, or hard-code both ends identically."
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "보통",
+  "question": "A link has a duplex mismatch: one switch uses half duplex and the other uses full duplex. Which counter typically increases on the half-duplex side?",
+  "choices": [
+   "Giants",
+   "Output drops only",
+   "Carrier transitions only",
+   "Late collisions"
+  ],
+  "answer": "D",
+  "explanation": "The full-duplex side transmits whenever it wants, so the half-duplex side sees collisions, including late collisions, after it has already sent more than 64 bytes. The full-duplex side typically reports CRC errors and runts.",
+  "option_notes": [
+   "Wrong: Giants relate to oversized frames, not a mismatch.",
+   "Wrong: Output drops are queue-related.",
+   "Wrong: Carrier transitions relate to link flapping.",
+   "Correct: The half-duplex side sees collisions, including late collisions."
+  ],
+  "key_concept": "Duplex mismatch: late collisions on the half side; CRC/runts on the full side.",
+  "cli_example": "show interfaces gigabitEthernet 0/1",
+  "tip": "Late collisions point to duplex mismatch or cable length."
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "보통",
+  "question": "Refer to the output.\n\nSwitch# show interfaces gigabitEthernet 0/5\n...\n Full-duplex, 1000Mb/s, media type is 10/100/1000BaseTX\n...\n 0 runts, 0 giants, 0 throttles\n 3250 input errors, 3250 CRC, 0 frame, 0 overrun, 0 ignored\n 0 output errors, 0 collisions, 2 interface resets\n\nWhat is the most likely cause?",
+  "choices": [
+   "A duplex mismatch",
+   "An MTU mismatch causing giants",
+   "A faulty cable or electrical interference causing corrupted frames",
+   "A speed mismatch"
+  ],
+  "answer": "C",
+  "explanation": "CRC errors with no collisions or runts, on a link that is full duplex at 1000 Mb/s, point to corrupted frames from a bad cable, connector or interference. A duplex mismatch would usually also produce runts or collisions. There are no giants and the link is up at one agreed speed.",
+  "option_notes": [
+   "Wrong: A mismatch would normally show collisions or runts.",
+   "Wrong: The giants counter is 0.",
+   "Correct: Many CRC errors and nothing else indicate a Layer 1 problem.",
+   "Wrong: A speed mismatch would not let the link come up."
+  ],
+  "key_concept": "Pure CRC errors suggest cable or EMI problems.",
+  "cli_example": "show interfaces gigabitEthernet 0/5",
+  "tip": "Replace or retest the cable first."
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "보통",
+  "question": "A switch port is hard-coded to 100 Mbps full duplex. The connected PC is set to auto-negotiate for speed and duplex. What is the likely result?",
+  "choices": [
+   "The link fails completely",
+   "The PC detects 100 Mbps but defaults to half duplex, causing a duplex mismatch",
+   "Both ends operate at 1 Gbps full duplex",
+   "The PC automatically negotiates full duplex with the fixed port"
+  ],
+  "answer": "B",
+  "explanation": "A hard-coded port does not send auto-negotiation signals. The auto side can sense the speed with parallel detection but cannot learn the duplex, so it defaults to half duplex on 10/100 links. The mismatch leads to collisions and poor performance.",
+  "option_notes": [
+   "Wrong: The link still comes up because speed is detected.",
+   "Correct: Speed is detected but duplex defaults to half.",
+   "Wrong: The fixed port is set to 100 Mbps, so 1 Gbps is not possible.",
+   "Wrong: Auto-negotiation cannot learn duplex from a fixed port."
+  ],
+  "key_concept": "One fixed, one auto side causes a duplex mismatch.",
+  "cli_example": "",
+  "tip": "Hard-code both ends or leave both on auto."
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "보통",
+  "question": "What is a late collision?",
+  "choices": [
+   "A collision detected after the first 64 bytes (512 bit times) of a frame have been transmitted",
+   "A collision that occurs within the first 8 bytes",
+   "A frame that arrives late due to a queue",
+   "A collision on a full-duplex link"
+  ],
+  "answer": "A",
+  "explanation": "In normal half-duplex Ethernet, a collision should occur within the first 512 bit times (64 bytes). A collision detected after that is a late collision and indicates a duplex mismatch or a cable or network segment that is too long.",
+  "option_notes": [
+   "Correct: Late collisions occur after 64 bytes are sent.",
+   "Wrong: This is an early collision window, not the late one.",
+   "Wrong: Queueing delay is not a collision.",
+   "Wrong: Full-duplex links do not have collisions."
+  ],
+  "key_concept": "Late collision = after 64 bytes; check duplex and length.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "보통",
+  "question": "The command show interfaces status displays 'notconnect' for a port. Which is a possible cause?",
+  "choices": [
+   "The port is err-disabled",
+   "The port is administratively shut down",
+   "The port is in a different VLAN",
+   "No cable is attached or the cable or far end is not providing a link signal"
+  ],
+  "answer": "D",
+  "explanation": "notconnect means no link is detected on the port. Typical causes are an unplugged or faulty cable or a powered-off device. Err-disabled and disabled are separate statuses, and VLAN membership does not affect link detection.",
+  "option_notes": [
+   "Wrong: err-disabled is displayed as err-disabled.",
+   "Wrong: An admin shutdown is displayed as disabled.",
+   "Wrong: VLAN assignment does not affect the link state.",
+   "Correct: notconnect means no physical link is detected."
+  ],
+  "key_concept": "notconnect = Layer 1 link not detected.",
+  "cli_example": "show interfaces status",
+  "tip": "Statuses: connected, notconnect, disabled, err-disabled."
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "보통",
+  "question": "Which command lets a switch automatically bring a port out of the err-disabled state caused by a port security violation after a set time?",
+  "choices": [
+   "errdisable auto-recover all-ports",
+   "switchport port-security recover",
+   "errdisable recovery cause psecure-violation",
+   "spanning-tree errdisable"
+  ],
+  "answer": "C",
+  "explanation": "errdisable recovery cause psecure-violation enables automatic recovery for port security violations. The interval can be set with errdisable recovery interval seconds. The other commands are not valid IOS syntax.",
+  "option_notes": [
+   "Wrong: errdisable auto-recover all-ports is not valid syntax.",
+   "Wrong: switchport port-security recover is not valid syntax.",
+   "Correct: This enables auto-recovery for psecure violations.",
+   "Wrong: spanning-tree errdisable is not a valid command."
+  ],
+  "key_concept": "errdisable recovery auto-recovers err-disabled ports.",
+  "cli_example": "errdisable recovery cause psecure-violation\nerrdisable recovery interval 300",
+  "tip": "Manual recovery is shutdown then no shutdown."
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "보통",
+  "question": "Two switches are connected with a copper link. One port is configured for 100 Mbps and the other for 1000 Mbps, both hard-coded. What is the result?",
+  "choices": [
+   "The link comes up at 100 Mbps",
+   "The link does not come up",
+   "The link comes up at 1000 Mbps",
+   "The link comes up and negotiates duplex"
+  ],
+  "answer": "B",
+  "explanation": "A speed mismatch means the two ends use different signaling rates, so they cannot establish a link and the port stays down. Unlike a duplex mismatch, where the link comes up but performs badly, a speed mismatch leaves the link down.",
+  "option_notes": [
+   "Wrong: The ends do not drop to the lower speed when both are hard-coded.",
+   "Correct: Mismatched speeds prevent a link.",
+   "Wrong: The ends do not move to the higher speed when hard-coded.",
+   "Wrong: No negotiation is possible when both are hard-coded."
+  ],
+  "key_concept": "Speed mismatch = link down; duplex mismatch = link up but slow.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "보통",
+  "question": "Which protocol can log a '%CDP-4-DUPLEX_MISMATCH' message when a duplex mismatch is detected between Cisco neighbors?",
+  "choices": [
+   "CDP",
+   "VTP",
+   "DTP",
+   "STP"
+  ],
+  "answer": "A",
+  "explanation": "CDP exchanges information such as duplex and native VLAN between neighbors. When the advertised duplex values do not match, CDP logs a duplex mismatch message. VTP, DTP and STP do not report duplex mismatches.",
+  "option_notes": [
+   "Correct: CDP detects duplex mismatches between neighbors.",
+   "Wrong: VTP distributes VLAN information.",
+   "Wrong: DTP negotiates trunking.",
+   "Wrong: STP prevents Layer 2 loops."
+  ],
+  "key_concept": "CDP can reveal duplex mismatches.",
+  "cli_example": "show cdp neighbors detail",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "보통",
+  "question": "In a duplex mismatch, which counters typically increase on the full-duplex side?",
+  "choices": [
+   "Late collisions",
+   "Excessive collisions",
+   "Jabber",
+   "CRC errors, runts and frame errors"
+  ],
+  "answer": "D",
+  "explanation": "The half-duplex end stops and retransmits when it detects a collision, which truncates frames. The full-duplex end receives these partial frames as runts and CRC or frame errors. It does not detect collisions because full duplex disables collision detection.",
+  "option_notes": [
+   "Wrong: Collisions are detected on the half-duplex side.",
+   "Wrong: A full-duplex port does not count collisions.",
+   "Wrong: Jabber is a different fault involving oversized transmissions.",
+   "Correct: The full-duplex side sees damaged or short frames."
+  ],
+  "key_concept": "Full side: CRC/runts. Half side: collisions.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "보통",
+  "question": "After replacing a cable, an administrator wants to confirm that the error counters have stopped increasing. Which command resets the counters on a switch interface?",
+  "choices": [
+   "reload interface gigabitEthernet 0/1",
+   "clear interface errors",
+   "clear counters gigabitEthernet 0/1",
+   "reset counters"
+  ],
+  "answer": "C",
+  "explanation": "The clear counters interface command resets the interface statistics to zero so new errors are easy to spot. The other commands are not valid IOS commands for this purpose.",
+  "option_notes": [
+   "Wrong: reload interface is not an IOS command.",
+   "Wrong: clear interface errors is not valid syntax.",
+   "Correct: clear counters resets the interface statistics.",
+   "Wrong: reset counters is not an IOS command."
+  ],
+  "key_concept": "clear counters resets statistics.",
+  "cli_example": "clear counters gigabitEthernet 0/1\nshow interfaces gigabitEthernet 0/1",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "어려움",
+  "question": "Refer to the output.\n\nSW1# show interfaces fastEthernet 0/4\nFastEthernet0/4 is up, line protocol is up (connected)\n Half-duplex, 100Mb/s\n 0 runts, 0 giants\n 842 late collision, 1205 collisions\n\nThe connected switch SW2 is configured with 'duplex full' on its port. What should the administrator do to fix the problem?",
+  "choices": [
+   "Replace the cable with a crossover cable",
+   "Set both ends to the same duplex, preferably both to auto or both to full",
+   "Change the speed to 10 Mbps on SW1",
+   "Enable PortFast on SW1"
+  ],
+  "answer": "B",
+  "explanation": "Late collisions on a half-duplex port facing a full-duplex neighbor indicate a duplex mismatch. SW1 negotiated half duplex because SW2 was hard-coded. Making both ends match fixes the issue. Cable type, a speed change or PortFast do not fix duplex.",
+  "option_notes": [
+   "Wrong: The link is up, so cabling is fine.",
+   "Correct: Matching duplex settings removes the mismatch.",
+   "Wrong: Reducing the speed does not fix duplex.",
+   "Wrong: PortFast affects STP, not duplex."
+  ],
+  "key_concept": "Late collisions + full-duplex neighbor = duplex mismatch.",
+  "cli_example": "interface FastEthernet0/4\n duplex auto\n speed auto",
+  "tip": "Fix both ends the same way."
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "어려움",
+  "question": "A server connects to a switch with a 90 m cable that is routed in a tray alongside high-voltage power cables. The port shows Full-duplex, 1000Mb/s with 0 collisions but thousands of CRC errors. What is the best first corrective action?",
+  "choices": [
+   "Re-route or replace the cable away from the power cables, or use shielded cable",
+   "Change the switch port to half duplex",
+   "Increase the port MTU",
+   "Configure the port with speed 10"
+  ],
+  "answer": "A",
+  "explanation": "CRC errors with no collisions on a correctly negotiated full-duplex link indicate corrupted signals, and parallel power cabling is a classic source of EMI. Re-routing or shielding the cable addresses the cause. Half duplex, a larger MTU, or a slower speed do not address the cause.",
+  "option_notes": [
+   "Correct: Separating or shielding the cable removes the interference.",
+   "Wrong: Half duplex would reduce performance and does not fix EMI.",
+   "Wrong: MTU changes do not affect CRC errors.",
+   "Wrong: A slower speed is not a fix for EMI-induced errors."
+  ],
+  "key_concept": "CRC errors with clean duplex usually means EMI or a bad cable.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "어려움",
+  "question": "Refer to the configuration.\n\nSW1(config-if)# speed 100\nSW1(config-if)# duplex full\n\nSW2 Gi0/1 is left at the default (speed auto, duplex auto). What state is the link in?",
+  "choices": [
+   "Up at 100 Mbps full duplex on both sides",
+   "Down because auto cannot connect to a fixed port",
+   "Up at 1000 Mbps full duplex",
+   "Up at 100 Mbps, with SW1 in full duplex and SW2 in half duplex (duplex mismatch)"
+  ],
+  "answer": "D",
+  "explanation": "SW1 does not send auto-negotiation pulses. SW2 uses parallel detection and detects 100 Mbps, but because it cannot learn duplex, it falls back to half duplex. This results in a duplex mismatch with late collisions on SW2 and CRC errors on SW1.",
+  "option_notes": [
+   "Wrong: SW2 cannot learn duplex from a fixed port.",
+   "Wrong: The link comes up because the speed can be detected.",
+   "Wrong: The fixed 100 Mbps speed prevents 1000 Mbps.",
+   "Correct: SW2 senses the speed but defaults to half duplex."
+  ],
+  "key_concept": "Fixed + auto = speed detected, duplex defaults to half.",
+  "cli_example": "show interfaces status",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "어려움",
+  "question": "Refer to the output.\n\nSwitch# show interfaces gigabitEthernet 0/6\n...\n MTU 1500 bytes\n Full-duplex, 1000Mb/s\n 0 runts, 4210 giants, 0 throttles\n 4210 input errors, 0 CRC, 0 frame\n\nA server on this port was recently configured with a 9000-byte MTU. What explains the giants counter?",
+  "choices": [
+   "The cable is too long",
+   "A duplex mismatch is present",
+   "The server sends jumbo frames that exceed what the switch port accepts",
+   "The port is err-disabled"
+  ],
+  "answer": "C",
+  "explanation": "Giants are frames larger than the maximum allowed by the port. The server's 9000-byte MTU produces jumbo frames, but the switch is using the default MTU of 1500 bytes. The CRC count is 0 and the link is at full duplex, so cabling and duplex are fine.",
+  "option_notes": [
+   "Wrong: Cable problems cause CRC errors, which are 0.",
+   "Wrong: A duplex mismatch would cause runts and CRC.",
+   "Correct: Jumbo frames exceed the port limit and count as giants.",
+   "Wrong: The port is up and passing traffic."
+  ],
+  "key_concept": "Giants often come from MTU or jumbo-frame mismatches.",
+  "cli_example": "system mtu jumbo 9000\n!\nshow system mtu",
+  "tip": "Giants with clean CRC = MTU mismatch."
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "어려움",
+  "question": "A user cannot reach the network. The port shows 'notconnect' in show interfaces status. The IP settings on the PC look correct. What should be checked next?",
+  "choices": [
+   "The default gateway and subnet mask on the router",
+   "The patch cable, the wall jack and the NIC link light",
+   "The DNS server address",
+   "The STP root bridge"
+  ],
+  "answer": "B",
+  "explanation": "notconnect means the switch sees no link, which is a Layer 1 problem. Check the cable, connectors, wall jack and NIC before anything related to Layers 2 to 7. IP settings, DNS and STP cannot be evaluated until a link exists.",
+  "option_notes": [
+   "Wrong: The gateway cannot help if there is no link.",
+   "Correct: The physical path must be checked first.",
+   "Wrong: DNS is irrelevant without a link.",
+   "Wrong: STP root selection does not explain no link."
+  ],
+  "key_concept": "No link = troubleshoot Layer 1 first.",
+  "cli_example": "show interfaces status",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "어려움",
+  "question": "Refer to the output.\n\nSwitch# show interfaces status\nPort   Status       Vlan Duplex Speed Type\nGi0/3  err-disabled 10   auto   auto  10/100/1000BaseTX\n\nThe cause was removed. The administrator enters 'no shutdown' on Gi0/3 and the port stays err-disabled. What must be done?",
+  "choices": [
+   "Enter shutdown and then no shutdown on the interface",
+   "Reload the VLAN database",
+   "Enter spanning-tree portfast on the interface",
+   "Change the duplex to full"
+  ],
+  "answer": "A",
+  "explanation": "An err-disabled port is already administratively up, so no shutdown on its own does nothing. Bouncing the port with shutdown followed by no shutdown clears the err-disabled state, as long as the cause is gone. Otherwise the port will return to err-disabled.",
+  "option_notes": [
+   "Correct: Bouncing the port clears the err-disabled state.",
+   "Wrong: The VLAN database is unrelated.",
+   "Wrong: PortFast does not recover the port.",
+   "Wrong: Duplex changes do not clear err-disabled."
+  ],
+  "key_concept": "Recover err-disabled with shutdown, then no shutdown.",
+  "cli_example": "interface GigabitEthernet0/3\n shutdown\n no shutdown",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "어려움",
+  "question": "A half-duplex 100 Mbps network uses hubs and a 250 m total run between two stations. Late collisions are reported. What is the most likely cause?",
+  "choices": [
+   "The stations are using 1518-byte frames",
+   "The cable category is Cat6",
+   "Spanning tree has blocked a port",
+   "The collision domain is too large because the cable length exceeds the allowed network diameter"
+  ],
+  "answer": "D",
+  "explanation": "Late collisions occur when the round-trip delay is longer than the time needed to send 64 bytes. Excess cable length or too many repeaters makes the collision domain too large. Maximum frame size, Cat6 cable and STP blocking do not cause late collisions.",
+  "option_notes": [
+   "Wrong: Frame size is normal.",
+   "Wrong: Cat6 is a valid cable category.",
+   "Wrong: STP blocking leaves a port forwarding no traffic, not colliding.",
+   "Correct: Too large a collision domain causes late collisions."
+  ],
+  "key_concept": "Late collisions can come from cable length or duplex mismatch.",
+  "cli_example": "",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "어려움",
+  "question": "Refer to the log.\n\n%LINK-3-UPDOWN: Interface GigabitEthernet0/8, changed state to down\n%LINK-3-UPDOWN: Interface GigabitEthernet0/8, changed state to up\n%LINK-3-UPDOWN: Interface GigabitEthernet0/8, changed state to down\n%LINK-3-UPDOWN: Interface GigabitEthernet0/8, changed state to up\n\nWhat does this repeating pattern indicate?",
+  "choices": [
+   "A normal VLAN reconfiguration",
+   "A completed spanning-tree convergence",
+   "A flapping link, often caused by a bad cable, connector or transceiver",
+   "An administrator saving the configuration"
+  ],
+  "answer": "C",
+  "explanation": "Repeated up and down transitions mean the link is flapping. Typical causes are a damaged cable, loose connector, failing NIC or transceiver. Replace or reseat the components and check the interface 'carrier transitions' and reset counters.",
+  "option_notes": [
+   "Wrong: VLAN changes do not toggle link state.",
+   "Wrong: STP convergence does not bring links down.",
+   "Correct: Constant state changes indicate a flapping physical link.",
+   "Wrong: Saving the config does not change link state."
+  ],
+  "key_concept": "Repeated UPDOWN logs = flapping link.",
+  "cli_example": "show interfaces gigabitEthernet 0/8\nshow logging",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "어려움",
+  "question": "Refer to the output.\n\nSwitch# show interfaces gigabitEthernet 0/2\n...\n reliability 190/255, txload 1/255, rxload 1/255\n\nWhat does the output suggest?",
+  "choices": [
+   "The interface is saturated in both directions",
+   "Reliability is about 75 percent, so the interface is experiencing a high error rate",
+   "The interface is 100 percent reliable",
+   "The interface has been administratively shut down"
+  ],
+  "answer": "B",
+  "explanation": "Reliability is expressed as a fraction of 255, where 255/255 is 100 percent. 190/255 is roughly 74.5 percent, so many frames are failing. Load values of 1/255 show the link is almost idle, so utilization is not the problem.",
+  "option_notes": [
+   "Wrong: Load is 1/255, not saturated.",
+   "Correct: 190/255 is about 75 percent, which indicates a high error rate.",
+   "Wrong: 100 percent reliability would show 255/255.",
+   "Wrong: A shut-down interface would show administratively down."
+  ],
+  "key_concept": "Reliability 255/255 is perfect; lower values mean errors.",
+  "cli_example": "show interfaces gigabitEthernet 0/2",
+  "tip": ""
+ },
+ {
+  "sub": "1.4",
+  "difficulty": "어려움",
+  "question": "Refer to the log.\n\n%PM-4-ERR_DISABLE: bpduguard error detected on Gi0/4, putting Gi0/4 in err-disable state\n\nWhat most likely caused this?",
+  "choices": [
+   "A BPDU was received on a PortFast access port that has BPDU guard enabled",
+   "A duplex mismatch with the neighbor",
+   "A port security MAC limit was exceeded",
+   "The cable exceeded 100 meters"
+  ],
+  "answer": "A",
+  "explanation": "BPDU guard err-disables an access port when a BPDU arrives, for example when a user connects a switch to a PortFast edge port. The message names bpduguard directly. A duplex mismatch, port security violation or an overlong cable would produce different symptoms or messages.",
+  "option_notes": [
+   "Correct: The log says bpduguard detected a BPDU on the port.",
+   "Wrong: Duplex mismatches do not trigger BPDU guard.",
+   "Wrong: Port security violations log psecure-violation.",
+   "Wrong: Cable length does not trigger BPDU guard."
+  ],
+  "key_concept": "Read the err-disable log reason: bpduguard, psecure-violation, etc.",
+  "cli_example": "show errdisable recovery\nshow errdisable detect",
+  "tip": "The reason in the log tells you how to fix the cause."
+ }
+]
