@@ -141,3 +141,11 @@
 ## [2026-11-20] output | 시험 작성 도우미 e2e-test-writer(.claude/agents, Sonnet): 새 기능의 Playwright 시험만 써 주고 실행은 GitHub Actions. tracer-test 첫 실행 성공
 
 ## [2026-11-20] output | 작업실 지도(docs/map.html): 에이전트·만들기 도우미·자동 장치·만드는 사람 네 층, 기능이 나가는 길, 토큰 비교, 추가 규칙. 소개 페이지·README에서 링크
+
+## [2026-11-20] output | DY-008 SHADOW 영어 섀도잉 코치 초기 버전(agents/shadowing-coach): 유튜브 소리 내려받기·Whisper 로컬 문장 나누기·누르는 동안 녹음/떼면 재생·억양 곡선·알아들은 단어 비교·날짜별 기록, 로직 시험 11개 → [[shadowing-coach]]
+
+## [2026-11-20] output | 개발 보드 신설 (wiki/개발 보드.md) — 허브별 할 일을 한 곳으로 모음, CLAUDE.md 바로가기·규칙 추가
+
+## [2026-11-20] output | SHADOW 단어 뜻 보기(맥 내장 뉴에이스 영한사전, Swift 도우미, 클릭하면 품사별 짧은 뜻) + 한글 입력 상태에서도 단축키 동작 → [[shadowing-coach]]
+
+## [2026-11-20] output | SHADOW GitHub 바로가기: docs/shadow/ 'SHADOW 열기' 페이지(→127.0.0.1:8777) + 로그인 때 자동 실행(autostart.sh, LaunchAgent), README·소개 페이지 링크 → [[shadowing-coach]]

@@ -44,9 +44,14 @@
 - 발표(5단계): `docs/heartline/deck.html` 10장 — 만든 이유(지방에서 서울로 올라와 외로웠던 경험) · 기능 4장 · 기술 2장(구조·테스트/배포), 발표자 메모 + `output/제출/2026_11_19_heartline_5_발표.pptx`
 - 과제 제출 파일: `wiki/projects/heartline/output/제출/` — 1 PRD·2 체크리스트·3 테스트 목록(파일 하나짜리 HTML+md)·4 앱 zip·5 발표 pptx + 전체 묶음 zip
 
+# 📁 프로젝트: shadowing-coach
+
+- [[shadowing-coach]] — 허브: DY-008 SHADOW · 영어 섀도잉 코치(내 Mac 전용). 유튜브 소리 내려받기(yt-dlp) → Whisper(로컬) 문장 나누기 → Space 누르는 동안 녹음·떼면 바로 재생 → 억양 곡선(YIN·DTW)·알아들은 단어 비교, 날짜별 기록, 단어 클릭하면 뜻(맥 내장 영한사전)
+
 # 🔗 공통 (shared)
+- [[개발 보드]] — 모든 프로젝트의 할 일 한 곳(지금·다음·확인 필요·완료)
 - [[나]] — 사용자 본인 페이지
-- [[에이전트 코드명]] — 007 스타일 코드명 목록: DY-001 SENTINEL · 002 MIRROR · 003 TRACER · 004 TWIN · 005 PRIMER, 본부 Q-BRANCH
+- [[에이전트 코드명]] — 007 스타일 코드명 목록: DY-001 SENTINEL · 002 MIRROR · 003 TRACER · 004 TWIN · 005 PRIMER · 006 SWEEPER · 007 CUPID · 008 SHADOW, 본부 Q-BRANCH
 - [[백업 현황]] — 공개 저장소·비공개 저장소(private/)·드라이브(Windows 시절, 중단) 백업 범위, 다른 컴퓨터로 옮기는 법
 - [[gemini-chat]] — `scripts/gemini.py`: 터미널 제미나이 대화(키는 .env, 기록은 볼트 밖, 모델 자동 전환). 무료 등급, 민감정보 전송 금지
 - [[위키 효과 측정]] — 위키 A/B 테스트: 같은 질문을 위키로·위키 없이 답하게 해 토큰·시간 비교(`tools/wiki_ab_test.py`, 결과는 이 페이지에 누적)

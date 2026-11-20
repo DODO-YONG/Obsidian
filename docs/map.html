@@ -13,13 +13,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=20261120111743">
+<link rel="stylesheet" href="style.css?v=20261120124407">
 <script>
 /* 기본은 어두운 화면. 직접 고른 값이 있으면 그것을 따른다. */
 try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
 /* 새 버전 자동 확인 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261120111743';
+  var SITE_V = '20261120124407';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -178,7 +178,7 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
         <div class="down" aria-hidden="true">↓ 통과한 것만 배포</div>
         <div class="layer" style="--c:var(--c-agent)">
           <div><span class="who">AGENT</span><h3>에이전트</h3><p class="desc">내가 쓰는 결과물</p></div>
-          <div class="chips"><span class="chip2">DY-001 SENTINEL</span><span class="chip2">DY-002 MIRROR</span><span class="chip2">DY-003 TRACER</span><span class="chip2">DY-004 TWIN</span><span class="chip2">DY-005 PRIMER</span><span class="chip2">DY-006 SWEEPER</span><span class="chip2">DY-007 CUPID</span></div>
+          <div class="chips"><span class="chip2">DY-001 SENTINEL</span><span class="chip2">DY-002 MIRROR</span><span class="chip2">DY-003 TRACER</span><span class="chip2">DY-004 TWIN</span><span class="chip2">DY-005 PRIMER</span><span class="chip2">DY-006 SWEEPER</span><span class="chip2">DY-007 CUPID</span><span class="chip2">DY-008 SHADOW</span></div>
         </div>
       </div>
     </div>
@@ -263,6 +263,7 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
           <div class="am"><span class="mono">DY-005</span><b>PRIMER</b><span>초보자 FAQ 15개 받기</span></div>
           <div class="am"><span class="mono">DY-006</span><b>SWEEPER</b><span>랩탑 폴더 정리 도우미</span></div>
           <div class="am"><span class="mono">DY-007</span><b>CUPID</b><span>Heartline 가상 연인 웹앱</span></div>
+          <div class="am"><span class="mono">DY-008</span><b>SHADOW</b><span>영어 섀도잉 코치(억양 곡선·발음 체크)</span></div>
         </div>
       </div>
     </div>

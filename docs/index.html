@@ -15,12 +15,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=20261120111743">
-<link rel="stylesheet" href="tracer-how.css?v=20261120111743">
+<link rel="stylesheet" href="style.css?v=20261120124407">
+<link rel="stylesheet" href="tracer-how.css?v=20261120124407">
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261120111743';
+  var SITE_V = '20261120124407';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -59,7 +59,7 @@
     <div>
       <p class="kicker"><span class="pulse" aria-hidden="true"></span>Agent DY · AWS 인턴십 과정 · 학습 기록</p>
       <h1>나에게 필요한 에이전트를<br><span class="hl">하나씩</span> 만들어 보는 중</h1>
-      <p class="lead">AWS 인턴십 과정에서 Claude Code를 써 가며 배우고 있습니다. 지금은 초기 버전 에이전트 다섯 개(SENTINEL · MIRROR · TRACER · SWEEPER · CUPID)와, 메모와 코드를 함께 정리하는 Obsidian 위키가 있습니다.</p>
+      <p class="lead">AWS 인턴십 과정에서 Claude Code를 써 가며 배우고 있습니다. 지금은 초기 버전 에이전트 여섯 개(SENTINEL · MIRROR · TRACER · SWEEPER · CUPID · SHADOW)와, 메모와 코드를 함께 정리하는 Obsidian 위키가 있습니다.</p>
       <div class="cta">
         <a class="btn primary" href="#agents">만든 에이전트 보기
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
@@ -90,14 +90,14 @@
           <li><span class="h">2b4bd68</span><span class="t">14:59</span><span class="m">Heartline 서버·앱 구현</span></li>
           <li><span class="h">d2339c9</span><span class="t">15:21</span><span class="m">Heartline 발표 (deck + pptx)</span></li>
           <li class="more">… 외 18개 (잡음·작은 수정 포함)</li>
-          <li class="day"># 4일차 · 11-20 · 12 commits</li>
+          <li class="day"># 4일차 · 11-20 · 13 commits</li>
           <li><span class="h">f6af5d3</span><span class="t">09:07</span><span class="m">소개 페이지: 에이전트 카드 3열로 한 화면에, TRACER 원리 4개 장면으로</span></li>
           <li><span class="h">70a0c0c</span><span class="t">10:11</span><span class="m">TRACER 상시 운영: Vercel /api·Supabase·구글 로그인·문제은행·관리자 페이지</span></li>
           <li><span class="h">2da8568</span><span class="t">10:23</span><span class="m">TRACER 배포 완료: tracer-eosin.vercel.app, 예전 주소 자동 이동</span></li>
           <li><span class="h">e825e57</span><span class="t">10:35</span><span class="m">TRACER 소개·이용 분리: 처음 화면 선택 → 소개(about) / 이용(app), 로그인 표시 개선</span></li>
-          <li class="more">… 외 8개 (잡음·작은 수정 포함)</li>
+          <li class="more">… 외 9개 (잡음·작은 수정 포함)</li>
         </ol>
-        <div class="tail">90 commits · 4 days<span class="cursor" aria-hidden="true"></span></div>
+        <div class="tail">91 commits · 4 days<span class="cursor" aria-hidden="true"></span></div>
         <!-- gitlog:end -->
       </div>
     </figure>
@@ -123,7 +123,7 @@
             </div>
             <div class="zone">
               <h4><span class="dot" aria-hidden="true"></span>에이전트 (agents/)</h4>
-              <ul class="mono"><li>DY-001 SENTINEL</li><li>DY-002 MIRROR</li><li>DY-003 TRACER</li><li>DY-006 SWEEPER</li><li>DY-007 CUPID</li></ul>
+              <ul class="mono"><li>DY-001 SENTINEL</li><li>DY-002 MIRROR</li><li>DY-003 TRACER</li><li>DY-006 SWEEPER</li><li>DY-007 CUPID</li><li>DY-008 SHADOW</li></ul>
             </div>
             <div class="zone private">
               <h4><span class="dot" aria-hidden="true"></span>비공개 구역 · 밖으로 나가지 않음</h4>
@@ -285,6 +285,32 @@
               <li>입력 중 표시·여러 말풍선·읽음·하트 반응으로 실제 메신저 느낌</li>
               <li>대화·페르소나는 방문자 브라우저에만, 서버는 저장하지 않음. AI 고지·성인 캐릭터만·위기 시 도움 안내</li>
               <li>PRD → 체크리스트 → 테스트 먼저 → 구현 → 발표, 하루에 다섯 단계 (자동 테스트 55개 통과)</li>
+            </ul>
+            </details>
+          </div>
+        </article>
+
+        <article class="agent">
+          <div class="agent-id">
+            <span class="mono">DY-008 · agents/shadowing-coach</span>
+            <h3>SHADOW</h3>
+            <span class="chip">초기 버전 · 개인용</span>
+            <div class="links">
+              <a href="shadow/"><b>SHADOW 열기 →</b></a>
+              <a href="https://github.com/DODO-YONG/Obsidian/tree/main/agents/shadowing-coach">코드 보기 →</a>
+            </div>
+          </div>
+          <div class="agent-body">
+            <p>영어 섀도잉 코치. 유튜브 영상을 문장 단위로 듣고, 누르고 있는 동안 녹음해서 떼면 바로 재생합니다. 원본과 내 억양 곡선, 음성 인식이 알아들은 단어를 비교합니다.</p>
+            <details class="agent-more"><summary>작동 순서 · 자세히</summary>
+            <ol class="pipeline" aria-label="동작 순서">
+              <li><span>소리 내려받기</span></li><li><span>Whisper로 문장 나누기</span></li><li><span>누르는 동안 녹음</span></li><li><span>억양·단어 비교</span></li>
+            </ol>
+            <ul class="points">
+              <li>개인 컴퓨터 환경에서만 동작. 음성 인식(Whisper)도 로컬에서 실행해 외부 AI 호출·추가 비용 없음</li>
+              <li>억양은 각자 평균 목소리 기준 반음으로 바꾸고 말 빠르기 차이를 맞춰 오르내림 모양만 비교</li>
+              <li>발음은 "알아들은 단어" 비율로 표시. 무음에서 음성 인식이 말을 지어내는 문제는 소리 크기로 먼저 거름</li>
+              <li>녹음은 문장마다 날짜별로 쌓여 예전 녹음과 비교. 내려받은 소리·녹음은 공개 저장소에 올리지 않음</li>
             </ul>
             </details>
           </div>
@@ -517,6 +543,6 @@
   }
 })();
 </script>
-<script src="tracer-how.js?v=20261120111743" defer></script>
+<script src="tracer-how.js?v=20261120124407" defer></script>
 </body>
 </html>

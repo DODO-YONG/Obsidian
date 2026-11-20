@@ -1,0 +1,6 @@
+# 내려받은 소리·내 녹음 (개인 학습용, 공개 저장소에 올리지 않음)
+data/
+# Whisper 모델 (용량 큼, start.py가 다시 받음)
+models/
+# 단어 사전 도우미 (start.py가 dict.swift로 빌드)
+tools/dict-lookup

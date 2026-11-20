@@ -2,7 +2,7 @@
 
 [![나만의 에이전트 작업실 소개 페이지](docs/preview.png)](https://dodo-yong.github.io/Obsidian/)
 
-**🌐 소개 페이지: https://dodo-yong.github.io/Obsidian/** · 🧠 [CCNA 코치 TRACER](https://tracer-eosin.vercel.app/ccna/) · 🗺️ [TRACER 작동 방식](https://tracer-eosin.vercel.app/ccna/about.html#how) · 💻 [터미널 작업 기록](https://dodo-yong.github.io/Obsidian/terminal.html) · 🧭 [작업실 지도](https://dodo-yong.github.io/Obsidian/map.html) (에이전트 + 만들기 도우미 + 자동 장치)
+**🌐 소개 페이지: https://dodo-yong.github.io/Obsidian/** · 🧠 [CCNA 코치 TRACER](https://tracer-eosin.vercel.app/ccna/) · 🗺️ [TRACER 작동 방식](https://tracer-eosin.vercel.app/ccna/about.html#how) · 🎧 [영어 섀도잉 SHADOW](https://dodo-yong.github.io/Obsidian/shadow/) · 💻 [터미널 작업 기록](https://dodo-yong.github.io/Obsidian/terminal.html) · 🧭 [작업실 지도](https://dodo-yong.github.io/Obsidian/map.html) (에이전트 + 만들기 도우미 + 자동 장치)
 
 AWS 인턴십 과정에서 Claude Code로 나에게 필요한 에이전트를 하나씩 만들어 보는 학습 기록. 코드는 `agents/`, 설계·학습 메모는 Obsidian 위키(`wiki/`)에 있다.
 에이전트에는 007처럼 번호와 코드명을 붙였다(나는 Agent DY). → [코드명 목록](wiki/shared/에이전트%20코드명.md)
@@ -61,6 +61,13 @@ flowchart LR
   end
   W --> HL
 
+  subgraph SH["DY-008 SHADOW · 영어 섀도잉 코치 (내 Mac 전용)"]
+    direction TB
+    SH1["📥 유튜브 소리 내려받기<br/>yt-dlp → Whisper(로컬)로 문장 나누기"] --> SH2["🎤 Space 누르는 동안 녹음<br/>떼면 바로 재생"]
+    SH2 --> SH3["📈 억양 곡선 비교 · 🗣️ 알아들은 단어 비교<br/>날짜별 기록"]
+  end
+  W --> SH
+
   classDef base fill:#f3f4f6,stroke:#9ca3af,color:#374151
   class W,T base
   style SA fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
@@ -69,6 +76,7 @@ flowchart LR
   style BF fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
   style LH fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
   style HL fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+  style SH fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
 ```
 
 <sub>색: 🟨 기획 · 🟦 초기 버전·개발중 · 🟩 완료</sub>
@@ -84,6 +92,7 @@ flowchart LR
 | 📝 DY-005 **PRIMER** | 내 분야 초보자가 자주 묻는 질문 15개와 두 줄 답을 Gemini에게 한 번 받아 `answer.md`로 저장 | 🟦 초기 버전 | [agents/beginner-faq](agents/beginner-faq) | — |
 | 🧹 DY-006 **SWEEPER** | 홈 폴더 정리 도우미. 다운로드·데스크탑 현황과 휴지통 후보, 흩어진 문서를 위키 `raw/`로 모으기, 폴더를 종류별로 정리. 스캔은 코드(사용량 0), 옮기기·지우기는 터미널에서 직접 승인·휴지통만 | 🟦 초기 버전 | [agents/laptop-helper](agents/laptop-helper) | [위키](wiki/projects/laptop-helper/laptop-helper.md) |
 | 💗 DY-007 **CUPID** | Heartline: 내 취향대로 만드는 나만의 가상 연인 웹앱. 성격·말투·호칭·관계를 정하고(프리셋 6종·실시간 미리보기), 최대 5명을 바꿔 가며 메신저처럼 톡해요. 부가로 영어 모드(교정 카드) | 🟦 초기 버전 | [agents/heartline](agents/heartline) · [**앱**](https://dodo-yong.github.io/Obsidian/heartline/) | [위키](wiki/projects/heartline/heartline.md) · [PRD](wiki/projects/heartline/topics/Heartline%20PRD_261119.md) · [**PRD 페이지**](https://dodo-yong.github.io/Obsidian/heartline/prd.html) · [체크리스트](https://dodo-yong.github.io/Obsidian/heartline/checklist.html) · [테스트](https://dodo-yong.github.io/Obsidian/heartline/tests.html) · [발표](https://dodo-yong.github.io/Obsidian/heartline/deck.html) |
+| 🎧 DY-008 **SHADOW** | 영어 섀도잉 코치(내 Mac 전용). 유튜브 주소를 넣으면 소리를 내려받아 문장 단위로 나누고, 문장을 듣고 **Space를 누르는 동안 녹음 → 떼면 바로 재생**. 원본과 내 **억양 곡선**, Whisper가 **알아들은 단어**를 비교하고 녹음은 날짜별로 쌓임. 모두 로컬·추가 비용 0원 | 🟦 초기 버전 · 개인용 | [agents/shadowing-coach](agents/shadowing-coach) · [**열기**](https://dodo-yong.github.io/Obsidian/shadow/) | [위키](wiki/projects/shadowing-coach/shadowing-coach.md) |
 
 ## 🧠 TRACER 쓰는 법
 
@@ -102,6 +111,7 @@ flowchart LR
 | TRACER (CCNA 코치) | **https://tracer-eosin.vercel.app/ccna/** (Vercel에서 운영 · github.io `/ccna/`는 자동 이동) — 처음 화면 · `about.html` 소개 · `app.html` 이용 · `admin.html` 관리자 · `privacy.html` | `docs/ccna/*`, `docs/api/` (서버), `docs/vercel.json` |
 | TRACER 작동 방식 (공용) | Q-BRANCH `#how`와 TRACER 소개(`about.html#how`)에 함께 들어감 | `docs/tracer-how.js`, `docs/tracer-how.css` — 여기만 고치면 두 곳이 같이 바뀜 |
 | 터미널 작업 기록 | https://dodo-yong.github.io/Obsidian/terminal.html | `docs/terminal.html` |
+| SHADOW 열기 (섀도잉 코치) | https://dodo-yong.github.io/Obsidian/shadow/ — 개인 컴퓨터에서 SHADOW가 켜져 있으면 버튼 하나로 http://127.0.0.1:8777/ 로 연결 | `docs/shadow/index.html` |
 | Heartline (CUPID 앱) | https://dodo-yong.github.io/Obsidian/heartline/ (PRD `prd.html` · 체크리스트 `checklist.html` · 테스트 `tests.html` · 발표 `deck.html`) | `docs/heartline/` |
 
 - 사이트를 고친 뒤엔 `scripts/bump-site-version.sh`로 버전을 올린다 → 열린 페이지가 새 버전을 감지하면 한 번 자동 새로고침(브라우저 캐시 대응). 공용 파일 주소의 `?v=`도 함께 올린다.
