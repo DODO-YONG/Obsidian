@@ -80,6 +80,54 @@ def test_mcq_question_and_grade(logged_in, errors, base_url):
     expect(page.locator("#gradeBtn")).to_contain_text("다음 문제")
 
 
+def _open_mcq(page, base_url):
+    page.goto(base_url + "/ccna/app.html")
+    page.click('#qtypeSeg [data-v="mcq"]')
+    page.click("#newQ")
+    expect(page.locator("#qCard .choice")).to_have_count(4)
+
+
+def test_mcq_grade_button_states_before_and_after(logged_in, errors, base_url):
+    page = logged_in
+    _open_mcq(page, base_url)
+    expect(page.locator("#gradeBtn")).to_have_text("채점하기")
+    expect(page.locator("#gradeBtn")).to_be_disabled()
+    expect(page.locator("#gradeHint")).to_contain_text("보기를 하나 고르세요")
+    page.click('#qCard .choice[data-l="C"]')
+    expect(page.locator("#gradeBtn")).to_be_enabled()
+    expect(page.locator("#gradeHint")).to_contain_text("C를 골랐어요")
+    page.click("#gradeBtn")
+    expect(page.locator("#gradeBtn")).to_contain_text("다음 문제")
+    expect(page.locator("#gradeBtn")).to_have_class(re.compile("next"))
+    expect(page.locator("#qCard")).to_have_class(re.compile("graded"))
+    expect(page.locator("#gradeHint")).to_contain_text("채점 완료")
+    expect(page.locator("#nextBtn2")).to_be_visible()
+    expect(page.locator("#nextBtn2")).to_contain_text("다음 문제")
+    # 채점 후에는 다른 보기를 눌러도 선택이 바뀌지 않는다
+    expect(page.locator('#qCard .choice[data-l="C"]')).to_have_attribute("aria-pressed", "true")
+    page.click('#qCard .choice[data-l="A"]', force=True)
+    expect(page.locator('#qCard .choice[data-l="A"]')).to_have_attribute("aria-pressed", "false")
+    expect(page.locator('#qCard .choice[data-l="C"]')).to_have_attribute("aria-pressed", "true")
+
+
+@pytest.mark.parametrize("btn", ["#gradeBtn", "#nextBtn2"])
+def test_mcq_next_does_not_regrade(btn, logged_in, errors, base_url):
+    page = logged_in
+    grades = []
+    page.on("request", lambda r: grades.append(r.url) if "/api/grade" in r.url else None)
+    _open_mcq(page, base_url)
+    page.click('#qCard .choice[data-l="B"]')
+    page.click("#gradeBtn")
+    expect(page.locator("#nextBtn2")).to_be_visible()
+    assert len(grades) == 1
+    page.click(btn)                                         # 다음 문제
+    expect(page.locator("#gradeBtn")).to_have_text("채점하기")
+    expect(page.locator("#qCard")).not_to_have_class(re.compile("graded"))
+    expect(page.locator("#nextBtn2")).to_have_count(0)
+    expect(page.locator("#qCard .choice")).to_have_count(4)
+    assert len(grades) == 1, "다음 문제를 눌렀는데 /api/grade가 다시 호출됨"
+
+
 def test_conn_help_logged_in_has_no_login_button(logged_in, errors, base_url):
     page = logged_in
     page.goto(base_url + "/ccna/app.html")
