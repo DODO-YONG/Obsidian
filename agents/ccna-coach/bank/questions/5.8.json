@@ -181,7 +181,7 @@
   "question": "What is a main benefit of using a centralized AAA server?",
   "choices": [
    "User accounts are managed in one place for many devices",
-   "Devices no longer need IP addresses",
+   "Devices no longer need IP addresses for remote management",
    "Switches forward faster",
    "VLANs are created automatically"
   ],
@@ -335,7 +335,7 @@
   "question": "What does aaa accounting exec default start-stop group radius do?",
   "choices": [
    "Sends a record when an EXEC session starts and another when it ends",
-   "Blocks EXEC sessions",
+   "Blocks EXEC sessions unless the RADIUS server approves each command",
    "Authenticates users",
    "Encrypts session data"
   ],
@@ -358,7 +358,7 @@
   "choices": [
    "login authentication VTY-AUTH under line vty",
    "ip access-group VTY-AUTH",
-   "aaa apply VTY-AUTH",
+   "aaa apply login VTY-AUTH under line vty 0 4",
    "transport input VTY-AUTH"
   ],
   "answer": "A",
@@ -423,7 +423,7 @@
   "question": "Given: aaa authentication login default group radius local; aaa authentication login CONSOLE none; line console 0 has login authentication CONSOLE. What applies to console logins?",
   "choices": [
    "No authentication is required",
-   "RADIUS then local",
+   "RADIUS first, then the local database",
    "Local only",
    "Line password"
   ],
@@ -444,8 +444,8 @@
   "difficulty": "어려움",
   "question": "A router has aaa new-model and a RADIUS server, but all remote logins fail. The shared key differs between router and server. What is the likely result?",
   "choices": [
-   "Authentication requests are rejected or time out because messages cannot be validated",
-   "Logins succeed using the local database automatically",
+   "Requests are rejected or time out because they cannot be validated",
+   "Logins succeed, because the router automatically uses its local database",
    "The router reloads",
    "The password is sent in clear text"
   ],
@@ -467,7 +467,7 @@
   "question": "An administrator needs to authorize and log every command each engineer enters. Which solution fits best?",
   "choices": [
    "TACACS+ command authorization and accounting",
-   "RADIUS only",
+   "RADIUS authentication with local accounting",
    "Local usernames",
    "Line passwords"
   ],
@@ -488,8 +488,8 @@
   "difficulty": "어려움",
   "question": "Which statement correctly compares RADIUS and TACACS+?",
   "choices": [
-   "RADIUS uses UDP and encrypts only the password; TACACS+ uses TCP and encrypts the whole payload",
-   "RADIUS uses TCP and encrypts everything",
+   "RADIUS: UDP, encrypts only the password; TACACS+: TCP, encrypts all",
+   "RADIUS uses TCP and encrypts the whole payload; TACACS+ uses UDP",
    "Both use UDP",
    "TACACS+ is an open standard"
   ],
@@ -535,7 +535,7 @@
    "test aaa group radius user1 Cisco123 new-code",
    "ping radius",
    "show crypto",
-   "debug radius ping"
+   "test radius server 10.1.1.5 user1 Cisco123"
   ],
   "answer": "A",
   "explanation": "The test aaa command sends a test authentication request to the server group and shows pass or fail.",
@@ -577,7 +577,7 @@
   "question": "A method list is: aaa authentication login default group tacacs+ enable. What does the enable method do?",
   "choices": [
    "Uses the enable password as a fallback",
-   "Enables TACACS+",
+   "Enables TACACS+ on all of the vty lines",
    "Enables the line",
    "Sets privilege 15"
   ],

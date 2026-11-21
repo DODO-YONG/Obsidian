@@ -99,7 +99,7 @@ flowchart LR
 **주소: https://tracer-eosin.vercel.app/ccna/** — 처음 화면에서 "소개 보기" / "바로 이용하기"를 고른다. (예전 github.io 주소로 와도 자동 이동)
 
 - **누구나**: 오른쪽 위 **Google로 로그인** → 범위·난이도 고르고 **문제 받기** → 답을 내면 해설과 XP. 진도는 계정에 저장돼 다른 기기에서도 이어진다. 로그아웃도 오른쪽 위. 서브넷 계산은 로그인 없이 바로.
-- **무료 한도 보호**: 사람마다 하루 AI 30회(관리자가 조정), 전체 하루 300회. 객관식은 미리 채운 문제은행(1,560문제)에서만 나와 AI를 안 부르고, AI는 주관식에만 쓴다.
+- **무료 한도 보호**: 사람마다 하루 AI 30회(관리자가 조정), 전체 하루 300회. 객관식은 미리 채운 문제은행(1,808문제)에서만 나와 AI를 안 부르고, AI는 주관식에만 쓴다.
 - **주인(나)**: [관리자 페이지](https://tracer-eosin.vercel.app/ccna/admin.html)에서 사용자 권한·차단·한도, 활동 기록, 신고된 문제를 관리. 내 Mac은 꺼져 있어도 된다.
 - 페이지: [소개](https://tracer-eosin.vercel.app/ccna/about.html) · [이용](https://tracer-eosin.vercel.app/ccna/app.html) · [개인정보 처리방침](https://tracer-eosin.vercel.app/ccna/privacy.html) · 구성·배포: [agents/ccna-coach/README.md](agents/ccna-coach/README.md), [SETUP.md](agents/ccna-coach/SETUP.md)
 

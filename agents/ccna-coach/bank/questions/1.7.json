@@ -161,7 +161,7 @@
    "No, private addresses are globally unique",
    "Yes, but only with a VLAN",
    "Yes, because private addresses only need to be unique within each organization",
-   "No, only one company can use each private network per ISP"
+   "No, each private network may be used by only one company in each ISP service region"
   ],
   "answer": "C",
   "explanation": "Private addresses are not registered and are not routed on the Internet, so many organizations reuse the same ranges internally. Problems appear only when the networks are connected to each other.",
@@ -268,7 +268,7 @@
   "difficulty": "보통",
   "question": "Which statement describes the 100.64.0.0/10 address block?",
   "choices": [
-   "It is a private block defined in RFC 1918",
+   "It is a private block defined in RFC 1918 for enterprise networks",
    "It is shared address space for carrier-grade NAT (RFC 6598)",
    "It is the IPv4 multicast range",
    "It is the loopback range"
@@ -291,7 +291,7 @@
   "question": "A client receives the address 169.254.17.8. What does this indicate?",
   "choices": [
    "The client could not contact a DHCP server and self-assigned a link-local address",
-   "The client received a private address from DHCP",
+   "The client received a private RFC 1918 address from a DHCP server on the local subnet",
    "The client is using an RFC 1918 address",
    "The client is using a loopback address"
   ],
@@ -337,7 +337,7 @@
    "Forward it normally",
    "Reply with a TTL expired message",
    "Drop it, because private source addresses should not appear on the Internet",
-   "Translate it with NAT overload"
+   "Translate it with NAT overload so that the reply can return to the original sender"
   ],
   "answer": "C",
   "explanation": "RFC 1918 addresses are not valid on the Internet. A private source address arriving from outside is a sign of misconfiguration or spoofing, so edge filters usually drop it. NAT does not apply to traffic that should not exist there.",
@@ -379,7 +379,7 @@
   "question": "A home Wi-Fi router is configured with LAN address 192.168.1.1/24 and its WAN port has the ISP-assigned address 203.0.113.50. Which statement is correct?",
   "choices": [
    "LAN devices use private addresses and the router uses NAT to reach the Internet",
-   "LAN devices use public addresses",
+   "LAN devices use public addresses that the ISP assigned through the router's WAN port",
    "The router WAN address is private",
    "The LAN address is a multicast address"
   ],
@@ -512,8 +512,8 @@
   "choices": [
    "The subnet mask is too short",
    "The default route is a static route",
-   "The packets leave with private source addresses that the ISP does not route or return",
-   "The hosts need a public DNS name"
+   "Packets leave with private source addresses the ISP will not route back",
+   "The hosts need registered public DNS names before Internet sites will reply"
   ],
   "answer": "C",
   "explanation": "Without NAT the router forwards the packets with private source addresses. The ISP drops them or cannot route replies back. Configuring NAT overload on the router fixes this.",
@@ -620,7 +620,7 @@
   "difficulty": "어려움",
   "question": "A technician assigns 172.15.4.1/24 to a LAN, believing it to be a private address. What is the problem?",
   "choices": [
-   "The /24 mask is not allowed for 172.x.x.x",
+   "The /24 mask is not allowed for any 172.x.x.x address, which must use a /16",
    "172.15.4.1 is a public address because 172.16.0.0/12 starts at 172.16.0.0",
    "It is a multicast address",
    "It is a loopback address"

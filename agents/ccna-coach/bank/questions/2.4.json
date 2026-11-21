@@ -5,9 +5,9 @@
   "question": "What is the main purpose of an EtherChannel?",
   "choices": [
    "Split one physical link into several VLANs",
-   "Combine multiple physical links into one logical link for more bandwidth and redundancy",
+   "Bundle several physical links into one logical link",
    "Encrypt traffic between two switches",
-   "Remove the need for Spanning Tree on the network"
+   "Remove the need for Spanning Tree everywhere on the switched network"
   ],
   "answer": "B",
   "explanation": "EtherChannel bundles 2 to 8 active Ethernet links into one logical interface. It increases bandwidth and provides redundancy if a member link fails. STP treats the bundle as one link.",
@@ -313,7 +313,7 @@
   "question": "Which configuration creates a Layer 3 EtherChannel on a multilayer switch?",
   "choices": [
    "Configure switchport mode trunk on the member ports",
-   "Configure an IP address on each member interface",
+   "Configure an IP address on each member interface and keep switchport enabled",
    "Configure the VLAN IP address on each member port",
    "Configure no switchport and an IP address on the Port-channel interface"
   ],
@@ -356,7 +356,7 @@
   "difficulty": "보통",
   "question": "A single FTP transfer between one client and one server across a 4-link EtherChannel only uses about 1 Gbps of the 4 Gbps available. Why?",
   "choices": [
-   "EtherChannel only activates one link until it fails",
+   "EtherChannel activates only one member link until that link fails",
    "The hash sends all frames of one flow over the same member link",
    "STP blocks three of the links",
    "The links are in LACP passive mode"
@@ -400,7 +400,7 @@
   "difficulty": "보통",
   "question": "SW1 is set to mode on for the EtherChannel and SW2 is set to mode active. What is the result?",
   "choices": [
-   "A LACP EtherChannel forms because SW2 is active",
+   "An LACP EtherChannel forms because SW2 is active and SW1 accepts with on",
    "A PAgP EtherChannel forms",
    "An EtherChannel forms and uses the on mode on both ends",
    "No EtherChannel forms because on does not exchange negotiation packets"
@@ -445,8 +445,8 @@
   "question": "Refer to the output. Gi0/2 shows the s flag while Gi0/1 is bundled. Which is the most likely reason?\n\nSW1# show etherchannel summary\nFlags:  D - down        P - bundled in port-channel\n        I - stand-alone s - suspended\n        S - Layer2      U - in use      R - Layer3\n\nGroup  Port-channel  Protocol    Ports\n------+-------------+-----------+---------------------------\n1      Po1(SU)         LACP      Gi0/1(P)    Gi0/2(s)",
   "choices": [
    "Gi0/2 is administratively shut down",
-   "Gi0/2 has a configuration, such as speed, duplex or VLAN mode, that differs from the port-channel",
-   "Gi0/2 is operating as a stand-alone port",
+   "Gi0/2's settings, such as speed, duplex or VLAN mode, differ from Po1",
+   "Gi0/2 is operating as a stand-alone port after LACP negotiation timed out",
    "Gi0/2 is a hot-standby LACP member"
   ],
   "answer": "B",
@@ -488,7 +488,7 @@
   "difficulty": "어려움",
   "question": "A 4-link LACP EtherChannel carries traffic between two switches. One member link fails. What is the impact on Spanning Tree?",
   "choices": [
-   "STP recalculates the topology and blocks another link",
+   "STP recalculates the topology and then blocks another member link of the bundle",
    "The entire bundle goes down",
    "STP elects a new root bridge",
    "No STP topology change; traffic is redistributed over the remaining links"
@@ -513,7 +513,7 @@
    "A PAgP EtherChannel forms",
    "An LACP EtherChannel forms",
    "No EtherChannel forms because the protocols are different",
-   "A static EtherChannel forms"
+   "A static EtherChannel forms, using mode on behavior on both sides"
   ],
   "answer": "C",
   "explanation": "Both ends must use the same negotiation protocol. Desirable/auto belong to PAgP and active/passive to LACP. A mix leaves the ports unbundled.",
@@ -576,10 +576,10 @@
   "difficulty": "어려움",
   "question": "After configuring an EtherChannel with mode on on SW1 only, the SW2 ports appear in err-disabled state with the reason channel-misconfig. What is the cause?",
   "choices": [
-   "The ports were configured with LACP passive on both ends",
+   "The ports were configured with LACP passive on both ends of the link",
    "The speed is auto on both switches",
    "The native VLAN is correct on both sides",
-   "One side is bundled with on while the other side is not configured for the EtherChannel"
+   "One side bundles with on while the other is not set for EtherChannel"
   ],
   "answer": "D",
   "explanation": "The channel-misconfig error means the EtherChannel guard saw a bundle on one side and individual ports on the other, which could create loops. Make both sides consistent and shut/no shut the ports.",
@@ -599,7 +599,7 @@
   "question": "An administrator enters channel-protocol lacp on an interface and then tries channel-group 1 mode desirable. What happens?",
   "choices": [
    "The port joins group 1 using PAgP",
-   "The port joins group 1 using LACP active",
+   "The port joins group 1 and uses LACP active mode instead of desirable",
    "The switch rejects the command because desirable is a PAgP mode",
    "The switch ignores channel-protocol lacp"
   ],
@@ -620,7 +620,7 @@
   "difficulty": "어려움",
   "question": "A port-channel has two members. show etherchannel summary shows Po1(SU) with Gi0/1(P) and Gi0/2(D). Which statement is correct?",
   "choices": [
-   "The EtherChannel is down",
+   "The EtherChannel is down because one member is not bundled",
    "The EtherChannel is up and carrying traffic only on Gi0/1",
    "Gi0/2 is carrying all the traffic",
    "Gi0/1 is suspended"
@@ -643,7 +643,7 @@
   "question": "In the output of show etherchannel summary, the Protocol column displays a dash (-) for Po1. What does this indicate?",
   "choices": [
    "The EtherChannel was formed statically with mode on",
-   "LACP is in use",
+   "LACP is in use, so the bundle was negotiated dynamically",
    "PAgP is in use",
    "The bundle is down"
   ],

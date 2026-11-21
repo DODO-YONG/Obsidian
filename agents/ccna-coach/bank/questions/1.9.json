@@ -70,7 +70,7 @@
   "difficulty": "쉬움",
   "question": "How does IPv6 handle the functions that IPv4 broadcast performed?",
   "choices": [
-   "It uses a broadcast address ending in :FFFF",
+   "It uses a broadcast address that ends in :FFFF on every IPv6 subnet",
    "It uses anycast addresses only",
    "It uses multicast addresses, such as the all-nodes group FF02::1",
    "It uses the loopback address"
@@ -114,8 +114,8 @@
   "difficulty": "쉬움",
   "question": "What is an IPv6 anycast address?",
   "choices": [
-   "An address assigned to multiple devices where a packet is delivered to the nearest one",
-   "An address that delivers to all devices in a group",
+   "One address on several devices; packets go to the nearest one",
+   "An address that delivers each packet to all devices in a group",
    "An address that identifies only one interface",
    "An address used only on the local link"
   ],
@@ -180,7 +180,7 @@
   "difficulty": "쉬움",
   "question": "Which protocol replaces ARP in IPv6 to map IPv6 addresses to link-layer addresses?",
   "choices": [
-   "DHCPv6",
+   "DHCPv6 using address resolution messages on each link",
    "Neighbor Discovery Protocol (NDP) using ICMPv6",
    "RARP",
    "IGMP"
@@ -246,7 +246,7 @@
   "difficulty": "보통",
   "question": "Which bit of the first byte of the MAC address is inverted when building a modified EUI-64 interface ID?",
   "choices": [
-   "The first bit",
+   "The 8th bit (individual/group bit)",
    "The last bit",
    "The 7th bit (universal/local bit)",
    "The 4th bit"
@@ -254,7 +254,7 @@
   "answer": "C",
   "explanation": "The universal/local (U/L) bit is the 7th bit of the first byte. It is inverted in modified EUI-64. For example, 00 becomes 02.",
   "option_notes": [
-   "Wrong: The first bit is the individual/group bit and is not changed.",
+   "Wrong: The individual/group bit is not changed; EUI-64 flips the 7th bit.",
    "Wrong: The last bit of the byte is not changed.",
    "Correct: The U/L bit, the 7th bit, is flipped.",
    "Wrong: The 4th bit is not changed."
@@ -312,7 +312,7 @@
   "difficulty": "보통",
   "question": "Which multicast addresses do OSPFv3 routers use to communicate?",
   "choices": [
-   "FF02::9",
+   "FF02::9 for all routers and FF02::A for designated routers",
    "FF02::A",
    "FF02::1",
    "FF02::5 for all OSPF routers and FF02::6 for DR/BDR"
@@ -554,10 +554,10 @@
   "difficulty": "어려움",
   "question": "Refer to the output.\n\nR1# show ipv6 interface gigabitEthernet 0/0\n...\n Joined group address(es):\n   FF02::1\n   FF02::2\n   FF02::1:FF00:1\n\nWhat does the FF02::2 entry indicate?",
   "choices": [
-   "The interface has joined the all-routers group because ipv6 unicast-routing is enabled",
+   "It joined all-routers because ipv6 unicast-routing is enabled",
    "The interface is configured as an anycast address",
    "The interface uses EUI-64",
-   "The interface has duplicate address detection disabled"
+   "Duplicate address detection has been disabled on the interface"
   ],
   "answer": "A",
   "explanation": "A router joins FF02::2, the all-routers multicast group, when IPv6 routing is enabled. FF02::1 is all nodes and FF02::1:FF00:1 is the solicited-node group for an address ending in ::1.",
@@ -577,9 +577,9 @@
   "question": "When pinging the link-local address FE80::2 of a neighbor, IOS asks for an output interface. Why?",
   "choices": [
    "Link-local addresses cannot be used with ping",
-   "ICMPv6 requires a source MAC address",
+   "ICMPv6 requires a source MAC address that only an interface can supply",
    "FE80::2 is an anycast address",
-   "Link-local addresses are only unique per link, so the router must know which link to use"
+   "Link-local addresses are unique only per link, so a link must be chosen"
   ],
   "answer": "D",
   "explanation": "The same link-local address can exist on multiple links, so the router needs the exit interface to know where to send the packet. Link-local addresses work with ping when the interface is given.",
@@ -620,8 +620,8 @@
   "difficulty": "어려움",
   "question": "Which statement about unique local addresses such as FD12:3456:789A:1::1 is true?",
   "choices": [
-   "They are automatically assigned to every interface",
-   "They are not routable on the global Internet and are intended for internal use",
+   "They are automatically assigned to every interface that has IPv6 enabled",
+   "They are not routed on the Internet and are meant for internal use",
    "They are used only for multicast",
    "They are identical to link-local addresses"
   ],

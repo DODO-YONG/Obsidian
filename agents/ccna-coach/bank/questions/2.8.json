@@ -224,7 +224,7 @@
   "difficulty": "보통",
   "question": "Which two settings must be configured before RSA keys can be generated for SSH on a router?",
   "choices": [
-   "An enable password and a banner",
+   "An enable secret password and a login banner on the console",
    "A loopback interface and OSPF",
    "A VLAN and a trunk",
    "A host name other than the default and a domain name"
@@ -269,8 +269,8 @@
   "question": "How does TACACS+ differ from RADIUS?",
   "choices": [
    "TACACS+ uses UDP and encrypts only the password",
-   "TACACS+ encrypts the full packet body and separates authentication, authorization and accounting",
-   "TACACS+ combines authentication and authorization",
+   "TACACS+ encrypts the whole body and separates AAA functions",
+   "TACACS+ combines authentication and authorization in one step",
    "TACACS+ is an open IEEE standard"
   ],
   "answer": "B",
@@ -290,8 +290,8 @@
   "difficulty": "보통",
   "question": "What does the following command do?\n\naaa authentication login default group tacacs+ local",
   "choices": [
-   "It uses a TACACS+ server for login and falls back to local usernames if no TACACS+ server responds",
-   "It uses local usernames first and a TACACS+ server as backup",
+   "TACACS+ first; local usernames only if no TACACS+ server responds",
+   "Local usernames first; a TACACS+ server is used only as a backup",
    "It uses only the TACACS+ server and never the local database",
    "It uses RADIUS first and TACACS+ as backup"
   ],
@@ -400,7 +400,7 @@
   "difficulty": "보통",
   "question": "What does the command exec-timeout 5 0 configure on a line?",
   "choices": [
-   "Disconnects after 5 seconds",
+   "Disconnects any idle session after 5 seconds",
    "Allows 5 login attempts",
    "Disables the session timeout",
    "Disconnects an idle session after 5 minutes"
@@ -423,8 +423,8 @@
   "question": "Which statement about enable secret and enable password is correct?",
   "choices": [
    "enable password is stronger than enable secret",
-   "Both store passwords with the same encryption",
-   "enable secret stores a hashed password and takes precedence over enable password",
+   "Both store passwords using the same reversible type 7 encryption method",
+   "enable secret is hashed and takes precedence over enable password",
    "enable secret is stored in clear text"
   ],
   "answer": "C",
@@ -446,7 +446,7 @@
   "choices": [
    "transport input ssh blocks SSH",
    "login local is configured, but no local username exists",
-   "ip ssh version 2 prevents SSH",
+   "ip ssh version 2 prevents SSH from every client on the network",
    "The domain name is required to be public"
   ],
   "answer": "B",
@@ -467,7 +467,7 @@
   "question": "A user telnets to a router and receives the message 'Password required, but none set'. The VTY lines have the command login configured. What is the fix?",
   "choices": [
    "Configure a line password with password, or use login local with a username",
-   "Configure enable secret",
+   "Configure an enable secret, so that the vty line accepts the incoming Telnet session",
    "Enter no login and keep the password empty",
    "Configure ip domain-name"
   ],
@@ -488,7 +488,7 @@
   "difficulty": "어려움",
   "question": "An administrator enters ip ssh version 2 after generating a 512-bit RSA key. What is the result?",
   "choices": [
-   "SSH version 2 works with any key size",
+   "SSH version 2 is enabled, because it works with any RSA key size, including 512",
    "SSH version 2 is not supported on routers",
    "The command removes the key",
    "The device requires an RSA key of at least 768 bits for SSH version 2"
@@ -510,7 +510,7 @@
   "difficulty": "어려움",
   "question": "A router uses aaa authentication login default group tacacs+ local. The TACACS+ server is reachable but rejects a user's password. What happens?",
   "choices": [
-   "The router tries the local database",
+   "The router falls back to the local database because the server rejected the user",
    "The router tries the enable password",
    "The login is denied; the router does not fall back to the local database",
    "The router grants access to privileged mode"
@@ -642,8 +642,8 @@
   "difficulty": "어려움",
   "question": "Which statement about service password-encryption is correct?",
   "choices": [
-   "It applies weak type 7 encryption to line passwords that can be easily reversed",
-   "It hashes all passwords with SHA-256",
+   "It applies weak type 7 encryption that is easily reversed",
+   "It hashes all of the passwords in the configuration with strong SHA-256",
    "It replaces enable secret",
    "It encrypts SSH sessions"
   ],

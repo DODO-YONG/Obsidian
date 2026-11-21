@@ -137,7 +137,7 @@
   "question": "What does an access point beacon frame advertise?",
   "choices": [
    "The user password",
-   "The DHCP address pool",
+   "The DHCP address pool and gateway that clients will receive on the WLAN",
    "The routing table of the AP",
    "The presence and capabilities of the WLAN, including the SSID"
   ],
@@ -182,7 +182,7 @@
   "choices": [
    "Replaces the DHCP server",
    "Centrally manages and configures lightweight access points",
-   "Acts as a RADIUS client only",
+   "Acts only as a RADIUS client for the 802.1X authentication",
    "Provides Layer 1 repeating"
   ],
   "answer": "B",
@@ -247,7 +247,7 @@
   "question": "A WLAN has three APs in a row, all on channel 6. Users report slow performance. What is the best fix with the least cost?",
   "choices": [
    "Move all APs to channel 7",
-   "Increase the transmit power on all APs",
+   "Increase the transmit power on all APs to overcome noise",
    "Configure the neighbouring APs on channels 1 and 11",
    "Disable beacons"
   ],
@@ -270,7 +270,7 @@
   "choices": [
    "The name of the WLAN",
    "The MAC address of the access point radio",
-   "The IP address of the AP",
+   "The IP address of the AP's management interface",
    "The channel number"
   ],
   "answer": "B",
@@ -293,7 +293,7 @@
    "Discover (probe or beacon), authenticate, associate",
    "Associate, discover, authenticate",
    "Authenticate, discover, associate",
-   "Discover, associate, authenticate"
+   "Discover, associate, then authenticate with the AP"
   ],
   "answer": "A",
   "explanation": "A client first finds an AP through beacons or probe requests, then performs 802.11 authentication, and finally associates with the AP. For WPA2 and WPA3 security, key exchange and 802.1X or PSK handshakes follow association.",
@@ -314,7 +314,7 @@
   "choices": [
    "TKIP",
    "WEP",
-   "MAC filtering",
+   "MAC filtering with an allow list of client MACs",
    "Simultaneous Authentication of Equals (SAE)"
   ],
   "answer": "D",
@@ -401,7 +401,7 @@
   "question": "What happens to the 2.4 GHz signal when it passes through a concrete wall?",
   "choices": [
    "It is amplified",
-   "It changes channel",
+   "It changes to a different channel to avoid the wall",
    "It changes SSID",
    "It is attenuated, so the received power drops"
   ],
@@ -422,9 +422,9 @@
   "difficulty": "어려움",
   "question": "A WLAN has a channel width of 80 MHz configured in the 5 GHz band for all APs in a large building. Users have co-channel interference. What is the best action?",
   "choices": [
-   "Increase the channel width to 160 MHz",
+   "Increase the channel width to 160 MHz so each AP gets more bandwidth to share",
    "Switch the APs to 2.4 GHz",
-   "Reduce the channel width to 20 or 40 MHz to allow more non-overlapping channels",
+   "Reduce the channel width to 20 or 40 MHz for more non-overlapping channels",
    "Disable all clients except one"
   ],
   "answer": "C",
@@ -447,7 +447,7 @@
    "Put the guest SSID on the same VLAN as the servers",
    "Map the guest SSID to a separate VLAN and restrict it with ACLs or a firewall",
    "Hide the guest SSID",
-   "Use a stronger channel for guests"
+   "Put guests on a stronger, separate channel so they stay apart from staff"
   ],
   "answer": "B",
   "explanation": "Each SSID can be mapped to its own VLAN on the WLC. Placing guests on a separate VLAN with Layer 3 filtering keeps them away from internal resources. Hiding an SSID provides no real isolation.",
@@ -469,7 +469,7 @@
    "The SNR is only 3 dB, so the signal is barely above the noise",
    "The SNR is 167 dB",
    "The AP is using too many channels",
-   "The SSID is broadcast"
+   "The SSID is broadcast in beacons, which adds noise to the channel"
   ],
   "answer": "A",
   "explanation": "SNR = -82 minus -85 = 3 dB. A signal this close to the noise floor allows only the lowest data rates, with many retries. Moving closer or reducing interference improves the SNR.",
@@ -488,10 +488,10 @@
   "difficulty": "어려움",
   "question": "Which statement describes the difference between an autonomous AP and a lightweight AP?",
   "choices": [
-   "An autonomous AP needs CAPWAP tunnels; a lightweight AP does not",
+   "An autonomous AP needs CAPWAP tunnels to a WLC; a lightweight AP does not",
    "A lightweight AP cannot transmit radio signals",
    "An autonomous AP can only be used outdoors",
-   "A lightweight AP needs a WLC to operate normally; an autonomous AP is configured on its own"
+   "A lightweight AP needs a WLC to operate; an autonomous AP works alone"
   ],
   "answer": "D",
   "explanation": "Autonomous APs hold their own configuration and are managed individually. Lightweight APs discover a WLC, download their configuration, and tunnel traffic to it using CAPWAP. This allows centralized management and roaming.",
@@ -510,7 +510,7 @@
   "difficulty": "어려움",
   "question": "A client connects to the SSID 'Corp' but cannot get an IP address. Other clients on the same SSID work. The AP shows the client as associated. Which layer-oriented conclusion is most accurate?",
   "choices": [
-   "The problem is at the RF layer, because the client is associated",
+   "The problem is at the RF layer, because the client is only weakly associated to the AP",
    "The SSID is misspelled on the client",
    "The wireless association succeeded, so look at DHCP or VLAN mapping for the client",
    "The AP radio is turned off"
@@ -532,7 +532,7 @@
   "difficulty": "어려움",
   "question": "Why is MAC address filtering NOT considered a strong wireless security control?",
   "choices": [
-   "MAC addresses are encrypted by WPA2",
+   "MAC addresses are encrypted by WPA2 and cannot be seen",
    "MAC addresses can be observed in the air and spoofed",
    "MAC filters disable the SSID",
    "MAC filters only work on 5 GHz"
@@ -557,7 +557,7 @@
    "SSID and pre-shared key (security type must also be supported)",
    "Channel and BSSID",
    "IP subnet and DNS server",
-   "Transmit power and antenna type"
+   "Transmit power and antenna type, which must be the same on both ends"
   ],
   "answer": "A",
   "explanation": "The client needs the network name and the correct passphrase, and it must support the same security protocol. The channel is found by scanning, and IP settings come after association. Power and antennas do not need to match.",
@@ -643,7 +643,7 @@
   "question": "An administrator disables SSID broadcast to hide a corporate WLAN. What is the effect on security?",
   "choices": [
    "Little benefit, because the SSID still appears in probe requests and responses",
-   "The traffic becomes encrypted",
+   "The traffic becomes encrypted, because a hidden SSID always requires WPA3 security",
    "Clients can no longer associate",
    "The AP stops using a channel"
   ],

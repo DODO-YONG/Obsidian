@@ -182,7 +182,7 @@
   "choices": [
    "The neighbor's running configuration",
    "The neighbor's platform and its connected port ID",
-   "The neighbor's enable secret",
+   "The neighbor's enable secret and console password",
    "The neighbor's routing table"
   ],
   "answer": "B",
@@ -356,7 +356,7 @@
   "difficulty": "보통",
   "question": "Why is it recommended to disable CDP on interfaces that face untrusted or external networks?",
   "choices": [
-   "CDP consumes all available bandwidth on the link",
+   "CDP messages consume most of the available bandwidth on slow external links",
    "CDP advertises device details such as platform, IOS version and IP address",
    "CDP prevents the interface from forwarding user traffic",
    "CDP forces the port into a trunk"
@@ -423,7 +423,7 @@
   "question": "What does the Capability column show in show cdp neighbors output?",
   "choices": [
    "The bandwidth of the link",
-   "The VLANs allowed on the link",
+   "The VLANs that are allowed on the link between the two neighbors",
    "The functional role of the neighbor, such as Router or Switch",
    "The speed of the neighbor's CPU"
   ],

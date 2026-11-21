@@ -291,7 +291,7 @@
   "question": "Refer to the output.\n\nPort Vlans allowed on trunk\nGi0/1 1-4094\nPort Vlans allowed and active in management domain\nGi0/1 1,10,20\n\nWhat does the second section mean?",
   "choices": [
    "VLANs 1, 10 and 20 exist on this switch and are permitted on the trunk",
-   "Only VLANs 1, 10 and 20 are blocked",
+   "Only VLANs 1, 10 and 20 are blocked by spanning tree on this trunk port",
    "VLANs 1, 10 and 20 are pruned",
    "The trunk is down"
   ],
@@ -359,7 +359,7 @@
    "Frames from all VLANs",
    "Frames belonging to the native VLAN",
    "Only voice VLAN frames",
-   "Only broadcast frames"
+   "Only broadcast frames from every VLAN"
   ],
   "answer": "B",
   "explanation": "802.1Q tags every frame except those of the native VLAN. The receiving switch places untagged frames in its own configured native VLAN.",
@@ -379,7 +379,7 @@
   "question": "VLAN 20 is not in the allowed list of a trunk between two switches. What is the effect?",
   "choices": [
    "VLAN 20 frames are not carried across that trunk",
-   "VLAN 20 is deleted from the switch",
+   "VLAN 20 is deleted from the switch's VLAN database",
    "The trunk goes down",
    "VLAN 20 becomes the native VLAN"
   ],
@@ -467,7 +467,7 @@
   "question": "A trunk allows VLANs 10,20,30. The engineer runs switchport trunk allowed vlan 20. What is the result?",
   "choices": [
    "Only VLAN 20 is allowed; VLAN 10 and 30 stop crossing the trunk",
-   "VLAN 20 is added to the list",
+   "VLAN 20 is added to the existing allowed list, which keeps 10 and 30",
    "The command is rejected",
    "VLAN 10 and 30 remain allowed"
   ],
@@ -511,7 +511,7 @@
   "question": "Switch A: switchport mode trunk and switchport nonegotiate. Switch B: switchport mode dynamic desirable. What happens?",
   "choices": [
    "Both ports become trunks",
-   "Both ports become access ports",
+   "Both ports become access ports in VLAN 1, because DTP has been disabled on A",
    "A is a trunk and B is an access port, so traffic of tagged VLANs fails",
    "Switch B is err-disabled"
   ],
@@ -532,7 +532,7 @@
   "difficulty": "어려움",
   "question": "What does the global command vlan dot1q tag native do?",
   "choices": [
-   "It removes tags from all VLANs",
+   "It removes the 802.1Q tags from frames of all VLANs",
    "It tags native VLAN frames on all 802.1Q trunks",
    "It changes the native VLAN to 1",
    "It disables DTP"
@@ -577,7 +577,7 @@
   "question": "Refer to the output.\n\nPort Vlans in spanning tree forwarding state and not pruned\nGi0/1 1,10\n\nVLANs 1,10,20 are allowed and active on the trunk. What explains the missing VLAN 20?",
   "choices": [
    "VLAN 20 is the native VLAN",
-   "VLAN 20 was deleted",
+   "VLAN 20 was deleted from this switch's VLAN database",
    "The trunk uses ISL",
    "Spanning tree is blocking VLAN 20 on this port"
   ],
@@ -598,7 +598,7 @@
   "difficulty": "어려움",
   "question": "Which is a recommended practice to reduce VLAN hopping with double tagging?",
   "choices": [
-   "Use VLAN 1 as the native VLAN for all trunks",
+   "Use VLAN 1 as the native VLAN for all trunks and assign user ports to it too",
    "Leave all ports in dynamic desirable mode",
    "Use an unused VLAN as the native VLAN and do not assign user ports to it",
    "Allow all VLANs on every trunk"
@@ -623,7 +623,7 @@
    "switchport mode dynamic desirable\nswitchport trunk allowed vlan 10,20",
    "switchport mode trunk\nswitchport trunk native vlan 99\nswitchport trunk allowed vlan 10,20,99\nswitchport nonegotiate",
    "switchport mode access\nswitchport trunk native vlan 99",
-   "switchport mode trunk\nswitchport nonegotiate\nswitchport trunk allowed vlan 10,20,30"
+   "switchport mode trunk\nswitchport trunk native vlan 1\nswitchport trunk allowed vlan 10,20,30\nswitchport nonegotiate"
   ],
   "answer": "B",
   "explanation": "A static trunk with nonegotiate removes DTP. The allowed list must include the native VLAN if it should be carried.",

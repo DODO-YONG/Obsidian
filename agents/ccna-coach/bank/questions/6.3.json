@@ -29,7 +29,7 @@
    "It is the virtual network that carries user traffic between endpoints",
    "It is the application that talks to the controller",
    "It is the database that stores endpoint locations",
-   "It is the physical network that provides IP reachability between the fabric devices"
+   "The physical network that gives IP reachability between fabric devices"
   ],
   "answer": "D",
   "explanation": "The underlay is the physical topology of switches, routers and links with IP connectivity. Overlay tunnels run on top of it, so the underlay only needs to deliver IP packets between tunnel endpoints.",
@@ -48,7 +48,7 @@
   "difficulty": "쉬움",
   "question": "Which statement best describes an overlay network?",
   "choices": [
-   "A second set of physical cables for backup",
+   "A second, separate set of physical cables used only for backup paths",
    "The set of switch ports reserved for management",
    "A virtual network built on top of the physical network using tunnels",
    "A routing protocol that replaces the underlay"
@@ -136,7 +136,7 @@
   "difficulty": "쉬움",
   "question": "Which Cisco product is the controller that provides automation and assurance for SD-Access campus networks?",
   "choices": [
-   "Cisco Packet Tracer",
+   "Cisco Identity Services Engine (ISE) by itself",
    "Cisco Webex",
    "Cisco ASDM",
    "Cisco Catalyst Center (formerly Cisco DNA Center)"
@@ -144,7 +144,7 @@
   "answer": "D",
   "explanation": "Cisco Catalyst Center, previously called DNA Center, is the management and automation controller for enterprise campus networks. It provides a GUI and northbound REST APIs and uses southbound protocols to configure devices.",
   "option_notes": [
-   "Wrong: this is a simulation tool for learning.",
+   "Wrong: ISE provides identity and policy, but Catalyst Center is the SD-Access controller.",
    "Wrong: this is a collaboration product.",
    "Wrong: this manages ASA firewalls, not SD-Access.",
    "Correct: it is the controller used to design, provision and monitor the fabric."
@@ -202,7 +202,7 @@
   "difficulty": "쉬움",
   "question": "What is a fabric in the context of SD-Access?",
   "choices": [
-   "A cable type used for fiber links",
+   "A special cable type used for fiber links between fabric nodes",
    "The overlay and underlay together, forming a logical network domain",
    "A type of access control list",
    "A cloud-only network service"
@@ -270,7 +270,7 @@
   "choices": [
    "The same VLAN on every access port",
    "A spanning-tree root in each tunnel",
-   "A private copy of each user routing table",
+   "A private copy of each user VRF routing table on every node",
    "IP reachability between the tunnel endpoint addresses"
   ],
   "answer": "D",
@@ -312,8 +312,8 @@
   "difficulty": "보통",
   "question": "Which statement describes intent-based networking?",
   "choices": [
-   "The administrator must type every command on each device",
-   "The administrator states the desired outcome and the controller translates it into device configuration",
+   "The administrator must still type every command on each network device by hand",
+   "The administrator states the outcome and the controller turns it into configs",
    "The network devices vote on the best configuration",
    "The network is built without any policies"
   ],
@@ -357,7 +357,7 @@
   "question": "What is the main purpose of an SD-Access fabric edge node?",
   "choices": [
    "It connects endpoints such as hosts and access points to the fabric",
-   "It stores the LISP database for all endpoints",
+   "It stores the LISP mapping database for every endpoint in the fabric",
    "It connects the fabric to the internet",
    "It runs the Catalyst Center GUI"
   ],
@@ -402,7 +402,7 @@
   "choices": [
    "The data plane builds the routing table, and the control plane forwards frames",
    "Both planes only exist on controllers",
-   "The control plane builds forwarding information, and the data plane forwards traffic using it",
+   "The control plane builds forwarding data; the data plane uses it to forward",
    "The control plane carries user traffic"
   ],
   "answer": "C",
@@ -422,7 +422,7 @@
   "difficulty": "보통",
   "question": "What is added to the original frame when a VXLAN tunnel endpoint encapsulates it?",
   "choices": [
-   "Only a new VLAN tag",
+   "Only a new 802.1Q VLAN tag and a new FCS",
    "A VXLAN header plus outer UDP and IP headers",
    "A TCP header and a TLS session",
    "Nothing, the frame is sent as is"
@@ -466,8 +466,8 @@
   "difficulty": "어려움",
   "question": "The Catalyst Center appliance in an SD-Access network loses power. What is the expected effect on existing fabric traffic?",
   "choices": [
-   "Existing traffic continues to be forwarded, but new automation and changes are unavailable",
-   "All traffic stops immediately",
+   "Existing traffic keeps flowing, but automation and changes are unavailable",
+   "All fabric traffic stops immediately until the appliance is back online",
    "All edge nodes reboot",
    "Traffic is flooded across the underlay"
   ],
@@ -488,7 +488,7 @@
   "difficulty": "어려움",
   "question": "Which statement about VXLAN and the underlay MTU is correct?",
   "choices": [
-   "The underlay MTU should be reduced below 1500",
+   "The underlay MTU should be reduced below 1500 to make room for VXLAN",
    "VXLAN removes the need for any MTU planning",
    "VXLAN adds no bytes to the original packet",
    "The underlay MTU must allow for the extra VXLAN encapsulation overhead"
@@ -510,7 +510,7 @@
   "difficulty": "어려움",
   "question": "An administrator wants policy that follows the user regardless of the IP address or VLAN. Which SD-Access feature supports this?",
   "choices": [
-   "Static ACLs on each access port",
+   "Static ACLs on each access port, tied to IP addresses",
    "Larger VLAN ranges",
    "Scalable Group Tags (SGTs) for micro-segmentation",
    "Spanning tree portfast"
@@ -532,9 +532,9 @@
   "difficulty": "어려움",
   "question": "Which statement best explains how an SD-Access edge node finds the location of a destination endpoint?",
   "choices": [
-   "It floods an ARP request across the whole fabric",
+   "It floods an ARP request across the whole fabric to find the endpoint",
    "It asks Catalyst Center for every packet",
-   "It queries the control plane node, which returns the location of the endpoint",
+   "It queries the control plane node, which returns the endpoint's location",
    "It uses a static route on each edge node"
   ],
   "answer": "C",
@@ -623,7 +623,7 @@
    "Data plane, then applications, then controller",
    "Devices, then applications, then controller",
    "Controller, then devices, then applications",
-   "Applications, then controller (control plane), then network devices (data plane)"
+   "Applications, then controller, then network devices"
   ],
   "answer": "D",
   "explanation": "SDN places applications on top, the controller in the middle and infrastructure devices at the bottom. Northbound APIs connect the top two, and southbound APIs connect the bottom two.",
@@ -642,7 +642,7 @@
   "difficulty": "어려움",
   "question": "An engineer is told that the fabric uses VXLAN with LISP and that Catalyst Center provisions it. Which task remains the responsibility of the underlay?",
   "choices": [
-   "Mapping endpoint IDs to locations",
+   "Mapping endpoint IDs to their fabric locations",
    "Assigning SGTs to users",
    "Routing the outer packets between fabric nodes",
    "Defining the virtual network VRFs"

@@ -29,7 +29,7 @@
    "Floods it out all ports in the VLAN except the incoming port",
    "Drops the frame",
    "Sends it only back out the incoming port",
-   "Sends it to the default gateway"
+   "Sends it to the default gateway for the switch's management VLAN"
   ],
   "answer": "A",
   "explanation": "If the destination MAC is unknown, the switch cannot choose one port. It floods the frame out all ports in the VLAN except the port it arrived on. The reply from the destination lets the switch learn that MAC address.",
@@ -248,7 +248,7 @@
   "choices": [
    "The switch learns PC-B on Fa0/2 and forwards the frame there",
    "The switch drops the frame until ARP completes",
-   "The switch learns PC-A on Fa0/1 and floods the frame out all other ports in the VLAN",
+   "It learns PC-A on Fa0/1 and floods the frame to all other VLAN ports",
    "The switch sends the frame only to Fa0/2 because ports are numbered"
   ],
   "answer": "C",
@@ -270,7 +270,7 @@
   "choices": [
    "MAC addresses are global and cannot appear twice in the table",
    "The MAC table keeps entries per VLAN, so the same MAC can appear in different VLANs",
-   "MAC addresses in different VLANs must be unique across the switch",
+   "MAC addresses in different VLANs must be unique across the whole switch and the stack",
    "Only VLAN 1 entries age out"
   ],
   "answer": "B",
@@ -359,7 +359,7 @@
    "Drops the frame permanently",
    "Floods the frame until the destination replies and is relearned",
    "Sends a MAC request to the router",
-   "Uses the ARP table to find the port"
+   "Uses its ARP table to find the port where the destination last was"
   ],
   "answer": "B",
   "explanation": "After aging, the entry no longer exists, so the destination looks unknown. The frame is flooded. When the destination replies, the switch learns its MAC again.",
@@ -379,7 +379,7 @@
   "question": "Why does a switch never learn the MAC address FFFF.FFFF.FFFF?",
   "choices": [
    "It is a destination broadcast address and never appears as a source address",
-   "It is reserved for routers only",
+   "It is reserved for routers only, so every switch port filters it on arrival",
    "It is learned only on trunk ports",
    "It is learned only after DHCP completes"
   ],
@@ -425,7 +425,7 @@
    "Forwards it out Fa0/2",
    "Drops it",
    "Floods it out all VLAN 20 ports except Fa0/4",
-   "Forwards it out Fa0/1"
+   "Forwards it out Fa0/1 and also back out Fa0/4"
   ],
   "answer": "C",
   "explanation": "MAC lookups are performed per VLAN. The destination appears only in VLAN 10, so the lookup in VLAN 20 fails. The switch floods the frame within VLAN 20.",
@@ -444,7 +444,7 @@
   "difficulty": "어려움",
   "question": "Hosts connected to a switch complain about slow performance, and the switch output shows thousands of entries per second being added for random source MACs on one port. Which attack does this suggest?",
   "choices": [
-   "DHCP starvation only",
+   "DHCP starvation that exhausts the address pool",
    "MAC flooding (CAM table overflow)",
    "ARP poisoning only",
    "VLAN hopping"
@@ -466,8 +466,8 @@
   "difficulty": "어려움",
   "question": "PC-A is on Fa0/1 and PC-B on Fa0/2 in VLAN 10, and the switch has learned both. PC-B is then moved to Fa0/3 without sending any traffic, while the old entry has not aged. PC-A sends a frame to PC-B. What happens?",
   "choices": [
-   "The frame is sent out Fa0/2 and PC-B does not receive it until the entry ages or PC-B transmits",
-   "The frame is flooded because the switch detects the move",
+   "It goes out Fa0/2; PC-B misses it until the entry ages or PC-B sends",
+   "The frame is flooded because the switch detects that PC-B has moved",
    "The frame is delivered to Fa0/3 because ports are updated automatically",
    "The switch disables Fa0/2"
   ],
@@ -490,8 +490,8 @@
   "choices": [
    "The uplink never learns MAC addresses",
    "Only the switch's own MAC is stored on the uplink",
-   "Hosts behind a trunk are learned as static entries",
-   "MACs of hosts reachable through a downstream switch are learned on the uplink port"
+   "Hosts behind a trunk are learned as static entries on the uplink",
+   "Hosts behind a downstream switch are learned on the uplink port"
   ],
   "answer": "D",
   "explanation": "A switch learns all source MACs it sees on an interface, including those from hosts behind another switch. That is why trunk and uplink ports often show many MACs.",
@@ -511,8 +511,8 @@
   "question": "A switch's MAC table contains the following. Which action does the switch take for a frame sent from 0001.1111.1111 to 0003.3333.3333, which arrives on Fa0/1?\n\nVlan  Mac Address       Type     Ports\n1     0001.1111.1111    DYNAMIC  Fa0/1\n1     0002.2222.2222    DYNAMIC  Fa0/2\n1     0003.3333.3333    DYNAMIC  Fa0/1",
   "choices": [
    "Forwards it out Fa0/2",
-   "Floods it out all other ports",
-   "Filters (drops) the frame because the source and destination are on the same port",
+   "Floods it out all other ports in the VLAN because the MAC is unknown",
+   "Filters (drops) it, since source and destination are on one port",
    "Forwards it back out Fa0/1"
   ],
   "answer": "C",
@@ -535,7 +535,7 @@
    "The MAC is blocked on Fa0/5",
    "The MAC is permanently associated with Fa0/5 in VLAN 10 and does not age out",
    "Only frames from that MAC are allowed on Fa0/5",
-   "The MAC is learned dynamically on Fa0/5 for 300 seconds"
+   "The MAC is learned dynamically on Fa0/5 in VLAN 10 and ages out after 300 seconds"
   ],
   "answer": "B",
   "explanation": "The command creates a static entry. The switch forwards frames for that MAC out Fa0/5 in VLAN 10 and does not age the entry. It does not restrict which sources can use the port.",
@@ -554,8 +554,8 @@
   "difficulty": "어려움",
   "question": "A user reports that traffic from their PC reaches the server but replies are flooded to all ports, causing excess traffic. Which condition on the switch best explains this?",
   "choices": [
-   "The server MAC address has aged out or was never learned because the server does not send frames",
-   "The PC MAC is learned on the wrong port",
+   "The server MAC aged out or was never learned, since the server sends nothing",
+   "The PC's MAC address is learned on the wrong switch port, so the replies are flooded",
    "The VLAN is shut down",
    "The switch is in half duplex"
   ],
@@ -576,10 +576,10 @@
   "difficulty": "어려움",
   "question": "Which statement about the CAM table in a Layer 2 switch is correct?",
   "choices": [
-   "It stores IP routes learned by OSPF",
+   "It stores IP routes learned by OSPF in memory for fast hardware lookups",
    "It is cleared every time a port goes up",
    "It is configured manually for every host",
-   "It is stored in content-addressable memory for fast lookups of MAC addresses"
+   "It is held in content-addressable memory for fast MAC lookups"
   ],
   "answer": "D",
   "explanation": "The MAC address table is held in content-addressable memory for fast hardware lookup. It is filled dynamically. If a port goes down, the entries for that port are removed, but not the whole table.",
@@ -642,7 +642,7 @@
   "difficulty": "어려움",
   "question": "A switch has a port with the following output. Fa0/7 connects to a single PC and port security is not enabled. Which statement explains why three MAC addresses appear on Fa0/7?\n\nVlan  Mac Address       Type     Ports\n10    0010.AAAA.0001    DYNAMIC  Fa0/7\n10    0010.AAAA.0002    DYNAMIC  Fa0/7\n10    0010.AAAA.0003    DYNAMIC  Fa0/7",
   "choices": [
-   "Frames from several source MACs arrive on Fa0/7, for example from a hub, VMs or an attached device",
+   "Several source MACs arrive on Fa0/7, e.g. from a hub, VMs or a device",
    "The switch assigned three addresses to the port",
    "The port is configured as a static access port with three secondary MACs",
    "The PC has three IP addresses"

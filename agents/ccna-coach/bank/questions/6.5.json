@@ -114,8 +114,8 @@
   "difficulty": "쉬움",
   "question": "Which statement best describes REST?",
   "choices": [
-   "An architectural style for APIs that uses HTTP methods to work with resources",
-   "A routing protocol that exchanges prefixes",
+   "An API style that uses HTTP methods to work with resources",
+   "A routing protocol that exchanges prefixes between controllers",
    "A Layer 2 encapsulation for WAN links",
    "A command line interface for switches"
   ],
@@ -271,7 +271,7 @@
    "401 means the server crashed; 403 means the URL is wrong",
    "401 means success; 403 means redirect",
    "They are identical",
-   "401 means authentication is missing or invalid; 403 means the authenticated user lacks permission"
+   "401: authentication missing or invalid; 403: no permission"
   ],
   "answer": "D",
   "explanation": "A 401 response says the client has not provided valid credentials. A 403 response says the server knows who you are but you are not allowed to perform the action.",
@@ -291,7 +291,7 @@
   "question": "In the URL https://api.example.com/v1/devices?type=switch&limit=5, what is type=switch&limit=5 called?",
   "choices": [
    "The HTTP method",
-   "The status code",
+   "The resource path (endpoint)",
    "The query string (parameters)",
    "The request body"
   ],
@@ -299,7 +299,7 @@
   "explanation": "The part after the question mark carries query parameters that filter or limit the results. Here the client asks for switches and at most 5 results.",
   "option_notes": [
    "Wrong: the method is GET, POST and so on.",
-   "Wrong: this is in the response.",
+   "Wrong: The resource path is /v1/devices, the part before the question mark.",
    "Correct: it follows the question mark.",
    "Wrong: this is not part of the URL."
   ],
@@ -312,7 +312,7 @@
   "difficulty": "보통",
   "question": "Which header tells the server that the body of a request is JSON?",
   "choices": [
-   "Accept: text/html",
+   "Accept: application/json; charset=utf-8",
    "Content-Type: application/json",
    "Host: localhost",
    "Connection: close"
@@ -356,7 +356,7 @@
   "difficulty": "보통",
   "question": "What does it mean that REST is stateless?",
   "choices": [
-   "Each request contains all the information the server needs, and the server stores no client session between requests",
+   "Each request carries all needed info; the server keeps no client session",
    "The API never returns a status code",
    "The server cannot store any data",
    "The client must stay connected with a single TCP session forever"
@@ -378,7 +378,7 @@
   "difficulty": "보통",
   "question": "Which statement about the GET method is correct?",
   "choices": [
-   "It is used to delete resources",
+   "It is used to delete resources that are no longer needed",
    "It always requires a JSON body",
    "It creates a new resource each time",
    "It should only retrieve data and not change the resource"
@@ -467,7 +467,7 @@
   "question": "An engineer sends the same PUT request twice with identical data. Which statement describes the expected result?",
   "choices": [
    "The resource ends up in the same state, because PUT is idempotent",
-   "Two copies of the resource are created",
+   "Two copies of the resource are created, one for each request",
    "The resource is deleted on the second request",
    "The server must reject the second request"
   ],
@@ -554,8 +554,8 @@
   "difficulty": "어려움",
   "question": "A REST API returns 503 Service Unavailable. Which statement is correct?",
   "choices": [
-   "The client credentials are wrong",
-   "The server is temporarily unable to handle the request, so retrying later may work",
+   "The client credentials are wrong, or the client's token has already expired",
+   "The server is temporarily unable to respond; retrying later may work",
    "The resource was created",
    "The URL was permanently moved"
   ],
@@ -576,7 +576,7 @@
   "difficulty": "어려움",
   "question": "A response body contains {\"id\": 7} and the header Content-Type: application/xml. What problem would a JSON parser have?",
   "choices": [
-   "The declared type is XML, but the body is JSON, so the format is inconsistent",
+   "The header declares XML, but the body is JSON",
    "The JSON is invalid because it uses braces",
    "The id key must be a string",
    "There is no problem at all"
@@ -598,7 +598,7 @@
   "difficulty": "어려움",
   "question": "Which request correctly uses REST principles to update the hostname of device 42 to \"SW9\" by replacing the full resource?",
   "choices": [
-   "GET /api/v1/devices/42 with a JSON body",
+   "GET /api/v1/devices/42 with a JSON body that holds the new name",
    "DELETE /api/v1/devices/42 with a JSON body",
    "POST /api/v1/devices/42/delete",
    "PUT /api/v1/devices/42 with a JSON body of the full device"
@@ -620,7 +620,7 @@
   "difficulty": "어려움",
   "question": "What is the main advantage of a REST API on Catalyst Center or a similar controller for an engineer?",
   "choices": [
-   "It removes the need for authentication",
+   "It removes the need for any authentication or user accounts",
    "It works only with a console cable",
    "It only works when the controller is offline",
    "A script can automate tasks by sending standard HTTP requests"
@@ -643,7 +643,7 @@
   "question": "A client sends GET /api/v1/devices with Accept: application/json and gets a 406 Not Acceptable response. What does this suggest?",
   "choices": [
    "The server could not be reached",
-   "The request used the wrong method",
+   "The request used the wrong HTTP method for that resource",
    "The server cannot return the data in the requested format",
    "The token expired"
   ],

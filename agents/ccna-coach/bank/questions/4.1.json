@@ -5,7 +5,7 @@
   "question": "What is the main purpose of NAT on an enterprise edge router?",
   "choices": [
    "To translate private IPv4 addresses to public IPv4 addresses",
-   "To assign IP addresses to hosts automatically",
+   "To assign private IP addresses to the inside hosts automatically",
    "To encrypt traffic between two sites",
    "To prevent Layer 2 loops"
   ],
@@ -73,7 +73,7 @@
    "A mapping that is removed after an idle timeout",
    "Many inside hosts sharing one public address using different port numbers",
    "A temporary mapping chosen from a pool of public addresses",
-   "A permanent one-to-one mapping between an inside local address and an inside global address"
+   "A permanent one-to-one mapping of an inside local to an inside global"
   ],
   "answer": "D",
   "explanation": "Static NAT is a manually configured one-to-one mapping that stays in the translation table until removed. It is typically used for servers that must be reachable from the outside. Dynamic NAT uses a pool and PAT uses ports.",
@@ -334,7 +334,7 @@
   "difficulty": "보통",
   "question": "What is the role of the access list in the command ip nat inside source list 10 pool PUBLIC?",
   "choices": [
-   "It defines the public addresses to use",
+   "It defines which public addresses the pool PUBLIC can hand out to hosts",
    "It blocks traffic from the Internet",
    "It identifies which inside source addresses are eligible for translation",
    "It filters packets entering the outside interface"
@@ -466,7 +466,7 @@
   "difficulty": "어려움",
   "question": "PAT is configured to translate hosts in 192.168.10.0/24 but show ip nat translations is empty. The ACL is:\n\naccess-list 5 permit 192.168.1.0 0.0.0.255\n\nWhich statement explains the problem?",
   "choices": [
-   "The ACL must be an extended ACL",
+   "The ACL must be an extended ACL so that it can match the host subnet",
    "The ACL permits 192.168.1.0/24, which does not match the host subnet",
    "The ACL must be applied to the outside interface",
    "The ACL wildcard mask should be 255.255.255.0"
@@ -488,8 +488,8 @@
   "difficulty": "어려움",
   "question": "A router is configured with ip nat inside source list 1 pool PUBLIC overload and the pool has two addresses. What is the effect of the overload keyword?",
   "choices": [
-   "Many inside hosts can share the pool addresses by using unique port numbers",
-   "Traffic is load balanced across the two ISPs",
+   "Many inside hosts share the pool addresses using unique ports",
+   "Traffic is load balanced across the two ISPs by the pool addresses",
    "Each inside host gets its own pool address and ports are ignored",
    "Only two inside hosts can be translated at one time"
   ],
@@ -508,11 +508,11 @@
  {
   "sub": "4.1",
   "difficulty": "어려움",
-  "question": "Refer to the output.\n\nRouter# show ip nat translations\nPro Inside global     Inside local      Outside local     Outside global\n--- 203.0.113.10      10.1.1.10         ---               ---\n\nWhich statement is true about this entry?",
+  "question": "Refer to the output.\n\nRouter# show ip nat translations\nPro Inside global     Inside local      Outside local     Outside global\n--- 203.0.113.10      10.1.1.10         ---               ---\n\nThe entry is still in the table after a week with no traffic from 10.1.1.10. Which statement is true about this entry?",
   "choices": [
-   "It will be removed automatically after the idle timer expires",
+   "It will be removed automatically after the translation idle timer expires",
    "It is a PAT entry created by an active TCP session",
-   "It is a simple one-to-one translation without port information, such as a static NAT entry",
+   "A one-to-one translation without ports, such as a static NAT entry",
    "It is an outside NAT translation"
   ],
   "answer": "C",
@@ -556,7 +556,7 @@
   "choices": [
    "The source IP address and source port",
    "The destination IP address and destination port",
-   "Only the destination IP address",
+   "Only the destination IP address, never the port number",
    "Only the source port"
   ],
   "answer": "B",
@@ -598,7 +598,7 @@
   "difficulty": "어려움",
   "question": "Why would an engineer configure PAT with the interface keyword instead of a pool when the outside interface gets its address through DHCP from the ISP?",
   "choices": [
-   "The interface keyword disables the need for an ACL",
+   "The interface keyword removes the need for an ACL to select the inside hosts",
    "The translation follows the interface address even if the ISP changes it",
    "A pool cannot use overload",
    "The interface keyword enables more than 65,535 sessions"
@@ -644,7 +644,7 @@
   "choices": [
    "The outside local address is 10.1.1.5",
    "The outside local address is translated to a private address",
-   "The outside global address is 203.0.113.1",
+   "The outside global address is 203.0.113.1, which is the router's public IP",
    "The outside local and outside global addresses are the same, 198.51.100.7"
   ],
   "answer": "D",

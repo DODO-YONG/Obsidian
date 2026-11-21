@@ -4,7 +4,7 @@
   "difficulty": "쉬움",
   "question": "What is the main purpose of a First Hop Redundancy Protocol (FHRP)?",
   "choices": [
-   "Prevent Layer 2 loops",
+   "Prevent Layer 2 loops between distribution switches",
    "Provide a redundant default gateway for hosts",
    "Translate private addresses",
    "Assign IP addresses to hosts"
@@ -312,7 +312,7 @@
   "difficulty": "보통",
   "question": "Refer to the output. Which router is currently forwarding traffic for the virtual IP?\n\nR1# show standby brief\nInterface Grp Pri P State   Active  Standby  Virtual IP\nGi0/0     1   100   Standby 10.1.1.3 local   10.1.1.1",
   "choices": [
-   "R1",
+   "R1, the router running the command",
    "Both routers",
    "No router",
    "The router with address 10.1.1.3"
@@ -379,7 +379,7 @@
   "question": "Which statement about HSRP election is correct when priorities are equal?",
   "choices": [
    "The router with the highest IP address on the interface becomes active",
-   "The router with the lowest IP address becomes active",
+   "The router with the lowest IP address on its interface becomes the active one",
    "The router that boots last becomes active",
    "The router with the lowest MAC address becomes active"
   ],
@@ -466,8 +466,8 @@
   "difficulty": "어려움",
   "question": "Two routers are configured for HSRP group 1 on the same VLAN but both show Active. What is the most likely cause?",
   "choices": [
-   "They cannot see each other's Hello messages, for example due to a Layer 2 problem",
-   "They use different priorities",
+   "They cannot hear each other's Hellos, for example due to a Layer 2 issue",
+   "They use different priorities, so each router claims the active role itself",
    "They use the same virtual IP",
    "They have the same hello interval"
   ],
@@ -488,7 +488,7 @@
   "difficulty": "어려움",
   "question": "A router interface is configured with ip address 10.1.1.2 255.255.255.0 and standby 1 ip 10.1.2.1. What is the problem?",
   "choices": [
-   "HSRP needs OSPF",
+   "HSRP needs a routing protocol such as OSPF running on the interface",
    "The group number must be 0",
    "The router needs two interfaces",
    "The virtual IP is not in the same subnet as the interface address"
@@ -535,7 +535,7 @@
    "It sends a DHCP request",
    "It becomes active and takes over the virtual IP and MAC address",
    "It shuts down its interface",
-   "It elects a new DR"
+   "It starts an election for a new DR and BDR on the LAN segment instead"
   ],
   "answer": "B",
   "explanation": "The hold time (10 seconds by default) is the time the standby router waits without Hellos before concluding that the active router has failed. It then starts using the virtual MAC and IP address.",
@@ -598,7 +598,7 @@
   "difficulty": "어려움",
   "question": "Which statement describes why FHRPs use a virtual MAC address along with a virtual IP?",
   "choices": [
-   "It allows routers to route without IP",
+   "It allows the routers to forward traffic without using any IP addresses",
    "It reduces the Hello timers",
    "Hosts keep their ARP cache entry for the gateway valid after a failover",
    "It prevents VLANs from being created"
@@ -658,5 +658,555 @@
   "key_concept": "HSRPv1 AC01, HSRPv2 F001, VRRP 5E.",
   "cli_example": "interface g0/0\n standby version 2\n standby 1 ip 10.1.1.1",
   "tip": "Version 2 also supports IPv6."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "쉬움",
+  "question": "Hosts use one router as their only default gateway, and no FHRP is used. What happens when that router fails?",
+  "choices": [
+   "Hosts lose access to other subnets",
+   "Hosts switch to another gateway automatically",
+   "Hosts use ARP to find a new gateway",
+   "Hosts keep working through the switch"
+  ],
+  "answer": "A",
+  "explanation": "Hosts have one static default gateway. If it fails and nothing takes over its address, traffic to other subnets stops.",
+  "option_notes": [
+   "Correct: No FHRP = single point of failure.",
+   "Wrong: Hosts do not choose a new gateway on their own.",
+   "Wrong: ARP only resolves the configured gateway's MAC.",
+   "Wrong: Switches do not route to other subnets."
+  ],
+  "key_concept": "Default gateway = single point of failure.",
+  "cli_example": "ipconfig",
+  "tip": "One gateway, one weak spot."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "쉬움",
+  "question": "Which problem does an FHRP solve?",
+  "choices": [
+   "Default gateway redundancy for hosts",
+   "Loop prevention between switches",
+   "Fast convergence of OSPF routes",
+   "Load balancing between ISPs"
+  ],
+  "answer": "A",
+  "explanation": "An FHRP lets several routers share a virtual gateway address so hosts keep a working gateway if one router fails.",
+  "option_notes": [
+   "Correct: FHRP = gateway redundancy.",
+   "Wrong: STP prevents switching loops.",
+   "Wrong: OSPF convergence is a routing topic.",
+   "Wrong: ISP load balancing is done by routing."
+  ],
+  "key_concept": "First hop = the host's gateway.",
+  "cli_example": "show standby brief",
+  "tip": "Back up the first hop."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "쉬움",
+  "question": "What must be configured on hosts to use an FHRP?",
+  "choices": [
+   "Only the virtual IP as their gateway",
+   "An FHRP client on each host",
+   "Both routers' real IPs as gateways",
+   "A routing protocol on each host"
+  ],
+  "answer": "A",
+  "explanation": "FHRPs are transparent to hosts. Hosts just use the virtual IP as a normal default gateway.",
+  "option_notes": [
+   "Correct: Hosts need only the virtual gateway IP.",
+   "Wrong: No special client is needed.",
+   "Wrong: Hosts point to the virtual IP, not real IPs.",
+   "Wrong: Hosts do not run routing protocols."
+  ],
+  "key_concept": "FHRP is invisible to hosts.",
+  "cli_example": "ipconfig /all",
+  "tip": "Hosts don't even know."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "쉬움",
+  "question": "Which vendor created GLBP?",
+  "choices": [
+   "Cisco",
+   "IETF",
+   "IEEE",
+   "Juniper"
+  ],
+  "answer": "A",
+  "explanation": "GLBP and HSRP are Cisco proprietary. VRRP is the IETF open standard.",
+  "option_notes": [
+   "Correct: GLBP is Cisco proprietary.",
+   "Wrong: IETF created VRRP.",
+   "Wrong: IEEE did not create FHRPs.",
+   "Wrong: Juniper did not create GLBP."
+  ],
+  "key_concept": "Cisco: HSRP, GLBP. Open: VRRP.",
+  "cli_example": "show glbp brief",
+  "tip": "G and H are Cisco's."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "쉬움",
+  "question": "How many routers in one HSRP group forward traffic for the virtual IP at a time?",
+  "choices": [
+   "One, the active router",
+   "Every router in the group",
+   "Two, active and standby",
+   "None; hosts choose"
+  ],
+  "answer": "A",
+  "explanation": "In HSRP only the active router forwards traffic sent to the virtual IP. The standby waits to take over.",
+  "option_notes": [
+   "Correct: Only the active router forwards.",
+   "Wrong: The other routers wait.",
+   "Wrong: The standby does not forward.",
+   "Wrong: The active router forwards."
+  ],
+  "key_concept": "HSRP = one active, one standby.",
+  "cli_example": "show standby brief",
+  "tip": "Active works, standby watches."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "쉬움",
+  "question": "Why do hosts not need to change anything after an FHRP failover?",
+  "choices": [
+   "The virtual IP and virtual MAC stay the same",
+   "Hosts get a new gateway from DHCP",
+   "The switch rewrites the gateway address",
+   "The routers send new routes to hosts"
+  ],
+  "answer": "A",
+  "explanation": "The new active router takes over the same virtual IP and virtual MAC, so the hosts' gateway and ARP entry stay valid.",
+  "option_notes": [
+   "Correct: Same virtual IP and MAC.",
+   "Wrong: DHCP is not involved.",
+   "Wrong: Switches do not rewrite addresses.",
+   "Wrong: Hosts do not receive routes."
+  ],
+  "key_concept": "Virtual IP + virtual MAC = no host change.",
+  "cli_example": "show ip arp",
+  "tip": "Same address, new router behind it."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "쉬움",
+  "question": "What is the default VRRP priority?",
+  "choices": [
+   "100",
+   "1",
+   "255",
+   "0"
+  ],
+  "answer": "A",
+  "explanation": "VRRP routers have priority 100 by default. 255 is reserved for the address owner.",
+  "option_notes": [
+   "Correct: Default priority is 100.",
+   "Wrong: 1 is not the default.",
+   "Wrong: 255 is for the address owner.",
+   "Wrong: 0 signals that the master is leaving."
+  ],
+  "key_concept": "HSRP and VRRP both default to 100.",
+  "cli_example": "show vrrp brief",
+  "tip": "100 is normal."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "쉬움",
+  "question": "Which devices usually run an FHRP?",
+  "choices": [
+   "Two routers or L3 switches on the same LAN",
+   "The end hosts on the LAN, each running the FHRP client",
+   "The DHCP server for the LAN",
+   "A single access-layer L2 switch"
+  ],
+  "answer": "A",
+  "explanation": "The gateway devices for a subnet run the FHRP together. Often these are two distribution-layer L3 switches.",
+  "option_notes": [
+   "Correct: Gateway devices share the virtual IP.",
+   "Wrong: Hosts only use the virtual IP.",
+   "Wrong: DHCP servers do not run FHRPs.",
+   "Wrong: A single L2 switch is not a gateway."
+  ],
+  "key_concept": "FHRP runs between the gateways.",
+  "cli_example": "show standby",
+  "tip": "Two gateways, one virtual address."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "보통",
+  "question": "Which HSRP version supports IPv6?",
+  "choices": [
+   "HSRP version 2",
+   "HSRP version 1",
+   "Both versions",
+   "Neither; IPv6 uses only VRRP"
+  ],
+  "answer": "A",
+  "explanation": "HSRPv2 adds IPv6 support and a larger group range. HSRPv1 is IPv4 only.",
+  "option_notes": [
+   "Correct: HSRPv2 supports IPv6.",
+   "Wrong: HSRPv1 is IPv4 only.",
+   "Wrong: Only version 2 supports it.",
+   "Wrong: HSRPv2 does support IPv6."
+  ],
+  "key_concept": "Use standby version 2 for IPv6.",
+  "cli_example": "show standby",
+  "tip": "Version 2 for the new protocol."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "보통",
+  "question": "To which address are HSRP version 1 Hellos sent?",
+  "choices": [
+   "224.0.0.2",
+   "224.0.0.5",
+   "224.0.0.18",
+   "224.0.0.102"
+  ],
+  "answer": "A",
+  "explanation": "HSRPv1 uses 224.0.0.2 (all routers). HSRPv2 uses 224.0.0.102 and VRRP uses 224.0.0.18.",
+  "option_notes": [
+   "Correct: HSRPv1 = 224.0.0.2.",
+   "Wrong: 224.0.0.5 is OSPF.",
+   "Wrong: 224.0.0.18 is VRRP.",
+   "Wrong: 224.0.0.102 is HSRPv2."
+  ],
+  "key_concept": "HSRPv1 .2, HSRPv2 .102, VRRP .18.",
+  "cli_example": "show standby",
+  "tip": "v1 uses .2."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "보통",
+  "question": "Which virtual MAC format does VRRP use for IPv4?",
+  "choices": [
+   "0000.5E00.01xx",
+   "0000.0C07.ACxx",
+   "0000.0C9F.Fxxx",
+   "0007.B400.xxxx"
+  ],
+  "answer": "A",
+  "explanation": "VRRP uses 0000.5E00.01xx, where xx is the group number in hex. 0000.0C07.ACxx is HSRPv1 and 0000.0C9F.Fxxx is HSRPv2.",
+  "option_notes": [
+   "Correct: VRRP = 0000.5E00.01xx.",
+   "Wrong: That is HSRPv1.",
+   "Wrong: That is HSRPv2.",
+   "Wrong: That is GLBP."
+  ],
+  "key_concept": "Virtual MAC shows which FHRP is in use.",
+  "cli_example": "show vrrp",
+  "tip": "5E = VRRP."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "보통",
+  "question": "Which FHRP lets the virtual IP be the same as a router's real interface IP?",
+  "choices": [
+   "VRRP",
+   "HSRP",
+   "GLBP",
+   "None of them"
+  ],
+  "answer": "A",
+  "explanation": "VRRP allows the virtual IP to match a router's real address. That router is the address owner.",
+  "option_notes": [
+   "Correct: VRRP allows an address owner.",
+   "Wrong: HSRP needs a separate virtual IP.",
+   "Wrong: GLBP needs a separate virtual IP.",
+   "Wrong: VRRP allows it."
+  ],
+  "key_concept": "VRRP address owner = priority 255.",
+  "cli_example": "show vrrp",
+  "tip": "VRRP can reuse a real IP."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "보통",
+  "question": "Which statement about preemption defaults is true?",
+  "choices": [
+   "VRRP preempts by default; HSRP does not",
+   "HSRP preempts by default; VRRP does not",
+   "Both preempt by default",
+   "Neither preempts by default"
+  ],
+  "answer": "A",
+  "explanation": "VRRP has preemption on by default. HSRP needs the standby preempt command.",
+  "option_notes": [
+   "Correct: VRRP on, HSRP off by default.",
+   "Wrong: The defaults are reversed.",
+   "Wrong: HSRP does not preempt by default.",
+   "Wrong: VRRP does preempt by default."
+  ],
+  "key_concept": "HSRP: add 'standby preempt.'",
+  "cli_example": "show standby",
+  "tip": "VRRP takes back; HSRP waits."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "보통",
+  "question": "How can two HSRP routers share the load across VLAN 10 and VLAN 20?",
+  "choices": [
+   "Make R1 active for VLAN 10 and R2 for VLAN 20",
+   "Make both routers active in each VLAN",
+   "Give both routers the same priority",
+   "Use one HSRP group for both VLANs"
+  ],
+  "answer": "A",
+  "explanation": "Each VLAN has its own HSRP group. Giving each router the higher priority in a different VLAN spreads the traffic.",
+  "option_notes": [
+   "Correct: One active router per VLAN, split across routers.",
+   "Wrong: HSRP has only one active router per group.",
+   "Wrong: Equal priority still gives one active router.",
+   "Wrong: Groups are per VLAN interface."
+  ],
+  "key_concept": "Load share by VLAN with HSRP.",
+  "cli_example": "show standby brief",
+  "tip": "Split the VLANs between the routers."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "보통",
+  "question": "Refer to the output on R2. Which statement is true?\n\nInterface  Grp  Pri  P  State    Active     Standby    Virtual IP\nVl10       10   90   P  Standby  10.1.10.2  local      10.1.10.1\nVl20       20   110  P  Active   local      10.1.20.2  10.1.20.1",
+  "choices": [
+   "R2 forwards VLAN 20; another router forwards VLAN 10",
+   "R2 forwards traffic for both VLANs",
+   "R2 forwards VLAN 10; another router forwards VLAN 20",
+   "Neither group has an active router"
+  ],
+  "answer": "A",
+  "explanation": "For VLAN 20, R2 is Active ('local'). For VLAN 10, R2 is Standby and the active router is 10.1.10.2.",
+  "option_notes": [
+   "Correct: R2 is active only for VLAN 20.",
+   "Wrong: R2 is standby for VLAN 10.",
+   "Wrong: The roles are reversed.",
+   "Wrong: Each group has an active router."
+  ],
+  "key_concept": "show standby brief: 'local' = this router.",
+  "cli_example": "show standby brief",
+  "tip": "Read the State column per VLAN."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "보통",
+  "question": "Refer to the output. Which default gateway should DHCP give to hosts in VLAN 10?\n\nInterface  Grp  Pri  P  State    Active     Standby    Virtual IP\nVl10       10   90   P  Standby  10.1.10.2  local      10.1.10.1\nVl20       20   110  P  Active   local      10.1.20.2  10.1.20.1",
+  "choices": [
+   "10.1.10.1",
+   "10.1.10.2",
+   "10.1.20.1",
+   "R2's own VLAN 10 address"
+  ],
+  "answer": "A",
+  "explanation": "Hosts must use the virtual IP so they keep working if a router fails. For VLAN 10 that is 10.1.10.1.",
+  "option_notes": [
+   "Correct: Use the virtual IP.",
+   "Wrong: 10.1.10.2 is the current active router's real IP.",
+   "Wrong: 10.1.20.1 is for VLAN 20.",
+   "Wrong: Real IPs do not fail over."
+  ],
+  "key_concept": "Gateway = virtual IP, never a real IP.",
+  "cli_example": "show standby brief",
+  "tip": "Point hosts at the virtual address."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "보통",
+  "question": "What group number range does HSRP version 2 support?",
+  "choices": [
+   "0 to 4095",
+   "0 to 255",
+   "1 to 1024",
+   "0 to 65535"
+  ],
+  "answer": "A",
+  "explanation": "HSRPv1 groups range from 0 to 255. HSRPv2 extends this to 0-4095, which can match VLAN IDs.",
+  "option_notes": [
+   "Correct: v2 = 0-4095.",
+   "Wrong: That is the v1 range.",
+   "Wrong: Not an HSRP range.",
+   "Wrong: Not an HSRP range."
+  ],
+  "key_concept": "v2 group numbers can match VLAN numbers.",
+  "cli_example": "show standby",
+  "tip": "4095 like VLANs."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "어려움",
+  "question": "The HSRP active router loses power. With default timers, about how long until the standby takes over?",
+  "choices": [
+   "Up to about 10 seconds",
+   "About 3 seconds",
+   "About 40 seconds",
+   "Immediately"
+  ],
+  "answer": "A",
+  "explanation": "HSRP Hellos are sent every 3 seconds and the hold time is 10 seconds. The standby takes over when the hold timer expires.",
+  "option_notes": [
+   "Correct: Hold time 10 s.",
+   "Wrong: 3 s is the Hello interval.",
+   "Wrong: 40 s is OSPF's Dead timer.",
+   "Wrong: The standby must wait for the hold timer."
+  ],
+  "key_concept": "HSRP Hello 3 / Hold 10.",
+  "cli_example": "show standby",
+  "tip": "Three to say hello, ten to give up."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "어려움",
+  "question": "R1 is HSRP active with priority 120 and preempt, and tracks its uplink with decrement 10. R2 has priority 100 with preempt. R1's uplink fails. What happens?",
+  "choices": [
+   "R1 stays active at 110; traffic hits a dead uplink",
+   "R2 becomes active because R1's priority dropped below it",
+   "Both routers become active",
+   "R1 shuts its LAN interface"
+  ],
+  "answer": "A",
+  "explanation": "120 - 10 = 110, which is still higher than R2's 100. R1 stays active even without its uplink. The decrement must bring R1 below 100.",
+  "option_notes": [
+   "Correct: 110 > 100, so no failover.",
+   "Wrong: R1's priority is still higher.",
+   "Wrong: Only one router is active.",
+   "Wrong: Tracking only changes priority."
+  ],
+  "key_concept": "Decrement must push priority below the standby.",
+  "cli_example": "show standby",
+  "tip": "Drop enough to lose the election."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "어려움",
+  "question": "Hosts use R1's real IP 10.1.1.2 as their gateway instead of the HSRP virtual IP 10.1.1.1. R1 fails. What happens?",
+  "choices": [
+   "Hosts lose off-subnet access despite HSRP",
+   "R2 takes over 10.1.1.2 automatically",
+   "Hosts switch to the virtual IP",
+   "The switch forwards to R2 instead"
+  ],
+  "answer": "A",
+  "explanation": "HSRP protects only the virtual IP. R2 does not take over R1's real address, so hosts pointing to it lose their gateway.",
+  "option_notes": [
+   "Correct: Only the virtual IP fails over.",
+   "Wrong: Real IPs are not shared.",
+   "Wrong: Hosts do not change gateways by themselves.",
+   "Wrong: Switches forward by MAC, not by gateway choice."
+  ],
+  "key_concept": "Hosts must use the virtual IP.",
+  "cli_example": "ipconfig",
+  "tip": "Wrong gateway = no protection."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "어려움",
+  "question": "How does GLBP share traffic between routers while hosts use one virtual IP?",
+  "choices": [
+   "The AVG answers ARP with different AVF MACs",
+   "Each router answers with its real MAC",
+   "Hosts are given different virtual IPs",
+   "Routers take turns being active each minute"
+  ],
+  "answer": "A",
+  "explanation": "The Active Virtual Gateway replies to ARP requests with different virtual MAC addresses, each belonging to an Active Virtual Forwarder.",
+  "option_notes": [
+   "Correct: Different virtual MACs spread the hosts.",
+   "Wrong: GLBP uses virtual MACs.",
+   "Wrong: All hosts use the same virtual IP.",
+   "Wrong: GLBP does not rotate the active role over time."
+  ],
+  "key_concept": "GLBP: one IP, many virtual MACs.",
+  "cli_example": "show glbp brief",
+  "tip": "Same gateway, different MACs."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "어려움",
+  "question": "After an HSRP failover, how do the LAN switches learn the new port for the virtual MAC?",
+  "choices": [
+   "The new active router sends gratuitous ARP",
+   "Hosts send new ARP requests every second",
+   "STP recalculates the topology",
+   "The old active router tells the switches"
+  ],
+  "answer": "A",
+  "explanation": "The new active router sends a gratuitous ARP from the virtual MAC, so switches update their MAC tables right away.",
+  "option_notes": [
+   "Correct: Gratuitous ARP updates MAC tables.",
+   "Wrong: Hosts keep their ARP entries.",
+   "Wrong: STP does not move MAC entries.",
+   "Wrong: The old active router may be down."
+  ],
+  "key_concept": "Gratuitous ARP moves the virtual MAC.",
+  "cli_example": "show mac address-table",
+  "tip": "The new router announces itself."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "어려움",
+  "question": "R1 uses HSRP version 1 and R2 uses HSRP version 2 for the same group and virtual IP. What is the result?",
+  "choices": [
+   "They do not see each other; both may go active",
+   "R2 drops to version 1 automatically",
+   "They share the load equally",
+   "R1 upgrades to version 2 automatically"
+  ],
+  "answer": "A",
+  "explanation": "The versions use different multicast addresses and packet formats, so the routers do not hear each other. Each may become active, causing conflicts.",
+  "option_notes": [
+   "Correct: Version mismatch = no communication.",
+   "Wrong: Versions are not negotiated.",
+   "Wrong: They do not cooperate at all.",
+   "Wrong: Versions are not negotiated."
+  ],
+  "key_concept": "Versions must match.",
+  "cli_example": "show standby",
+  "tip": "Two languages, no conversation."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "어려움",
+  "question": "Why use an FHRP for IPv6 hosts that can already learn several routers from Router Advertisements?",
+  "choices": [
+   "An FHRP fails over faster and in a controlled way",
+   "IPv6 hosts cannot use Router Advertisements to find gateways",
+   "RAs work only with HSRP version 1",
+   "IPv6 hosts need a static gateway"
+  ],
+  "answer": "A",
+  "explanation": "IPv6 hosts can learn gateways from RAs, but noticing a dead router can take a long time. An FHRP such as HSRPv2 or VRRPv3 gives quicker, predictable failover.",
+  "option_notes": [
+   "Correct: FHRPs give faster and controlled failover.",
+   "Wrong: IPv6 hosts do learn gateways from RAs.",
+   "Wrong: RAs are part of IPv6, not HSRP.",
+   "Wrong: IPv6 hosts often learn gateways automatically."
+  ],
+  "key_concept": "RA gives a gateway; FHRP gives fast failover.",
+  "cli_example": "show standby",
+  "tip": "RAs work, FHRP works faster."
+ },
+ {
+  "sub": "3.5",
+  "difficulty": "어려움",
+  "question": "R1's interface IP is 10.1.1.1, and the VRRP virtual IP is also 10.1.1.1. Which statement is true?",
+  "choices": [
+   "R1 owns it, has priority 255 and is master",
+   "R1 must use a different virtual IP",
+   "R1 can only be backup for its own IP",
+   "VRRP will refuse to start on R1"
+  ],
+  "answer": "A",
+  "explanation": "In VRRP, a router whose real IP equals the virtual IP is the address owner. It gets priority 255 and becomes master whenever it is up.",
+  "option_notes": [
+   "Correct: Address owner = priority 255 = master.",
+   "Wrong: VRRP allows this.",
+   "Wrong: The owner is always master when up.",
+   "Wrong: VRRP supports address owners."
+  ],
+  "key_concept": "VRRP owner always wins.",
+  "cli_example": "show vrrp",
+  "tip": "Own the address, own the role."
  }
 ]

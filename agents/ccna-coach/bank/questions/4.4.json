@@ -224,7 +224,7 @@
   "difficulty": "보통",
   "question": "Why are SNMPv1 and SNMPv2c considered insecure?",
   "choices": [
-   "They use TCP port 161",
+   "They use TCP port 161, which anyone can scan",
    "They do not support traps",
    "Community strings are sent in clear text",
    "They require telnet access"
@@ -246,7 +246,7 @@
   "difficulty": "보통",
   "question": "What is the difference between an SNMP trap and an SNMP inform?",
   "choices": [
-   "A trap is acknowledged; an inform is not",
+   "A trap is acknowledged by the manager; an inform is not",
    "Traps use TCP; informs use UDP",
    "Traps are sent by managers; informs by agents",
    "An inform is acknowledged by the manager; a trap is not"
@@ -312,7 +312,7 @@
   "difficulty": "보통",
   "question": "What does this command do?\nsnmp-server host 10.1.1.100 traps version 2c Cisco123",
   "choices": [
-   "It lets 10.1.1.100 poll the router with Get requests",
+   "It lets 10.1.1.100 poll the router with Get requests using Cisco123",
    "It enables SNMPv3 for 10.1.1.100",
    "It sends traps to 10.1.1.100 using SNMPv2c and community Cisco123",
    "It blocks SNMP traffic from 10.1.1.100"
@@ -357,7 +357,7 @@
   "question": "What risk does configuring snmp-server community Cisco123 rw introduce?",
   "choices": [
    "Anyone who knows the string can change device configuration over SNMP",
-   "The device can no longer send traps",
+   "The device can no longer send traps, because the rw keyword disables trap sending",
    "SNMP switches to TCP",
    "Syslog messages stop"
   ],
@@ -400,7 +400,7 @@
   "difficulty": "보통",
   "question": "Which device runs the SNMP agent?",
   "choices": [
-   "The network management station only",
+   "The network management station (NMS) that polls devices",
    "The DHCP server only",
    "The managed device such as a router or switch",
    "The end user's web browser"
@@ -422,7 +422,7 @@
   "difficulty": "보통",
   "question": "What is the purpose of the commands snmp-server location and snmp-server contact?",
   "choices": [
-   "They restrict which hosts can poll the device",
+   "They restrict which management hosts are allowed to poll the device",
    "They enable SNMPv3",
    "They configure the trap destination",
    "They store descriptive information readable through SNMP"
@@ -488,7 +488,7 @@
   "difficulty": "어려움",
   "question": "An administrator configures SNMPv3 on a router. Which sequence is the correct logical order?",
   "choices": [
-   "Create a user, then create a community string",
+   "Create a user first, then create a community string for that user",
    "Create a trap host, then create an OID",
    "Create a group, then create a user that belongs to the group",
    "Enable SNMP traps only"
@@ -534,7 +534,7 @@
   "choices": [
    "It names ACL 10, which limits which hosts may use the community",
    "It sets the SNMP version to 10",
-   "It sets the polling interval to 10 seconds",
+   "It sets the minimum polling interval for this community to 10 seconds",
    "It sets the trap queue length to 10"
   ],
   "answer": "A",
@@ -554,7 +554,7 @@
   "difficulty": "어려움",
   "question": "Which statement about informs compared with traps is true?",
   "choices": [
-   "Informs are faster because they use TCP",
+   "Informs are faster than traps, because they are sent with TCP instead of UDP",
    "Informs use more memory because the agent keeps them until acknowledged",
    "Informs work only in SNMPv1",
    "Informs are never retransmitted"
@@ -600,7 +600,7 @@
   "choices": [
    "The router lacks a MIB",
    "The device has no IP address",
-   "SNMPv3 encryption failed",
+   "SNMPv3 encryption failed for the manager's requests",
    "A manager is using an incorrect community string"
   ],
   "answer": "D",

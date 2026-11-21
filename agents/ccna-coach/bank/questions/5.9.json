@@ -137,7 +137,7 @@
   "question": "Why is disabling SSID broadcast not considered a strong security measure?",
   "choices": [
    "The SSID is still visible in management frames and easily discovered",
-   "It encrypts the network",
+   "It encrypts the network name so that attackers cannot read or find it",
    "It blocks all clients",
    "It changes the channel"
   ],
@@ -159,7 +159,7 @@
   "question": "What protects data when a wireless network uses Open Authentication?",
   "choices": [
    "Nothing, traffic is not encrypted",
-   "AES",
+   "AES-CCMP encryption with a shared key",
    "WPA2",
    "SAE"
   ],
@@ -167,7 +167,7 @@
   "explanation": "Open authentication has no password and no encryption at the 802.11 layer.",
   "option_notes": [
    "Correct: No protection.",
-   "Wrong: AES is not applied.",
+   "Wrong: Open authentication applies no encryption at all.",
    "Wrong: WPA2 is not used.",
    "Wrong: SAE is WPA3."
   ],
@@ -225,7 +225,7 @@
   "question": "What is the main security improvement of SAE over the WPA2 PSK handshake?",
   "choices": [
    "It resists offline dictionary attacks",
-   "It uses a shorter key",
+   "It uses a shorter key that is faster",
    "It disables encryption",
    "It removes the passphrase"
   ],
@@ -247,7 +247,7 @@
   "question": "What does Opportunistic Wireless Encryption (OWE) provide?",
   "choices": [
    "Encryption on open networks without a password",
-   "User authentication",
+   "User authentication with an 802.1X RADIUS server",
    "MAC filtering",
    "Rogue AP detection"
   ],
@@ -269,7 +269,7 @@
   "question": "What is the purpose of Protected Management Frames (PMF, 802.11w)?",
   "choices": [
    "Protect management frames such as deauthentication from spoofing",
-   "Increase throughput",
+   "Increase throughput by compressing the beacons and other management frames",
    "Assign channels",
    "Create VLANs"
   ],
@@ -357,7 +357,7 @@
   "question": "Why is MAC filtering a weak wireless security control?",
   "choices": [
    "MAC addresses can be sniffed and spoofed",
-   "It uses AES",
+   "It uses AES, which is too slow for clients",
    "It requires a certificate",
    "It encrypts frames"
   ],
@@ -400,8 +400,8 @@
   "difficulty": "보통",
   "question": "What is an evil twin attack?",
   "choices": [
-   "An attacker sets up a rogue AP with the same SSID as a legitimate network",
-   "A deauthentication flood",
+   "A rogue AP that uses the same SSID as a real network",
+   "A flood of deauthentication frames against one client",
    "A brute-force attack",
    "A VLAN hop"
   ],
@@ -467,7 +467,7 @@
   "question": "A company uses WPA2-Personal. An employee leaves and knows the passphrase. What is the best long-term improvement?",
   "choices": [
    "Move to WPA2-Enterprise with 802.1X",
-   "Hide the SSID",
+   "Hide the SSID from the ex-employee",
    "Add MAC filtering",
    "Use WEP"
   ],
@@ -489,7 +489,7 @@
   "question": "Which statement about WPA3 is correct?",
   "choices": [
    "It requires Protected Management Frames",
-   "It uses TKIP",
+   "It uses TKIP for backward compatibility",
    "It is based on WEP",
    "It requires no encryption"
   ],
@@ -533,7 +533,7 @@
   "question": "A client has the correct WPA2-PSK but still cannot join. The WLAN uses WPA2 with 802.1X as authentication key management. What is the likely cause?",
   "choices": [
    "The WLAN expects EAP credentials, not a PSK",
-   "The channel is wrong",
+   "The channel is wrong for the client's radio",
    "The AP has too many antennas",
    "The IP address is private"
   ],
@@ -555,7 +555,7 @@
   "question": "Which wireless attack is directly mitigated by 802.11w PMF?",
   "choices": [
    "Spoofed deauthentication frames",
-   "MAC flooding",
+   "MAC flooding of the AP's table",
    "DHCP starvation",
    "ARP spoofing"
   ],
@@ -621,7 +621,7 @@
   "question": "Which Wi-Fi Alliance mode offers the strongest enterprise security with a 192-bit minimum security level?",
   "choices": [
    "WPA3-Enterprise 192-bit mode",
-   "WPA2-Personal",
+   "WPA2-Enterprise with AES-CCMP",
    "WPA-TKIP",
    "Open"
   ],
@@ -629,7 +629,7 @@
   "explanation": "WPA3-Enterprise 192-bit mode aligns with the CNSA suite for high-security networks.",
   "option_notes": [
    "Correct: 192-bit mode.",
-   "Wrong: Personal uses PSK.",
+   "Wrong: WPA2-Enterprise has no 192-bit mode; that is WPA3-Enterprise.",
    "Wrong: TKIP is weak.",
    "Wrong: Open has none."
   ],
@@ -642,8 +642,8 @@
   "difficulty": "보통",
   "question": "How does TKIP compare with AES-CCMP?",
   "choices": [
-   "TKIP is RC4-based and weaker; AES-CCMP is stronger and required by WPA2",
-   "TKIP is AES-based and stronger",
+   "TKIP is RC4-based and weaker; AES-CCMP is stronger",
+   "TKIP is AES-based and stronger than AES-CCMP",
    "They are identical",
    "TKIP is required by WPA3"
   ],

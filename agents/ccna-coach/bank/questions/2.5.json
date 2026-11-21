@@ -48,7 +48,7 @@
   "difficulty": "쉬움",
   "question": "How is the root bridge elected?",
   "choices": [
-   "The switch with the highest bridge ID wins",
+   "The switch with the highest bridge ID (priority, then MAC address) wins",
    "The switch with the most ports wins",
    "The switch with the fastest uplink wins",
    "The switch with the lowest bridge ID (priority, then MAC address) wins"
@@ -293,7 +293,7 @@
    "The lowest cumulative path cost to the root bridge",
    "The lowest MAC address of the neighbor",
    "The highest port priority",
-   "The highest bandwidth link on the switch"
+   "The highest bandwidth link on the switch to any neighbor"
   ],
   "answer": "A",
   "explanation": "Each non-root switch selects one root port. Tie-breakers: lowest root path cost, lowest sender bridge ID, lowest sender port priority, then lowest sender port ID.",
@@ -357,8 +357,8 @@
   "question": "What is an RSTP alternate port?",
   "choices": [
    "A port that is directly connected to end devices",
-   "A port that offers an alternate path to the root bridge through a different switch",
-   "A designated port with a higher priority",
+   "A port with a backup path to the root through a different switch",
+   "A designated port that has a higher port priority on the same segment",
    "A port that is disabled by the administrator"
   ],
   "answer": "B",
@@ -422,7 +422,7 @@
   "difficulty": "보통",
   "question": "How does RSTP detect that a neighbor is lost?",
   "choices": [
-   "After the max age of 20 seconds",
+   "After the 20-second max age timer expires with no BPDUs received",
    "After 180 seconds",
    "After three missed hello intervals (6 seconds by default)",
    "Only after the link goes down"
@@ -445,8 +445,8 @@
   "question": "Refer to the output. Which statement is correct?\n\nSW2# show spanning-tree vlan 10\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    24586\n             Address     0011.2233.4401\n             Cost        4\n             Port        1 (GigabitEthernet0/1)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)\n             Address     0011.2233.4402\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------\nGi0/1               Root FWD 4         128.1    P2p\nGi0/2               Altn BLK 4         128.2    P2p\nGi0/3               Desg FWD 19        128.3    P2p",
   "choices": [
    "SW2 is the root bridge and Gi0/3 is its root port",
-   "SW2 is not the root bridge; Gi0/1 is its root port and Gi0/2 is an alternate port",
-   "SW2 is not the root bridge; Gi0/3 is its root port",
+   "SW2 is not root; Gi0/1 is its root port and Gi0/2 is alternate",
+   "SW2 is not the root bridge; Gi0/3 is its root port and Gi0/1 is alternate",
    "SW2 is the root bridge and Gi0/2 is blocked by BPDU guard"
   ],
   "answer": "B",
@@ -488,10 +488,10 @@
   "difficulty": "어려움",
   "question": "The root port of a switch running Rapid PVST+ fails and the switch has an alternate port. What happens?",
   "choices": [
-   "The alternate port goes through listening and learning for 30 seconds",
+   "The alternate port goes through listening and learning states for 30 seconds",
    "All ports are reset and the root election starts again",
    "The alternate port becomes designated and stays blocked",
-   "The alternate port immediately becomes the root port and moves to forwarding without waiting for timers"
+   "The alternate port becomes root port and forwards at once, without timers"
   ],
   "answer": "D",
   "explanation": "Because RSTP pre-calculates alternate paths, convergence after a root port failure is almost immediate, typically less than a second, instead of 30 to 50 seconds in 802.1D.",
@@ -511,7 +511,7 @@
   "question": "In RSTP, which event generates a topology change?",
   "choices": [
    "An edge port goes up",
-   "Any port goes down",
+   "Any port goes down, including edge ports facing hosts",
    "A non-edge port transitions to the forwarding state",
    "A new VLAN is created"
   ],
@@ -532,8 +532,8 @@
   "difficulty": "어려움",
   "question": "A user connects an unmanaged switch to an access port that has PortFast and BPDU Guard enabled. The unmanaged switch sends a BPDU. What happens and how is the port recovered manually?",
   "choices": [
-   "The port goes to blocking; it recovers by itself in 30 seconds",
-   "The port goes to err-disabled; the admin removes the switch and uses shutdown followed by no shutdown",
+   "The port goes to blocking and recovers by itself after about 30 seconds",
+   "It goes err-disabled; remove the switch, then shutdown and no shutdown",
    "The port remains forwarding but drops BPDUs",
    "The port becomes the root port; no recovery is required"
   ],
@@ -555,7 +555,7 @@
   "question": "A link between two switches runs at half duplex. How does Rapid PVST+ treat this link by default?",
   "choices": [
    "As a shared link, so rapid proposal/agreement transitions are not used",
-   "As a point-to-point link",
+   "As a point-to-point link, because both ends of the link are Cisco switches",
    "As an edge port",
    "As a disabled link"
   ],
@@ -598,7 +598,7 @@
   "difficulty": "어려움",
   "question": "A switch running Rapid PVST+ is connected to a switch running 802.1D. What happens on the connecting port?",
   "choices": [
-   "RSTP convergence still applies to the link",
+   "RSTP rapid convergence still applies to that link after a short negotiation delay",
    "The port is err-disabled",
    "The port reverts to 802.1D behavior, losing rapid convergence on that link",
    "The legacy switch automatically upgrades to RSTP"

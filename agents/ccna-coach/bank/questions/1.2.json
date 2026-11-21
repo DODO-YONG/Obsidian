@@ -49,7 +49,7 @@
   "question": "What is the main function of the core layer in a three-tier campus design?",
   "choices": [
    "Connecting user PCs with PoE",
-   "Applying port security to end devices",
+   "Applying port security and PoE to the end devices at the edge",
    "High-speed, reliable transport between distribution blocks",
    "Providing wireless coverage"
   ],
@@ -114,7 +114,7 @@
   "difficulty": "쉬움",
   "question": "What is a SOHO network?",
   "choices": [
-   "A large campus with a three-tier design",
+   "A large enterprise campus network that uses a full three-tier hierarchical design",
    "A small office or home office network, often served by one multifunction device",
    "A spine-leaf data center",
    "A service provider backbone"
@@ -137,7 +137,7 @@
   "question": "What is a WAN?",
   "choices": [
    "A network inside one room",
-   "A wireless network limited to 10 meters",
+   "A wireless network limited to about 10 meters around one person",
    "A network that connects LANs across a large geographic area",
    "A link between two ports on one switch"
   ],
@@ -227,7 +227,7 @@
    "It removes the need for access switches",
    "It eliminates the need for Layer 3 routing",
    "Lower cost and less complexity because separate core switches are not needed",
-   "It provides the highest possible scale for large campuses"
+   "It provides the highest possible scale and port density for very large campuses"
   ],
   "answer": "C",
   "explanation": "With a collapsed core, the distribution switches also perform core functions, which reduces the number of devices. It suits smaller sites but does not scale as well as a dedicated core in very large campuses.",
@@ -246,10 +246,10 @@
   "difficulty": "보통",
   "question": "In a spine-leaf topology, which statement is correct?",
   "choices": [
-   "Spine switches are fully meshed with each other",
+   "Spine switches are fully meshed with each other for redundancy",
    "Leaf switches are fully meshed with each other",
    "Servers connect directly to spine switches",
-   "Spine switches do not connect to other spine switches, and leaf switches do not connect to other leaf switches"
+   "Spines never link to spines, and leaves never link to leaves"
   ],
   "answer": "D",
   "explanation": "The classic spine-leaf design connects each leaf to every spine only. There are no spine-to-spine or leaf-to-leaf links, so every leaf-to-leaf path crosses exactly one spine.",
@@ -313,7 +313,7 @@
   "question": "Why is spine-leaf well suited to a data center?",
   "choices": [
    "It supports only north-south traffic",
-   "It requires a spanning tree root bridge at every leaf",
+   "It requires a spanning tree root bridge configured at every leaf switch",
    "It handles heavy east-west traffic with predictable low latency",
    "It uses a single shared bus"
   ],
@@ -356,8 +356,8 @@
   "difficulty": "보통",
   "question": "What is a typical SOHO Internet connection method for a small home office router?",
   "choices": [
-   "The router gets a public IP from the ISP and uses NAT for internal private hosts",
-   "It runs OSPF with the ISP",
+   "It gets one public IP from the ISP and uses NAT for inside hosts",
+   "It runs OSPF with the ISP to learn a full Internet routing table",
    "It uses spine-leaf uplinks",
    "It uses a full mesh to each host"
   ],
@@ -422,7 +422,7 @@
   "difficulty": "보통",
   "question": "Why does a three-tier campus design connect each access switch to two distribution switches?",
   "choices": [
-   "To double the number of VLANs",
+   "To double the number of VLANs that each access switch is able to carry",
    "To avoid using IP addresses",
    "To convert the access switch into a router",
    "To provide redundancy if one uplink or distribution switch fails"
@@ -512,8 +512,8 @@
   "choices": [
    "Spine switches disable all VLANs",
    "Servers run STP for the switches",
-   "Leaf switches are directly connected in a ring",
-   "Leaf-spine links are routed and use equal-cost multipath instead of blocking redundant links"
+   "Leaf switches are directly connected to each other in a ring with STP",
+   "Leaf-spine links are routed and use ECMP instead of blocking links"
   ],
   "answer": "D",
   "explanation": "STP blocks redundant Layer 2 links to prevent loops. With routed point-to-point links, all uplinks can be used at once through ECMP. This improves bandwidth use and convergence.",
@@ -600,7 +600,7 @@
   "choices": [
    "Access, access, distribution",
    "Distribution, distribution, core",
-   "Access, core, access, core",
+   "Access, distribution, access, distribution, access",
    "Access, distribution, core, distribution, access"
   ],
   "answer": "D",
@@ -608,7 +608,7 @@
   "option_notes": [
    "Wrong: Access switches are not directly connected to each other in the hierarchy.",
    "Wrong: The path must start and end at access switches.",
-   "Wrong: The core would not be crossed twice.",
+   "Wrong: The path between buildings must cross the core layer.",
    "Correct: Inter-block traffic crosses the core."
   ],
   "key_concept": "Up, across the core, down.",
@@ -621,7 +621,7 @@
   "question": "Which of the following is typically NOT found in a SOHO network?",
   "choices": [
    "A dedicated core layer of multiple high-speed switches",
-   "A multifunction router with NAT",
+   "A multifunction router with NAT, DHCP and a built-in switch",
    "Wireless connectivity",
    "A single ISP connection"
   ],

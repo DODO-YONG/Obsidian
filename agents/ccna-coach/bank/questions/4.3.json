@@ -246,10 +246,10 @@
   "difficulty": "보통",
   "question": "What does the command no ip domain-lookup do on a Cisco router?",
   "choices": [
-   "It disables the DNS server feature",
+   "It disables the DNS server feature so the router answers no queries",
    "It deletes all static host entries",
    "It blocks DNS traffic through the router",
-   "It stops the router from trying to resolve mistyped commands as hostnames"
+   "It stops the router treating mistyped commands as hostnames"
   ],
   "answer": "D",
   "explanation": "By default a router treats an unrecognized word as a hostname and tries to Telnet to it, causing a long Translating delay. no ip domain-lookup turns off that behavior.",
@@ -488,7 +488,7 @@
   "difficulty": "어려움",
   "question": "A DHCP client was given an 8-day lease. At which point does it first try to renew the lease, and how?",
   "choices": [
-   "After 7 days, by broadcasting a DHCPDISCOVER",
+   "After 7 days, by broadcasting a DHCPDISCOVER to any server that listens",
    "After 8 days, by sending DHCPRELEASE",
    "After 4 days, by unicasting a DHCPREQUEST to the original server",
    "After 2 days, by unicasting a DHCPOFFER"
@@ -599,9 +599,9 @@
   "question": "An engineer mistypes a command on a router with default settings and no DNS server. The console freezes for a while after a Translating message. What causes this and how can it be avoided?",
   "choices": [
    "The router is rebooting; use no service dhcp",
-   "The router is loading a config from TFTP; use no boot network",
+   "The router is loading a config file from TFTP; use no boot network",
    "The router is syncing its clock; use no ntp",
-   "The router tries to resolve the word as a hostname; use no ip domain-lookup"
+   "It tries to resolve the word as a hostname; use no ip domain-lookup"
   ],
   "answer": "D",
   "explanation": "An unrecognized single word is interpreted as a hostname to Telnet to. With no DNS server the router broadcasts the lookup and waits for a timeout. no ip domain-lookup disables this.",
@@ -620,9 +620,9 @@
   "difficulty": "어려움",
   "question": "How does a client usually resolve a name using DNS?",
   "choices": [
-   "It sends a recursive query to its local DNS server, which queries other servers on its behalf",
+   "It sends a recursive query to its local DNS server, which does the rest",
    "It broadcasts the query to every host on the subnet",
-   "It queries the root servers itself with iterative queries",
+   "It queries the root and TLD servers itself, one by one, using iterative queries",
    "It asks its default gateway to translate the name"
   ],
   "answer": "A",
@@ -642,7 +642,7 @@
   "difficulty": "어려움",
   "question": "A pool is configured on router R1, but clients on VLAN 10 receive no address. Output of show ip dhcp pool shows the pool network 10.10.20.0/24, while VLAN 10 uses 10.10.10.0/24 and R1 interface VLAN 10 is 10.10.10.1. What is the problem?",
   "choices": [
-   "The lease time is too short",
+   "The lease time is set too short for the VLAN 10 clients",
    "The pool network does not match the client subnet",
    "DNS is not configured",
    "The excluded range is too small"

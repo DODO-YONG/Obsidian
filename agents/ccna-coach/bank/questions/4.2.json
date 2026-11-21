@@ -72,7 +72,7 @@
   "choices": [
    "It increases interface bandwidth",
    "It enables spanning tree",
-   "It encrypts the management traffic",
+   "It is required to encrypt the SSH and SNMP management traffic between devices",
    "Log messages from different devices can be correlated by timestamp"
   ],
   "answer": "D",
@@ -92,7 +92,7 @@
   "difficulty": "쉬움",
   "question": "In NTP, what does stratum 0 represent?",
   "choices": [
-   "A device that is unsynchronized",
+   "A device that is unsynchronized and has no valid clock source",
    "A router acting as NTP client",
    "A reference clock such as an atomic clock or GPS receiver",
    "The maximum hop count"
@@ -248,7 +248,7 @@
   "choices": [
    "The router is unsynchronized",
    "The reference clock is 250 Hz",
-   "The router is a stratum 4 server with its own clock",
+   "The router is a stratum 4 master that is using its own internal clock",
    "The router is synchronized to 10.1.1.1, which is a stratum 3 server"
   ],
   "answer": "D",
@@ -312,7 +312,7 @@
   "difficulty": "보통",
   "question": "What is the difference between ntp peer and ntp server?",
   "choices": [
-   "There is no difference",
+   "There is no difference; both commands make the router a client only",
    "ntp peer is symmetric, so either device can synchronize to the other",
    "ntp server is used only on switches",
    "ntp peer configures a device as a stratum 0 clock"
@@ -336,7 +336,7 @@
   "choices": [
    "Sets the NTP key for Loopback0",
    "Makes Loopback0 an NTP server",
-   "Disables NTP on other interfaces",
+   "Disables NTP on every interface except the Loopback0 interface",
    "Uses the Loopback0 address as the source of NTP packets"
   ],
   "answer": "D",
@@ -423,7 +423,7 @@
   "question": "What does the ntp update-calendar command do?",
   "choices": [
    "Disables the clock",
-   "Synchronizes the router with the PC calendar",
+   "Synchronizes the router's clock with the calendar of the connected console PC",
    "Updates the hardware calendar from the NTP-synchronized software clock",
    "Sets the NTP server calendar"
   ],
@@ -490,7 +490,7 @@
   "choices": [
    "The last eight polls to the server all succeeded",
    "The server is using key 377",
-   "Only 3 of 8 polls succeeded",
+   "Only 3 of the last 8 polls to the server succeeded",
    "The server is stratum 377"
   ],
   "answer": "A",
@@ -532,9 +532,9 @@
   "difficulty": "어려움",
   "question": "R2 is already synchronized to an NTP server. R3 is configured with ntp server pointing to R2. What must be configured on R2 for R3 to synchronize?",
   "choices": [
-   "ntp peer on both devices",
+   "ntp peer on both devices so that R3 can synchronize from R2",
    "ntp master on R2",
-   "Nothing; a synchronized IOS device automatically serves NTP requests",
+   "Nothing; a synchronized IOS device serves NTP automatically",
    "A static route to R3 only"
   ],
   "answer": "C",
@@ -554,7 +554,7 @@
   "difficulty": "어려움",
   "question": "R1 has ntp authenticate and ntp authentication-key 1 md5 CISCO, but does not synchronize with the server 10.1.1.1, which uses the same key. The configuration is:\n\nntp authenticate\nntp authentication-key 1 md5 CISCO\nntp server 10.1.1.1\n\nWhat is missing?",
   "choices": [
-   "The ntp master command",
+   "The ntp master command, so that R1 trusts its own clock with key 1",
    "ntp trusted-key 1 and the key 1 option on the ntp server command",
    "A second ntp authentication-key",
    "ntp source Loopback0"
@@ -599,7 +599,7 @@
   "question": "Which command limits an NTP server so it only responds to time requests from hosts permitted by ACL 10 and refuses control queries?",
   "choices": [
    "ntp access-group serve-only 10",
-   "ntp access-list 10",
+   "ntp access-list 10 serve-only",
    "access-class 10 in",
    "ntp restrict 10"
   ],
@@ -642,10 +642,10 @@
   "difficulty": "어려움",
   "question": "Refer to the output. What can be concluded?\n\nR1# show ntp status\nClock is synchronized, stratum 8, reference is 127.127.1.1",
   "choices": [
-   "R1 is synchronized to an external server at 127.127.1.1",
+   "R1 is synchronized to an external NTP server at address 127.127.1.1",
    "R1 uses a stratum 7 server",
    "R1 is unsynchronized",
-   "R1 is using its own internal clock, probably because of the ntp master command"
+   "R1 uses its own internal clock, likely from the ntp master command"
   ],
   "answer": "D",
   "explanation": "The reference address 127.127.1.1 is the local reference clock IOS uses when a router is configured with ntp master. Stratum 8 is the default stratum for ntp master. The router is its own time source and is not receiving time from an external server.",

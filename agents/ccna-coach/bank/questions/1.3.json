@@ -335,7 +335,7 @@
   "question": "Refer to the output.\n\nSwitch# show interfaces status\nPort    Name   Status     Vlan  Duplex  Speed  Type\nGi0/1          connected  1     a-full  a-100  10/100/1000BaseTX\n\nWhat does 'a-full' and 'a-100' indicate?",
   "choices": [
    "Duplex and speed were manually set to full and 100 Mbps",
-   "The port is operating at 100 Gbps half duplex",
+   "The port is operating at 100 Gbps in half duplex after auto-negotiation",
    "Duplex and speed were auto-negotiated as full duplex and 100 Mbps",
    "The port is in an error-disabled state"
   ],
@@ -380,7 +380,7 @@
   "choices": [
    "Swap the strands so each Tx connects to the opposite Rx",
    "Replace the fiber with a crossover UTP cable",
-   "Configure mdix auto on both ports",
+   "Configure mdix auto on both fiber ports and then reset them",
    "Change the duplex to half on both ports"
   ],
   "answer": "A",
@@ -444,7 +444,7 @@
   "difficulty": "어려움",
   "question": "Refer to the output.\n\nSwitch# show power inline\nAvailable:370.0(w)  Used:355.0(w)  Remaining:15.0(w)\nInterface Admin  Oper       Power(Watts) Device        Class\nGi0/1     auto   on         15.4         IP phone      3\nGi0/9     auto   power-deny 0.0          n/a           n/a\n\nA new 802.3at Class 4 access point (needs up to 30 W) is connected to Gi0/9. Why is the port in power-deny?",
   "choices": [
-   "The port is configured with power inline never",
+   "The port is configured with power inline never, so PoE is disabled on it entirely",
    "The remaining power budget (15.0 W) is less than the 30 W the device requires",
    "The cable is longer than 100 m",
    "The access point must use a crossover cable"
@@ -488,10 +488,10 @@
   "difficulty": "어려움",
   "question": "A 1000BASE-T link between two switches comes up only at 100 Mbps. Cable testing shows pins 4, 5, 7 and 8 are damaged. What explains the result?",
   "choices": [
-   "1000BASE-T uses only pins 1,2 and 3,6",
+   "1000BASE-T uses only pins 1,2 and 3,6, so the cable is fine",
    "The switches have a mismatched duplex",
    "Auto-MDIX disables gigabit speed",
-   "1000BASE-T needs all four pairs, but 100BASE-TX uses only the pairs on pins 1,2 and 3,6"
+   "1000BASE-T needs all four pairs; 100BASE-TX needs only two"
   ],
   "answer": "D",
   "explanation": "10/100 Ethernet uses two pairs (pins 1,2 and 3,6), while 1000BASE-T uses all four pairs at the same time. With pairs 4,5 and 7,8 damaged, negotiation falls back to 100 Mbps. Duplex mismatch and Auto-MDIX do not explain a speed drop.",
@@ -510,7 +510,7 @@
   "difficulty": "어려움",
   "question": "Two switches use SFP ports. One end has a 1000BASE-SX SFP and the other has a 1000BASE-LX SFP, joined by a single-mode patch cord. The link stays down. What is the most likely cause?",
   "choices": [
-   "The switch ports need mdix auto",
+   "The switch ports need mdix auto enabled before the fiber link can come up",
    "The cable is longer than 100 m",
    "Mismatched transceiver types and wavelengths (850 nm versus 1310 nm)",
    "The ports are PoE PSEs"
@@ -555,7 +555,7 @@
   "question": "A switch has the following configuration. A new switch connected with a straight-through cable does not come up. Interface speed and duplex are hard-coded.\n\ninterface GigabitEthernet0/3\n speed 100\n duplex full\n mdix auto\n\nOn some older Catalyst platforms, why might Auto-MDIX not work here?",
   "choices": [
    "Auto-MDIX requires speed and duplex to be set to auto on those platforms",
-   "Auto-MDIX works only with half duplex",
+   "Auto-MDIX works only when both ends are manually set to half duplex mode",
    "Auto-MDIX requires PoE to be enabled",
    "Auto-MDIX is limited to fiber interfaces"
   ],
@@ -643,7 +643,7 @@
   "question": "A user's PC connects to a wall jack that is patched to a switch through 70 m of horizontal cabling plus two 3 m patch cords. The link reports many CRC errors. What is the length of the channel, and does it exceed the UTP limit?",
   "choices": [
    "76 m in total; within the 100 m limit, so length is not the cause",
-   "76 m in total; it exceeds the 100 m limit",
+   "76 m in total; it exceeds the 90 m limit, so the length is the cause",
    "146 m in total; it exceeds the limit",
    "70 m in total; patch cords do not count"
   ],

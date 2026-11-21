@@ -269,7 +269,7 @@
   "question": "What does the command logging console 3 do?",
   "choices": [
    "Displays messages of levels 0 to 3 on the console",
-   "Displays only level 3 messages",
+   "Displays only level 3 (Errors) messages on the console",
    "Sends messages to server 3",
    "Displays levels 3 to 7"
   ],
@@ -334,7 +334,7 @@
   "difficulty": "보통",
   "question": "Why can syslog messages be lost on the way to the server?",
   "choices": [
-   "Syslog uses TCP without windows",
+   "Syslog uses TCP without windowing, so the router drops data",
    "The router limits it to 10 messages",
    "Syslog needs a TFTP server",
    "The default transport is UDP, which is not reliable"
@@ -400,7 +400,7 @@
   "difficulty": "보통",
   "question": "What does the facility in %SYS-5-CONFIG_I identify?",
   "choices": [
-   "The severity of the message",
+   "The severity level of the message, on a scale of 0 to 7",
    "The remote syslog server",
    "The part of the system that generated the message",
    "The interface involved"
@@ -445,7 +445,7 @@
   "question": "Consider this log line:\n*Mar  1 00:01:02.003: %SYS-5-CONFIG_I: Configured from console by console\nWhich statements are true?",
   "choices": [
    "The severity is Notifications and the clock is not synchronized",
-   "The severity is Errors and NTP is working",
+   "The severity is Errors and the clock is synchronized with NTP",
    "The severity is Alerts and the logging is remote",
    "The severity is Debugging and the timestamp is valid"
   ],
@@ -466,7 +466,7 @@
   "difficulty": "어려움",
   "question": "A syslog server receives no interface up/down messages. The router shows logging host 10.1.1.50 and logging trap errors. Interface changes generate %LINEPROTO-5-UPDOWN. What is the issue?",
   "choices": [
-   "Syslog needs TCP 514 open",
+   "Syslog needs TCP port 514 open on the syslog server's firewall",
    "The trap level is too severe to include level 5 messages",
    "The buffer is too small",
    "Timestamps are disabled"
@@ -554,7 +554,7 @@
   "difficulty": "어려움",
   "question": "An administrator runs debug ip packet on a router with logging buffered informational. The buffer does not contain the debug output. Why?",
   "choices": [
-   "Debug messages are never logged",
+   "Debug messages are never saved to the local logging buffer",
    "Debug output is level 7 and is above the buffer threshold",
    "Buffered logging works only for level 0",
    "Debug output goes only to SNMP"
@@ -576,7 +576,7 @@
   "difficulty": "어려움",
   "question": "Why might an engineer prefer a centralized syslog server instead of only reading local router logs?",
   "choices": [
-   "Syslog servers encrypt all messages by default",
+   "Central syslog servers encrypt and sign every message by default with TLS",
    "It removes the need for timestamps",
    "Logs from many devices are kept in one place and survive a device reload",
    "It lets the server configure the router"
@@ -600,7 +600,7 @@
   "choices": [
    "The message has severity 0",
    "The message was sent by SNMP",
-   "The message came from a remote server",
+   "The message was forwarded from a remote syslog server",
    "The router clock has not been set or synchronized"
   ],
   "answer": "D",
@@ -642,7 +642,7 @@
   "difficulty": "어려움",
   "question": "An admin sets logging buffered 8192 warnings and later wants to see an interface flap that generated %LINEPROTO-5-UPDOWN. The buffer shows nothing. What should the admin change?",
   "choices": [
-   "Increase the buffer size only",
+   "Increase only the buffer size, for example to 16384 bytes",
    "Raise the buffered level to notifications or higher",
    "Change logging host to the loopback",
    "Disable service timestamps"

@@ -180,7 +180,7 @@
   "difficulty": "쉬움",
   "question": "Which of these is a routing source with the lowest default administrative distance?",
   "choices": [
-   "OSPF",
+   "EIGRP (internal route)",
    "Connected interface",
    "EIGRP",
    "RIP"
@@ -188,7 +188,7 @@
   "answer": "B",
   "explanation": "A lower AD is more trusted. Connected is 0, static 1, EIGRP 90, OSPF 110 and RIP 120.",
   "option_notes": [
-   "Wrong: OSPF has AD 110.",
+   "Wrong: Internal EIGRP has AD 90, higher than a connected route's AD 0.",
    "Correct: Connected interfaces have AD 0.",
    "Wrong: Internal EIGRP has AD 90.",
    "Wrong: RIP has AD 120."
@@ -312,7 +312,7 @@
   "difficulty": "보통",
   "question": "Which statement about metrics is true?",
   "choices": [
-   "The router converts all metrics to hop count",
+   "The router converts all metrics to a hop count before comparing them",
    "A lower AD always has a lower metric",
    "The highest metric is chosen",
    "Metrics of different routing protocols cannot be compared directly"
@@ -401,9 +401,9 @@
   "question": "What is the effect of the following command on route selection?\n\nip route 10.0.0.0 255.0.0.0 192.168.1.2 200",
   "choices": [
    "Makes the route preferred over all others",
-   "Sets the metric of the route to 200",
+   "Sets the metric of this static route to 200, so it is used much less often",
    "Sets the route's prefix length to 200",
-   "Creates a floating static route that is used only if routes with lower AD disappear"
+   "Creates a floating static route used only if lower-AD routes disappear"
   ],
   "answer": "D",
   "explanation": "The number at the end of the ip route command changes the administrative distance. With AD 200, the static route is less trusted than most dynamic routes and appears only if they are absent.",
@@ -576,10 +576,10 @@
   "difficulty": "어려움",
   "question": "R1 learns 192.168.50.0/24 from OSPF (metric 10) and from EIGRP (metric 10000). Which statement is correct?",
   "choices": [
-   "The OSPF route is installed because it has the lower metric",
+   "The OSPF route is installed because its metric of 10 is much lower",
    "Both routes are installed and traffic is load balanced",
    "The OSPF route is installed because OSPF is a link-state protocol",
-   "The EIGRP route is installed now, and the OSPF route is installed if the EIGRP route is lost"
+   "EIGRP is installed now; OSPF is installed if the EIGRP route is lost"
   ],
   "answer": "D",
   "explanation": "AD is compared first for different protocols, and EIGRP internal has 90 versus 110 for OSPF. The OSPF route stays in its database and is installed if the EIGRP route is removed.",
@@ -598,7 +598,7 @@
   "difficulty": "어려움",
   "question": "R1 has a default route and the static route ip route 10.7.0.0 255.255.0.0 192.168.9.9. R1 has no route to 192.168.9.9. How is a packet to 10.7.1.1 forwarded?",
   "choices": [
-   "It is dropped because a static route exists",
+   "It is dropped because an unusable static route exists for the prefix",
    "Using the static route, resolving 192.168.9.9 by ARP",
    "Using the default route, because the static route is not installed",
    "Using the connected route nearest to 10.7.1.1"
@@ -658,5 +658,1193 @@
   "key_concept": "/32 = host route, most specific.",
   "cli_example": "ip route 10.4.4.4 255.255.255.255 192.168.1.2",
   "tip": "Host routes override network routes."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "쉬움",
+  "question": "R1 has routes to 172.16.0.0/16 and 172.16.4.0/24. Which route is used for a packet to 172.16.4.77?",
+  "choices": [
+   "172.16.4.0/24",
+   "172.16.0.0/16",
+   "Both, load-balanced",
+   "Neither; the packet is dropped"
+  ],
+  "answer": "A",
+  "explanation": "Both routes match, but /24 is longer (more specific) than /16. The router always uses the longest matching prefix.",
+  "option_notes": [
+   "Correct: /24 is the longest match.",
+   "Wrong: /16 also matches but is less specific.",
+   "Wrong: Different prefixes are never load-balanced.",
+   "Wrong: Two routes match, so the packet is forwarded."
+  ],
+  "key_concept": "Longest prefix match.",
+  "cli_example": "show ip route 172.16.4.77",
+  "tip": "More bits = more specific = wins."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "쉬움",
+  "question": "Which order does a router follow when routes are installed and used?",
+  "choices": [
+   "Longest match, then AD, then metric",
+   "AD, then metric, then longest match",
+   "Metric, then AD, then longest match",
+   "AD, then longest match, then metric"
+  ],
+  "answer": "A",
+  "explanation": "The most specific prefix is chosen first. AD decides between sources offering the same prefix, and the metric decides within one source.",
+  "option_notes": [
+   "Correct: Prefix length, AD, metric.",
+   "Wrong: AD never overrides a longer prefix.",
+   "Wrong: Metric is the last tie-breaker.",
+   "Wrong: AD is not checked before prefix length."
+  ],
+  "key_concept": "Length → AD → metric.",
+  "cli_example": "show ip route <address>",
+  "tip": "L-A-M: Longest, AD, Metric."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "쉬움",
+  "question": "Which route matches every destination IPv4 address?",
+  "choices": [
+   "0.0.0.0/0",
+   "255.255.255.255/32",
+   "127.0.0.0/8",
+   "0.0.0.0/32"
+  ],
+  "answer": "A",
+  "explanation": "A /0 prefix checks zero bits, so every address matches it. That is why 0.0.0.0/0 is the default route.",
+  "option_notes": [
+   "Correct: /0 matches all addresses.",
+   "Wrong: /32 matches only one address.",
+   "Wrong: 127.0.0.0/8 is the loopback range.",
+   "Wrong: 0.0.0.0/32 is a single address."
+  ],
+  "key_concept": "0.0.0.0/0 = default route.",
+  "cli_example": "show ip route 0.0.0.0",
+  "tip": "Zero bits to match = matches everything."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "쉬움",
+  "question": "R1 has 10.5.5.5/32 (static), 10.5.5.0/24 (OSPF) and 0.0.0.0/0. Which route is used for a packet to 10.5.5.5?",
+  "choices": [
+   "10.5.5.5/32",
+   "10.5.5.0/24",
+   "0.0.0.0/0",
+   "The OSPF route, due to its metric"
+  ],
+  "answer": "A",
+  "explanation": "A /32 host route is the most specific match possible, so it wins over the /24 and the default route.",
+  "option_notes": [
+   "Correct: /32 is the longest possible match.",
+   "Wrong: /24 matches but is less specific.",
+   "Wrong: The default route is used only when nothing else matches.",
+   "Wrong: Metrics are not compared across different prefix lengths."
+  ],
+  "key_concept": "Host route /32 beats everything.",
+  "cli_example": "show ip route 10.5.5.5",
+  "tip": "/32 = exact address."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "쉬움",
+  "question": "R1 has two static routes for 10.9.0.0/16 with the default AD, one via 10.0.0.2 and one via 10.0.0.6. Both next hops are reachable. What does R1 do?",
+  "choices": [
+   "It installs both and load-balances",
+   "It installs only the first one entered",
+   "It installs only the lower next-hop address",
+   "It rejects both as duplicates"
+  ],
+  "answer": "A",
+  "explanation": "Two static routes for the same prefix with the same AD are equal. IOS installs both and shares traffic between them.",
+  "option_notes": [
+   "Correct: Same prefix, same AD = both installed.",
+   "Wrong: Configuration order does not decide.",
+   "Wrong: Next-hop address values are not a tie-breaker.",
+   "Wrong: Both commands are accepted."
+  ],
+  "key_concept": "Equal static routes load-balance.",
+  "cli_example": "show ip route static",
+  "tip": "Same prefix + same AD = share."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "쉬움",
+  "question": "Which prefix is LESS specific than 192.168.10.0/24?",
+  "choices": [
+   "192.168.0.0/16",
+   "192.168.10.0/25",
+   "192.168.10.64/26",
+   "192.168.10.4/30"
+  ],
+  "answer": "A",
+  "explanation": "Specificity is the prefix length. /16 is shorter than /24, so it is less specific. /25, /26 and /30 are more specific.",
+  "option_notes": [
+   "Correct: /16 has fewer bits than /24.",
+   "Wrong: /25 is more specific.",
+   "Wrong: /26 is more specific.",
+   "Wrong: /30 is more specific."
+  ],
+  "key_concept": "Smaller number after the slash = less specific.",
+  "cli_example": "show ip route longer-prefixes",
+  "tip": "Short prefix = big net = vague."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "쉬움",
+  "question": "R1 has 2001:DB8::/32 and 2001:DB8:1::/48. Which route is used for 2001:DB8:1:5::1?",
+  "choices": [
+   "2001:DB8:1::/48",
+   "2001:DB8::/32",
+   "Both, load-balanced",
+   "Neither; IPv6 has no longest match"
+  ],
+  "answer": "A",
+  "explanation": "IPv6 uses longest prefix match too. Both routes match, and /48 is longer than /32.",
+  "option_notes": [
+   "Correct: /48 is the longer match.",
+   "Wrong: /32 matches but is less specific.",
+   "Wrong: Different prefixes are not load-balanced.",
+   "Wrong: IPv6 also uses longest prefix match."
+  ],
+  "key_concept": "Longest match works the same for IPv6.",
+  "cli_example": "show ipv6 route 2001:DB8:1:5::1",
+  "tip": "Same rule, longer addresses."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "쉬움",
+  "question": "Two routes have the same prefix length and the same AD. What decides which one is installed?",
+  "choices": [
+   "The metric",
+   "The age of the route",
+   "The next-hop address",
+   "The exit interface name"
+  ],
+  "answer": "A",
+  "explanation": "When prefix length and AD tie, the routing protocol's metric picks the best path. Equal metrics lead to load balancing.",
+  "option_notes": [
+   "Correct: Metric is the final tie-breaker.",
+   "Wrong: Route age is not a selection value.",
+   "Wrong: Next-hop addresses are not compared.",
+   "Wrong: Interface names are not compared."
+  ],
+  "key_concept": "Same length, same AD → metric.",
+  "cli_example": "show ip route",
+  "tip": "Metric is the last judge."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "쉬움",
+  "question": "R1 has only 192.168.2.0/24 and a default route. Which route is used for a packet to 192.168.1.10?",
+  "choices": [
+   "The default route",
+   "192.168.2.0/24",
+   "Neither; the packet is dropped",
+   "Both, load-balanced"
+  ],
+  "answer": "A",
+  "explanation": "192.168.1.10 is not inside 192.168.2.0/24, so the only match is the default route 0.0.0.0/0.",
+  "option_notes": [
+   "Correct: Only 0.0.0.0/0 matches.",
+   "Wrong: 192.168.1.10 is outside 192.168.2.0/24.",
+   "Wrong: The default route matches, so it is not dropped.",
+   "Wrong: Only one route matches."
+  ],
+  "key_concept": "Default route = last resort.",
+  "cli_example": "show ip route 192.168.1.10",
+  "tip": "Check the bits, not just the look of the address."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "쉬움",
+  "question": "During a route lookup, what does the router compare with each route?",
+  "choices": [
+   "The destination address bits covered by the prefix",
+   "The source address of the packet against the route's prefix",
+   "The TTL of the packet",
+   "The destination MAC address"
+  ],
+  "answer": "A",
+  "explanation": "The router compares the packet's destination IP with each route, but only for the number of bits in the route's prefix length.",
+  "option_notes": [
+   "Correct: Destination IP bits up to the prefix length.",
+   "Wrong: Normal routing ignores the source address.",
+   "Wrong: TTL is not used for route selection.",
+   "Wrong: MAC addresses are Layer 2, not used in route lookup."
+  ],
+  "key_concept": "Route lookup uses the destination IP.",
+  "cli_example": "show ip route <destination>",
+  "tip": "Routers route on where the packet is going."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "Refer to the routing table. Which next hop is used for a packet to 10.20.30.5?\n\nS     10.0.0.0/8 [1/0] via 192.168.1.1\nO     10.20.0.0/16 [110/20] via 192.168.2.2, Gi0/2\nO     10.20.30.0/24 [110/30] via 192.168.3.3, Gi0/3\nS*    0.0.0.0/0 [1/0] via 192.168.4.4",
+  "choices": [
+   "192.168.3.3",
+   "192.168.2.2",
+   "192.168.1.1",
+   "192.168.4.4"
+  ],
+  "answer": "A",
+  "explanation": "10.20.30.5 matches /8, /16, /24 and the default route. The /24 is longest, so 192.168.3.3 is used, even though its metric is higher.",
+  "option_notes": [
+   "Correct: /24 is the longest match.",
+   "Wrong: /16 matches but is shorter.",
+   "Wrong: /8 matches but is shorter, even with AD 1.",
+   "Wrong: The default route is used only when nothing else matches."
+  ],
+  "key_concept": "Longest match ignores metric and AD.",
+  "cli_example": "show ip route 10.20.30.5",
+  "tip": "/24 beats /16 beats /8 beats /0."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "Refer to the routing table. Which next hop is used for a packet to 10.20.40.5?\n\nS     10.0.0.0/8 [1/0] via 192.168.1.1\nO     10.20.0.0/16 [110/20] via 192.168.2.2, Gi0/2\nO     10.20.30.0/24 [110/30] via 192.168.3.3, Gi0/3\nS*    0.0.0.0/0 [1/0] via 192.168.4.4",
+  "choices": [
+   "192.168.2.2",
+   "192.168.3.3",
+   "192.168.1.1",
+   "192.168.4.4"
+  ],
+  "answer": "A",
+  "explanation": "10.20.40.5 is not in 10.20.30.0/24, but it is in 10.20.0.0/16. The /16 is the longest match.",
+  "option_notes": [
+   "Correct: /16 is the longest route that matches.",
+   "Wrong: 10.20.40.5 is outside 10.20.30.0/24.",
+   "Wrong: /8 matches but is shorter than /16.",
+   "Wrong: The default route loses to any real match."
+  ],
+  "key_concept": "Check each route's range first.",
+  "cli_example": "show ip route 10.20.40.5",
+  "tip": "Third octet 40 ≠ 30."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "Refer to the routing table. Which next hop is used for a packet to 10.99.1.1?\n\nS     10.0.0.0/8 [1/0] via 192.168.1.1\nO     10.20.0.0/16 [110/20] via 192.168.2.2, Gi0/2\nO     10.20.30.0/24 [110/30] via 192.168.3.3, Gi0/3\nS*    0.0.0.0/0 [1/0] via 192.168.4.4",
+  "choices": [
+   "192.168.1.1",
+   "192.168.2.2",
+   "192.168.4.4",
+   "192.168.3.3"
+  ],
+  "answer": "A",
+  "explanation": "10.99.1.1 is inside 10.0.0.0/8 but not inside 10.20.0.0/16. The /8 static route is the longest match.",
+  "option_notes": [
+   "Correct: /8 is the only specific route that matches.",
+   "Wrong: 10.99.x.x is outside 10.20.0.0/16.",
+   "Wrong: /8 is longer than /0.",
+   "Wrong: 10.99.1.1 is outside 10.20.30.0/24."
+  ],
+  "key_concept": "A short route still beats the default.",
+  "cli_example": "show ip route 10.99.1.1",
+  "tip": "/8 > /0."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "Refer to the routing table. Which next hop is used for a packet to 11.1.1.1?\n\nS     10.0.0.0/8 [1/0] via 192.168.1.1\nO     10.20.0.0/16 [110/20] via 192.168.2.2, Gi0/2\nO     10.20.30.0/24 [110/30] via 192.168.3.3, Gi0/3\nS*    0.0.0.0/0 [1/0] via 192.168.4.4",
+  "choices": [
+   "192.168.4.4",
+   "192.168.1.1",
+   "192.168.2.2",
+   "The packet is dropped"
+  ],
+  "answer": "A",
+  "explanation": "11.1.1.1 is outside every 10.x route, so only the default route 0.0.0.0/0 matches.",
+  "option_notes": [
+   "Correct: Only the default route matches.",
+   "Wrong: 11.0.0.0 is not inside 10.0.0.0/8.",
+   "Wrong: 11.1.1.1 is outside 10.20.0.0/16.",
+   "Wrong: A default route exists, so the packet is forwarded."
+  ],
+  "key_concept": "Default route catches all unmatched traffic.",
+  "cli_example": "show ip route 11.1.1.1",
+  "tip": "No match? Go to last resort."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "Which destination uses 172.16.32.0/20 rather than 172.16.0.0/16?",
+  "choices": [
+   "172.16.45.9",
+   "172.16.48.1",
+   "172.16.31.200",
+   "172.16.64.4"
+  ],
+  "answer": "A",
+  "explanation": "A /20 has a block size of 16 in the third octet, so 172.16.32.0/20 covers 172.16.32.0 to 172.16.47.255. Only 172.16.45.9 is in that range.",
+  "option_notes": [
+   "Correct: 45 is inside 32-47.",
+   "Wrong: 48 starts the next /20 block.",
+   "Wrong: 31 is in the previous block (16-31).",
+   "Wrong: 64 is outside 32-47."
+  ],
+  "key_concept": "/20 = block of 16 in the 3rd octet.",
+  "cli_example": "show ip route 172.16.45.9",
+  "tip": "Find the block: 32 + 16 - 1 = 47."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "Refer to the output. Which next hop is used for a packet to 192.168.1.100?\n\nO     192.168.1.0/24 [110/10] via 10.0.0.1\nS     192.168.1.64/27 [1/0] via 10.0.0.5",
+  "choices": [
+   "10.0.0.1",
+   "10.0.0.5",
+   "Both, load-balanced",
+   "None; the packet is dropped"
+  ],
+  "answer": "A",
+  "explanation": "192.168.1.64/27 covers .64 to .95. Address .100 is outside it, so the /24 route via 10.0.0.1 is the longest match.",
+  "option_notes": [
+   "Correct: .100 is only inside the /24.",
+   "Wrong: The /27 ends at .95.",
+   "Wrong: Different prefixes are not load-balanced.",
+   "Wrong: The /24 matches, so the packet is forwarded."
+  ],
+  "key_concept": "/27 = block of 32.",
+  "cli_example": "show ip route 192.168.1.100",
+  "tip": "64 + 32 - 1 = 95."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "Refer to the output. Which next hop is used for a packet to 192.168.1.90?\n\nO     192.168.1.0/24 [110/10] via 10.0.0.1\nS     192.168.1.64/27 [1/0] via 10.0.0.5",
+  "choices": [
+   "10.0.0.5",
+   "10.0.0.1",
+   "Both, load-balanced",
+   "None; the packet is dropped"
+  ],
+  "answer": "A",
+  "explanation": "192.168.1.64/27 covers .64 to .95, so .90 matches both routes. The /27 is longer and wins.",
+  "option_notes": [
+   "Correct: .90 is in .64-.95, and /27 is longer.",
+   "Wrong: /24 matches but is less specific.",
+   "Wrong: Different prefixes are never load-balanced.",
+   "Wrong: Both routes match, so it is forwarded."
+  ],
+  "key_concept": "Longer prefix wins.",
+  "cli_example": "show ip route 192.168.1.90",
+  "tip": "Inside the small block? Small block wins."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "R1 learns 10.1.1.0/24 from two EIGRP neighbors, with metrics 30720 and 28160. Which route is installed?",
+  "choices": [
+   "The route with metric 28160",
+   "The route with metric 30720",
+   "Both, as they are from one protocol",
+   "Neither, because the metrics differ"
+  ],
+  "answer": "A",
+  "explanation": "Both routes come from EIGRP (same AD), so the lower metric wins. 28160 is lower.",
+  "option_notes": [
+   "Correct: Lower metric wins within one protocol.",
+   "Wrong: 30720 is the higher (worse) metric.",
+   "Wrong: Default load balancing needs equal metrics.",
+   "Wrong: The better one is installed."
+  ],
+  "key_concept": "Lower metric is better.",
+  "cli_example": "show ip route eigrp",
+  "tip": "Smaller cost = shorter road."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "R1 learns 10.4.0.0/16 from OSPF (cost 2) and from RIP (hop count 1). Which route is installed?",
+  "choices": [
+   "The OSPF route, AD 110",
+   "The RIP route, metric 1",
+   "Both, load-balanced",
+   "The route learned first"
+  ],
+  "answer": "A",
+  "explanation": "Different sources are compared by AD. OSPF's 110 is lower than RIP's 120, so OSPF wins no matter what the metrics are.",
+  "option_notes": [
+   "Correct: OSPF 110 < RIP 120.",
+   "Wrong: The metric is not compared across protocols.",
+   "Wrong: Different sources are not load-balanced.",
+   "Wrong: Learning order does not matter."
+  ],
+  "key_concept": "Different protocols → AD.",
+  "cli_example": "show ip route 10.4.0.0",
+  "tip": "Lower AD = more trusted."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "Refer to the output. Which next hop is used for a packet to 2001:DB8:ACAD:5::9?\n\nS   2001:DB8:ACAD::/48 [1/0]\n     via 2001:DB8:FF::1\nO   2001:DB8:ACAD:5::/64 [110/20]\n     via FE80::3, GigabitEthernet0/1",
+  "choices": [
+   "FE80::3",
+   "2001:DB8:FF::1",
+   "Both, load-balanced",
+   "The packet is dropped"
+  ],
+  "answer": "A",
+  "explanation": "Both routes match, but /64 is longer than /48. The OSPF route wins even though the static route has a lower AD.",
+  "option_notes": [
+   "Correct: /64 is the longest match.",
+   "Wrong: /48 matches but is shorter.",
+   "Wrong: Different prefixes are not load-balanced.",
+   "Wrong: The packet matches two routes."
+  ],
+  "key_concept": "Longest match before AD in IPv6 too.",
+  "cli_example": "show ipv6 route 2001:DB8:ACAD:5::9",
+  "tip": "/64 > /48."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "Refer to the output. Which next hop is used for a packet to 2001:DB8:ACAD:6::1?\n\nS   2001:DB8:ACAD::/48 [1/0]\n     via 2001:DB8:FF::1\nO   2001:DB8:ACAD:5::/64 [110/20]\n     via FE80::3, GigabitEthernet0/1",
+  "choices": [
+   "2001:DB8:FF::1",
+   "FE80::3",
+   "Both, load-balanced",
+   "The packet is dropped"
+  ],
+  "answer": "A",
+  "explanation": "2001:DB8:ACAD:6:: is not in 2001:DB8:ACAD:5::/64, but it is in 2001:DB8:ACAD::/48.",
+  "option_notes": [
+   "Correct: Only the /48 matches.",
+   "Wrong: The /64 is only for subnet :5.",
+   "Wrong: Only one route matches.",
+   "Wrong: The /48 matches, so it is forwarded."
+  ],
+  "key_concept": "Check the 4th hextet for /64.",
+  "cli_example": "show ipv6 route 2001:DB8:ACAD:6::1",
+  "tip": "Subnet 6 ≠ subnet 5."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "R1 has ip route 10.0.0.0 255.0.0.0 Null0 and a default route. No other 10.x route exists. What happens to a packet for 10.1.1.1?",
+  "choices": [
+   "It is dropped by the Null0 route",
+   "It uses the default route",
+   "It is sent back to the source",
+   "It is flooded to all neighbors"
+  ],
+  "answer": "A",
+  "explanation": "10.0.0.0/8 is a longer match than 0.0.0.0/0, so the Null0 route is chosen and the packet is discarded.",
+  "option_notes": [
+   "Correct: /8 to Null0 beats /0.",
+   "Wrong: The /8 is more specific than the default.",
+   "Wrong: Routers do not return packets to the source.",
+   "Wrong: Routers do not flood packets."
+  ],
+  "key_concept": "Null0 = discard.",
+  "cli_example": "show ip route 10.1.1.1",
+  "tip": "Null0 is a black hole on purpose."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "Which address is inside 10.10.8.0/21?",
+  "choices": [
+   "10.10.15.200",
+   "10.10.16.1",
+   "10.10.7.255",
+   "10.10.24.8"
+  ],
+  "answer": "A",
+  "explanation": "/21 has a block size of 8 in the third octet. 10.10.8.0/21 covers 10.10.8.0 to 10.10.15.255.",
+  "option_notes": [
+   "Correct: 15 is inside 8-15.",
+   "Wrong: 16 starts the next block.",
+   "Wrong: 7 is in the previous block.",
+   "Wrong: 24 is outside 8-15."
+  ],
+  "key_concept": "/21 = block of 8 in the 3rd octet.",
+  "cli_example": "show ip route 10.10.15.200",
+  "tip": "8 + 8 - 1 = 15."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "R1 has 172.16.0.0/12, 172.16.0.0/16 and 0.0.0.0/0. Which route is used for a packet to 172.20.1.1?",
+  "choices": [
+   "172.16.0.0/12",
+   "172.16.0.0/16",
+   "0.0.0.0/0",
+   "Both 172.16 routes, load-balanced"
+  ],
+  "answer": "A",
+  "explanation": "172.16.0.0/12 covers 172.16.0.0 to 172.31.255.255, so it includes 172.20.1.1. The /16 covers only 172.16.x.x.",
+  "option_notes": [
+   "Correct: 172.20 is inside 172.16-172.31.",
+   "Wrong: The /16 covers only 172.16.x.x.",
+   "Wrong: A more specific route matches.",
+   "Wrong: Different prefixes are not load-balanced."
+  ],
+  "key_concept": "/12 = block of 16 in the 2nd octet.",
+  "cli_example": "show ip route 172.20.1.1",
+  "tip": "172.16-31 is the private /12."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "By default, how many equal-cost paths does OSPF install for one prefix on Cisco IOS?",
+  "choices": [
+   "4",
+   "1",
+   "2",
+   "16"
+  ],
+  "answer": "A",
+  "explanation": "OSPF's maximum-paths default is 4 on IOS. More paths can be allowed with the maximum-paths command.",
+  "option_notes": [
+   "Correct: Default OSPF equal-cost paths: 4.",
+   "Wrong: OSPF installs more than one equal path.",
+   "Wrong: The default is higher than 2.",
+   "Wrong: 16 can be configured but is not the default."
+  ],
+  "key_concept": "OSPF default maximum-paths = 4.",
+  "cli_example": "show ip protocols",
+  "tip": "Four lanes by default."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "R1 has 192.168.10.0/24 and 192.168.10.128/25. Which route is used for a packet to 192.168.10.255?",
+  "choices": [
+   "192.168.10.128/25",
+   "192.168.10.0/24",
+   "Neither; .255 is a broadcast",
+   "Both, load-balanced"
+  ],
+  "answer": "A",
+  "explanation": "192.168.10.128/25 covers .128 to .255, so .255 matches both routes. The /25 is longer. A router forwards a directed broadcast by its route unless it owns that subnet.",
+  "option_notes": [
+   "Correct: /25 covers .128-.255 and is longer.",
+   "Wrong: /24 is less specific.",
+   "Wrong: It is routed like any other destination here.",
+   "Wrong: Different prefixes are not load-balanced."
+  ],
+  "key_concept": "/25 = upper half: .128-.255.",
+  "cli_example": "show ip route 192.168.10.255",
+  "tip": "Upper half of a /24 is .128/25."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "R1 learns 10.5.0.0/16 from OSPF with cost 100 via R2 and cost 50 via R3. Which route is installed?",
+  "choices": [
+   "Via R3, cost 50",
+   "Via R2, cost 100",
+   "Both, load-balanced",
+   "Neither; the costs conflict"
+  ],
+  "answer": "A",
+  "explanation": "Both are OSPF routes with the same AD, so the lower cost wins.",
+  "option_notes": [
+   "Correct: Lower OSPF cost wins.",
+   "Wrong: 100 is the higher cost.",
+   "Wrong: Load balancing needs equal cost.",
+   "Wrong: OSPF installs the best path."
+  ],
+  "key_concept": "Lower OSPF cost = better.",
+  "cli_example": "show ip route ospf",
+  "tip": "Cheaper road wins."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "R1 has 10.1.1.0/24 via RIP (AD 120) and 10.1.0.0/16 via a static route (AD 1). Which route is used for 10.1.1.1?",
+  "choices": [
+   "The RIP /24 route",
+   "The static /16 route",
+   "Both, load-balanced",
+   "Whichever has the lower metric"
+  ],
+  "answer": "A",
+  "explanation": "Longest match comes first. The /24 is more specific, so the RIP route is used for 10.1.1.1 even though the static route has a much lower AD.",
+  "option_notes": [
+   "Correct: /24 wins by longest match.",
+   "Wrong: AD only compares identical prefixes.",
+   "Wrong: Different prefixes are not load-balanced.",
+   "Wrong: Metrics are not compared here."
+  ],
+  "key_concept": "A worse AD can still win with a longer prefix.",
+  "cli_example": "show ip route 10.1.1.1",
+  "tip": "Specific beats trusted."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "보통",
+  "question": "R1 has ip route 0.0.0.0 0.0.0.0 10.0.0.1 configured and also learns an O*E2 default route. Which default route is installed?",
+  "choices": [
+   "The static default, AD 1",
+   "The OSPF default, AD 110",
+   "Both, load-balanced",
+   "The one with the lower metric"
+  ],
+  "answer": "A",
+  "explanation": "Both are 0.0.0.0/0, so AD decides. Static (1) beats OSPF (110).",
+  "option_notes": [
+   "Correct: Static AD 1 < OSPF 110.",
+   "Wrong: OSPF has the higher AD.",
+   "Wrong: Different sources are not load-balanced.",
+   "Wrong: Metrics are not compared across sources."
+  ],
+  "key_concept": "Same prefix → AD.",
+  "cli_example": "show ip route 0.0.0.0",
+  "tip": "Static default beats OSPF default."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "Refer to the routing table. Which next hop is used for a packet to 172.16.10.70?\n\nO     172.16.0.0/16 [110/20] via 10.0.0.2, Gi0/0\nO     172.16.8.0/22 [110/30] via 10.0.0.6, Gi0/1\nS     172.16.10.0/24 [1/0] via 10.0.0.10\nD     172.16.10.0/26 [90/3072] via 10.0.0.14, Gi0/3",
+  "choices": [
+   "10.0.0.10",
+   "10.0.0.14",
+   "10.0.0.6",
+   "10.0.0.2"
+  ],
+  "answer": "A",
+  "explanation": "172.16.10.0/26 covers .0 to .63, so .70 does not match it. The next longest match is 172.16.10.0/24 via 10.0.0.10.",
+  "option_notes": [
+   "Correct: The /24 is the longest route that contains .70.",
+   "Wrong: .70 is outside 172.16.10.0/26 (.0-.63).",
+   "Wrong: The /22 matches but is shorter than /24.",
+   "Wrong: The /16 matches but is the shortest."
+  ],
+  "key_concept": "Check whether the address is in the range before using a route.",
+  "cli_example": "show ip route 172.16.10.70",
+  "tip": "/26 = blocks of 64."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "Refer to the routing table. Which next hop is used for a packet to 172.16.11.5?\n\nO     172.16.0.0/16 [110/20] via 10.0.0.2, Gi0/0\nO     172.16.8.0/22 [110/30] via 10.0.0.6, Gi0/1\nS     172.16.10.0/24 [1/0] via 10.0.0.10\nD     172.16.10.0/26 [90/3072] via 10.0.0.14, Gi0/3",
+  "choices": [
+   "10.0.0.6",
+   "10.0.0.10",
+   "10.0.0.2",
+   "10.0.0.14"
+  ],
+  "answer": "A",
+  "explanation": "172.16.8.0/22 covers 172.16.8.0 to 172.16.11.255, so 172.16.11.5 matches it. It is not in 172.16.10.0/24, so the /22 is the longest match.",
+  "option_notes": [
+   "Correct: The /22 covers 8-11 and is the longest match.",
+   "Wrong: 172.16.11.5 is outside 172.16.10.0/24.",
+   "Wrong: The /16 matches but is shorter.",
+   "Wrong: 172.16.11.5 is outside 172.16.10.0/26."
+  ],
+  "key_concept": "/22 = block of 4 in the 3rd octet.",
+  "cli_example": "show ip route 172.16.11.5",
+  "tip": "8, 9, 10, 11 are in the /22."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "Refer to the routing table. Which next hop is used for a packet to 172.16.10.20?\n\nO     172.16.0.0/16 [110/20] via 10.0.0.2, Gi0/0\nO     172.16.8.0/22 [110/30] via 10.0.0.6, Gi0/1\nS     172.16.10.0/24 [1/0] via 10.0.0.10\nD     172.16.10.0/26 [90/3072] via 10.0.0.14, Gi0/3",
+  "choices": [
+   "10.0.0.14",
+   "10.0.0.10",
+   "10.0.0.6",
+   "10.0.0.2"
+  ],
+  "answer": "A",
+  "explanation": "172.16.10.20 matches all four routes. The /26 (.0-.63) is the longest, so the EIGRP route via 10.0.0.14 is used. AD does not matter between different prefix lengths.",
+  "option_notes": [
+   "Correct: /26 is the longest match.",
+   "Wrong: /24 matches but is shorter; its AD 1 does not matter.",
+   "Wrong: /22 matches but is shorter.",
+   "Wrong: /16 matches but is the shortest."
+  ],
+  "key_concept": "Longest match first, always.",
+  "cli_example": "show ip route 172.16.10.20",
+  "tip": "Four matches, one winner: the /26."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "Refer to the routing table. Which next hop is used for a packet to 172.16.12.1?\n\nO     172.16.0.0/16 [110/20] via 10.0.0.2, Gi0/0\nO     172.16.8.0/22 [110/30] via 10.0.0.6, Gi0/1\nS     172.16.10.0/24 [1/0] via 10.0.0.10\nD     172.16.10.0/26 [90/3072] via 10.0.0.14, Gi0/3",
+  "choices": [
+   "10.0.0.2",
+   "10.0.0.6",
+   "10.0.0.10",
+   "No route; it is dropped"
+  ],
+  "answer": "A",
+  "explanation": "172.16.8.0/22 ends at 172.16.11.255. Address 172.16.12.1 matches only 172.16.0.0/16.",
+  "option_notes": [
+   "Correct: Only the /16 contains 172.16.12.1.",
+   "Wrong: The /22 ends at 172.16.11.255.",
+   "Wrong: 172.16.12.1 is outside 172.16.10.0/24.",
+   "Wrong: The /16 matches, so it is forwarded."
+  ],
+  "key_concept": "Know where each block ends.",
+  "cli_example": "show ip route 172.16.12.1",
+  "tip": "12 starts a new /22 block."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "Refer to the output. R1 also has S 10.0.0.0/8 [1/0] via 192.168.9.1. Why is the OSPF route used for 10.4.4.4?\n\nR1# show ip route 10.4.4.4\nRouting entry for 10.4.4.0/24\n  Known via \"ospf 1\", distance 110, metric 2, type intra area",
+  "choices": [
+   "The OSPF /24 is a longer match than the static /8",
+   "OSPF routes always beat static routes",
+   "The static route's next hop is unreachable",
+   "The OSPF metric is lower than the static metric"
+  ],
+  "answer": "A",
+  "explanation": "AD is not compared because the prefixes are different. 10.4.4.0/24 is longer than 10.0.0.0/8, so it wins.",
+  "option_notes": [
+   "Correct: /24 is more specific than /8.",
+   "Wrong: Static (AD 1) would beat OSPF for the same prefix.",
+   "Wrong: Nothing shows the static route is down; it is just less specific.",
+   "Wrong: Metrics are not compared across sources or prefix lengths."
+  ],
+  "key_concept": "Longest match is independent of AD.",
+  "cli_example": "show ip route 10.4.4.4",
+  "tip": "/24 > /8, no matter the source."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "Which destination matches 10.1.64.0/18 but NOT 10.1.96.0/19?",
+  "choices": [
+   "10.1.80.1",
+   "10.1.100.1",
+   "10.1.127.254",
+   "10.1.128.1"
+  ],
+  "answer": "A",
+  "explanation": "10.1.64.0/18 covers 64-127 in the third octet. 10.1.96.0/19 covers 96-127. Only 10.1.80.1 is in the first range but not the second.",
+  "option_notes": [
+   "Correct: 80 is in 64-127 but not in 96-127.",
+   "Wrong: 100 is in both ranges.",
+   "Wrong: 127 is in both ranges.",
+   "Wrong: 128 is outside both ranges."
+  ],
+  "key_concept": "/18 = block of 64; /19 = block of 32.",
+  "cli_example": "show ip route 10.1.80.1",
+  "tip": "64-127 minus 96-127 = 64-95."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "R1 has D 10.0.0.0/8 [90/...], O 10.1.0.0/16 [110/...] and R 10.1.1.0/24 [120/...]. Which route is used for a packet to 10.1.2.1?",
+  "choices": [
+   "The OSPF /16",
+   "The RIP /24",
+   "The EIGRP /8",
+   "All three, load-balanced"
+  ],
+  "answer": "A",
+  "explanation": "10.1.2.1 is not in 10.1.1.0/24. It matches 10.1.0.0/16 and 10.0.0.0/8, and /16 is longer.",
+  "option_notes": [
+   "Correct: The /16 is the longest match.",
+   "Wrong: 10.1.2.1 is outside 10.1.1.0/24.",
+   "Wrong: The /8 matches but is shorter, even with the best AD.",
+   "Wrong: Different prefixes are never load-balanced."
+  ],
+  "key_concept": "AD never helps a shorter prefix.",
+  "cli_example": "show ip route 10.1.2.1",
+  "tip": "Third octet 2 ≠ 1."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "R1 has 192.168.0.0/22, 192.168.4.0/23, 192.168.6.0/24 and a default route. Which destination uses the default route?",
+  "choices": [
+   "192.168.7.1",
+   "192.168.3.250",
+   "192.168.5.9",
+   "192.168.6.200"
+  ],
+  "answer": "A",
+  "explanation": "/22 covers 192.168.0-3, /23 covers 4-5, and /24 covers 6. Only 192.168.7.x matches none of them.",
+  "option_notes": [
+   "Correct: 7 is not covered by any specific route.",
+   "Wrong: 3 is inside 192.168.0.0/22.",
+   "Wrong: 5 is inside 192.168.4.0/23.",
+   "Wrong: 6 is inside 192.168.6.0/24."
+  ],
+  "key_concept": "Map each route to its range.",
+  "cli_example": "show ip route 192.168.7.1",
+  "tip": "0-3, 4-5, 6 ... 7 is missing."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "R1 learns 10.8.0.0/16 by OSPF via R2 and via R3, both cost 30, and load-balances. The admin raises the cost of R1's link to R3 by 5. What happens?",
+  "choices": [
+   "Only the path via R2 (cost 30) is used",
+   "Both paths stay, now with unequal sharing",
+   "Only the path via R3 is used",
+   "The route is removed and recalculated as /16"
+  ],
+  "answer": "A",
+  "explanation": "OSPF installs only the lowest cost paths. Via R3 now costs 35, so only the cost 30 path via R2 stays in the table.",
+  "option_notes": [
+   "Correct: Cost 30 beats 35; the R3 path is dropped.",
+   "Wrong: OSPF does not do unequal-cost load balancing.",
+   "Wrong: Via R3 is now the worse path.",
+   "Wrong: The prefix stays /16; only the path set changes."
+  ],
+  "key_concept": "OSPF = equal-cost load balancing only.",
+  "cli_example": "show ip route 10.8.0.0",
+  "tip": "Change one cost and the tie breaks."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "Refer to the output. Which next hop is used for 2001:DB8:CAFE:11::1?\n\nS   2001:DB8::/32 [1/0]\n     via 2001:DB8:1::1\nO   2001:DB8:CAFE::/48 [110/20]\n     via FE80::2, GigabitEthernet0/0\nS   2001:DB8:CAFE:10::/64 [1/0]\n     via 2001:DB8:2::1",
+  "choices": [
+   "FE80::2",
+   "2001:DB8:2::1",
+   "2001:DB8:1::1",
+   "The packet is dropped"
+  ],
+  "answer": "A",
+  "explanation": "2001:DB8:CAFE:11:: is not in subnet :10::/64. It does match 2001:DB8:CAFE::/48, which is longer than the /32.",
+  "option_notes": [
+   "Correct: The /48 is the longest match.",
+   "Wrong: Subnet :11 is not subnet :10.",
+   "Wrong: The /32 matches but is shorter.",
+   "Wrong: Two routes match."
+  ],
+  "key_concept": "/64 = exact 4th hextet; /48 = first three hextets.",
+  "cli_example": "show ipv6 route 2001:DB8:CAFE:11::1",
+  "tip": "Hextet 11 ≠ 10 (hex)."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "R1 has 10.10.10.0/24 via OSPF (cost 50), 10.10.10.0/24 via a static route with AD 115, and 10.10.0.0/16 via a static route with AD 1. Which route is used for 10.10.10.10?",
+  "choices": [
+   "The OSPF /24",
+   "The static /24 with AD 115",
+   "The static /16 with AD 1",
+   "Both /24 routes, load-balanced"
+  ],
+  "answer": "A",
+  "explanation": "The two /24s are the longest match. Between them, OSPF (110) beats the static route (115), so only the OSPF /24 is installed and used.",
+  "option_notes": [
+   "Correct: /24 first, then OSPF 110 < 115.",
+   "Wrong: The static /24 is a floating backup.",
+   "Wrong: The /16 loses on prefix length.",
+   "Wrong: Different sources are not load-balanced."
+  ],
+  "key_concept": "Floating static: AD set higher than the dynamic route.",
+  "cli_example": "show ip route 10.10.10.10",
+  "tip": "Length first, then AD."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "R1 has 10.10.10.0/24 via OSPF (cost 50), 10.10.10.0/24 via a static route with AD 115, and 10.10.0.0/16 via a static route with AD 1. The OSPF neighbor goes down. Which route is used for 10.10.10.10?",
+  "choices": [
+   "The static /24 with AD 115",
+   "The static /16 with AD 1",
+   "The default route, if one exists",
+   "No route; the packet is dropped"
+  ],
+  "answer": "A",
+  "explanation": "When the OSPF route is lost, the floating static /24 (AD 115) is installed. It is still a longer match than the /16.",
+  "option_notes": [
+   "Correct: The floating /24 is installed and is the longest match.",
+   "Wrong: The /16 is still shorter than the /24.",
+   "Wrong: A /24 still matches, so the default is not needed.",
+   "Wrong: The backup /24 keeps the destination reachable."
+  ],
+  "key_concept": "Floating static takes over when the dynamic route disappears.",
+  "cli_example": "show ip route 10.10.10.0",
+  "tip": "Backup /24 still beats /16."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "Refer to the output. What can you conclude?\n\nR1# show ip route 10.50.1.1\nRouting entry for 10.50.0.0/16\n  Known via \"static\", distance 1, metric 0",
+  "choices": [
+   "No more specific route to 10.50.1.1 is installed",
+   "Static routes always beat OSPF routes for any destination",
+   "10.50.1.1 is unreachable from R1",
+   "OSPF has a higher AD than this route"
+  ],
+  "answer": "A",
+  "explanation": "show ip route <address> shows the best (longest) match. Because it shows /16, no /17 to /32 route containing 10.50.1.1 is in the table.",
+  "option_notes": [
+   "Correct: The longest installed match is the /16.",
+   "Wrong: A longer OSPF route would win over this static.",
+   "Wrong: A route exists, so it is reachable from R1's view.",
+   "Wrong: AD says nothing about routes with other prefix lengths."
+  ],
+  "key_concept": "show ip route <IP> = longest installed match.",
+  "cli_example": "show ip route 10.50.1.1",
+  "tip": "The command answers 'which route is used?'"
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "These four routes are all in the table. Which one is used for 192.168.100.33?",
+  "choices": [
+   "192.168.100.32/28",
+   "192.168.100.32/27",
+   "192.168.100.0/26",
+   "192.168.96.0/20"
+  ],
+  "answer": "A",
+  "explanation": "All four contain .33: /28 covers .32-.47, /27 covers .32-.63, /26 covers .0-.63 and /20 covers 192.168.96.0-111.255. The /28 is longest.",
+  "option_notes": [
+   "Correct: /28 is the longest match.",
+   "Wrong: /27 matches but is shorter.",
+   "Wrong: /26 matches but is shorter.",
+   "Wrong: /20 matches but is the shortest."
+  ],
+  "key_concept": "Biggest prefix number that still matches.",
+  "cli_example": "show ip route 192.168.100.33",
+  "tip": "/28 beats /27 beats /26."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "R1 has 172.16.0.0/12 and 172.30.0.0/15. Which route is used for 172.31.255.255?",
+  "choices": [
+   "172.30.0.0/15",
+   "172.16.0.0/12",
+   "Neither; it is a broadcast",
+   "Both, load-balanced"
+  ],
+  "answer": "A",
+  "explanation": "172.30.0.0/15 covers 172.30.0.0 to 172.31.255.255. Both routes match, and /15 is longer than /12.",
+  "option_notes": [
+   "Correct: /15 covers 172.30-31 and is longer.",
+   "Wrong: /12 matches but is shorter.",
+   "Wrong: It is a normal destination for the router.",
+   "Wrong: Different prefixes are not load-balanced."
+  ],
+  "key_concept": "/15 = block of 2 in the 2nd octet.",
+  "cli_example": "show ip route 172.31.255.255",
+  "tip": "30 and 31 form a /15."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "R1 has D 10.1.1.0/24 [90/2816] and O 10.1.1.0/25 [110/2]. Which route is used for 10.1.1.200?",
+  "choices": [
+   "The EIGRP /24",
+   "The OSPF /25",
+   "Both, load-balanced",
+   "Neither; the routes conflict"
+  ],
+  "answer": "A",
+  "explanation": "10.1.1.0/25 covers .0-.127, so .200 matches only the /24.",
+  "option_notes": [
+   "Correct: Only the /24 contains .200.",
+   "Wrong: .200 is outside .0-.127.",
+   "Wrong: Different prefixes are not load-balanced.",
+   "Wrong: Overlapping routes are normal."
+  ],
+  "key_concept": "Lower half /25 = .0-.127.",
+  "cli_example": "show ip route 10.1.1.200",
+  "tip": "200 > 127."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "R1 has D 10.1.1.0/24 [90/2816] and O 10.1.1.0/25 [110/2]. Which route is used for 10.1.1.100?",
+  "choices": [
+   "The OSPF /25",
+   "The EIGRP /24",
+   "Both, load-balanced",
+   "The one with the lower AD"
+  ],
+  "answer": "A",
+  "explanation": ".100 is in 10.1.1.0/25 (.0-.127) and in the /24. The /25 is longer, so OSPF is used even though EIGRP has a lower AD.",
+  "option_notes": [
+   "Correct: /25 is the longest match.",
+   "Wrong: The /24 is shorter.",
+   "Wrong: Different prefixes are not load-balanced.",
+   "Wrong: AD is not compared between different prefix lengths."
+  ],
+  "key_concept": "Longest match ignores AD.",
+  "cli_example": "show ip route 10.1.1.100",
+  "tip": "100 ≤ 127 → /25."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "R1 has 192.168.48.0/22 via A (static), 192.168.50.0/23 via B (OSPF) and 192.168.50.0/24 via C (RIP). Which next hop is used for 192.168.50.1?",
+  "choices": [
+   "C",
+   "B",
+   "A",
+   "B and C, load-balanced"
+  ],
+  "answer": "A",
+  "explanation": "All three contain 192.168.50.1: /22 covers 48-51, /23 covers 50-51 and /24 covers 50. The /24 is longest.",
+  "option_notes": [
+   "Correct: /24 is the longest match.",
+   "Wrong: /23 matches but is shorter.",
+   "Wrong: /22 matches but is the shortest.",
+   "Wrong: Different prefixes are not load-balanced."
+  ],
+  "key_concept": "The RIP route can win if it is most specific.",
+  "cli_example": "show ip route 192.168.50.1",
+  "tip": "/24 > /23 > /22."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "Which statement about the default route is true?",
+  "choices": [
+   "It is used only when no other route matches",
+   "It is used whenever its AD is the lowest",
+   "It is preferred because it covers all hosts",
+   "It is checked before connected routes"
+  ],
+  "answer": "A",
+  "explanation": "0.0.0.0/0 has prefix length 0, the shortest possible. It wins only when no other route matches the destination.",
+  "option_notes": [
+   "Correct: /0 is the last choice in longest match.",
+   "Wrong: AD does not lift a /0 above other matching prefixes.",
+   "Wrong: Covering everything makes it the least specific.",
+   "Wrong: Connected routes are more specific, so they win."
+  ],
+  "key_concept": "Default = shortest possible match.",
+  "cli_example": "show ip route",
+  "tip": "Last resort means last."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "Which address matches 2001:DB8:ACAD:1200::/56?",
+  "choices": [
+   "2001:DB8:ACAD:12FF::1",
+   "2001:DB8:ACAD:1300::1",
+   "2001:DB8:ACAD:1100::1",
+   "2001:DB8:ACAD:120::1"
+  ],
+  "answer": "A",
+  "explanation": "/56 fixes the first 56 bits: 2001:DB8:ACAD and the first two hex digits (12) of the fourth hextet. 12FF keeps 12; 1300 and 1100 do not, and 120 is really 0120.",
+  "option_notes": [
+   "Correct: The 4th hextet 12FF starts with 12.",
+   "Wrong: 13 differs from 12.",
+   "Wrong: 11 differs from 12.",
+   "Wrong: 120 means 0120, which starts with 01."
+  ],
+  "key_concept": "/56 = first 2 hex digits of the 4th hextet.",
+  "cli_example": "show ipv6 route 2001:DB8:ACAD:12FF::1",
+  "tip": "Expand leading zeros before comparing."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "R1 has a static default route (AD 1) and a DHCP-learned default route (AD 254). Which is installed?",
+  "choices": [
+   "The static default, AD 1",
+   "The DHCP default, AD 254",
+   "Both, load-balanced",
+   "The DHCP default, because it is newer"
+  ],
+  "answer": "A",
+  "explanation": "Both are 0.0.0.0/0, so AD decides. 1 is lower than 254.",
+  "option_notes": [
+   "Correct: Static 1 < DHCP 254.",
+   "Wrong: 254 is the higher AD.",
+   "Wrong: Different sources are not load-balanced.",
+   "Wrong: Age does not decide."
+  ],
+  "key_concept": "DHCP default = AD 254, built to lose.",
+  "cli_example": "show ip route 0.0.0.0",
+  "tip": "Configured beats learned-by-DHCP."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "R1 has ip route 10.30.0.0 255.255.0.0 via R2, but traffic to 10.30.30.30 goes to R3 because of O 10.30.30.0/24 via R3. Which change makes this traffic use R2?",
+  "choices": [
+   "Add a static route for 10.30.30.0/24 via R2",
+   "Lower the /16 static route's AD to 0",
+   "Raise the OSPF cost on the R3 path",
+   "Change the /16 static's next hop to R3"
+  ],
+  "answer": "A",
+  "explanation": "The /24 wins by longest match. A static /24 via R2 ties on length and beats OSPF on AD (1 vs 110).",
+  "option_notes": [
+   "Correct: Same /24 length, lower AD → via R2.",
+   "Wrong: AD does not help the /16 against a /24.",
+   "Wrong: A higher cost still leaves the only /24 in place.",
+   "Wrong: That sends traffic to R3, not R2."
+  ],
+  "key_concept": "To beat a specific route, match its length.",
+  "cli_example": "show ip route 10.30.30.30",
+  "tip": "Fight length with length."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "R1 has O 10.40.0.0/16 [110/20] via a 2-hop path and O 10.40.0.0/16 [110/30] via a 1-hop path. Which path is used?",
+  "choices": [
+   "The 2-hop path with cost 20",
+   "The 1-hop path with cost 30",
+   "Both, load-balanced",
+   "The path learned first"
+  ],
+  "answer": "A",
+  "explanation": "OSPF picks the lowest total cost, not the fewest routers. Cost 20 is better.",
+  "option_notes": [
+   "Correct: Lower cost wins, even with more hops.",
+   "Wrong: Hop count does not matter to OSPF.",
+   "Wrong: Load balancing needs equal cost.",
+   "Wrong: Learning order does not decide."
+  ],
+  "key_concept": "OSPF counts cost, not hops.",
+  "cli_example": "show ip ospf interface brief",
+  "tip": "Fast 2-hop road beats slow 1-hop road."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "Which statement describes how a router uses AD, metric and prefix length?",
+  "choices": [
+   "Install by AD/metric; forward by longest match",
+   "Forward by AD, then by longest match",
+   "Forward by metric, then by AD",
+   "Install by longest match; forward by AD"
+  ],
+  "answer": "A",
+  "explanation": "AD and metric decide which route for each exact prefix goes into the table. For each packet, the router then picks the longest matching prefix among the installed routes.",
+  "option_notes": [
+   "Correct: AD and metric install; longest match forwards.",
+   "Wrong: AD is not used per packet.",
+   "Wrong: Metric is not used per packet.",
+   "Wrong: Longest match is the per-packet step."
+  ],
+  "key_concept": "Table building vs packet forwarding.",
+  "cli_example": "show ip route <address>",
+  "tip": "Build with AD and metric, use with longest match."
+ },
+ {
+  "sub": "3.2",
+  "difficulty": "어려움",
+  "question": "R1 has 172.16.0.0/16 via OSPF, 172.16.0.0/16 via a static route with AD 120, and 172.16.1.0/24 via a static route with AD 130. Which route is used for 172.16.1.1?",
+  "choices": [
+   "The static /24 with AD 130",
+   "The OSPF /16",
+   "The static /16 with AD 120",
+   "No route; AD 130 is too high"
+  ],
+  "answer": "A",
+  "explanation": "The /24 is the only route for that exact prefix, so it is installed even with AD 130. It is also the longest match for 172.16.1.1.",
+  "option_notes": [
+   "Correct: The /24 is installed and is the longest match.",
+   "Wrong: The /16 is shorter.",
+   "Wrong: That static /16 is not even installed; OSPF wins the /16.",
+   "Wrong: Any AD below 255 can be installed."
+  ],
+  "key_concept": "AD only competes against the same prefix.",
+  "cli_example": "show ip route 172.16.1.1",
+  "tip": "No rival for its prefix = installed."
  }
 ]

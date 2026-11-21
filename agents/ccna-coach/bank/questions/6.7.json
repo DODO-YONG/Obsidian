@@ -114,9 +114,9 @@
   "difficulty": "쉬움",
   "question": "Which statement describes JSON?",
   "choices": [
-   "A lightweight, human-readable data format made of key/value pairs and arrays",
+   "A lightweight, readable data format of key/value pairs and arrays",
    "A routing protocol",
-   "A programming language that compiles to machine code",
+   "A programming language that compiles directly to machine code",
    "A Layer 2 header"
   ],
   "answer": "A",
@@ -510,7 +510,7 @@
   "difficulty": "어려움",
   "question": "A REST API returns [] for a request that lists devices. What does this mean?",
   "choices": [
-   "An empty object",
+   "An empty object, so one device was returned",
    "A syntax error",
    "An empty array, so no devices were returned",
    "A null value"
@@ -535,7 +535,7 @@
    "{\"id\": null}",
    "{\"ok\": false}",
    "{\"id\": 5, \"id2\": undefined}",
-   "{\"list\": []}"
+   "{\"list\": [], \"x\": \"null\"}"
   ],
   "answer": "C",
   "explanation": "JSON values can be strings, numbers, objects, arrays, true, false or null. undefined is a JavaScript keyword that does not exist in JSON.",
@@ -620,7 +620,7 @@
   "difficulty": "어려움",
   "question": "Which statement about JSON compared with XML is correct?",
   "choices": [
-   "JSON requires closing tags for every key",
+   "JSON requires closing tags for every key, so it is larger",
    "JSON cannot represent lists",
    "JSON can only store numbers",
    "JSON is usually more compact because it does not use closing tags"

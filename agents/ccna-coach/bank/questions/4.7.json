@@ -4,9 +4,9 @@
   "difficulty": "쉬움",
   "question": "What is the main goal of QoS?",
   "choices": [
-   "Give priority and predictable treatment to important traffic during congestion",
+   "Prioritize important traffic during congestion",
    "Encrypt all traffic",
-   "Increase the physical link speed",
+   "Increase the physical link speed for all users",
    "Assign IP addresses"
   ],
   "answer": "A",
@@ -48,7 +48,7 @@
   "difficulty": "쉬움",
   "question": "What does classification do in QoS?",
   "choices": [
-   "Drops packets that exceed a rate",
+   "Drops the packets that exceed a configured rate",
    "Delays packets to smooth a rate",
    "Identifies traffic and places it into classes",
    "Encrypts packets"
@@ -70,7 +70,7 @@
   "difficulty": "쉬움",
   "question": "What does marking do in QoS?",
   "choices": [
-   "Blocks unwanted traffic",
+   "Blocks unwanted traffic at the edge of the network using access lists",
    "Creates VLANs",
    "Measures link speed",
    "Sets a value in the packet or frame header to indicate the class"
@@ -114,7 +114,7 @@
   "difficulty": "쉬움",
   "question": "What is the main difference between policing and shaping?",
   "choices": [
-   "Policing buffers excess traffic; shaping drops it",
+   "Policing buffers the excess traffic; shaping drops or remarks it",
    "Policing drops or remarks excess traffic; shaping buffers it",
    "Both always drop excess",
    "Both only mark traffic"
@@ -136,7 +136,7 @@
   "difficulty": "쉬움",
   "question": "Which queuing mechanism gives voice strict priority?",
   "choices": [
-   "FIFO",
+   "WFQ (weighted fair queuing)",
    "Tail drop",
    "LLQ (low latency queuing)",
    "RIP"
@@ -144,7 +144,7 @@
   "answer": "C",
   "explanation": "LLQ includes a strict priority queue that is always served first, typically used for voice.",
   "option_notes": [
-   "Wrong: It treats all packets the same.",
+   "Wrong: WFQ shares bandwidth fairly between flows but gives no strict priority.",
    "Wrong: It is a drop behavior, not a queue type.",
    "Correct: It adds a priority queue to CBWFQ.",
    "Wrong: It is a routing protocol."
@@ -269,7 +269,7 @@
   "question": "What is the trust boundary in QoS?",
   "choices": [
    "The point where a device begins to trust QoS markings",
-   "The point where traffic is encrypted",
+   "The point where traffic is first encrypted by the network",
    "The maximum bandwidth of a link",
    "The boundary between VLANs"
   ],
@@ -312,7 +312,7 @@
   "difficulty": "보통",
   "question": "What does CBWFQ provide?",
   "choices": [
-   "Strict priority for all classes",
+   "Strict priority queuing for all classes of traffic",
    "Encryption per class",
    "A guaranteed minimum bandwidth for each class",
    "Header compression only"
@@ -445,7 +445,7 @@
   "question": "Examine the policy. What happens to voice during congestion?\npolicy-map WAN\n class VOICE\n  priority percent 20\n class DATA\n  bandwidth percent 40",
   "choices": [
    "Voice gets strict priority but is limited to 20 percent when congested",
-   "Voice gets unlimited priority",
+   "Voice gets unlimited strict priority over all other traffic, even when congested",
    "Voice is dropped first",
    "Voice shares equally with data"
   ],
@@ -510,7 +510,7 @@
   "difficulty": "어려움",
   "question": "What does this policer do?\npolice 1000000 conform-action transmit exceed-action drop",
   "choices": [
-   "Buffers excess traffic",
+   "Buffers excess traffic above 1 Mbps and sends it later",
    "Marks excess as EF",
    "Blocks all traffic",
    "Sends traffic up to 1 Mbps and drops the rest"
@@ -576,7 +576,7 @@
   "difficulty": "어려움",
   "question": "A PC marks its traffic DSCP EF to gain priority. The access switch uses a trust boundary at the IP phone. What should the switch do?",
   "choices": [
-   "Trust and forward EF",
+   "Trust the EF marking and forward it",
    "Drop the traffic",
    "Re-mark or ignore the PC markings",
    "Convert to CoS 7"
@@ -622,7 +622,7 @@
   "choices": [
    "Early random drops avoid all TCP flows slowing down together",
    "It increases link speed",
-   "It removes jitter completely",
+   "It removes queuing jitter completely for every TCP flow on the link",
    "It encrypts TCP sessions"
   ],
   "answer": "A",

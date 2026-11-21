@@ -71,7 +71,7 @@
   "question": "What is a container in the context of virtualization?",
   "choices": [
    "A full virtual machine with its own guest kernel and virtual hardware",
-   "A physical switch module installed in a chassis",
+   "A physical switch module installed in a blade chassis and shared by several tenants",
    "A lightweight isolated environment that shares the host operating system kernel",
    "A VLAN used to separate tenant traffic"
   ],
@@ -159,7 +159,7 @@
   "question": "What is a main benefit of server virtualization?",
   "choices": [
    "It removes the need for any network connectivity",
-   "It automatically encrypts all traffic between hosts",
+   "It automatically encrypts all of the traffic between hosts on the same physical server",
    "Multiple workloads can share one physical server, improving hardware use",
    "It increases the number of VLANs a switch supports"
   ],
@@ -202,10 +202,10 @@
   "difficulty": "쉬움",
   "question": "What is the purpose of VRF on a router?",
   "choices": [
-   "Keep routing tables of different customers or segments separate on one device",
+   "Keep routing tables of different customers separate on one device",
    "Increase the speed of a physical interface",
    "Replace spanning tree on trunk links",
-   "Load balance traffic across two ISPs"
+   "Load balance traffic across two ISPs using separate routing tables"
   ],
   "answer": "A",
   "explanation": "VRF virtualizes the router at Layer 3. Overlapping IP address ranges can be used in different VRFs without conflict. Traffic does not pass between VRFs unless it is explicitly leaked.",
@@ -249,7 +249,7 @@
    "A container includes a hypervisor and a VM does not",
    "VMs share the host kernel and containers do not",
    "A VM includes a full guest OS, while a container shares the host OS kernel",
-   "VMs cannot be moved between hosts, but containers can"
+   "VMs can never be moved between physical hosts while running, but containers can"
   ],
   "answer": "C",
   "explanation": "The key difference is the operating system layer. Each VM contains a complete guest OS, making it larger. A container shares the host kernel, making it smaller and faster.",
@@ -334,7 +334,7 @@
   "difficulty": "보통",
   "question": "A Type 1 hypervisor is preferred over a Type 2 hypervisor in a data center mainly because it:",
   "choices": [
-   "Requires a desktop operating system to be installed first",
+   "Requires a full desktop operating system to be installed on the server first",
    "Cannot host more than one VM",
    "Runs directly on hardware with less overhead and better performance",
    "Is designed only for personal laptops"
@@ -359,7 +359,7 @@
    "A physical router and a VRF",
    "A virtual NIC in the VM and a virtual switch on the host",
    "A trunk port and a VTP server",
-   "A Type 2 hypervisor and a container engine"
+   "A Type 2 hypervisor and a container engine running on the host"
   ],
   "answer": "B",
   "explanation": "Each VM has one or more virtual NICs. These connect to a virtual switch in the hypervisor. The virtual switch is attached to one or more physical NICs that connect to the access or data center switch.",
@@ -402,8 +402,8 @@
   "choices": [
    "Spanning Tree PortFast",
    "Route summarization",
-   "Port security sticky learning",
-   "Virtualization features of the hypervisor environment, such as live migration"
+   "Port security sticky learning that moves the VM's MAC to the new port",
+   "Hypervisor virtualization features such as live migration"
   ],
   "answer": "D",
   "explanation": "One big benefit of virtualization is VM mobility. Because a VM is software, it can be moved between physical hosts for maintenance or load balancing. The VM's network settings follow it.",
@@ -420,18 +420,18 @@
  {
   "sub": "1.12",
   "difficulty": "어려움",
-  "question": "A router has the following configuration. A ping from R1 to 10.1.1.2 fails even though the neighbor is reachable. What is the most likely cause?\n\ninterface g0/1\n ip address 10.1.1.1 255.255.255.0\n vrf forwarding RED\n!\nvrf definition RED\n address-family ipv4",
+  "question": "An engineer enters the following commands in this order. A ping from R1 to 10.1.1.2 fails even though the neighbor is reachable. What is the most likely cause?\n\ninterface g0/1\n ip address 10.1.1.1 255.255.255.0\n vrf forwarding RED\n!\nvrf definition RED\n address-family ipv4",
   "choices": [
    "VRF RED does not support IPv4",
    "The ping must use the vrf keyword and the interface has no problem",
-   "The IP address was applied before vrf forwarding, so it was removed from the interface",
+   "The IP address was applied before vrf forwarding, which removed it",
    "The router needs MPLS enabled to use VRF"
   ],
   "answer": "C",
   "explanation": "Assigning an interface to a VRF removes its IPv4 address. If the commands are typed in the wrong order, the interface ends up without an IP. You must reapply the address after vrf forwarding. Note also that pings need ping vrf RED because the global table does not know that VRF.",
   "option_notes": [
    "Wrong: VRF RED has the ipv4 address family configured.",
-   "Wrong: Even with the vrf keyword, a ping needs the interface to have an IP address.",
+   "Wrong: The vrf keyword is needed too, but the interface has lost its IP address, so the ping still fails.",
    "Correct: Because vrf forwarding was entered after the IP address, the address was cleared, leaving the interface without an IP.",
    "Wrong: VRF-lite does not require MPLS."
   ],
@@ -445,9 +445,9 @@
   "question": "On a router, ping 192.168.1.2 fails from the global exec prompt, but ping vrf BLUE 192.168.1.2 succeeds. What does this indicate?",
   "choices": [
    "The ping command is broken in global mode",
-   "The destination is reachable through an interface in VRF BLUE, not through the global routing table",
+   "The destination is reachable only through VRF BLUE, not the global table",
    "VRF BLUE has a higher administrative distance",
-   "The destination host blocks ICMP from the global table"
+   "The destination host blocks ICMP that comes from the global routing table"
   ],
   "answer": "B",
   "explanation": "Each VRF has its own routing table, so commands default to the global table unless you name a VRF. The destination network exists only in BLUE. Use the vrf keyword for ping, traceroute and show ip route to test inside a VRF.",
@@ -466,8 +466,8 @@
   "difficulty": "어려움",
   "question": "Which design requirement is best met with VRFs rather than VLANs alone?",
   "choices": [
-   "Separating Layer 3 routing for two tenants that use overlapping IP subnets on shared routers",
-   "Separating broadcast domains on an access switch",
+   "Separating routing for two tenants with overlapping subnets on shared routers",
+   "Separating broadcast domains for each department on a single access-layer switch",
    "Preventing loops between two access switches",
    "Increasing trunk bandwidth between switches"
   ],
@@ -510,9 +510,9 @@
   "difficulty": "어려움",
   "question": "Which statement correctly describes route leaking between VRFs?",
   "choices": [
-   "VRFs automatically exchange all routes using OSPF",
+   "VRFs automatically exchange all of their routes using OSPF",
    "Route leaking occurs when a VRF is deleted",
-   "Routes are intentionally imported from one VRF into another so selected networks can communicate",
+   "Routes are deliberately imported from one VRF into another",
    "VRFs cannot communicate under any circumstances"
   ],
   "answer": "C",
@@ -532,7 +532,7 @@
   "difficulty": "어려움",
   "question": "Which of these is a disadvantage of running a Type 2 hypervisor compared with a Type 1 hypervisor?",
   "choices": [
-   "It cannot run Linux guests",
+   "It cannot run Linux guest operating systems, only Windows guests on any host",
    "An additional host OS layer adds overhead and a larger attack surface",
    "It needs a physical router for each VM",
    "It cannot use virtual NICs"
@@ -598,9 +598,9 @@
   "difficulty": "보통",
   "question": "Which statement about hypervisors and VM isolation is correct?",
   "choices": [
-   "If one VM crashes, all VMs on the host must reboot",
+   "If one VM crashes, every VM on the same host must reboot to recover",
    "All VMs share one IP address and MAC address",
-   "A problem inside one VM's guest OS normally does not affect other VMs on the same host",
+   "A crash in one VM's guest OS normally does not affect other VMs",
    "VMs on the same host can read each other's memory by default"
   ],
   "answer": "C",
@@ -620,7 +620,7 @@
   "difficulty": "어려움",
   "question": "A router has VRF RED with the command ip route vrf RED 0.0.0.0 0.0.0.0 10.5.5.1. Where will this default route appear?",
   "choices": [
-   "In the global routing table, visible with show ip route",
+   "In the global routing table, visible with show ip route and show ip route vrf",
    "Only in the routing table of VRF RED, visible with show ip route vrf RED",
    "In every VRF configured on the router",
    "In no table, because VRFs do not support static routes"
@@ -643,7 +643,7 @@
   "question": "An engineer needs to run several isolated customer networks on one physical router, with each customer allowed its own overlapping addressing. Which approach is correct?",
   "choices": [
    "Create one VRF per customer and assign each customer's interfaces to its VRF",
-   "Create one VLAN per customer on the router's loopback interfaces",
+   "Create one VLAN per customer and map each to one of the router's loopback interfaces",
    "Use a single routing table with different AD values per customer",
    "Install a Type 2 hypervisor on the router"
   ],

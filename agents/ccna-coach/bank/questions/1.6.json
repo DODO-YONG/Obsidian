@@ -402,7 +402,7 @@
   "choices": [
    "The PC address is a broadcast address",
    "The mask is invalid",
-   "The default gateway is the network address",
+   "The default gateway is the network address of the PC's subnet",
    "The default gateway is not in the same subnet as the PC"
   ],
   "answer": "D",
@@ -512,8 +512,8 @@
   "choices": [
    "10.1.1.1/30 is a broadcast address",
    "A /30 cannot be used on a router",
-   "10.1.1.4/30 is the network address of the next /30 subnet and is in a different subnet",
-   "The two addresses are in the same subnet but share a gateway"
+   "10.1.1.4/30 is the network address of the next /30, a different subnet",
+   "The two addresses are in the same subnet but must share one default gateway"
   ],
   "answer": "C",
   "explanation": "A /30 has a block size of 4. 10.1.1.1 is in the subnet 10.1.1.0/30 (hosts .1 and .2). 10.1.1.4 is the network address of 10.1.1.4/30, which is a different subnet, so R2 cannot be used and the routers are not on the same subnet.",
@@ -578,7 +578,7 @@
   "choices": [
    "Accept both and route between them",
    "Accept the second command and shut down Gi0/0",
-   "Accept both and use the longer mask for Gi0/0",
+   "Accept both commands and apply the longer of the two masks to Gi0/0",
    "Reject the second command with an overlapping subnet error"
   ],
   "answer": "D",
@@ -622,7 +622,7 @@
   "choices": [
    "192.168.5.31 is the network address",
    "192.168.5.31 is the broadcast address of the 192.168.5.0/27 subnet",
-   "The mask 255.255.255.224 is not valid on a router",
+   "The mask 255.255.255.224 is not valid on a router's Ethernet interface",
    "192.168.5.31 is a private address that is not allowed"
   ],
   "answer": "B",

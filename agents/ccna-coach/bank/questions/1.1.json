@@ -93,7 +93,7 @@
   "question": "Which device centrally manages and configures lightweight access points?",
   "choices": [
    "Wireless LAN Controller (WLC)",
-   "Layer 2 switch",
+   "Layer 2 switch running VTP server mode",
    "Hub",
    "Syslog server"
   ],
@@ -181,7 +181,7 @@
   "question": "What is the main difference between an IPS and an IDS?",
   "choices": [
    "An IPS sits inline and can block traffic; an IDS only detects and alerts",
-   "An IDS sits inline and can block traffic; an IPS only alerts",
+   "An IDS sits inline and can block traffic; an IPS only detects and alerts",
    "An IPS works at Layer 2 only; an IDS works at Layer 7 only",
    "An IPS routes packets; an IDS switches frames"
   ],
@@ -224,7 +224,7 @@
   "difficulty": "보통",
   "question": "A Layer 2 switch receives a frame whose destination MAC address is not in its MAC address table. What does the switch do?",
   "choices": [
-   "Drops the frame",
+   "Drops the frame and waits for the destination to send traffic",
    "Sends the frame back out the ingress port",
    "Floods the frame out all ports in the VLAN except the ingress port",
    "Sends an ICMP unreachable message to the sender"
@@ -246,7 +246,7 @@
   "difficulty": "보통",
   "question": "A router receives a packet for a destination that does not match any route and no default route exists. What happens?",
   "choices": [
-   "The router floods the packet out all interfaces",
+   "The router floods the packet out all interfaces except the one it arrived on",
    "The router forwards the packet to the first interface",
    "The router asks DHCP for a route",
    "The router drops the packet and may send an ICMP destination unreachable message"
@@ -270,7 +270,7 @@
   "choices": [
    "CAPWAP over UDP 5246 and 5247",
    "GRE over TCP 47",
-   "LWAPP over TCP 443",
+   "LWAPP over TCP 443 and TCP 8443",
    "IPsec over UDP 500"
   ],
   "answer": "A",
@@ -357,7 +357,7 @@
   "question": "How does an autonomous AP differ from a lightweight AP?",
   "choices": [
    "An autonomous AP is configured and managed on its own, with no WLC required",
-   "An autonomous AP depends on a WLC for all configuration",
+   "An autonomous AP depends on a WLC for all of its configuration and policy",
    "An autonomous AP can only operate in the 6 GHz band",
    "An autonomous AP has no radio"
   ],
@@ -400,7 +400,7 @@
   "difficulty": "보통",
   "question": "Which description matches the southbound direction of Cisco DNA Center?",
   "choices": [
-   "Communication from the controller to applications using REST APIs",
+   "Communication from the controller to business applications and scripts using REST APIs such as the Intent API",
    "Communication between two switches using STP",
    "Communication from the controller to network devices using protocols such as SSH, SNMP and NETCONF",
    "Communication between hosts and DNS servers"
@@ -444,7 +444,7 @@
   "difficulty": "어려움",
   "question": "Users in VLAN 10 and VLAN 20 are connected to the same Layer 2 switch, and the switch has no IP routing. Hosts in the two VLANs cannot ping each other. What is required?",
   "choices": [
-   "A second Layer 2 switch in each VLAN",
+   "A second Layer 2 switch in each VLAN connected by a trunk",
    "A hub connecting the two VLANs",
    "Disabling VTP",
    "A Layer 3 device that routes between the VLAN subnets"
@@ -491,7 +491,7 @@
    "The SVI has no description",
    "VLAN 30 does not exist in the VLAN database or no active port is in VLAN 30",
    "The switch is using full duplex",
-   "The SVI IP address is a private address"
+   "The SVI IP address is a private RFC 1918 address, which an SVI cannot use"
   ],
   "answer": "B",
   "explanation": "An SVI's line protocol is up only when the VLAN exists and at least one port in that VLAN (access port or trunk allowing it) is up. Descriptions, duplex and private addressing do not affect SVI state.",
@@ -576,7 +576,7 @@
   "difficulty": "어려움",
   "question": "Why can an inline IPS become a single point of failure?",
   "choices": [
-   "It only inspects mirrored traffic and misses attacks",
+   "It only inspects mirrored traffic, so it misses attacks and slows the path",
    "All traffic must pass through it, so a failure can interrupt the path",
    "It cannot drop packets",
    "It runs only on wireless networks"
@@ -599,7 +599,7 @@
   "question": "Why do Layer 3 switches usually forward inter-VLAN traffic faster than a traditional software-based router on a stick?",
   "choices": [
    "They use fewer IP addresses",
-   "They do not need a routing table",
+   "They do not need a routing table because they switch by MAC",
    "They perform routing in hardware (ASICs) using CEF tables",
    "They ignore access control lists"
   ],

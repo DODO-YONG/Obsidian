@@ -15,12 +15,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=20261120124859">
-<link rel="stylesheet" href="tracer-how.css?v=20261120124859">
+<link rel="stylesheet" href="style.css?v=20261122005239">
+<link rel="stylesheet" href="tracer-how.css?v=20261122005239">
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261120124859';
+  var SITE_V = '20261122005239';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -231,7 +231,7 @@
             </ol>
             <ul class="points">
               <li>Vercel(화면·서버)과 Supabase(로그인·DB) 무료 등급으로 항상 운영. 키와 정답은 서버에만</li>
-              <li>객관식은 미리 채운 <b>문제은행</b>(1,560문제)에서만 출제 → AI 호출 0번, AI는 주관식에만</li>
+              <li>객관식은 미리 채운 <b>문제은행</b>(1,808문제)에서만 출제 → AI 호출 0번, AI는 주관식에만</li>
               <li>사람마다 하루 사용량 제한, 관리자 페이지에서 권한·차단·활동 기록·신고된 문제 관리</li>
               <li>서브넷 계산은 AI 없이 코드가 출제·채점 (로그인 없이도 사용)</li>
               <li>XP·레벨·칭호(Cable Rookie → CCNA Ready)·오늘의 퀘스트·배지</li>
@@ -568,6 +568,6 @@
   }
 })();
 </script>
-<script src="tracer-how.js?v=20261120124859" defer></script>
+<script src="tracer-how.js?v=20261122005239" defer></script>
 </body>
 </html>

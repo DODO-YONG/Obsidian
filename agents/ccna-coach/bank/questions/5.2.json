@@ -1,662 +1,662 @@
 [
-{
-"sub": "5.2",
-"difficulty": "쉬움",
-"question": "Which element of a security program is designed to keep users regularly reminded of threats through posters, emails and newsletters?",
-"choices": [
-"User awareness",
-"Penetration testing",
-"Network segmentation",
-"Disaster recovery"
-],
-"answer": "A",
-"explanation": "User awareness is an ongoing effort that keeps security in the minds of employees with simple reminders and campaigns. It does not need formal classes. It builds a security-conscious culture.",
-"option_notes": [
-"Correct: Regular reminders keep users alert.",
-"Wrong: Pen testing is a technical assessment of defenses.",
-"Wrong: Segmentation is a technical design control.",
-"Wrong: Disaster recovery restores operations after a disruption."
-],
-"key_concept": "Awareness = continuous reminders; training = formal skill building.",
-"cli_example": "",
-"tip": "Awareness: posters, emails. Training: formal courses."
-},
-{
-"sub": "5.2",
-"difficulty": "쉬움",
-"question": "Which of the following is a physical access control?",
-"choices": [
-"An extended ACL on a router interface",
-"A badge reader on the server room door",
-"An enable secret password",
-"A VLAN for the guest network"
-],
-"answer": "B",
-"explanation": "A badge reader on a door limits who can physically enter a room. Physical controls protect equipment, such as wiring closets and data centers, from unauthorized people. The others are logical controls.",
-"option_notes": [
-"Wrong: This is a logical network control.",
-"Correct: It restricts physical entry.",
-"Wrong: This is a logical device-access control.",
-"Wrong: Segmentation is a logical control."
-],
-"key_concept": "Physical access control restricts who can enter spaces holding equipment.",
-"cli_example": "",
-"tip": "Badge readers, locks, cameras and guards are physical controls."
-},
-{
-"sub": "5.2",
-"difficulty": "쉬움",
-"question": "What is the main purpose of a security awareness program?",
-"choices": [
-"To replace the firewall",
-"To encrypt all network traffic",
-"To help users recognize threats and follow security policy",
-"To increase network bandwidth"
-],
-"answer": "C",
-"explanation": "Security awareness teaches all users to recognize threats such as phishing and to follow security policy. Many attacks target people, so informed users are a key layer of defense. It complements technical controls.",
-"option_notes": [
-"Wrong: Awareness complements technical controls and does not replace them.",
-"Wrong: Encryption is a technical control.",
-"Correct: Informed users make fewer mistakes.",
-"Wrong: Awareness has no effect on bandwidth."
-],
-"key_concept": "Awareness reduces human error.",
-"cli_example": "",
-"tip": "People are often the weakest link."
-},
-{
-"sub": "5.2",
-"difficulty": "쉬움",
-"question": "Which term describes an attacker following an authorized employee through a secured door without using a badge?",
-"choices": [
-"Phishing",
-"Spoofing",
-"War driving",
-"Tailgating"
-],
-"answer": "D",
-"explanation": "Tailgating, also called piggybacking, is an unauthorized person entering a restricted area by following someone authorized. Mantraps and security guards help prevent it. User awareness also helps, because employees should challenge unknown people.",
-"option_notes": [
-"Wrong: Phishing uses fraudulent messages.",
-"Wrong: Spoofing forges an identity or address.",
-"Wrong: War driving searches for wireless networks.",
-"Correct: The attacker follows an authorized person."
-],
-"key_concept": "Tailgating = following an authorized person through a door.",
-"cli_example": "",
-"tip": "Mantraps defeat tailgating."
-},
-{
-"sub": "5.2",
-"difficulty": "쉬움",
-"question": "Which device is a deterrent and also records physical activity around an equipment room?",
-"choices": [
-"A security camera",
-"A syslog server",
-"A VPN concentrator",
-"A NetFlow collector"
-],
-"answer": "A",
-"explanation": "Security cameras (CCTV) discourage intruders and record events so that incidents can be investigated. They support physical security together with locks and badges. They do not by themselves prevent entry.",
-"option_notes": [
-"Correct: Cameras deter and record activity.",
-"Wrong: Syslog records device events, not physical activity.",
-"Wrong: A VPN device secures remote connectivity.",
-"Wrong: NetFlow collects traffic statistics."
-],
-"key_concept": "CCTV is both a deterrent and an investigative control.",
-"cli_example": "",
-"tip": "Cameras detect and deter, locks prevent."
-},
-{
-"sub": "5.2",
-"difficulty": "쉬움",
-"question": "A company holds a formal class that teaches employees how to identify phishing emails and handle sensitive data. Which security program element is this?",
-"choices": [
-"Physical access control",
-"User training",
-"Vulnerability scanning",
-"Data backup"
-],
-"answer": "B",
-"explanation": "User training is formal instruction that teaches specific skills and behaviors. It is more structured than awareness reminders. Employees often complete it at hire and on a periodic basis.",
-"option_notes": [
-"Wrong: This deals with entry to facilities.",
-"Correct: A formal class teaches specific skills.",
-"Wrong: This is a technical assessment.",
-"Wrong: Backups protect data availability."
-],
-"key_concept": "Training = formal, skills-based instruction.",
-"cli_example": "",
-"tip": "Training is structured; awareness is continuous and informal."
-},
-{
-"sub": "5.2",
-"difficulty": "쉬움",
-"question": "Why should network equipment such as switches and routers be kept in locked wiring closets?",
-"choices": [
-"It increases the speed of the switch ports",
-"It is required for STP to work",
-"Physical access can let someone bypass logical security controls",
-"It reduces the need for passwords"
-],
-"answer": "C",
-"explanation": "Anyone with physical access to a device can reset passwords, connect a console cable or tap cables. Locking closets stops unauthorized physical access. Logical controls alone are not enough if people can touch the hardware.",
-"option_notes": [
-"Wrong: Location does not change port speed.",
-"Wrong: STP is unaffected by locks.",
-"Correct: An intruder can console in or reset the device.",
-"Wrong: Passwords are still required."
-],
-"key_concept": "Physical access to a device can defeat logical controls.",
-"cli_example": "",
-"tip": "Console access plus physical access can allow password recovery."
-},
-{
-"sub": "5.2",
-"difficulty": "쉬움",
-"question": "What is a mantrap in physical security?",
-"choices": [
-"A software tool that traps malware",
-"A cable lock for laptops",
-"A fake server used to attract attackers",
-"A two-door chamber that lets one person through at a time after authentication"
-],
-"answer": "D",
-"explanation": "A mantrap is a small space with two interlocking doors. Only one door can be open at a time, and the person must be authenticated before the second door opens. It prevents tailgating into sensitive areas such as a data center.",
-"option_notes": [
-"Wrong: This describes a sandbox or honeypot.",
-"Wrong: That is a cable lock.",
-"Wrong: That is a honeypot.",
-"Correct: This stops tailgating."
-],
-"key_concept": "Mantrap = two-door entry chamber that stops tailgating.",
-"cli_example": "",
-"tip": "Mantrap = tailgating prevention."
-},
-{
-"sub": "5.2",
-"difficulty": "쉬움",
-"question": "Which of the following is an example of a biometric physical access control?",
-"choices": [
-"A fingerprint scanner on the door",
-"A numeric keypad code",
-"A metal door key",
-"A visitor sign-in sheet"
-],
-"answer": "A",
-"explanation": "A fingerprint reader on a door uses a physical characteristic of the person, so it is biometric. A key card is something you have and a PIN is something you know. Biometrics identify who you are.",
-"option_notes": [
-"Correct: It uses a body characteristic.",
-"Wrong: A PIN is something you know.",
-"Wrong: A key is something you have.",
-"Wrong: A log is not an authentication control."
-],
-"key_concept": "Biometrics use physical traits such as fingerprints.",
-"cli_example": "",
-"tip": "Fingerprint, retina, face = biometrics."
-},
-{
-"sub": "5.2",
-"difficulty": "쉬움",
-"question": "Which action is part of good physical security for network equipment?",
-"choices": [
-"Leaving the console cable plugged in for convenience",
-"Keeping equipment in locked rooms with logged access",
-"Placing switches in open office areas",
-"Labeling the closet with the admin password"
-],
-"answer": "B",
-"explanation": "Disabling unused physical ports and keeping closets locked reduce ways for an intruder to connect. Keeping equipment in open areas is risky. Physical and logical security work together.",
-"option_notes": [
-"Wrong: This invites unauthorized access.",
-"Correct: Restricting access reduces tampering.",
-"Wrong: Open areas allow tampering.",
-"Wrong: Never post passwords."
-],
-"key_concept": "Restrict physical access and unused ports.",
-"cli_example": "interface range g0/10 - 24\n shutdown",
-"tip": "Shut down unused switch ports and place them in an unused VLAN."
-},
-{
-"sub": "5.2",
-"difficulty": "보통",
-"question": "A company shows employees simulated phishing emails and sends follow-up lessons to those who click. This activity is part of which program element?",
-"choices": [
-"Physical access control",
-"Network access control",
-"User awareness and training",
-"Incident response automation"
-],
-"answer": "C",
-"explanation": "Simulated phishing campaigns raise awareness and measure how well users recognize attacks. Follow-up lessons are training. Together they form part of the user awareness and training program.",
-"option_notes": [
-"Wrong: No physical entry is involved.",
-"Wrong: NAC checks devices connecting to the network.",
-"Correct: Simulations plus lessons teach users to spot phishing.",
-"Wrong: This concerns handling real incidents."
-],
-"key_concept": "Simulated phishing measures and improves user awareness.",
-"cli_example": "",
-"tip": "Test users, then train those who fail."
-},
-{
-"sub": "5.2",
-"difficulty": "보통",
-"question": "What is the difference between security awareness and security training?",
-"choices": [
-"Awareness is formal classroom instruction, while training is only posters",
-"Awareness covers physical access only, while training covers passwords only",
-"There is no difference; they are the same thing",
-"Awareness is continuous reminders, while training is formal skill-based instruction"
-],
-"answer": "D",
-"explanation": "Awareness is a continuous, general effort to keep security visible, such as posters and email tips. Training is formal and teaches specific skills, such as handling sensitive data. Both are part of a security program.",
-"option_notes": [
-"Wrong: The definitions are reversed.",
-"Wrong: Both address many topics.",
-"Wrong: They have different purposes.",
-"Correct: This distinguishes the two correctly."
-],
-"key_concept": "Awareness = ongoing reminders; training = formal skills instruction.",
-"cli_example": "",
-"tip": "Awareness is broad; training is specific."
-},
-{
-"sub": "5.2",
-"difficulty": "보통",
-"question": "An employee holds a door for a delivery person who claims to be from a vendor and has no badge. Which control would have best prevented unauthorized entry?",
-"choices": [
-"A visitor policy with badge or escort verification and a mantrap or guard",
-"An extended ACL on the core router",
-"A stronger Wi-Fi password",
-"Port security on access ports"
-],
-"answer": "A",
-"explanation": "A visitor policy that requires badge or escort verification, together with security guards or mantraps, stops unknown persons from walking in. Awareness training should teach employees to challenge strangers. Network controls cannot stop physical entry.",
-"option_notes": [
-"Correct: This controls physical entry.",
-"Wrong: ACLs filter packets, not people.",
-"Wrong: Wi-Fi settings do not stop physical entry.",
-"Wrong: Port security limits MAC addresses."
-],
-"key_concept": "Verify visitors and challenge unknown people.",
-"cli_example": "",
-"tip": "Policies must say how to handle visitors."
-},
-{
-"sub": "5.2",
-"difficulty": "보통",
-"question": "What is dumpster diving in the context of security?",
-"choices": [
-"Flooding a server with requests",
-"Searching discarded material for sensitive information",
-"Guessing passwords from a list",
-"Forging the source address of packets"
-],
-"answer": "B",
-"explanation": "Dumpster diving is searching through discarded materials for useful information such as printouts, notes or old drives. A policy requiring shredding and secure disposal prevents it. It is a low-tech form of reconnaissance.",
-"option_notes": [
-"Wrong: That is a DoS attack.",
-"Correct: Trash can reveal credentials or documents.",
-"Wrong: That is a dictionary attack.",
-"Wrong: That is spoofing."
-],
-"key_concept": "Dumpster diving finds sensitive information in trash.",
-"cli_example": "",
-"tip": "Shred paper and wipe drives before disposal."
-},
-{
-"sub": "5.2",
-"difficulty": "보통",
-"question": "Which control best protects the physical network cables in a public area from being tapped or unplugged?",
-"choices": [
-"Enabling a VLAN on the ports",
-"Configuring an access list",
-"Running cables through locked, enclosed conduit",
-"Enabling SNMPv3"
-],
-"answer": "C",
-"explanation": "Placing cables in locked conduits or enclosed raceways limits physical access to them. A firewall or VLAN does not stop someone from physically touching a cable. Physical protection of the infrastructure is part of physical access control.",
-"option_notes": [
-"Wrong: VLANs do not stop physical tampering.",
-"Wrong: ACLs do not protect cables.",
-"Correct: This blocks physical access to the cables.",
-"Wrong: SNMPv3 secures management traffic only."
-],
-"key_concept": "Protect cabling physically, not only logically.",
-"cli_example": "",
-"tip": "Physical layer attacks need physical countermeasures."
-},
-{
-"sub": "5.2",
-"difficulty": "보통",
-"question": "Which security program item would a policy that says 'lock your screen and remove sensitive papers when leaving your desk' belong to?",
-"choices": [
-"A routing policy",
-"A QoS policy",
-"A NAT policy",
-"A clean desk policy"
-],
-"answer": "D",
-"explanation": "A clean desk policy is a security policy that reduces the risk of information being seen or taken by unauthorized persons. It supports confidentiality in the physical workspace. Awareness training helps employees follow it.",
-"option_notes": [
-"Wrong: Routing policies control paths for traffic.",
-"Wrong: QoS prioritizes traffic.",
-"Wrong: NAT translates addresses.",
-"Correct: It limits exposure of information at workstations."
-],
-"key_concept": "Clean desk policy protects information in the physical workspace.",
-"cli_example": "",
-"tip": "Policies guide user behavior."
-},
-{
-"sub": "5.2",
-"difficulty": "보통",
-"question": "Which two items are examples of physical access controls? (Choose the best single pair.)",
-"choices": [
-"Door locks and security guards",
-"Passwords and ACLs",
-"Encryption and hashing",
-"Firewalls and IPS"
-],
-"answer": "A",
-"explanation": "Door locks and security guards restrict who may enter areas. Passwords and ACLs are logical controls. Physical access controls protect the environment where devices are located.",
-"option_notes": [
-"Correct: Both control physical entry.",
-"Wrong: Both are logical controls.",
-"Wrong: Both are cryptographic controls.",
-"Wrong: Both are network security devices."
-],
-"key_concept": "Locks and guards are physical controls.",
-"cli_example": "",
-"tip": "Physical = touch; logical = software."
-},
-{
-"sub": "5.2",
-"difficulty": "보통",
-"question": "A security policy requires that visitors sign in, wear a visible badge and be escorted in the data center. Which security objective is most directly supported?",
-"choices": [
-"Encrypting data in transit",
-"Controlling and recording physical access",
-"Load balancing traffic",
-"Detecting rogue wireless access points"
-],
-"answer": "B",
-"explanation": "Visitor controls prevent unauthorized people from reaching equipment and provide a record of who entered. This supports physical access control and accountability. It does not protect against remote attacks.",
-"option_notes": [
-"Wrong: This is a cryptographic function.",
-"Correct: Sign-in, badges and escorts control and log entry.",
-"Wrong: This is a performance function.",
-"Wrong: This requires wireless monitoring tools."
-],
-"key_concept": "Visitor logs, badges and escorts support physical access control.",
-"cli_example": "",
-"tip": "Logs provide accountability for physical entry."
-},
-{
-"sub": "5.2",
-"difficulty": "보통",
-"question": "A user receives a phone call from someone claiming to be IT support who asks for their password to 'fix an issue'. Which program element best prepares users for this situation?",
-"choices": [
-"Port security",
-"Access control lists",
-"User awareness and training",
-"IP routing policy"
-],
-"answer": "C",
-"explanation": "User awareness and training teach employees that IT staff never ask for passwords and that unusual requests must be reported. This type of voice-based social engineering is called vishing. Technical controls alone cannot stop a user from volunteering a password.",
-"option_notes": [
-"Wrong: Port security limits switch port MAC addresses.",
-"Wrong: ACLs filter packets.",
-"Correct: Users learn to refuse such requests.",
-"Wrong: Routing policy does not address voice scams."
-],
-"key_concept": "Vishing is social engineering over the phone.",
-"cli_example": "",
-"tip": "Never share passwords, even with someone claiming to be IT."
-},
-{
-"sub": "5.2",
-"difficulty": "보통",
-"question": "Which statement describes the principle of least privilege?",
-"choices": [
-"All administrators share one account",
-"Every employee has access to all server rooms",
-"Users can access resources until they are denied",
-"Users receive only the access required to do their job"
-],
-"answer": "D",
-"explanation": "Least privilege gives each user only the access needed for their job. This limits damage from mistakes or compromised accounts. It applies to physical access, such as door permissions, as well as to systems.",
-"option_notes": [
-"Wrong: This breaks accountability.",
-"Wrong: This grants far more than needed.",
-"Wrong: Default permit is the opposite of least privilege.",
-"Correct: This limits potential damage."
-],
-"key_concept": "Least privilege = minimum access needed.",
-"cli_example": "",
-"tip": "Give only the access needed to do the job."
-},
-{
-"sub": "5.2",
-"difficulty": "어려움",
-"question": "After a breach, an investigation shows a contractor entered the server room with a coworker's borrowed badge. Which combination of improvements would address both the root causes?",
-"choices": [
-"User training on badge policy plus multi-factor physical authentication",
-"Adding more VLANs in the data center",
-"Increasing the SNMP polling interval",
-"Replacing the core switch"
-],
-"answer": "A",
-"explanation": "Badge sharing is a user behavior problem, so awareness and training and a policy against sharing credentials are needed. Adding a second factor such as a PIN or biometric makes a borrowed badge useless. Technical controls alone would not fix the behavior, and policy alone would not stop a stolen badge.",
-"option_notes": [
-"Correct: This fixes behavior and makes borrowed badges useless.",
-"Wrong: VLANs do not affect physical entry.",
-"Wrong: Monitoring rate has no effect on entry.",
-"Wrong: Hardware replacement does not fix the cause."
-],
-"key_concept": "Combine policy and training with stronger multi-factor physical access.",
-"cli_example": "",
-"tip": "Combine people, process and technology."
-},
-{
-"sub": "5.2",
-"difficulty": "어려움",
-"question": "A company wants to prevent two people from entering a data center on a single valid badge swipe. Which solution is the most effective?",
-"choices": [
-"Add a second badge reader on the same open door",
-"Install a mantrap with an interlocking door system",
-"Post a sign asking people not to tailgate",
-"Enable port security on the switch"
-],
-"answer": "B",
-"explanation": "A mantrap lets only one person into the chamber at a time and requires authentication before the inner door opens. A badge reader on a single door cannot tell whether two people passed through. Cameras alone only record the event.",
-"option_notes": [
-"Wrong: Two people can still enter together.",
-"Correct: Only one person can pass per authentication.",
-"Wrong: Signs do not enforce behavior.",
-"Wrong: This is unrelated to physical entry."
-],
-"key_concept": "Mantrap or turnstile enforces one person per authentication.",
-"cli_example": "",
-"tip": "Tailgating + mantrap is a common exam pairing."
-},
-{
-"sub": "5.2",
-"difficulty": "어려움",
-"question": "Which statement about a layered security program is correct?",
-"choices": [
-"It relies only on a perimeter firewall",
-"It removes the need for user training when strong passwords exist",
-"It combines policies and training, physical controls and technical controls",
-"It focuses only on encrypting data at rest"
-],
-"answer": "C",
-"explanation": "A good security program combines administrative controls such as policy and training, physical controls such as locks, and technical controls such as ACLs. Weakness in one layer can be covered by others. Relying only on technology ignores the human factor.",
-"option_notes": [
-"Wrong: This ignores people and physical threats.",
-"Wrong: Training is still needed.",
-"Correct: Layering covers all areas.",
-"Wrong: This covers a single aspect."
-],
-"key_concept": "Effective security mixes administrative, physical and technical controls.",
-"cli_example": "",
-"tip": "People, physical and technical layers all matter."
-},
-{
-"sub": "5.2",
-"difficulty": "어려움",
-"question": "An organization notices that employees keep writing passwords on sticky notes attached to monitors. Which is the best combined response?",
-"choices": [
-"Make passwords shorter so they are easy to remember",
-"Disable the passwords on internal systems",
-"Install more cameras in the network closet",
-"Enforce a clean desk policy, train users and provide a password manager"
-],
-"answer": "D",
-"explanation": "The root cause is that users find passwords hard to manage. The best response is user training with a clean desk policy, along with a password manager or single sign-on to reduce the number of passwords. Only forbidding notes without addressing usability usually fails.",
-"option_notes": [
-"Wrong: Shorter passwords weaken security.",
-"Wrong: This removes authentication.",
-"Wrong: Cameras in the closet do not address desk behavior.",
-"Correct: This addresses behavior and the cause."
-],
-"key_concept": "Address user behavior with policy, training and usable tools.",
-"cli_example": "",
-"tip": "Security that is too hard to use gets bypassed."
-},
-{
-"sub": "5.2",
-"difficulty": "어려움",
-"question": "During an audit, a tester walks into a lobby, claims to be an electrician and is allowed into a wiring closet. Which statement is the best assessment?",
-"choices": [
-"Pretexting succeeded because visitor verification and awareness were weak",
-"A zero-day exploit was used against the switch",
-"A DDoS attack was launched",
-"A rogue access point was installed"
-],
-"answer": "A",
-"explanation": "This is a pretexting and social engineering success, plus a physical access control failure. A visitor policy with identity verification and escorts, and employee awareness to challenge strangers, would stop it. A firewall would not have prevented the intrusion.",
-"option_notes": [
-"Correct: The tester invented a story and no one verified it.",
-"Wrong: No technical exploit was used.",
-"Wrong: No traffic flooding occurred.",
-"Wrong: No wireless device was mentioned."
-],
-"key_concept": "Pretexting uses a made-up identity to gain physical or information access.",
-"cli_example": "",
-"tip": "Pretexting = invented scenario to gain trust."
-},
-{
-"sub": "5.2",
-"difficulty": "어려움",
-"question": "Which control is classified as detective rather than preventive in a physical security program?",
-"choices": [
-"A locked door with a badge reader",
-"Security cameras recording the entrance",
-"A mantrap at the data center entrance",
-"A security guard blocking the doorway"
-],
-"answer": "B",
-"explanation": "Security cameras and entry logs detect and record events after or while they occur, but they do not stop entry. Locks, mantraps and guards at a door are preventive. A good program uses both types.",
-"option_notes": [
-"Wrong: This prevents entry.",
-"Correct: They record and detect but do not stop entry.",
-"Wrong: This prevents unauthorized entry.",
-"Wrong: This prevents entry."
-],
-"key_concept": "Detective controls reveal events; preventive controls stop them.",
-"cli_example": "",
-"tip": "Preventive = stop; detective = see/record."
-},
-{
-"sub": "5.2",
-"difficulty": "어려움",
-"question": "An organization wants to reduce the risk of lost laptops exposing data. Which combination best fits a security program that includes physical and user elements?",
-"choices": [
-"Only a longer SSID name",
-"Only a faster uplink for the laptops",
-"Disk encryption, cable locks and user training on reporting loss",
-"Disabling the corporate firewall"
-],
-"answer": "C",
-"explanation": "Full-disk encryption makes the data unreadable if the laptop is lost, a cable lock reduces the chance of theft, and training teaches users to report loss quickly. Together they cover technical, physical and user layers. Any single measure leaves a gap.",
-"option_notes": [
-"Wrong: SSID length has no effect.",
-"Wrong: Speed does not protect data.",
-"Correct: This covers technical, physical and user layers.",
-"Wrong: This lowers security."
-],
-"key_concept": "Combine encryption, physical protection and user reporting.",
-"cli_example": "",
-"tip": "Lost device = encrypt data."
-},
-{
-"sub": "5.2",
-"difficulty": "어려움",
-"question": "A policy states that a person who requests access to the data center must have their identity verified, approval from a manager and an entry logged. Which security concept does the logging part primarily support?",
-"choices": [
-"Authentication",
-"Authorization",
-"Confidentiality of data in transit",
-"Accountability (accounting)"
-],
-"answer": "D",
-"explanation": "Logging entries creates a record of who accessed the room and when, which supports accountability and later investigation. Approval supports authorization, and identity verification supports authentication. These match the AAA model applied to physical access.",
-"option_notes": [
-"Wrong: Authentication is verifying identity.",
-"Wrong: Authorization is the approval for access.",
-"Wrong: Entry logs do not encrypt traffic.",
-"Correct: Logs record who did what and when."
-],
-"key_concept": "Logs provide accountability (accounting).",
-"cli_example": "",
-"tip": "Authentication, authorization, accounting also apply to physical access."
-},
-{
-"sub": "5.2",
-"difficulty": "어려움",
-"question": "A phishing simulation shows that 30 percent of employees clicked a malicious link. Which next step best fits a mature security awareness program?",
-"choices": [
-"Provide targeted training and run follow-up simulations to measure improvement",
-"Disable email for the whole company",
-"Ignore the results because filters exist",
-"Reduce the length of the password policy"
-],
-"answer": "A",
-"explanation": "The result shows a training gap. The best response is targeted, repeated training and further simulations to measure improvement. Punishing staff or ignoring the result does not reduce the risk.",
-"option_notes": [
-"Correct: This closes the gap and measures results.",
-"Wrong: This is not practical and stops business.",
-"Wrong: Filters cannot catch every message.",
-"Wrong: Password length is unrelated to link clicking."
-],
-"key_concept": "Use results to drive targeted training and re-test.",
-"cli_example": "",
-"tip": "Measure, train, re-measure."
-},
-{
-"sub": "5.2",
-"difficulty": "어려움",
-"question": "Which statement correctly compares security awareness, training and education?",
-"choices": [
-"Education is the shortest and most general of the three",
-"Awareness is general, training is skill-based and education gives deeper expertise",
-"Training is only for visitors, awareness is only for IT",
-"All three mean installing security patches"
-],
-"answer": "B",
-"explanation": "Awareness makes people recognize security concerns, training teaches specific skills to perform tasks securely, and education builds deeper knowledge for security professionals. They form a progression from general to specialized. A program normally includes awareness for everyone and training for specific roles.",
-"option_notes": [
-"Wrong: Education is the deepest.",
-"Correct: This is the correct progression.",
-"Wrong: They apply to different levels, not roles like this.",
-"Wrong: They concern people, not patches."
-],
-"key_concept": "Awareness is broad; training is skills; education is deep knowledge.",
-"cli_example": "",
-"tip": "General to specialized: awareness, training, education."
-}
+ {
+  "sub": "5.2",
+  "difficulty": "쉬움",
+  "question": "Which element of a security program is designed to keep users regularly reminded of threats through posters, emails and newsletters?",
+  "choices": [
+   "User awareness",
+   "Penetration testing",
+   "Network segmentation",
+   "Disaster recovery"
+  ],
+  "answer": "A",
+  "explanation": "User awareness is an ongoing effort that keeps security in the minds of employees with simple reminders and campaigns. It does not need formal classes. It builds a security-conscious culture.",
+  "option_notes": [
+   "Correct: Regular reminders keep users alert.",
+   "Wrong: Pen testing is a technical assessment of defenses.",
+   "Wrong: Segmentation is a technical design control.",
+   "Wrong: Disaster recovery restores operations after a disruption."
+  ],
+  "key_concept": "Awareness = continuous reminders; training = formal skill building.",
+  "cli_example": "",
+  "tip": "Awareness: posters, emails. Training: formal courses."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "쉬움",
+  "question": "Which of the following is a physical access control?",
+  "choices": [
+   "An extended ACL on a router interface",
+   "A badge reader on the server room door",
+   "An enable secret password",
+   "A VLAN for the guest network"
+  ],
+  "answer": "B",
+  "explanation": "A badge reader on a door limits who can physically enter a room. Physical controls protect equipment, such as wiring closets and data centers, from unauthorized people. The others are logical controls.",
+  "option_notes": [
+   "Wrong: This is a logical network control.",
+   "Correct: It restricts physical entry.",
+   "Wrong: This is a logical device-access control.",
+   "Wrong: Segmentation is a logical control."
+  ],
+  "key_concept": "Physical access control restricts who can enter spaces holding equipment.",
+  "cli_example": "",
+  "tip": "Badge readers, locks, cameras and guards are physical controls."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "쉬움",
+  "question": "What is the main purpose of a security awareness program?",
+  "choices": [
+   "To replace the firewall",
+   "To encrypt all of the network traffic that users send and receive",
+   "To help users recognize threats and follow security policy",
+   "To increase network bandwidth"
+  ],
+  "answer": "C",
+  "explanation": "Security awareness teaches all users to recognize threats such as phishing and to follow security policy. Many attacks target people, so informed users are a key layer of defense. It complements technical controls.",
+  "option_notes": [
+   "Wrong: Awareness complements technical controls and does not replace them.",
+   "Wrong: Encryption is a technical control.",
+   "Correct: Informed users make fewer mistakes.",
+   "Wrong: Awareness has no effect on bandwidth."
+  ],
+  "key_concept": "Awareness reduces human error.",
+  "cli_example": "",
+  "tip": "People are often the weakest link."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "쉬움",
+  "question": "Which term describes an attacker following an authorized employee through a secured door without using a badge?",
+  "choices": [
+   "Phishing",
+   "Spoofing",
+   "War driving",
+   "Tailgating"
+  ],
+  "answer": "D",
+  "explanation": "Tailgating, also called piggybacking, is an unauthorized person entering a restricted area by following someone authorized. Mantraps and security guards help prevent it. User awareness also helps, because employees should challenge unknown people.",
+  "option_notes": [
+   "Wrong: Phishing uses fraudulent messages.",
+   "Wrong: Spoofing forges an identity or address.",
+   "Wrong: War driving searches for wireless networks.",
+   "Correct: The attacker follows an authorized person."
+  ],
+  "key_concept": "Tailgating = following an authorized person through a door.",
+  "cli_example": "",
+  "tip": "Mantraps defeat tailgating."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "쉬움",
+  "question": "Which device is a deterrent and also records physical activity around an equipment room?",
+  "choices": [
+   "A security camera",
+   "A syslog server",
+   "A VPN concentrator",
+   "A NetFlow collector"
+  ],
+  "answer": "A",
+  "explanation": "Security cameras (CCTV) discourage intruders and record events so that incidents can be investigated. They support physical security together with locks and badges. They do not by themselves prevent entry.",
+  "option_notes": [
+   "Correct: Cameras deter and record activity.",
+   "Wrong: Syslog records device events, not physical activity.",
+   "Wrong: A VPN device secures remote connectivity.",
+   "Wrong: NetFlow collects traffic statistics."
+  ],
+  "key_concept": "CCTV is both a deterrent and an investigative control.",
+  "cli_example": "",
+  "tip": "Cameras detect and deter, locks prevent."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "쉬움",
+  "question": "A company holds a formal class that teaches employees how to identify phishing emails and handle sensitive data. Which security program element is this?",
+  "choices": [
+   "Physical access control",
+   "User training",
+   "Vulnerability scanning",
+   "Data backup"
+  ],
+  "answer": "B",
+  "explanation": "User training is formal instruction that teaches specific skills and behaviors. It is more structured than awareness reminders. Employees often complete it at hire and on a periodic basis.",
+  "option_notes": [
+   "Wrong: This deals with entry to facilities.",
+   "Correct: A formal class teaches specific skills.",
+   "Wrong: This is a technical assessment.",
+   "Wrong: Backups protect data availability."
+  ],
+  "key_concept": "Training = formal, skills-based instruction.",
+  "cli_example": "",
+  "tip": "Training is structured; awareness is continuous and informal."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "쉬움",
+  "question": "Why should network equipment such as switches and routers be kept in locked wiring closets?",
+  "choices": [
+   "It keeps the devices cooler, which increases the speed of switch ports",
+   "It is required for STP to work",
+   "Physical access can let someone bypass logical security controls",
+   "It reduces the need for passwords"
+  ],
+  "answer": "C",
+  "explanation": "Anyone with physical access to a device can reset passwords, connect a console cable or tap cables. Locking closets stops unauthorized physical access. Logical controls alone are not enough if people can touch the hardware.",
+  "option_notes": [
+   "Wrong: Location does not change port speed.",
+   "Wrong: STP is unaffected by locks.",
+   "Correct: An intruder can console in or reset the device.",
+   "Wrong: Passwords are still required."
+  ],
+  "key_concept": "Physical access to a device can defeat logical controls.",
+  "cli_example": "",
+  "tip": "Console access plus physical access can allow password recovery."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "쉬움",
+  "question": "What is a mantrap in physical security?",
+  "choices": [
+   "A software tool that traps malware",
+   "A cable lock for laptops",
+   "A fake server that is placed on the network to attract and study attackers",
+   "A two-door entry that lets one authenticated person through at a time"
+  ],
+  "answer": "D",
+  "explanation": "A mantrap is a small space with two interlocking doors. Only one door can be open at a time, and the person must be authenticated before the second door opens. It prevents tailgating into sensitive areas such as a data center.",
+  "option_notes": [
+   "Wrong: This describes a sandbox or honeypot.",
+   "Wrong: That is a cable lock.",
+   "Wrong: That is a honeypot.",
+   "Correct: This stops tailgating."
+  ],
+  "key_concept": "Mantrap = two-door entry chamber that stops tailgating.",
+  "cli_example": "",
+  "tip": "Mantrap = tailgating prevention."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "쉬움",
+  "question": "Which of the following is an example of a biometric physical access control?",
+  "choices": [
+   "A fingerprint scanner on the door",
+   "A numeric keypad code on the door",
+   "A metal door key",
+   "A visitor sign-in sheet"
+  ],
+  "answer": "A",
+  "explanation": "A fingerprint reader on a door uses a physical characteristic of the person, so it is biometric. A key card is something you have and a PIN is something you know. Biometrics identify who you are.",
+  "option_notes": [
+   "Correct: It uses a body characteristic.",
+   "Wrong: A PIN is something you know.",
+   "Wrong: A key is something you have.",
+   "Wrong: A log is not an authentication control."
+  ],
+  "key_concept": "Biometrics use physical traits such as fingerprints.",
+  "cli_example": "",
+  "tip": "Fingerprint, retina, face = biometrics."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "쉬움",
+  "question": "Which action is part of good physical security for network equipment?",
+  "choices": [
+   "Leaving the console cable plugged in for convenience",
+   "Keeping equipment in locked rooms with logged access",
+   "Placing switches in open office areas",
+   "Labeling the closet with the admin password"
+  ],
+  "answer": "B",
+  "explanation": "Keeping equipment in locked rooms with logged access stops strangers from touching, unplugging or console-connecting to devices, and shows who entered. Leaving console cables connected, open placement and posted passwords all make tampering easy. Shutting down unused ports is a further hardening step.",
+  "option_notes": [
+   "Wrong: This invites unauthorized access.",
+   "Correct: Restricting access reduces tampering.",
+   "Wrong: Open areas allow tampering.",
+   "Wrong: Never post passwords."
+  ],
+  "key_concept": "Restrict physical access and unused ports.",
+  "cli_example": "interface range g0/10 - 24\n shutdown",
+  "tip": "Shut down unused switch ports and place them in an unused VLAN."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "보통",
+  "question": "A company shows employees simulated phishing emails and sends follow-up lessons to those who click. This activity is part of which program element?",
+  "choices": [
+   "Physical access control",
+   "Network access control",
+   "User awareness and training",
+   "Incident response automation"
+  ],
+  "answer": "C",
+  "explanation": "Simulated phishing campaigns raise awareness and measure how well users recognize attacks. Follow-up lessons are training. Together they form part of the user awareness and training program.",
+  "option_notes": [
+   "Wrong: No physical entry is involved.",
+   "Wrong: NAC checks devices connecting to the network.",
+   "Correct: Simulations plus lessons teach users to spot phishing.",
+   "Wrong: This concerns handling real incidents."
+  ],
+  "key_concept": "Simulated phishing measures and improves user awareness.",
+  "cli_example": "",
+  "tip": "Test users, then train those who fail."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "보통",
+  "question": "What is the difference between security awareness and security training?",
+  "choices": [
+   "Awareness is formal classroom instruction, while training is only posters",
+   "Awareness covers physical access only, while training covers passwords only",
+   "There is no difference; they are the same thing",
+   "Awareness is continuous reminders, while training is formal skill-based instruction"
+  ],
+  "answer": "D",
+  "explanation": "Awareness is a continuous, general effort to keep security visible, such as posters and email tips. Training is formal and teaches specific skills, such as handling sensitive data. Both are part of a security program.",
+  "option_notes": [
+   "Wrong: The definitions are reversed.",
+   "Wrong: Both address many topics.",
+   "Wrong: They have different purposes.",
+   "Correct: This distinguishes the two correctly."
+  ],
+  "key_concept": "Awareness = ongoing reminders; training = formal skills instruction.",
+  "cli_example": "",
+  "tip": "Awareness is broad; training is specific."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "보통",
+  "question": "An employee holds a door for a delivery person who claims to be from a vendor and has no badge. Which control would have best prevented unauthorized entry?",
+  "choices": [
+   "A visitor policy with badge or escort verification and a mantrap or guard",
+   "An extended ACL on the core router that blocks all visitor device traffic",
+   "A stronger Wi-Fi password",
+   "Port security on access ports"
+  ],
+  "answer": "A",
+  "explanation": "A visitor policy that requires badge or escort verification, together with security guards or mantraps, stops unknown persons from walking in. Awareness training should teach employees to challenge strangers. Network controls cannot stop physical entry.",
+  "option_notes": [
+   "Correct: This controls physical entry.",
+   "Wrong: ACLs filter packets, not people.",
+   "Wrong: Wi-Fi settings do not stop physical entry.",
+   "Wrong: Port security limits MAC addresses."
+  ],
+  "key_concept": "Verify visitors and challenge unknown people.",
+  "cli_example": "",
+  "tip": "Policies must say how to handle visitors."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "보통",
+  "question": "What is dumpster diving in the context of security?",
+  "choices": [
+   "Flooding a server with requests",
+   "Searching discarded material for sensitive information",
+   "Guessing passwords from a list of common words and names",
+   "Forging the source address of packets"
+  ],
+  "answer": "B",
+  "explanation": "Dumpster diving is searching through discarded materials for useful information such as printouts, notes or old drives. A policy requiring shredding and secure disposal prevents it. It is a low-tech form of reconnaissance.",
+  "option_notes": [
+   "Wrong: That is a DoS attack.",
+   "Correct: Trash can reveal credentials or documents.",
+   "Wrong: That is a dictionary attack.",
+   "Wrong: That is spoofing."
+  ],
+  "key_concept": "Dumpster diving finds sensitive information in trash.",
+  "cli_example": "",
+  "tip": "Shred paper and wipe drives before disposal."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "보통",
+  "question": "Which control best protects the physical network cables in a public area from being tapped or unplugged?",
+  "choices": [
+   "Enabling a VLAN on the ports",
+   "Configuring an extended access list on the switch ports",
+   "Running cables through locked, enclosed conduit",
+   "Enabling SNMPv3"
+  ],
+  "answer": "C",
+  "explanation": "Placing cables in locked conduits or enclosed raceways limits physical access to them. A firewall or VLAN does not stop someone from physically touching a cable. Physical protection of the infrastructure is part of physical access control.",
+  "option_notes": [
+   "Wrong: VLANs do not stop physical tampering.",
+   "Wrong: ACLs do not protect cables.",
+   "Correct: This blocks physical access to the cables.",
+   "Wrong: SNMPv3 secures management traffic only."
+  ],
+  "key_concept": "Protect cabling physically, not only logically.",
+  "cli_example": "",
+  "tip": "Physical layer attacks need physical countermeasures."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "보통",
+  "question": "Which security program item would a policy that says 'lock your screen and remove sensitive papers when leaving your desk' belong to?",
+  "choices": [
+   "A routing policy",
+   "A QoS policy",
+   "A NAT policy",
+   "A clean desk policy"
+  ],
+  "answer": "D",
+  "explanation": "A clean desk policy is a security policy that reduces the risk of information being seen or taken by unauthorized persons. It supports confidentiality in the physical workspace. Awareness training helps employees follow it.",
+  "option_notes": [
+   "Wrong: Routing policies control paths for traffic.",
+   "Wrong: QoS prioritizes traffic.",
+   "Wrong: NAT translates addresses.",
+   "Correct: It limits exposure of information at workstations."
+  ],
+  "key_concept": "Clean desk policy protects information in the physical workspace.",
+  "cli_example": "",
+  "tip": "Policies guide user behavior."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "보통",
+  "question": "Which two items are examples of physical access controls? (Choose the best single pair.)",
+  "choices": [
+   "Door locks and security guards",
+   "Passwords and ACLs",
+   "Encryption and hashing",
+   "Firewalls and IPS"
+  ],
+  "answer": "A",
+  "explanation": "Door locks and security guards restrict who may enter areas. Passwords and ACLs are logical controls. Physical access controls protect the environment where devices are located.",
+  "option_notes": [
+   "Correct: Both control physical entry.",
+   "Wrong: Both are logical controls.",
+   "Wrong: Both are cryptographic controls.",
+   "Wrong: Both are network security devices."
+  ],
+  "key_concept": "Locks and guards are physical controls.",
+  "cli_example": "",
+  "tip": "Physical = touch; logical = software."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "보통",
+  "question": "A security policy requires that visitors sign in, wear a visible badge and be escorted in the data center. Which security objective is most directly supported?",
+  "choices": [
+   "Encrypting data in transit",
+   "Controlling and recording physical access",
+   "Load balancing traffic",
+   "Detecting rogue wireless access points"
+  ],
+  "answer": "B",
+  "explanation": "Visitor controls prevent unauthorized people from reaching equipment and provide a record of who entered. This supports physical access control and accountability. It does not protect against remote attacks.",
+  "option_notes": [
+   "Wrong: This is a cryptographic function.",
+   "Correct: Sign-in, badges and escorts control and log entry.",
+   "Wrong: This is a performance function.",
+   "Wrong: This requires wireless monitoring tools."
+  ],
+  "key_concept": "Visitor logs, badges and escorts support physical access control.",
+  "cli_example": "",
+  "tip": "Logs provide accountability for physical entry."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "보통",
+  "question": "A user receives a phone call from someone claiming to be IT support who asks for their password to 'fix an issue'. Which program element best prepares users for this situation?",
+  "choices": [
+   "Port security",
+   "Access control lists",
+   "User awareness and training",
+   "IP routing policy"
+  ],
+  "answer": "C",
+  "explanation": "User awareness and training teach employees that IT staff never ask for passwords and that unusual requests must be reported. This type of voice-based social engineering is called vishing. Technical controls alone cannot stop a user from volunteering a password.",
+  "option_notes": [
+   "Wrong: Port security limits switch port MAC addresses.",
+   "Wrong: ACLs filter packets.",
+   "Correct: Users learn to refuse such requests.",
+   "Wrong: Routing policy does not address voice scams."
+  ],
+  "key_concept": "Vishing is social engineering over the phone.",
+  "cli_example": "",
+  "tip": "Never share passwords, even with someone claiming to be IT."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "보통",
+  "question": "Which statement describes the principle of least privilege?",
+  "choices": [
+   "All administrators share one account",
+   "Every employee has access to all server rooms",
+   "Users can access resources until they are denied",
+   "Users receive only the access required to do their job"
+  ],
+  "answer": "D",
+  "explanation": "Least privilege gives each user only the access needed for their job. This limits damage from mistakes or compromised accounts. It applies to physical access, such as door permissions, as well as to systems.",
+  "option_notes": [
+   "Wrong: This breaks accountability.",
+   "Wrong: This grants far more than needed.",
+   "Wrong: Default permit is the opposite of least privilege.",
+   "Correct: This limits potential damage."
+  ],
+  "key_concept": "Least privilege = minimum access needed.",
+  "cli_example": "",
+  "tip": "Give only the access needed to do the job."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "어려움",
+  "question": "After a breach, an investigation shows a contractor entered the server room with a coworker's borrowed badge. Which combination of improvements would address both the root causes?",
+  "choices": [
+   "User training on badge policy plus multi-factor physical authentication",
+   "Adding more VLANs in the data center so the servers are separated from users",
+   "Increasing the SNMP polling interval",
+   "Replacing the core switch"
+  ],
+  "answer": "A",
+  "explanation": "Badge sharing is a user behavior problem, so awareness and training and a policy against sharing credentials are needed. Adding a second factor such as a PIN or biometric makes a borrowed badge useless. Technical controls alone would not fix the behavior, and policy alone would not stop a stolen badge.",
+  "option_notes": [
+   "Correct: This fixes behavior and makes borrowed badges useless.",
+   "Wrong: VLANs do not affect physical entry.",
+   "Wrong: Monitoring rate has no effect on entry.",
+   "Wrong: Hardware replacement does not fix the cause."
+  ],
+  "key_concept": "Combine policy and training with stronger multi-factor physical access.",
+  "cli_example": "",
+  "tip": "Combine people, process and technology."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "어려움",
+  "question": "A company wants to prevent two people from entering a data center on a single valid badge swipe. Which solution is the most effective?",
+  "choices": [
+   "Add a second badge reader on the same open door",
+   "Install a mantrap with an interlocking door system",
+   "Post a sign asking people not to tailgate",
+   "Enable port security on the switch"
+  ],
+  "answer": "B",
+  "explanation": "A mantrap lets only one person into the chamber at a time and requires authentication before the inner door opens. A badge reader on a single door cannot tell whether two people passed through. Cameras alone only record the event.",
+  "option_notes": [
+   "Wrong: Two people can still enter together.",
+   "Correct: Only one person can pass per authentication.",
+   "Wrong: Signs do not enforce behavior.",
+   "Wrong: This is unrelated to physical entry."
+  ],
+  "key_concept": "Mantrap or turnstile enforces one person per authentication.",
+  "cli_example": "",
+  "tip": "Tailgating + mantrap is a common exam pairing."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "어려움",
+  "question": "Which statement about a layered security program is correct?",
+  "choices": [
+   "It relies only on a perimeter firewall",
+   "It removes the need for user training when strong passwords exist",
+   "It combines policies, training, physical and technical controls",
+   "It focuses only on encrypting data at rest"
+  ],
+  "answer": "C",
+  "explanation": "A good security program combines administrative controls such as policy and training, physical controls such as locks, and technical controls such as ACLs. Weakness in one layer can be covered by others. Relying only on technology ignores the human factor.",
+  "option_notes": [
+   "Wrong: This ignores people and physical threats.",
+   "Wrong: Training is still needed.",
+   "Correct: Layering covers all areas.",
+   "Wrong: This covers a single aspect."
+  ],
+  "key_concept": "Effective security mixes administrative, physical and technical controls.",
+  "cli_example": "",
+  "tip": "People, physical and technical layers all matter."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "어려움",
+  "question": "An organization notices that employees keep writing passwords on sticky notes attached to monitors. Which is the best combined response?",
+  "choices": [
+   "Make the passwords shorter so that users can remember them without notes",
+   "Disable the passwords on internal systems",
+   "Install more cameras in the network closet",
+   "Enforce a clean desk policy, train users and provide a password manager"
+  ],
+  "answer": "D",
+  "explanation": "The root cause is that users find passwords hard to manage. The best response is user training with a clean desk policy, along with a password manager or single sign-on to reduce the number of passwords. Only forbidding notes without addressing usability usually fails.",
+  "option_notes": [
+   "Wrong: Shorter passwords weaken security.",
+   "Wrong: This removes authentication.",
+   "Wrong: Cameras in the closet do not address desk behavior.",
+   "Correct: This addresses behavior and the cause."
+  ],
+  "key_concept": "Address user behavior with policy, training and usable tools.",
+  "cli_example": "",
+  "tip": "Security that is too hard to use gets bypassed."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "어려움",
+  "question": "During an audit, a tester walks into a lobby, claims to be an electrician and is allowed into a wiring closet. Which statement is the best assessment?",
+  "choices": [
+   "Pretexting succeeded because visitor verification and awareness were weak",
+   "A zero-day exploit was used against the lobby access switch to get inside",
+   "A DDoS attack was launched",
+   "A rogue access point was installed"
+  ],
+  "answer": "A",
+  "explanation": "This is a pretexting and social engineering success, plus a physical access control failure. A visitor policy with identity verification and escorts, and employee awareness to challenge strangers, would stop it. A firewall would not have prevented the intrusion.",
+  "option_notes": [
+   "Correct: The tester invented a story and no one verified it.",
+   "Wrong: No technical exploit was used.",
+   "Wrong: No traffic flooding occurred.",
+   "Wrong: No wireless device was mentioned."
+  ],
+  "key_concept": "Pretexting uses a made-up identity to gain physical or information access.",
+  "cli_example": "",
+  "tip": "Pretexting = invented scenario to gain trust."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "어려움",
+  "question": "Which control is classified as detective rather than preventive in a physical security program?",
+  "choices": [
+   "A locked door with a badge reader",
+   "Security cameras recording the entrance",
+   "A mantrap at the data center entrance",
+   "A security guard blocking the doorway"
+  ],
+  "answer": "B",
+  "explanation": "Security cameras and entry logs detect and record events after or while they occur, but they do not stop entry. Locks, mantraps and guards at a door are preventive. A good program uses both types.",
+  "option_notes": [
+   "Wrong: This prevents entry.",
+   "Correct: They record and detect but do not stop entry.",
+   "Wrong: This prevents unauthorized entry.",
+   "Wrong: This prevents entry."
+  ],
+  "key_concept": "Detective controls reveal events; preventive controls stop them.",
+  "cli_example": "",
+  "tip": "Preventive = stop; detective = see/record."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "어려움",
+  "question": "An organization wants to reduce the risk of lost laptops exposing data. Which combination best fits a security program that includes physical and user elements?",
+  "choices": [
+   "Only a longer SSID name",
+   "A faster uplink for the laptops, a longer SSID and stronger Wi-Fi signals",
+   "Disk encryption, cable locks and user training on reporting loss",
+   "Disabling the corporate firewall"
+  ],
+  "answer": "C",
+  "explanation": "Full-disk encryption makes the data unreadable if the laptop is lost, a cable lock reduces the chance of theft, and training teaches users to report loss quickly. Together they cover technical, physical and user layers. Any single measure leaves a gap.",
+  "option_notes": [
+   "Wrong: SSID length has no effect.",
+   "Wrong: Speed does not protect data.",
+   "Correct: This covers technical, physical and user layers.",
+   "Wrong: This lowers security."
+  ],
+  "key_concept": "Combine encryption, physical protection and user reporting.",
+  "cli_example": "",
+  "tip": "Lost device = encrypt data."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "어려움",
+  "question": "A policy states that a person who requests access to the data center must have their identity verified, approval from a manager and an entry logged. Which security concept does the logging part primarily support?",
+  "choices": [
+   "Authentication",
+   "Authorization",
+   "Confidentiality of data in transit",
+   "Accountability (accounting)"
+  ],
+  "answer": "D",
+  "explanation": "Logging entries creates a record of who accessed the room and when, which supports accountability and later investigation. Approval supports authorization, and identity verification supports authentication. These match the AAA model applied to physical access.",
+  "option_notes": [
+   "Wrong: Authentication is verifying identity.",
+   "Wrong: Authorization is the approval for access.",
+   "Wrong: Entry logs do not encrypt traffic.",
+   "Correct: Logs record who did what and when."
+  ],
+  "key_concept": "Logs provide accountability (accounting).",
+  "cli_example": "",
+  "tip": "Authentication, authorization, accounting also apply to physical access."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "어려움",
+  "question": "A phishing simulation shows that 30 percent of employees clicked a malicious link. Which next step best fits a mature security awareness program?",
+  "choices": [
+   "Give targeted training and repeat simulations to measure progress",
+   "Disable email for the whole company until the filters are upgraded",
+   "Ignore the results because filters exist",
+   "Reduce the length of the password policy"
+  ],
+  "answer": "A",
+  "explanation": "The result shows a training gap. The best response is targeted, repeated training and further simulations to measure improvement. Punishing staff or ignoring the result does not reduce the risk.",
+  "option_notes": [
+   "Correct: This closes the gap and measures results.",
+   "Wrong: This is not practical and stops business.",
+   "Wrong: Filters cannot catch every message.",
+   "Wrong: Password length is unrelated to link clicking."
+  ],
+  "key_concept": "Use results to drive targeted training and re-test.",
+  "cli_example": "",
+  "tip": "Measure, train, re-measure."
+ },
+ {
+  "sub": "5.2",
+  "difficulty": "어려움",
+  "question": "Which statement correctly compares security awareness, training and education?",
+  "choices": [
+   "Education is the shortest and most general of the three activities",
+   "Awareness is general, training builds skills, education goes deeper",
+   "Training is only for visitors, awareness is only for IT",
+   "All three mean installing security patches"
+  ],
+  "answer": "B",
+  "explanation": "Awareness makes people recognize security concerns, training teaches specific skills to perform tasks securely, and education builds deeper knowledge for security professionals. They form a progression from general to specialized. A program normally includes awareness for everyone and training for specific roles.",
+  "option_notes": [
+   "Wrong: Education is the deepest.",
+   "Correct: This is the correct progression.",
+   "Wrong: They apply to different levels, not roles like this.",
+   "Wrong: They concern people, not patches."
+  ],
+  "key_concept": "Awareness is broad; training is skills; education is deep knowledge.",
+  "cli_example": "",
+  "tip": "General to specialized: awareness, training, education."
+ }
 ]

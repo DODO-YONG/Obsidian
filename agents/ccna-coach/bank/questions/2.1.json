@@ -4,7 +4,7 @@
   "difficulty": "쉬움",
   "question": "What is the main purpose of a VLAN on a switch?",
   "choices": [
-   "To increase the speed of every switch port",
+   "To increase the speed of every switch port that is in the same VLAN",
    "To divide one physical switch into separate broadcast domains",
    "To route packets between different IP networks",
    "To encrypt traffic between two switches"
@@ -182,7 +182,7 @@
   "choices": [
    "A longer cable between the PCs",
    "A router or Layer 3 switch to route between the VLANs",
-   "A second switch with the same VLAN IDs",
+   "A second switch with the same VLAN IDs and an access link",
    "A higher STP priority on the switch"
   ],
   "answer": "B",
@@ -224,7 +224,7 @@
   "difficulty": "보통",
   "question": "VLAN 20 is deleted with no vlan 20 while ports Fa0/5-Fa0/8 are still assigned to it. What happens to those ports?",
   "choices": [
-   "They move to VLAN 1 automatically",
+   "They move back to VLAN 1 automatically and keep forwarding user traffic",
    "They are shut down and put in err-disabled state",
    "They become trunk ports",
    "They stay assigned to VLAN 20 but become inactive and forward no traffic"
@@ -268,7 +268,7 @@
   "difficulty": "보통",
   "question": "How does a Cisco IP phone normally learn the voice VLAN ID configured on the switch port?",
   "choices": [
-   "From DHCP option 1",
+   "From DHCP option 1 sent in the switch's offer",
    "Through CDP (or LLDP-MED) from the switch",
    "By manual entry on the PC",
    "Through DTP negotiation"
@@ -291,7 +291,7 @@
   "question": "Refer to the output.\n\nSwitch# show vlan brief\nVLAN Name     Status  Ports\n1    default  active  Fa0/1, Fa0/2, Fa0/3\n20   SALES    active  Fa0/4\n\nA PC on Fa0/3 is meant to be in VLAN 20 but cannot reach other VLAN 20 hosts. What is the cause?",
   "choices": [
    "Fa0/3 was never assigned to VLAN 20 and is still in VLAN 1",
-   "VLAN 20 is shut down",
+   "VLAN 20 is shut down, so Fa0/3 is listed in VLAN 1 instead",
    "The VLAN 20 name is wrong",
    "Fa0/3 is configured as a trunk"
   ],
@@ -356,8 +356,8 @@
   "difficulty": "보통",
   "question": "Refer to the output.\n\nSwitch# show interfaces fa0/1 switchport\nName: Fa0/1\nSwitchport: Enabled\nAdministrative Mode: static access\nOperational Mode: static access\nAccess Mode VLAN: 10 (DATA)\nVoice VLAN: 20 (VOICE)\n\nWhich statement is true?",
   "choices": [
-   "The port is a trunk with native VLAN 10",
-   "Untagged data frames from a PC go in VLAN 10 and phone voice frames use VLAN 20",
+   "The port is an 802.1Q trunk with native VLAN 10 and only VLAN 20 allowed",
+   "Untagged PC frames use VLAN 10; phone voice frames use VLAN 20",
    "The port carries only VLAN 20",
    "The port is in VLAN 1"
   ],
@@ -380,7 +380,7 @@
   "choices": [
    "interface range fa0/1 - 12\n switchport mode access\n switchport access vlan 30",
    "vlan 30\n ports fa0/1 - 12",
-   "interface vlan 30\n switchport range fa0/1 - 12",
+   "interface range fa0/1 - 12\n switchport mode trunk\n switchport trunk native vlan 30",
    "switchport access vlan 30 fa0/1 - 12"
   ],
   "answer": "A",
@@ -444,7 +444,7 @@
   "difficulty": "어려움",
   "question": "Hosts in VLAN 10 on SW1 and SW2 cannot communicate. The link between the switches is configured as an access port in VLAN 1 on both ends. What is the fix?",
   "choices": [
-   "Assign the link to VLAN 10 on one switch only",
+   "Assign the link as an access port in VLAN 10 on one switch only",
    "Configure the link as an 802.1Q trunk that allows VLAN 10",
    "Change the native VLAN to 10 on an access port",
    "Create VLAN 10 on one switch only"
@@ -469,7 +469,7 @@
    "PC frames untagged (VLAN 10) and phone voice frames tagged with VLAN 20",
    "Both PC and phone frames tagged with VLAN 10",
    "Both PC and phone frames untagged",
-   "PC frames tagged with VLAN 10 and voice frames untagged"
+   "PC frames tagged with VLAN 10 and voice frames sent untagged in VLAN 20"
   ],
   "answer": "A",
   "explanation": "The access port treats untagged frames as the access VLAN (10). The phone tags its own voice traffic with the voice VLAN ID (20). This lets one port carry two VLANs without being a full trunk.",
@@ -510,9 +510,9 @@
   "difficulty": "어려움",
   "question": "Interface Fa0/2 has the commands switchport mode trunk and switchport access vlan 10. Which statement is true?",
   "choices": [
-   "The port operates in access VLAN 10 only",
+   "The port operates in access VLAN 10 only, ignoring the trunk mode",
    "The configuration is rejected by IOS",
-   "The port operates as a trunk and the access VLAN setting is not used while it is trunking",
+   "It trunks, and the access VLAN setting is ignored while trunking",
    "The port becomes err-disabled"
   ],
   "answer": "C",
@@ -532,8 +532,8 @@
   "difficulty": "어려움",
   "question": "The command shutdown is entered in config-vlan mode for VLAN 30. What is the effect?",
   "choices": [
-   "VLAN 30 is deleted and its ports move to VLAN 1",
-   "Ports in VLAN 30 on this switch stop forwarding VLAN 30 traffic but stay assigned to it",
+   "VLAN 30 is deleted from the database and its ports move to VLAN 1",
+   "VLAN 30 ports here stop forwarding but stay assigned to VLAN 30",
    "All ports on the switch are shut down",
    "The ports in VLAN 30 are err-disabled"
   ],

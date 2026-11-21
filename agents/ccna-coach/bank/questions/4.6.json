@@ -5,7 +5,7 @@
   "question": "What is the purpose of the ip helper-address command?",
   "choices": [
    "Forward client DHCP broadcasts to a DHCP server on another subnet",
-   "Assign addresses from a pool on the router",
+   "Assign addresses to clients from a local DHCP pool on the router itself",
    "Block DHCP traffic",
    "Translate private addresses"
   ],
@@ -224,7 +224,7 @@
   "difficulty": "보통",
   "question": "What is the giaddr field in a relayed DHCP message?",
   "choices": [
-   "The IP address assigned to the client",
+   "The IP address that the DHCP server has offered and assigned to the client",
    "The MAC address of the server",
    "The IP address of the relay interface that received the client broadcast",
    "The default gateway option sent by the server"
@@ -359,7 +359,7 @@
    "No, the broadcast reaches the server directly",
    "Yes, always",
    "Yes, but only for renewals",
-   "No, but only with a switch trunk"
+   "No, but only when the switch port is a trunk"
   ],
   "answer": "A",
   "explanation": "A relay is needed only when the client broadcast has to cross a Layer 3 boundary.",
@@ -422,7 +422,7 @@
   "difficulty": "어려움",
   "question": "A DHCP server has pools for 10.10.10.0/24 only. Clients in VLAN 20 (10.10.20.0/24) are relayed by R1 and fail to get addresses. What is wrong?",
   "choices": [
-   "The relay uses UDP 68",
+   "The relay forwards to UDP port 68 instead of UDP port 67 on the server",
    "The clients lack a MAC address",
    "DHCP requires TCP",
    "The server has no pool matching the giaddr subnet 10.10.20.0/24"
@@ -447,7 +447,7 @@
    "The server has no route back to the relay interface subnet",
    "The server is using UDP 68",
    "The clients have the wrong MAC",
-   "ip helper-address is on the wrong VLAN"
+   "ip helper-address is configured under the wrong VLAN interface"
   ],
   "answer": "A",
   "explanation": "The server unicasts its reply to giaddr. Without a route (or default gateway) to that network, the offer is lost.",
@@ -468,7 +468,7 @@
   "choices": [
    "Both VLANs get addresses",
    "VLAN 20 clients get addresses; VLAN 10 clients do not",
-   "Neither VLAN gets addresses",
+   "Neither VLAN gets addresses, because both subinterfaces need it",
    "VLAN 10 gets addresses but VLAN 20 does not"
   ],
   "answer": "B",
@@ -532,8 +532,8 @@
   "difficulty": "어려움",
   "question": "An ACL on a firewall between R1 and the DHCP server blocks UDP 67. What happens?",
   "choices": [
-   "Relayed requests never reach the server and clients fail to get addresses",
-   "Clients get addresses via UDP 68",
+   "Relayed requests never reach the server, so clients get no address",
+   "Clients still get addresses, because the reply comes back on UDP 68",
    "Only renewals fail",
    "Clients use APIPA only for IPv6"
   ],

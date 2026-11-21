@@ -4,7 +4,7 @@
   "difficulty": "쉬움",
   "question": "Which description matches an autonomous access point?",
   "choices": [
-   "An AP that depends on a WLC for all configuration",
+   "An AP that depends on a WLC for all of its configuration and policies",
    "A self-contained AP that is configured and managed individually",
    "An AP that only runs in monitor mode",
    "An AP that is managed only through a cloud dashboard"
@@ -27,7 +27,7 @@
   "question": "What is the purpose of the CAPWAP protocol?",
   "choices": [
    "It creates tunnels between lightweight APs and a wireless LAN controller",
-   "It encrypts wireless client traffic with AES",
+   "It encrypts all wireless client traffic over the air using AES-CCMP keys",
    "It assigns IP addresses to wireless clients",
    "It discovers neighboring Cisco switches"
   ],
@@ -136,10 +136,10 @@
   "difficulty": "쉬움",
   "question": "What is the main benefit of FlexConnect mode?",
   "choices": [
-   "The AP forwards all traffic to the WLC",
+   "The AP forwards all client traffic to the central WLC through a CAPWAP tunnel",
    "The AP captures wireless frames for analysis",
    "The AP only operates on the 5 GHz band",
-   "Clients can continue to be served and switched locally when the WAN link to the WLC fails"
+   "Clients keep being served and switched locally if the WAN to the WLC fails"
   ],
   "answer": "D",
   "explanation": "FlexConnect suits branch offices with a central WLC. Client traffic is switched locally at the AP onto the VLAN, and the AP can keep operating in standalone mode if the WLC is not reachable.",
@@ -158,7 +158,7 @@
   "difficulty": "쉬움",
   "question": "In the split-MAC architecture, which functions does the lightweight AP perform?",
   "choices": [
-   "Client authentication policy and RF management",
+   "Client authentication policy and RF management for the whole wireless network",
    "Roaming and mobility management",
    "Real-time functions such as beacons, probe responses and frame encryption",
    "VLAN creation for the whole network"
@@ -224,10 +224,10 @@
   "difficulty": "보통",
   "question": "Which statement about lightweight APs compared to autonomous APs is true?",
   "choices": [
-   "Lightweight APs must be configured one by one in the CLI",
+   "Lightweight APs must each be configured one by one from the AP's CLI",
    "Lightweight APs do not support multiple SSIDs",
    "Lightweight APs cannot support roaming",
-   "Lightweight APs get their configuration from a WLC and tunnel traffic with CAPWAP"
+   "Lightweight APs get their configuration from a WLC and use CAPWAP"
   ],
   "answer": "D",
   "explanation": "A WLC-based design provides central configuration, RRM, roaming and security. Each lightweight AP builds CAPWAP tunnels to the WLC.",
@@ -268,8 +268,8 @@
   "difficulty": "보통",
   "question": "Which statement describes an AP in rogue detector mode?",
   "choices": [
-   "It scans all channels with its radio and serves clients",
-   "Its radio is off and it listens on the wired network for ARP information to find rogue clients and APs",
+   "It scans all channels with its radio while it continues to serve clients",
+   "Its radio is off; it listens on the wire for ARP to find rogue clients",
    "It bridges two remote networks",
    "It tunnels all client traffic to the WLC"
   ],
@@ -335,7 +335,7 @@
   "question": "Which DNS entry can an AP resolve to find the WLC?",
   "choices": [
    "WLC.cisco.com",
-   "CAPWAP.local",
+   "CAPWAP-CONTROLLER.cisco.localdomain",
    "CISCO-CAPWAP-CONTROLLER.localdomain",
    "AP-JOIN.domain"
   ],
@@ -356,7 +356,7 @@
   "difficulty": "보통",
   "question": "What is a benefit of a controller-based wireless architecture?",
   "choices": [
-   "Each AP must be configured separately",
+   "Each AP must be configured separately through its own web GUI",
    "Centralized configuration, RF management and client roaming",
    "No need for a wired network",
    "No use of CAPWAP"
@@ -380,7 +380,7 @@
   "choices": [
    "It periodically scans them for RRM and rogue detection",
    "It stops serving clients permanently",
-   "It switches to bridge mode",
+   "It switches to bridge mode on those channels to link sites",
    "It forwards wired traffic to the WLC"
   ],
   "answer": "A",
@@ -467,7 +467,7 @@
   "question": "A branch AP is in FlexConnect mode with a WLAN configured for local switching. The WAN link to the WLC goes down. What is the expected behavior?",
   "choices": [
    "The AP keeps forwarding client traffic locally for that WLAN in standalone mode",
-   "All clients are disconnected",
+   "All clients are disconnected from the WLAN until the WAN link to the HQ WLC returns",
    "The AP converts the traffic to CAPWAP and queues it",
    "The AP turns off its radios"
   ],
@@ -555,7 +555,7 @@
   "question": "An autonomous AP serves three SSIDs mapped to VLANs 10, 20 and 30. How should its switch port be configured?",
   "choices": [
    "As an 802.1Q trunk allowing VLANs 10, 20 and 30",
-   "As an access port in VLAN 10",
+   "As an access port in VLAN 10 for all three SSIDs",
    "As a routed port",
    "As a port-channel in on mode"
   ],
@@ -577,7 +577,7 @@
   "question": "How does a cloud-based AP architecture handle user data traffic?",
   "choices": [
    "All data goes through the cloud management platform",
-   "All data is tunneled with CAPWAP to a local WLC",
+   "All user data is tunneled with CAPWAP to a local WLC at the branch site",
    "Data is dropped until the cloud connection is established",
    "Data is forwarded locally; only management traffic goes to the cloud"
   ],
@@ -645,7 +645,7 @@
    "Change the AP mode to FlexConnect and enable local switching",
    "Change the AP to monitor mode",
    "Change the AP to sniffer mode",
-   "Increase the CAPWAP data tunnel MTU"
+   "Increase the CAPWAP data tunnel MTU on the AP and the WAN link"
   ],
   "answer": "A",
   "explanation": "FlexConnect mode is made for branch locations. Traffic of locally switched WLANs does not depend on the WAN link to the WLC.",

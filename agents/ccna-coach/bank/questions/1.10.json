@@ -93,9 +93,9 @@
   "question": "A Windows client has the address 169.254.37.12. What does this most likely indicate?",
   "choices": [
    "The client received the address from a DHCP server",
-   "The client could not reach a DHCP server and self-assigned an APIPA address",
+   "The client could not reach DHCP and self-assigned an APIPA address",
    "The client has a static public IP address",
-   "The client is using an IPv6 link-local address"
+   "The client is using an IPv6 link-local address in place of an IPv4 address"
   ],
   "answer": "B",
   "explanation": "The 169.254.0.0/16 range is used for automatic private IP addressing (APIPA). A host assigns itself an address from it when DHCP fails. The host can talk only to other hosts on the same link using such addresses.",
@@ -226,7 +226,7 @@
   "choices": [
    "The subnet mask is a class B mask",
    "The host has an APIPA address",
-   "The DNS server is missing",
+   "The DNS server address is missing from the host's configuration",
    "The default gateway is not in the same subnet as the host"
   ],
   "answer": "D",
@@ -380,7 +380,7 @@
   "choices": [
    "The adapter has no physical link, for example an unplugged cable",
    "The DHCP scope is exhausted",
-   "The default gateway is unreachable",
+   "The default gateway is unreachable from the adapter's subnet right now",
    "The DNS server is not responding"
   ],
   "answer": "A",
@@ -422,7 +422,7 @@
   "difficulty": "어려움",
   "question": "A PC can ping hosts in its own subnet but cannot ping 8.8.8.8. ipconfig shows a valid address and mask but no default gateway. What is the best fix?",
   "choices": [
-   "Change the DNS server to 8.8.8.8",
+   "Change the DNS server to 8.8.8.8 so that the PC can resolve Internet names",
    "Flush the DNS cache",
    "Configure a default gateway on the PC, or fix DHCP so it supplies one",
    "Change the subnet mask to 255.255.255.255"
@@ -444,7 +444,7 @@
   "difficulty": "어려움",
   "question": "A user can ping 93.184.216.34 but cannot browse to www.example.com. What is the most likely cause?",
   "choices": [
-   "A missing default gateway",
+   "A missing default gateway on the client",
    "A DNS configuration problem on the client",
    "A duplicate IP address",
    "A wrong subnet mask"
@@ -490,7 +490,7 @@
   "choices": [
    "The mask 255.255.255.128 is invalid for a host",
    "The host address is a broadcast address",
-   "The gateway must always end in .254",
+   "The gateway address must always be the last usable host address, ending in .254",
    "The gateway is in 192.168.10.0/25 while the host is in 192.168.10.128/25"
   ],
   "answer": "D",
@@ -511,7 +511,7 @@
   "question": "A traceroute output shows hop 3 as '* * *' but hops 4 and 5 reply normally and the destination is reached. What is the best conclusion?",
   "choices": [
    "The path is broken at hop 3",
-   "The destination is rejecting ICMP",
+   "The destination is rejecting ICMP, so the path beyond hop 3 cannot really be known",
    "The hop 3 device does not send ICMP replies, but it still forwards traffic",
    "Hop 3 has a duplicate IP address"
   ],
@@ -534,7 +534,7 @@
   "choices": [
    "It automatically gets a new address from DHCP",
    "It keeps its configured address, which may not fit the new subnet",
-   "It switches to an APIPA address",
+   "It switches to an APIPA address as soon as it moves to a different subnet",
    "It removes its default gateway"
   ],
   "answer": "B",
@@ -577,7 +577,7 @@
   "question": "A Windows PC fails to ping 127.0.0.1. What does this tell you?",
   "choices": [
    "The default gateway is down",
-   "The switch port is in the wrong VLAN",
+   "The switch port is assigned to the wrong VLAN for the PC's subnet",
    "The DNS server is unreachable",
    "The local TCP/IP stack on the PC is not working correctly"
   ],
@@ -623,7 +623,7 @@
    "An APIPA assignment",
    "A duplicate IP address on the network",
    "A wrong DNS suffix",
-   "A mismatched subnet mask"
+   "A mismatched subnet mask on one of the PCs"
   ],
   "answer": "B",
   "explanation": "Two hosts using the same IP address cause an address conflict, and the ARP cache of other devices flips between the two MAC addresses. The result is intermittent connectivity. The fix is to change one address or correct the static/DHCP overlap.",

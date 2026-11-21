@@ -48,9 +48,9 @@
   "difficulty": "쉬움",
   "question": "What does machine learning allow a system to do?",
   "choices": [
-   "Run only fixed rules written by an engineer",
+   "Run only the fixed rules that an engineer has written for each case",
    "Replace all network cables",
-   "Learn patterns from data and improve without being explicitly programmed for each case",
+   "Learn patterns from data without being programmed for each case",
    "Encrypt all traffic automatically"
   ],
   "answer": "C",
@@ -70,7 +70,7 @@
   "difficulty": "쉬움",
   "question": "Which task is a good use of machine learning in network operations?",
   "choices": [
-   "Assigning a MAC address to every NIC",
+   "Assigning a burned-in MAC address to every new network card",
    "Detecting unusual traffic patterns that may indicate a problem",
    "Crimping Ethernet cables",
    "Choosing the color of console cables"
@@ -92,8 +92,8 @@
   "difficulty": "쉬움",
   "question": "Which statement describes a hallucination in generative AI?",
   "choices": [
-   "The model refuses to answer any question",
-   "The model produces output that sounds confident but is incorrect or made up",
+   "The model refuses to answer any question it is not sure about",
+   "The model gives a confident answer that is wrong or made up",
    "The model deletes its training data",
    "The model encrypts its output"
   ],
@@ -137,9 +137,9 @@
   "question": "Which use case is an example of predictive AI in a network?",
   "choices": [
    "Writing a poem about the network",
-   "Drawing a new topology image from a text prompt",
+   "Drawing a new network topology image from a text prompt",
    "Typing a command into the CLI",
-   "Forecasting that a switch is likely to fail based on past logs and telemetry"
+   "Forecasting that a switch will likely fail, based on past logs"
   ],
   "answer": "D",
   "explanation": "Predictive maintenance uses historical logs, telemetry and error counters to estimate which device may fail soon. Engineers can then act before an outage.",
@@ -180,7 +180,7 @@
   "difficulty": "쉬움",
   "question": "Which statement is true about using AI and machine learning in network management?",
   "choices": [
-   "They remove the need for any human oversight",
+   "They remove the need for any human oversight of network changes",
    "They only work on wireless networks",
    "They can analyze large amounts of telemetry faster than a human can",
    "They are a replacement for physical devices"
@@ -202,8 +202,8 @@
   "difficulty": "쉬움",
   "question": "Which statement describes the main goal of a chatbot-style generative AI assistant used by a network engineer?",
   "choices": [
-   "Physically install network switches",
-   "Answer questions and draft text or configuration from natural language prompts",
+   "Physically install and cable new network switches in the racks",
+   "Answer questions and draft text or configs from plain-language prompts",
    "Replace IP addressing",
    "Increase the speed of copper cables"
   ],
@@ -313,8 +313,8 @@
   "question": "What is overfitting in machine learning?",
   "choices": [
    "A model uses too little memory",
-   "A model learns the training data too closely and performs poorly on new data",
-   "A model is trained with labeled data",
+   "A model fits the training data too closely and does poorly on new data",
+   "A model is trained with labeled data instead of unlabeled data",
    "A model runs on a switch"
   ],
   "answer": "B",
@@ -335,7 +335,7 @@
   "question": "Why should an engineer avoid pasting full device configurations with passwords into a public generative AI service?",
   "choices": [
    "The data may be stored or exposed outside the organization",
-   "The AI cannot read text",
+   "The AI tool cannot read configuration text in IOS format",
    "Configurations are always too small",
    "It makes the router reboot"
   ],
@@ -357,7 +357,7 @@
   "question": "Which scenario best fits predictive maintenance?",
   "choices": [
    "Using error counters and logs to estimate that a line card will fail soon",
-   "Replacing a card after it has already failed",
+   "Replacing a line card only after it has already failed in service",
    "Writing a user manual with a chatbot",
    "Changing a hostname manually"
   ],
@@ -380,8 +380,8 @@
   "choices": [
    "Cables are connected in a ring",
    "The network is disconnected from all other networks",
-   "An engineer reviews logs once a year",
-   "The system detects an issue, decides on a fix and applies it, then checks the result"
+   "An engineer reviews the logs once a year and plans fixes by hand",
+   "The system detects an issue, applies a fix, then checks the result"
   ],
   "answer": "D",
   "explanation": "In closed-loop automation, assurance data triggers an automated action, and new data confirms whether the action worked. AI and ML help decide which action to take.",
@@ -400,7 +400,7 @@
   "difficulty": "보통",
   "question": "Which task is best suited to generative AI?",
   "choices": [
-   "Calculating the checksum of a frame",
+   "Calculating the checksum of each Ethernet frame in real time",
    "Forwarding a packet in hardware",
    "Summarizing a long syslog file into a plain-language incident report",
    "Electing a spanning-tree root bridge"
@@ -423,7 +423,7 @@
   "question": "What is the difference between training and inference in machine learning?",
   "choices": [
    "Training applies the model to new data, inference builds the model",
-   "Training builds the model from data, inference applies the trained model to new data",
+   "Training builds the model; inference applies it to new data",
    "They are the same process",
    "Training is a cable test, inference is a ping test"
   ],
@@ -444,7 +444,7 @@
   "difficulty": "어려움",
   "question": "A model was trained only on weekday traffic. On weekends it flags normal traffic as anomalies. What is the most likely cause?",
   "choices": [
-   "The switches are using the wrong cable type",
+   "The switches are using the wrong cable type for the weekend traffic",
    "The training data was not representative of all normal behavior",
    "Generative AI is rewriting the traffic",
    "The model has too much training data"
@@ -466,7 +466,7 @@
   "difficulty": "어려움",
   "question": "Which pairing of requirement and AI type is correct?",
   "choices": [
-   "Forecast next month's link utilization: predictive; draft a change-request summary: generative",
+   "Forecast utilization: predictive; draft a summary: generative",
    "Forecast link utilization: generative; draft a summary: predictive",
    "Both tasks: only generative",
    "Both tasks: neither can use AI"
@@ -488,10 +488,10 @@
   "difficulty": "어려움",
   "question": "A generative AI tool suggests a router command that does not exist in the IOS version in use. What is the best way to handle this?",
   "choices": [
-   "Paste it into production, as the AI would not be wrong",
+   "Paste it into production, because the AI tool would not suggest a wrong one",
    "Assume the router is faulty and replace it",
    "Disable the router CLI",
-   "Verify the command against the vendor documentation or a lab device before using it"
+   "Verify it in vendor documentation or on a lab device before using it"
   ],
   "answer": "D",
   "explanation": "The suggestion is likely a hallucination or a command from another platform. Checking official documentation or testing in a lab prevents errors in production.",
@@ -532,7 +532,7 @@
   "difficulty": "어려움",
   "question": "Which dataset would be needed to train a supervised model that classifies flows as malicious or benign?",
   "choices": [
-   "Unlabeled flow records only",
+   "Unlabeled flow records from the last month only",
    "A list of switch port numbers",
    "Flow records labeled as malicious or benign",
    "Only the device serial numbers"
@@ -600,7 +600,7 @@
   "choices": [
    "AI cannot analyze any data",
    "It makes the network slower on purpose",
-   "It eliminates the need for testing",
+   "It eliminates the need for any testing of the change in a lab first",
    "Engineers can verify context and risk before the change is applied"
   ],
   "answer": "D",
@@ -620,10 +620,10 @@
   "difficulty": "어려움",
   "question": "Which prompt would most likely get a useful answer from a generative AI tool for a network task?",
   "choices": [
-   "Do network stuff",
+   "Do some network stuff on my router and make everything work better and faster",
    "Fix it",
    "Router",
-   "Write an example Cisco IOS configuration for a VLAN 20 SVI with IP 10.20.0.1/24, and explain each line"
+   "Write a Cisco IOS config for a VLAN 20 SVI at 10.20.0.1/24 and explain it"
   ],
   "answer": "D",
   "explanation": "Clear, specific prompts with context, platform and desired output give better results. Vague prompts lead to generic or incorrect answers.",
@@ -642,7 +642,7 @@
   "difficulty": "어려움",
   "question": "A vendor tool correlates logs from many devices and reports that a single failing uplink caused 40 separate alarms. Which benefit of AI and ML does this show?",
   "choices": [
-   "Replacing the failed uplink physically",
+   "Replacing the failed uplink physically without any analysis",
    "Generating a new IP addressing plan",
    "Faster root cause analysis through event correlation",
    "Disabling all alarms permanently"

@@ -4,7 +4,7 @@
   "difficulty": "쉬움",
   "question": "What is the purpose of a site-to-site IPsec VPN?",
   "choices": [
-   "Connect a single user's laptop to the office",
+   "Connect a single remote user's laptop to the office with a software VPN client",
    "Create an encrypted tunnel between two networks over an untrusted network",
    "Assign IP addresses to remote sites",
    "Replace the routing protocol"
@@ -49,7 +49,7 @@
   "question": "Which services does IPsec provide?",
   "choices": [
    "Confidentiality, integrity, authentication and anti-replay",
-   "Only routing",
+   "Routing, address translation and name resolution between sites",
    "Only name resolution",
    "Only address translation"
   ],
@@ -57,7 +57,7 @@
   "explanation": "IPsec encrypts data for confidentiality, uses hashing for integrity, authenticates peers and detects replayed packets.",
   "option_notes": [
    "Correct: Those are IPsec security services.",
-   "Wrong: IPsec is not a routing protocol.",
+   "Wrong: IPsec does not route, translate addresses or resolve names.",
    "Wrong: DNS resolves names.",
    "Wrong: NAT translates addresses."
   ],
@@ -136,7 +136,7 @@
   "difficulty": "쉬움",
   "question": "In IPsec tunnel mode, what happens to the original IP packet?",
   "choices": [
-   "It is sent unchanged",
+   "It is sent unchanged, with only the payload encrypted",
    "It is encapsulated and protected in a new IP packet",
    "It is dropped",
    "It is converted to IPv6"
@@ -180,7 +180,7 @@
   "difficulty": "쉬움",
   "question": "What does IKE do in an IPsec VPN?",
   "choices": [
-   "Compresses data",
+   "Compresses the data before it is encrypted",
    "Negotiates security associations and keys",
    "Assigns VLANs",
    "Filters packets"
@@ -246,7 +246,7 @@
   "difficulty": "보통",
   "question": "What is the purpose of the Diffie-Hellman algorithm in IPsec?",
   "choices": [
-   "Encrypt bulk data",
+   "Encrypt all of the bulk data that flows through the tunnel",
    "Securely derive a shared secret over an untrusted network",
    "Authenticate users with passwords",
    "Compress packets"
@@ -313,7 +313,7 @@
   "question": "Why is GRE over IPsec often used between branch routers?",
   "choices": [
    "GRE can carry routing protocol multicast that IPsec alone cannot",
-   "GRE provides stronger encryption",
+   "GRE provides stronger encryption than IPsec for routing traffic",
    "GRE removes the need for keys",
    "GRE is required by IKE"
   ],
@@ -380,7 +380,7 @@
   "choices": [
    "The IPsec protocols and algorithms for data protection",
    "The VLAN assignment",
-   "The routing metric",
+   "The routing metric used for traffic through the tunnel",
    "The DHCP lease"
   ],
   "answer": "A",
@@ -401,7 +401,7 @@
   "question": "Why is AH usually incompatible with NAT?",
   "choices": [
    "AH protects the outer IP header, so address changes break integrity",
-   "AH uses UDP",
+   "AH runs over UDP port 4500, which NAT devices always block by default",
    "AH is encrypted",
    "NAT blocks all ICMP"
   ],
@@ -422,8 +422,8 @@
   "difficulty": "어려움",
   "question": "A router shows #pkts encaps: 500, #pkts decaps: 0 for a VPN tunnel. What is the most likely issue?",
   "choices": [
-   "Outgoing traffic is encrypted but no encrypted traffic is arriving from the peer",
-   "The IKE port is blocked locally for all traffic",
+   "Traffic is encrypted out, but nothing encrypted comes back from the peer",
+   "The IKE port is blocked locally, so no SAs exist for any traffic",
    "The transform set is missing locally",
    "The tunnel is not configured"
   ],
@@ -489,7 +489,7 @@
   "question": "Phase 1 succeeds but Phase 2 fails. The crypto ACLs on the two routers are not mirror images. What is the likely effect?",
   "choices": [
    "IPsec SAs cannot be negotiated because proxy identities do not match",
-   "IKE will not start",
+   "IKE Phase 1 will not even start, because the peers cannot authenticate",
    "DHCP will fail",
    "OSPF will reset"
   ],
@@ -511,7 +511,7 @@
   "question": "Which statement describes Perfect Forward Secrecy (PFS)?",
   "choices": [
    "Each new IPsec SA uses a fresh Diffie-Hellman exchange",
-   "All SAs reuse the Phase 1 key",
+   "All IPsec SAs reuse the Phase 1 key so rekeying is faster",
    "Only AH is used",
    "Keys never change"
   ],
@@ -533,7 +533,7 @@
   "question": "An administrator wants OSPF adjacencies across a VPN between two sites. Why is plain IPsec tunnel mode a problem?",
   "choices": [
    "It cannot carry multicast routing protocol packets",
-   "It is not encrypted",
+   "It is not encrypted, so OSPF packets would be exposed",
    "It does not support IPv4",
    "It requires NAT"
   ],
@@ -555,7 +555,7 @@
   "question": "A pre-shared key is configured differently on two IPsec peers. How does this appear?",
   "choices": [
    "Phase 1 authentication fails",
-   "Phase 2 succeeds",
+   "Phase 2 succeeds, but data fails",
    "ESP is rejected",
    "NAT-T triggers"
   ],
@@ -577,7 +577,7 @@
   "question": "A VPN works between two routers directly connected to the Internet, but fails when one router is behind a NAT device. Which feature addresses this?",
   "choices": [
    "NAT traversal using UDP 4500",
-   "Port security",
+   "Port security on the edge router",
    "Split horizon",
    "Proxy ARP"
   ],
@@ -598,8 +598,8 @@
   "difficulty": "어려움",
   "question": "Which sequence best describes the structure of an ESP tunnel mode packet?",
   "choices": [
-   "New IP header, ESP header, original IP packet, ESP trailer, ESP authentication",
-   "Original IP header, TCP header, ESP trailer",
+   "New IP header, ESP header, original IP packet, ESP trailer, ESP auth",
+   "Original IP header, ESP header, TCP header, data, ESP trailer, ESP auth",
    "GRE header, original IP header",
    "UDP header, DHCP header"
   ],
@@ -621,7 +621,7 @@
   "question": "How does IPsec transport mode differ from tunnel mode?",
   "choices": [
    "Transport mode keeps the original IP header and protects only the payload",
-   "Transport mode adds a second IP header",
+   "Transport mode adds a second, new IP header in front of the original packet",
    "Transport mode uses no ESP",
    "Transport mode is only for routers"
   ],
@@ -643,7 +643,7 @@
   "question": "A router has a correct ISAKMP policy, transform set and crypto map, but the crypto map was never applied to the outgoing interface. What happens to traffic that matches the crypto ACL?",
   "choices": [
    "It is forwarded unencrypted and no tunnel is negotiated",
-   "It is encrypted using default values",
+   "It is encrypted using the default IPsec values on the interface",
    "It is dropped by the ACL",
    "The router reloads"
   ],

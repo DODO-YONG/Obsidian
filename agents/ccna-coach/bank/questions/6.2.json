@@ -49,7 +49,7 @@
   "question": "Which activity is part of the management plane?",
   "choices": [
    "Running OSPF to find neighbors",
-   "Switching an Ethernet frame to a MAC address",
+   "Switching an Ethernet frame toward its destination MAC address",
    "Connecting to a router with SSH to change its configuration",
    "Learning ARP entries"
   ],
@@ -70,7 +70,7 @@
   "difficulty": "쉬움",
   "question": "In a traditional network, where does each device make its own control plane decisions?",
   "choices": [
-   "On one central controller only",
+   "On one central controller for the whole network",
    "On the end-user PCs",
    "At the ISP only",
    "On the device itself, in a distributed way"
@@ -114,8 +114,8 @@
   "difficulty": "쉬움",
   "question": "What is Cisco Catalyst Center (formerly Cisco DNA Center)?",
   "choices": [
-   "A routing protocol for WAN links",
-   "A controller-based platform for automation and assurance of campus and branch networks",
+   "A routing protocol that connects campus networks over WAN links",
+   "A controller platform for automating and assuring campus networks",
    "A type of Layer 2 switch",
    "A wireless encryption standard"
   ],
@@ -136,7 +136,7 @@
   "difficulty": "쉬움",
   "question": "Which is a benefit of using a controller for network management instead of the CLI on every device?",
   "choices": [
-   "It removes the need for network devices",
+   "It removes the need for physical network devices at each site",
    "It makes configuration slower",
    "A single point to apply consistent policy across many devices",
    "It requires each device to be reloaded"
@@ -180,8 +180,8 @@
   "difficulty": "쉬움",
   "question": "Which statement about a controller as a point of failure is most accurate?",
   "choices": [
-   "The controller must be designed with redundancy because it is central to management",
-   "A controller can never fail",
+   "It needs redundancy, because it is central to management",
+   "A controller can never fail, because it runs in a cluster by design",
    "The controller has no effect on the network",
    "Controllers are used only for one device"
   ],
@@ -202,7 +202,7 @@
   "difficulty": "쉬움",
   "question": "What does a 'single pane of glass' refer to in controller-based networking?",
   "choices": [
-   "A physical window in the data center",
+   "A physical glass window into the data center's server room",
    "One interface that shows and manages the whole network",
    "A fiber-optic cable type",
    "A password manager"
@@ -269,7 +269,7 @@
   "question": "What is the purpose of the Software Image Management (SWIM) feature in Catalyst Center?",
   "choices": [
    "To upgrade and manage device software images centrally",
-   "To collect NetFlow records",
+   "To collect NetFlow records from every device in the network",
    "To assign IP addresses to clients",
    "To encrypt wireless clients"
   ],
@@ -334,10 +334,10 @@
   "difficulty": "보통",
   "question": "In intent-based networking, what does the administrator provide to the controller?",
   "choices": [
-   "Exact CLI commands for every device",
+   "The exact CLI commands that the controller must push to every device",
    "Only the physical cable map",
    "A list of passwords for the users",
-   "The desired business outcome or policy, which the system translates into device configuration"
+   "The desired outcome or policy, which it translates into device configs"
   ],
   "answer": "D",
   "explanation": "Intent-based networking lets the admin describe what is wanted (for example, 'give voice traffic priority'). The controller works out how to configure the devices, and then verifies the result.",
@@ -424,8 +424,8 @@
   "choices": [
    "All traffic stops immediately",
    "Switches erase their running configuration",
-   "All routing protocols stop and neighbors drop",
-   "Traffic continues to be forwarded; management, automation and assurance are unavailable"
+   "All routing protocols stop, and every OSPF neighbor relationship drops",
+   "Traffic keeps flowing; management, automation and assurance are lost"
   ],
   "answer": "D",
   "explanation": "Catalyst Center is a management and control-of-intent platform and is not in the forwarding path. Devices keep forwarding with their existing configuration. Only new provisioning, analytics and changes are affected.",
@@ -444,8 +444,8 @@
   "difficulty": "어려움",
   "question": "Which pairing of function and plane is correct?",
   "choices": [
-   "Enforcing an ACL on transit packets - data plane; exporting syslog - management plane; building an OSPF database - control plane",
-   "Enforcing an ACL on transit packets - management plane; exporting syslog - data plane",
+   "ACL on transit packets - data; syslog - management; OSPF database - control",
+   "ACL on transit packets - management; syslog - data; OSPF database - control",
    "Building an OSPF database - data plane; SSH access - control plane",
    "Forwarding frames - control plane; SNMP - data plane"
   ],
@@ -467,7 +467,7 @@
   "question": "A company has 500 switches. A new QoS policy must be added. Which statement correctly contrasts the two approaches?",
   "choices": [
    "Traditional: define once and push; controller-based: configure each switch separately",
-   "Traditional: configure each switch separately; controller-based: define the policy once and push it to all",
+   "Traditional: configure each switch; controller: define once and push to all",
    "Both need 500 separate logins",
    "Controller-based requires typing QoS on each switch console"
   ],
@@ -488,7 +488,7 @@
   "difficulty": "어려움",
   "question": "An administrator states 'Give the finance VLAN higher priority than guest Wi-Fi.' The controller determines the QoS commands for each device model. Which concept does this describe?",
   "choices": [
-   "Manual CLI provisioning",
+   "Manual CLI provisioning on each switch and AP",
    "Spanning tree convergence",
    "Intent-based networking with policy translation",
    "Port security"
@@ -510,10 +510,10 @@
   "difficulty": "어려움",
   "question": "Which statement correctly describes a possible disadvantage of controller-based management?",
   "choices": [
-   "It always increases per-device CLI work",
+   "It always increases the amount of per-device CLI work for engineers",
    "It can only manage one device",
    "It cannot provide any visibility",
-   "A compromised controller could give an attacker wide control, so it must be secured and access limited"
+   "A compromised controller could give an attacker wide control"
   ],
   "answer": "D",
   "explanation": "A controller holds credentials and can configure many devices. If it is compromised, the impact is large, so it needs strong authentication, RBAC, hardening and redundancy.",
@@ -555,8 +555,8 @@
   "question": "Which scenario best shows the benefit of Catalyst Center Assurance over traditional device-by-device monitoring?",
   "choices": [
    "It prevents any link from failing",
-   "It correlates data from many devices and clients to point to the likely cause of an issue",
-   "It requires engineers to read separate logs on each device",
+   "It correlates data from many devices to point to the likely cause",
+   "It requires engineers to read the separate logs on each device first",
    "It replaces all routing protocols"
   ],
   "answer": "B",
@@ -578,7 +578,7 @@
   "choices": [
    "Traditional networks have central policy by default",
    "Controller-based networks need CLI on every device for every change",
-   "Traditional networks have per-device policy, which makes configuration inconsistencies more likely",
+   "Traditional networks have per-device policy, so inconsistencies are likelier",
    "Traditional networks cannot forward any traffic"
   ],
   "answer": "C",
@@ -620,8 +620,8 @@
   "difficulty": "보통",
   "question": "Which statement about a controller-based network and the control plane is most accurate?",
   "choices": [
-   "Control plane intelligence is centralized in the controller to a greater degree than in a traditional network",
-   "Each device alone decides everything, with no central input",
+   "More control plane intelligence is centralized in the controller",
+   "Each device still decides everything by itself, with no central input",
    "The control plane is removed completely from the network",
    "Only end hosts run the control plane"
   ],
@@ -642,8 +642,8 @@
   "difficulty": "어려움",
   "question": "An engineer wants to see the full path and hop-by-hop interface health between two hosts across many switches from one tool. Which type of platform gives this most easily?",
   "choices": [
-   "The CLI of a single access switch",
-   "A controller with path-trace and assurance features, such as Catalyst Center",
+   "The CLI of a single access switch somewhere along the path",
+   "A controller with path trace and assurance, such as Catalyst Center",
    "A console cable on one router",
    "A cable tester"
   ],

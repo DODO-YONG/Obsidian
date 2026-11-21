@@ -115,7 +115,7 @@
   "question": "What is the SSID of a WLAN?",
   "choices": [
    "The network name that clients see and select",
-   "The MAC address of the AP",
+   "The MAC address of the AP radio that clients join",
    "The VLAN ID of the WLAN",
    "The password for the WLAN"
   ],
@@ -136,7 +136,7 @@
   "difficulty": "쉬움",
   "question": "Which WLC GUI setting on the General tab maps a WLAN to a specific VLAN?",
   "choices": [
-   "Radio Policy",
+   "Radio Policy (802.11a/b/g/n)",
    "Broadcast SSID",
    "Status",
    "Interface/Interface Group"
@@ -246,9 +246,9 @@
   "difficulty": "보통",
   "question": "What is the difference between a WLAN profile name and the SSID?",
   "choices": [
-   "The profile name is broadcast to clients and the SSID is internal",
+   "The profile name is broadcast to clients and the SSID is only internal",
    "They must always be different",
-   "The profile name is a label on the controller, and the SSID is the name seen by clients",
+   "The profile name is a controller label; the SSID is what clients see",
    "They must always be identical and cannot be changed"
   ],
   "answer": "C",
@@ -291,7 +291,7 @@
   "question": "A guest WLAN must show a web login page. Which security area is used on the WLC?",
   "choices": [
    "Layer 3 security with web policy",
-   "Layer 2 802.1X",
+   "Layer 2 802.1X with a RADIUS server",
    "Layer 2 WPA2 PSK",
    "The QoS tab"
   ],
@@ -400,7 +400,7 @@
   "difficulty": "보통",
   "question": "Which mechanism replaces the PSK exchange in WPA3-Personal to prevent offline dictionary attacks?",
   "choices": [
-   "TKIP",
+   "TKIP (Temporal Key Integrity Protocol) rekeying",
    "WEP",
    "LEAP",
    "SAE (Simultaneous Authentication of Equals)"
@@ -444,7 +444,7 @@
   "difficulty": "어려움",
   "question": "Clients connect to a new WPA2 PSK WLAN mapped to VLAN 30 but get APIPA addresses. The DHCP server is working. What is the likely cause?",
   "choices": [
-   "The PSK is incorrect",
+   "The PSK is incorrect on all of the clients that receive APIPA",
    "VLAN 30 is not allowed on the trunk connected to the WLC",
    "The SSID is hidden",
    "The profile name is too long"
@@ -467,7 +467,7 @@
   "question": "A client repeatedly fails to join a WPA2-PSK WLAN, while other clients join. The WLAN is enabled and in range. What is the most likely cause?",
   "choices": [
    "The passphrase configured on the client is incorrect",
-   "The WLAN is mapped to the wrong VLAN",
+   "The WLAN is mapped to the wrong VLAN interface on the controller",
    "The QoS profile is Bronze",
    "The WLC service port is disconnected"
   ],
@@ -488,7 +488,7 @@
   "difficulty": "어려움",
   "question": "An administrator configures an 802.1X WLAN, but users cannot authenticate. No server is defined. What must be done?",
   "choices": [
-   "Change Auth Key Mgmt to PSK only",
+   "Change Auth Key Mgmt to PSK only and leave 802.1X selected on the WLAN as well",
    "Enable Broadcast SSID",
    "Change the interface to management",
    "Add a RADIUS authentication server on the WLC and select it for the WLAN"
@@ -510,9 +510,9 @@
   "difficulty": "어려움",
   "question": "An administrator enters a 7-character passphrase for WPA2 PSK in ASCII format. What happens?",
   "choices": [
-   "It is accepted but padded to 8 characters",
+   "It is accepted, but the WLC pads it to 8 characters with a trailing space",
    "It is accepted and weakened to TKIP",
-   "The WLC rejects it because the ASCII passphrase must be 8 to 63 characters",
+   "The WLC rejects it: ASCII passphrases must be 8 to 63 characters",
    "It is converted into a hex key"
   ],
   "answer": "C",
@@ -554,9 +554,9 @@
   "difficulty": "어려움",
   "question": "A company needs a corporate WLAN with 802.1X and a guest WLAN with a shared passphrase. Guests must not reach corporate hosts. Which design is best?",
   "choices": [
-   "Two WLANs mapped to different dynamic interfaces and VLANs, with ACLs or routing to isolate guests",
+   "Two WLANs on different VLANs, with ACLs or routing to isolate guests",
    "One WLAN with two passphrases in the same VLAN",
-   "Two WLANs mapped to the same VLAN",
+   "Two WLANs mapped to the same VLAN and interface, each with its own security",
    "One open WLAN with MAC filtering"
   ],
   "answer": "A",
@@ -576,10 +576,10 @@
   "difficulty": "어려움",
   "question": "Which statement about hiding the SSID (Broadcast SSID disabled) is correct?",
   "choices": [
-   "It provides the same security as WPA2",
+   "It provides the same level of protection as WPA2 encryption with AES",
    "It encrypts the traffic",
    "It prevents all clients from associating",
-   "It does not secure the WLAN because the SSID can still be discovered from client probe or association frames"
+   "It adds no real security; the SSID still appears in client probes"
   ],
   "answer": "D",
   "explanation": "Hidden SSIDs only stop the name from being advertised. Always use proper authentication and encryption.",
@@ -599,8 +599,8 @@
   "question": "Which combination of settings correctly secures a WLAN with WPA2 Personal in the WLC GUI?",
   "choices": [
    "Layer 2 Security None, Layer 3 Web Policy",
-   "Layer 2 Security WPA+WPA2, TKIP only, 802.1X",
-   "Layer 2 Security WPA+WPA2, WPA2 Policy enabled with AES, Auth Key Mgmt PSK and a passphrase",
+   "Layer 2 Security WPA+WPA2, WPA Policy with TKIP only, Auth Key Mgmt 802.1X",
+   "WPA+WPA2, WPA2 Policy with AES, Auth Key Mgmt PSK and a passphrase",
    "Layer 2 Security 802.1X, WEP key, PSK"
   ],
   "answer": "C",
@@ -620,8 +620,8 @@
   "difficulty": "어려움",
   "question": "Which WLC GUI sequence is correct to build a WPA2-PSK WLAN?",
   "choices": [
-   "Configure PSK, then create the interface, then reboot the AP",
-   "Create the WLAN, set profile name and SSID, choose the interface, configure WPA2 AES with PSK, enable the WLAN, apply",
+   "Configure the PSK first, then create the dynamic interface, then reboot every AP",
+   "Create the WLAN, set name and SSID, pick the interface, set WPA2 PSK, enable",
    "Enable the WLAN, then delete the interface, then add PSK",
    "Set QoS Platinum, then configure STP, then add PSK"
   ],
@@ -643,7 +643,7 @@
   "question": "WPA3 requires which additional feature for the client and WLAN to operate securely?",
   "choices": [
    "Protected Management Frames (PMF)",
-   "TKIP",
+   "TKIP (Temporal Key Integrity Protocol)",
    "WEP",
    "MAC filtering"
   ],

@@ -70,9 +70,9 @@
   "difficulty": "쉬움",
   "question": "What is a giant frame on a standard Ethernet interface?",
   "choices": [
-   "A frame smaller than 64 bytes",
+   "A frame smaller than the 64-byte minimum size, usually from collisions",
    "A frame addressed to a broadcast MAC",
-   "A frame larger than the maximum allowed size of 1518 bytes (excluding tagging)",
+   "A frame larger than the 1518-byte maximum (excluding tagging)",
    "A frame that has a bad CRC"
   ],
   "answer": "C",
@@ -92,7 +92,7 @@
   "difficulty": "쉬움",
   "question": "A switch interface shows 'GigabitEthernet0/2 is administratively down, line protocol is down'. What does this mean?",
   "choices": [
-   "The cable is unplugged",
+   "The cable is unplugged from the switch port or the far end",
    "The interface was shut down with the shutdown command",
    "A duplex mismatch exists",
    "The neighbor is running a different speed"
@@ -115,7 +115,7 @@
   "question": "A switch interface shows 'down/down' and no link light. Which layer should you check first?",
   "choices": [
    "Layer 1, for example the cable and connectors",
-   "Layer 3, for example the IP address",
+   "Layer 3, for example the IP address and the mask",
    "Layer 4, for example the TCP port",
    "Layer 7, for example DNS"
   ],
@@ -181,9 +181,9 @@
   "question": "A switch port enters the err-disabled state. What does this mean?",
   "choices": [
    "The port is operating at half duplex",
-   "The switch shut the port down because of an error condition such as a security violation",
+   "The switch shut the port because of an error such as a security violation",
    "The port is waiting for a DHCP lease",
-   "The port is in a trunking mode"
+   "The port is in trunking mode and is waiting for DTP to finish its negotiation"
   ],
   "answer": "B",
   "explanation": "Err-disabled is a protective state in which the switch disables a port after detecting a problem such as a port security violation or BPDU guard trigger. The port forwards no traffic until it is recovered.",
@@ -247,7 +247,7 @@
   "question": "Refer to the output.\n\nSwitch# show interfaces gigabitEthernet 0/5\n...\n Full-duplex, 1000Mb/s, media type is 10/100/1000BaseTX\n...\n 0 runts, 0 giants, 0 throttles\n 3250 input errors, 3250 CRC, 0 frame, 0 overrun, 0 ignored\n 0 output errors, 0 collisions, 2 interface resets\n\nWhat is the most likely cause?",
   "choices": [
    "A duplex mismatch",
-   "An MTU mismatch causing giants",
+   "An MTU mismatch causing giants to be counted on both ends of the link",
    "A faulty cable or electrical interference causing corrupted frames",
    "A speed mismatch"
   ],
@@ -268,7 +268,7 @@
   "difficulty": "보통",
   "question": "A switch port is hard-coded to 100 Mbps full duplex. The connected PC is set to auto-negotiate for speed and duplex. What is the likely result?",
   "choices": [
-   "The link fails completely",
+   "The link fails completely because the PC cannot detect the speed of a fixed port",
    "The PC detects 100 Mbps but defaults to half duplex, causing a duplex mismatch",
    "Both ends operate at 1 Gbps full duplex",
    "The PC automatically negotiates full duplex with the fixed port"
@@ -290,9 +290,9 @@
   "difficulty": "보통",
   "question": "What is a late collision?",
   "choices": [
-   "A collision detected after the first 64 bytes (512 bit times) of a frame have been transmitted",
+   "A collision after the first 64 bytes (512 bit times) were sent",
    "A collision that occurs within the first 8 bytes",
-   "A frame that arrives late due to a queue",
+   "A frame that arrives late because it waited in an output queue",
    "A collision on a full-duplex link"
   ],
   "answer": "A",
@@ -312,7 +312,7 @@
   "difficulty": "보통",
   "question": "The command show interfaces status displays 'notconnect' for a port. Which is a possible cause?",
   "choices": [
-   "The port is err-disabled",
+   "The port has been err-disabled because a port security violation shut it down",
    "The port is administratively shut down",
    "The port is in a different VLAN",
    "No cable is attached or the cable or far end is not providing a link signal"
@@ -335,7 +335,7 @@
   "question": "Which command lets a switch automatically bring a port out of the err-disabled state caused by a port security violation after a set time?",
   "choices": [
    "errdisable auto-recover all-ports",
-   "switchport port-security recover",
+   "switchport port-security auto-recovery interval 30",
    "errdisable recovery cause psecure-violation",
    "spanning-tree errdisable"
   ],
@@ -400,7 +400,7 @@
   "difficulty": "보통",
   "question": "In a duplex mismatch, which counters typically increase on the full-duplex side?",
   "choices": [
-   "Late collisions",
+   "Late collisions and deferred frames",
    "Excessive collisions",
    "Jabber",
    "CRC errors, runts and frame errors"
@@ -444,7 +444,7 @@
   "difficulty": "어려움",
   "question": "Refer to the output.\n\nSW1# show interfaces fastEthernet 0/4\nFastEthernet0/4 is up, line protocol is up (connected)\n Half-duplex, 100Mb/s\n 0 runts, 0 giants\n 842 late collision, 1205 collisions\n\nThe connected switch SW2 is configured with 'duplex full' on its port. What should the administrator do to fix the problem?",
   "choices": [
-   "Replace the cable with a crossover cable",
+   "Replace the cable with a crossover cable and keep both ends at their settings",
    "Set both ends to the same duplex, preferably both to auto or both to full",
    "Change the speed to 10 Mbps on SW1",
    "Enable PortFast on SW1"
@@ -467,7 +467,7 @@
   "question": "A server connects to a switch with a 90 m cable that is routed in a tray alongside high-voltage power cables. The port shows Full-duplex, 1000Mb/s with 0 collisions but thousands of CRC errors. What is the best first corrective action?",
   "choices": [
    "Re-route or replace the cable away from the power cables, or use shielded cable",
-   "Change the switch port to half duplex",
+   "Change the switch port to half duplex so that collisions are detected and resent",
    "Increase the port MTU",
    "Configure the port with speed 10"
   ],
@@ -488,7 +488,7 @@
   "difficulty": "어려움",
   "question": "Refer to the configuration.\n\nSW1(config-if)# speed 100\nSW1(config-if)# duplex full\n\nSW2 Gi0/1 is left at the default (speed auto, duplex auto). What state is the link in?",
   "choices": [
-   "Up at 100 Mbps full duplex on both sides",
+   "Up at 100 Mbps and full duplex on both sides, because SW2 learns the duplex from SW1",
    "Down because auto cannot connect to a fixed port",
    "Up at 1000 Mbps full duplex",
    "Up at 100 Mbps, with SW1 in full duplex and SW2 in half duplex (duplex mismatch)"
@@ -511,7 +511,7 @@
   "question": "Refer to the output.\n\nSwitch# show interfaces gigabitEthernet 0/6\n...\n MTU 1500 bytes\n Full-duplex, 1000Mb/s\n 0 runts, 4210 giants, 0 throttles\n 4210 input errors, 0 CRC, 0 frame\n\nA server on this port was recently configured with a 9000-byte MTU. What explains the giants counter?",
   "choices": [
    "The cable is too long",
-   "A duplex mismatch is present",
+   "A duplex mismatch is present between the switch port and the server's NIC",
    "The server sends jumbo frames that exceed what the switch port accepts",
    "The port is err-disabled"
   ],
@@ -576,10 +576,10 @@
   "difficulty": "어려움",
   "question": "A half-duplex 100 Mbps network uses hubs and a 250 m total run between two stations. Late collisions are reported. What is the most likely cause?",
   "choices": [
-   "The stations are using 1518-byte frames",
+   "The stations are using full-size 1518-byte frames, which collide much more often",
    "The cable category is Cat6",
    "Spanning tree has blocked a port",
-   "The collision domain is too large because the cable length exceeds the allowed network diameter"
+   "The collision domain is too large: the cable run exceeds the allowed diameter"
   ],
   "answer": "D",
   "explanation": "Late collisions occur when the round-trip delay is longer than the time needed to send 64 bytes. Excess cable length or too many repeaters makes the collision domain too large. Maximum frame size, Cat6 cable and STP blocking do not cause late collisions.",
@@ -599,7 +599,7 @@
   "question": "Refer to the log.\n\n%LINK-3-UPDOWN: Interface GigabitEthernet0/8, changed state to down\n%LINK-3-UPDOWN: Interface GigabitEthernet0/8, changed state to up\n%LINK-3-UPDOWN: Interface GigabitEthernet0/8, changed state to down\n%LINK-3-UPDOWN: Interface GigabitEthernet0/8, changed state to up\n\nWhat does this repeating pattern indicate?",
   "choices": [
    "A normal VLAN reconfiguration",
-   "A completed spanning-tree convergence",
+   "A completed spanning-tree convergence after a new switch was added to the VLAN",
    "A flapping link, often caused by a bad cable, connector or transceiver",
    "An administrator saving the configuration"
   ],
@@ -620,8 +620,8 @@
   "difficulty": "어려움",
   "question": "Refer to the output.\n\nSwitch# show interfaces gigabitEthernet 0/2\n...\n reliability 190/255, txload 1/255, rxload 1/255\n\nWhat does the output suggest?",
   "choices": [
-   "The interface is saturated in both directions",
-   "Reliability is about 75 percent, so the interface is experiencing a high error rate",
+   "The interface is saturated in both directions and is dropping output packets",
+   "Reliability is about 75 percent, so the interface has a high error rate",
    "The interface is 100 percent reliable",
    "The interface has been administratively shut down"
   ],
@@ -644,7 +644,7 @@
   "choices": [
    "A BPDU was received on a PortFast access port that has BPDU guard enabled",
    "A duplex mismatch with the neighbor",
-   "A port security MAC limit was exceeded",
+   "A port security maximum MAC address limit was exceeded on the access port",
    "The cable exceeded 100 meters"
   ],
   "answer": "A",

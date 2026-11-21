@@ -247,7 +247,7 @@
   "question": "An administrator enters crypto key generate rsa on a router with the default hostname and no domain name. What is required first?",
   "choices": [
    "Configure ip domain-name and a non-default hostname",
-   "Configure ip ssh version 2",
+   "Configure ip ssh version 2 before generating the keys",
    "Configure login local",
    "Configure transport input ssh"
   ],
@@ -356,7 +356,7 @@
   "difficulty": "보통",
   "question": "What is the purpose of the logging synchronous command under line console 0?",
   "choices": [
-   "Sends logs to a syslog server",
+   "Sends the console log messages to a syslog server instead",
    "Prevents console messages from interrupting typed commands",
    "Synchronizes the clock with NTP",
    "Logs every typed command"
@@ -402,7 +402,7 @@
   "choices": [
    "enable secret 7 Cisco123",
    "enable algorithm-type scrypt secret Cisco123",
-   "enable password scrypt Cisco123",
+   "enable password algorithm-type scrypt Cisco123",
    "service password-encryption scrypt"
   ],
   "answer": "B",
@@ -445,9 +445,9 @@
   "question": "VTY lines are configured with login but no password. A user tries to Telnet to the router. What happens?",
   "choices": [
    "The user gets in without a prompt",
-   "The router prints that a password is required but none is set, and closes the session",
+   "It says a password is required but none is set, and closes the session",
    "The router falls back to the enable secret",
-   "The router prompts for a username"
+   "The router prompts for a username and then for the enable secret"
   ],
   "answer": "B",
   "explanation": "On VTY lines, login is the default. If no password is set, IOS rejects the session with Password required, but none set and disconnects.",
@@ -466,8 +466,8 @@
   "difficulty": "어려움",
   "question": "An administrator enters no service password-encryption on a router that already has type 7 line passwords. What is the result?",
   "choices": [
-   "All type 7 passwords revert to plain text",
-   "Existing type 7 passwords stay encrypted; new passwords are stored in plain text",
+   "All of the existing type 7 passwords revert to plain text right away",
+   "Old type 7 passwords stay encrypted; new ones are saved in plain text",
    "The enable secret becomes plain text",
    "All passwords are deleted"
   ],
@@ -598,8 +598,8 @@
   "difficulty": "어려움",
   "question": "Which statement correctly compares username admin password Cisco123 and username admin secret Cisco123?",
   "choices": [
-   "Both store the password the same way",
-   "password stores plain text unless service password-encryption is on; secret stores a hash",
+   "Both store the password the same way, as a reversible type 7 string",
+   "password is plain text unless encryption is on; secret stores a hash",
    "secret stores plain text; password stores a hash",
    "Neither can be used with login local"
   ],
@@ -642,7 +642,7 @@
   "difficulty": "어려움",
   "question": "VTY lines use login local, but the router has no local usernames. What is the result when someone connects remotely?",
   "choices": [
-   "The line password is used",
+   "The vty line password is used instead of a local username",
    "Authentication fails and nobody can log in remotely",
    "The enable secret is used",
    "Access is granted"

@@ -2,7 +2,7 @@
  {
   "sub": "2.7",
   "difficulty": "쉬움",
-  "question": "Which WLC port is used for out-of-band management and is not used for client data traffic?",
+  "question": "Which dedicated Ethernet port on a WLC is used for out-of-band management and is not used for client data traffic?",
   "choices": [
    "Distribution system port",
    "Service port",
@@ -27,7 +27,7 @@
   "question": "Which WLC ports carry client data traffic and CAPWAP tunnels and connect to the switch infrastructure?",
   "choices": [
    "Distribution system ports",
-   "Service port",
+   "Service port (out-of-band)",
    "Console port",
    "Redundancy port"
   ],
@@ -92,7 +92,7 @@
   "difficulty": "쉬움",
   "question": "What is the purpose of a LAG on a wireless LAN controller?",
   "choices": [
-   "To connect two WLCs for redundancy",
+   "To connect two WLCs together for stateful high-availability failover",
    "To bundle multiple distribution ports into one logical link",
    "To encrypt CAPWAP tunnels",
    "To assign VLANs to SSIDs"
@@ -138,7 +138,7 @@
   "choices": [
    "A longer patch cable",
    "A console cable",
-   "An SFP module",
+   "An SFP module and a fiber patch cord",
    "A PoE switch port or a PoE injector"
   ],
   "answer": "D",
@@ -291,7 +291,7 @@
   "question": "A FlexConnect AP uses local switching for WLANs mapped to VLANs 10 and 20. How should the AP switch port be configured?",
   "choices": [
    "As an 802.1Q trunk that allows VLANs 10 and 20",
-   "As an access port in VLAN 10",
+   "As an access port in VLAN 10 with a voice VLAN of 20",
    "As a routed port",
    "As a SPAN destination"
   ],
@@ -334,7 +334,7 @@
   "difficulty": "보통",
   "question": "What is an advantage of using LAG on the WLC?",
   "choices": [
-   "The WLC can serve more than 100 APs without a license",
+   "The WLC can then serve more than 100 APs without buying an extra license",
    "APs no longer need CAPWAP",
    "Traffic continues if one link fails, and bandwidth is shared across links",
    "The service port gets more bandwidth"
@@ -444,7 +444,7 @@
   "difficulty": "어려움",
   "question": "An administrator enables LAG on an AireOS WLC and configures a matching static EtherChannel on the switch. The WLC remains in the old configuration. What must be done on the WLC?",
   "choices": [
-   "Disable the service port",
+   "Disable the service port and the redundancy port first",
    "Save the configuration and reboot the controller",
    "Configure LACP active on the WLC",
    "Reset the CAPWAP tunnels only"
@@ -468,7 +468,7 @@
   "choices": [
    "VLAN 30 is not allowed on the trunk between the WLC and the switch",
    "The WLC service port is down",
-   "The AP port is configured as access in VLAN 30",
+   "The AP's switch port is configured as an access port in VLAN 30 only",
    "The DHCP option 43 is missing"
   ],
   "answer": "A",
@@ -488,7 +488,7 @@
   "difficulty": "어려움",
   "question": "An AP is installed 130 meters away from the nearest switch with a copper cable. The AP does not work reliably. What is the best solution?",
   "choices": [
-   "Replace the cable with a longer Cat 6 cable",
+   "Replace the copper cable with a longer, shielded Cat 6 cable",
    "Enable PoE+ on the port",
    "Change the port to a trunk",
    "Use fiber with a media converter, or add a closer switch"
@@ -511,7 +511,7 @@
   "question": "The access switch shows no link on the port to a new AP, and the AP has no power. Output of show power inline shows Admin 'off'. Which fix is best?",
   "choices": [
    "Enter no switchport",
-   "Enter spanning-tree portfast",
+   "Enter spanning-tree portfast on the interface",
    "Enter power inline auto on the interface",
    "Enter switchport mode trunk"
   ],
@@ -554,8 +554,8 @@
   "difficulty": "어려움",
   "question": "Which statement about the WLC service port is true?",
   "choices": [
-   "It is an out-of-band management interface that does not carry client or CAPWAP traffic",
-   "It carries client data to the network",
+   "An out-of-band management port that carries no client or CAPWAP traffic",
+   "It carries client data from the APs to the wired network and the Internet",
    "It bundles with distribution ports in LAG",
    "It is used to terminate APs"
   ],
@@ -578,8 +578,8 @@
   "choices": [
    "It terminates all APs",
    "It is the out-of-band management interface",
-   "It carries traffic for one VLAN",
-   "It is used for services such as DHCP relay and web authentication redirection, with a nonroutable IP address"
+   "It carries the client traffic for one VLAN that is mapped to a single WLAN",
+   "It is used for DHCP relay and web auth redirection, with a nonroutable IP"
   ],
   "answer": "D",
   "explanation": "The virtual interface address (often 192.0.2.1) is shared by controllers in a mobility group. It is not reachable from outside.",
@@ -620,8 +620,8 @@
   "difficulty": "어려움",
   "question": "On an AireOS WLC with LAG enabled, which statement about the distribution ports is true?",
   "choices": [
-   "Only two ports are in the LAG; the rest operate separately",
-   "All distribution ports are part of the LAG; a mix of LAG and non-LAG distribution ports is not supported",
+   "Only two ports can be in the LAG, and the rest of the ports operate separately",
+   "All distribution ports join the LAG; mixing LAG and non-LAG is not allowed",
    "LAG requires the service port to be in the bundle",
    "Each port needs a different IP address"
   ],
@@ -642,8 +642,8 @@
   "difficulty": "어려움",
   "question": "APs are in VLAN 100 (10.10.100.0/24) and the WLC management interface is 10.10.1.5/24 in VLAN 1. The APs can obtain an IP address but never join the WLC. Which condition must be met for the join to succeed?",
   "choices": [
-   "Layer 3 routing between the AP subnet and the WLC management subnet, permitting CAPWAP UDP 5246 and 5247",
-   "The AP and WLC must be in the same VLAN",
+   "Routing between the AP and WLC subnets that permits CAPWAP UDP 5246-5247",
+   "The AP and WLC must be in the same VLAN, because CAPWAP cannot be routed",
    "The AP port must be a trunk",
    "The WLC service port must be in VLAN 100"
   ],

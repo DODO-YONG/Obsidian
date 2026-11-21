@@ -1,662 +1,662 @@
 [
-  {
-    "sub": "4.8",
-    "difficulty": "쉬움",
-    "question": "Why is SSH preferred over Telnet for remote management?",
-    "choices": [
-      "SSH encrypts the session, including passwords",
-      "SSH is faster than Telnet",
-      "SSH uses UDP",
-      "SSH does not require a login"
-    ],
-    "answer": "A",
-    "explanation": "Telnet sends usernames, passwords and every command in clear text, so anyone capturing the traffic can read them. SSH encrypts the whole session and supports stronger authentication such as public keys. That is why SSH is the recommended way to manage devices remotely.",
-    "option_notes": [
-      "Correct: SSH encrypts the session, so passwords cannot be read by a sniffer.",
-      "Wrong: SSH is not faster; encryption adds a little overhead.",
-      "Wrong: SSH runs over TCP port 22, not UDP.",
-      "Wrong: SSH always requires authentication."
-    ],
-    "key_concept": "SSH = encrypted; Telnet = clear text.",
-    "cli_example": "",
-    "tip": "Exam keyword: 'secure remote management' means SSH; 'clear text' means Telnet."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "쉬움",
-    "question": "Which TCP port does SSH use by default?",
-    "choices": [
-      "23",
-      "22",
-      "21",
-      "443"
-    ],
-    "answer": "B",
-    "explanation": "SSH uses TCP port 22 by default. Telnet uses TCP 23, FTP control uses TCP 21 and HTTPS uses TCP 443. A firewall or ACL that blocks TCP 22 will stop SSH from working.",
-    "option_notes": [
-      "Wrong: TCP 23 is Telnet.",
-      "Correct: TCP 22 is the well-known SSH port.",
-      "Wrong: TCP 21 is the FTP control connection.",
-      "Wrong: TCP 443 is HTTPS."
-    ],
-    "key_concept": "SSH = TCP 22.",
-    "cli_example": "",
-    "tip": "Memorize: 20/21 FTP, 22 SSH, 23 Telnet, 69 TFTP (UDP)."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "쉬움",
-    "question": "Which command generates the RSA keys needed for SSH on a Cisco router?",
-    "choices": [
-      "ssh generate key",
-      "ip ssh rsa keypair",
-      "crypto key generate rsa",
-      "crypto ssh enable"
-    ],
-    "answer": "C",
-    "explanation": "crypto key generate rsa is entered in global configuration mode and creates the RSA key pair that SSH needs for encryption. The router must already have a hostname other than the default and a domain name. IOS then asks for the modulus size, or you can add modulus 2048.",
-    "option_notes": [
-      "Wrong: ssh generate key is not an IOS command.",
-      "Wrong: ip ssh rsa keypair-name only names a key pair; ip ssh rsa keypair does not generate keys.",
-      "Correct: crypto key generate rsa creates the RSA key pair for SSH.",
-      "Wrong: crypto ssh enable does not exist in IOS."
-    ],
-    "key_concept": "crypto key generate rsa creates the SSH keys.",
-    "cli_example": "Router(config)# hostname R1\nR1(config)# ip domain-name example.com\nR1(config)# crypto key generate rsa modulus 2048",
-    "tip": "SSH is not active until an RSA key exists. Think: hostname, domain name, then keys."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "쉬움",
-    "question": "Which command on the vty lines restricts remote access to SSH only?",
-    "choices": [
-      "transport output ssh",
-      "login ssh",
-      "ssh only",
-      "transport input ssh"
-    ],
-    "answer": "D",
-    "explanation": "transport input ssh under line vty allows only SSH for incoming remote sessions, so Telnet attempts are refused. transport input controls the protocols accepted on incoming connections to the line.",
-    "option_notes": [
-      "Wrong: transport output controls which protocols the router can use for outgoing connections from that line.",
-      "Wrong: login ssh is not a valid command; login only sets password or local authentication.",
-      "Wrong: ssh only is not a valid IOS command.",
-      "Correct: transport input ssh accepts only SSH and blocks Telnet."
-    ],
-    "key_concept": "transport input ssh",
-    "cli_example": "R1(config)# line vty 0 4\nR1(config-line)# transport input ssh",
-    "tip": "Input = incoming connections to the router. Default on newer IOS may allow Telnet, so set ssh explicitly."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "쉬움",
-    "question": "Which command sets the domain name required for RSA key generation?",
-    "choices": [
-      "ip domain-name example.com",
-      "domain example.com",
-      "ip name-server example.com",
-      "hostname example.com"
-    ],
-    "answer": "A",
-    "explanation": "The router builds its RSA key name from the hostname and domain name, so a domain name must exist before keys can be generated. ip domain-name sets the domain used for the key pair and for DNS name completion.",
-    "option_notes": [
-      "Correct: ip domain-name example.com sets the router's domain name.",
-      "Wrong: domain example.com is not an IOS global command for this purpose.",
-      "Wrong: ip name-server sets the DNS server address, not the router's own domain name.",
-      "Wrong: hostname sets only the device name, not the domain."
-    ],
-    "key_concept": "Set hostname and domain name before keys.",
-    "cli_example": "R1(config)# ip domain-name example.com",
-    "tip": "Don't confuse ip domain-name (your domain) with ip name-server (DNS server) or ip domain-lookup."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "쉬움",
-    "question": "Which command creates a local user account for SSH login?",
-    "choices": [
-      "user add admin Cisco123",
-      "username admin secret Cisco123",
-      "login admin Cisco123",
-      "enable user admin"
-    ],
-    "answer": "B",
-    "explanation": "username <name> secret <password> creates a local account in the router's user database, and the secret is stored hashed. SSH logins can then be checked against this database when the vty lines use login local.",
-    "option_notes": [
-      "Wrong: user add is a Linux style command, not IOS.",
-      "Correct: username admin secret Cisco123 creates a local user with a hashed password.",
-      "Wrong: login admin Cisco123 is not valid; login is a line command.",
-      "Wrong: enable user is not an IOS command."
-    ],
-    "key_concept": "username <name> secret <password>",
-    "cli_example": "R1(config)# username admin secret Cisco123",
-    "tip": "Use secret rather than password because secret is hashed."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "쉬움",
-    "question": "Which command makes vty lines authenticate with the local user database?",
-    "choices": [
-      "login",
-      "no login",
-      "login local",
-      "password local"
-    ],
-    "answer": "C",
-    "explanation": "login local tells the vty lines to check the username and password against the local user database. SSH requires a username, so plain login with only a line password is not enough. Without login local (or AAA) SSH users cannot authenticate properly.",
-    "option_notes": [
-      "Wrong: plain login asks for the line password only, with no username.",
-      "Wrong: no login lets users in without authentication, which is insecure and not what is wanted.",
-      "Correct: login local uses the local usernames for vty authentication.",
-      "Wrong: password local is not a valid command."
-    ],
-    "key_concept": "login local uses local usernames.",
-    "cli_example": "R1(config)# line vty 0 4\nR1(config-line)# login local",
-    "tip": "SSH = username required, so use login local with a username command."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "쉬움",
-    "question": "Which command displays the SSH version and settings of a router?",
-    "choices": [
-      "show ssh version",
-      "show crypto vty",
-      "show line vty",
-      "show ip ssh"
-    ],
-    "answer": "D",
-    "explanation": "show ip ssh displays whether the SSH server is enabled, the SSH version (for example 1.99 or 2.0), the timeout and the authentication retries. It shows the server settings, not the active sessions.",
-    "option_notes": [
-      "Wrong: show ssh version is not a command.",
-      "Wrong: show crypto vty is not a command.",
-      "Wrong: show line vty shows line status, not SSH settings.",
-      "Correct: show ip ssh shows SSH status, version and settings."
-    ],
-    "key_concept": "show ip ssh = server status.",
-    "cli_example": "R1# show ip ssh",
-    "tip": "show ip ssh = server settings; show ssh = connected sessions."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "쉬움",
-    "question": "Which command shows active SSH sessions on a router?",
-    "choices": [
-      "show ssh",
-      "show telnet",
-      "show sessions ssh",
-      "show ip ssh sessions"
-    ],
-    "answer": "A",
-    "explanation": "show ssh lists the current incoming and outgoing SSH sessions, including version, encryption and username. show ip ssh is different because it shows the server configuration.",
-    "option_notes": [
-      "Correct: show ssh displays active SSH connections.",
-      "Wrong: show telnet is not the command for SSH sessions.",
-      "Wrong: show sessions ssh is not valid syntax.",
-      "Wrong: show ip ssh sessions is not valid; show ip ssh shows settings only."
-    ],
-    "key_concept": "show ssh = active sessions.",
-    "cli_example": "R1# show ssh",
-    "tip": "Two similar commands: show ssh (sessions) and show ip ssh (settings)."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "쉬움",
-    "question": "What must a router have besides a hostname to generate SSH keys?",
-    "choices": [
-      "A default gateway",
-      "A domain name",
-      "A DHCP pool",
-      "A loopback"
-    ],
-    "answer": "B",
-    "explanation": "SSH keys are named from the hostname and the domain name, so the router needs a domain name in addition to a non-default hostname. If it is missing, IOS prints an error asking you to define a domain name first.",
-    "option_notes": [
-      "Wrong: a default gateway is not needed to generate keys.",
-      "Correct: a domain name is required for RSA key generation.",
-      "Wrong: a DHCP pool has nothing to do with SSH keys.",
-      "Wrong: a loopback interface is not required."
-    ],
-    "key_concept": "Hostname and domain name are prerequisites.",
-    "cli_example": "R1(config)# hostname R1\nR1(config)# ip domain-name example.com",
-    "tip": "Order to remember: hostname, ip domain-name, crypto key generate rsa."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "보통",
-    "question": "What is the minimum RSA modulus size required for SSH version 2 on Cisco IOS?",
-    "choices": [
-      "512 bits",
-      "1024 bits only",
-      "768 bits",
-      "4096 bits"
-    ],
-    "answer": "C",
-    "explanation": "SSH version 2 needs an RSA key of at least 768 bits. A 512-bit key works only for SSH version 1. In practice use 1024 or 2048 bits.",
-    "option_notes": [
-      "Wrong: 512 bits is too small for SSHv2.",
-      "Wrong: 1024 works, but it is not the minimum; larger keys are also allowed.",
-      "Correct: 768 bits is the minimum for SSH version 2.",
-      "Wrong: 4096 is allowed but is not the minimum."
-    ],
-    "key_concept": "SSHv2 needs 768+ bits.",
-    "cli_example": "R1(config)# crypto key generate rsa modulus 1024",
-    "tip": "768 = minimum for SSHv2. Short keys = SSHv1 only."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "보통",
-    "question": "The error Please define a hostname other than Router appears. What should be done?",
-    "choices": [
-      "Enable password encryption",
-      "Configure transport input ssh",
-      "Set the clock",
-      "Configure a unique hostname with the hostname command"
-    ],
-    "answer": "D",
-    "explanation": "The router refuses to generate keys while its hostname is still the default name Router. You must set a unique name with the hostname command and then generate the keys again.",
-    "option_notes": [
-      "Wrong: password encryption does not affect key generation.",
-      "Wrong: transport input ssh is a vty setting and not related to this error.",
-      "Wrong: the clock is not the cause of this message.",
-      "Correct: configure a unique hostname with the hostname command."
-    ],
-    "key_concept": "Change the default hostname.",
-    "cli_example": "Router(config)# hostname R1\nR1(config)# crypto key generate rsa",
-    "tip": "Default hostname is a classic SSH setup trap."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "보통",
-    "question": "Which command forces SSH version 2 only?",
-    "choices": [
-      "ip ssh version 2",
-      "ssh version 2",
-      "crypto ssh version 2",
-      "transport input ssh2"
-    ],
-    "answer": "A",
-    "explanation": "ip ssh version 2 makes the router accept only SSH version 2 connections. SSHv2 is more secure than version 1. It requires an RSA key of at least 768 bits.",
-    "option_notes": [
-      "Correct: ip ssh version 2 forces SSHv2 only.",
-      "Wrong: ssh version 2 is not a global command.",
-      "Wrong: crypto ssh version 2 does not exist.",
-      "Wrong: transport input ssh2 is not valid; transport input takes ssh, not a version."
-    ],
-    "key_concept": "ip ssh version 2.",
-    "cli_example": "R1(config)# ip ssh version 2",
-    "tip": "Version is set globally with ip ssh version 2, not on the vty line."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "보통",
-    "question": "What happens when login local is configured but no local usernames exist?",
-    "choices": [
-      "Everyone is allowed",
-      "Nobody can log in",
-      "The line password is used",
-      "The router reloads"
-    ],
-    "answer": "B",
-    "explanation": "login local checks usernames in the local database. If no username exists, no one can authenticate, and the line password is not used as a fallback. The router does not allow anyone in and does not reload.",
-    "option_notes": [
-      "Wrong: login local never allows everyone in.",
-      "Correct: with no local usernames, nobody can log in.",
-      "Wrong: with login local the line password is ignored.",
-      "Wrong: a failed login never reloads the router."
-    ],
-    "key_concept": "login local needs a username.",
-    "cli_example": "",
-    "tip": "login local + no username = locked out of remote access (console may still work)."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "보통",
-    "question": "Which command displays the public keys created on a router?",
-    "choices": [
-      "show ip ssh key",
-      "show crypto pki",
-      "show crypto key mypubkey rsa",
-      "show ssh keys"
-    ],
-    "answer": "C",
-    "explanation": "show crypto key mypubkey rsa displays the public RSA keys created on the router, with their names and sizes. It is a quick way to confirm that SSH keys exist.",
-    "option_notes": [
-      "Wrong: show ip ssh key is not a valid command.",
-      "Wrong: show crypto pki is for certificate infrastructure, not the SSH key list.",
-      "Correct: show crypto key mypubkey rsa lists the router's RSA public keys.",
-      "Wrong: show ssh keys is not valid."
-    ],
-    "key_concept": "show crypto key mypubkey rsa.",
-    "cli_example": "R1# show crypto key mypubkey rsa",
-    "tip": "Memorize the full command: show crypto key mypubkey rsa."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "보통",
-    "question": "What does ip ssh authentication-retries 2 configure?",
-    "choices": [
-      "The number of simultaneous SSH sessions",
-      "The RSA key length",
-      "The idle timeout",
-      "The number of failed login attempts allowed per connection"
-    ],
-    "answer": "D",
-    "explanation": "ip ssh authentication-retries sets how many times a user may fail authentication in one SSH connection before it is dropped. The default is 3. It does not limit total sessions or the idle timeout.",
-    "option_notes": [
-      "Wrong: simultaneous sessions are limited by the number of vty lines.",
-      "Wrong: key length is set with crypto key generate rsa.",
-      "Wrong: the idle timeout is set with ip ssh time-out or exec-timeout.",
-      "Correct: it limits failed login attempts per SSH connection."
-    ],
-    "key_concept": "authentication-retries limits login attempts.",
-    "cli_example": "R1(config)# ip ssh authentication-retries 2",
-    "tip": "Related settings: ip ssh time-out 60, ip ssh authentication-retries 3."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "보통",
-    "question": "Which command connects from a router to 10.1.1.1 using SSH as user admin?",
-    "choices": [
-      "ssh -l admin 10.1.1.1",
-      "telnet admin 10.1.1.1",
-      "ssh admin@@10.1.1.1",
-      "connect ssh 10.1.1.1 admin"
-    ],
-    "answer": "A",
-    "explanation": "The router's SSH client command is ssh -l <username> <address>. Here ssh -l admin 10.1.1.1 starts an SSH session to 10.1.1.1 as user admin. telnet uses the unencrypted Telnet protocol.",
-    "option_notes": [
-      "Correct: ssh -l admin 10.1.1.1 uses SSH with login name admin.",
-      "Wrong: telnet does not use SSH and would send data in clear text.",
-      "Wrong: admin@@10.1.1.1 is not valid IOS syntax.",
-      "Wrong: connect ssh is not valid IOS syntax."
-    ],
-    "key_concept": "ssh -l <user> <host>",
-    "cli_example": "R1# ssh -l admin 10.1.1.1",
-    "tip": "-l means login name."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "보통",
-    "question": "What is the effect of crypto key zeroize rsa?",
-    "choices": [
-      "It hashes passwords",
-      "It deletes the RSA keys and disables SSH",
-      "It resets the hostname",
-      "It enables Telnet"
-    ],
-    "answer": "B",
-    "explanation": "crypto key zeroize rsa deletes all RSA key pairs on the router. Without keys the SSH server cannot work, so SSH is effectively disabled until new keys are generated. It does not change the hostname or enable Telnet.",
-    "option_notes": [
-      "Wrong: it does not hash passwords.",
-      "Correct: it deletes the RSA keys, which disables SSH.",
-      "Wrong: the hostname is not changed.",
-      "Wrong: Telnet is controlled by transport input, not by zeroize."
-    ],
-    "key_concept": "zeroize removes keys.",
-    "cli_example": "R1(config)# crypto key zeroize rsa",
-    "tip": "zeroize = wipe the keys. Use it to reset SSH or to regenerate keys."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "보통",
-    "question": "What is the weakness of SSH version 1 compared with version 2?",
-    "choices": [
-      "It uses UDP",
-      "It does not use a password",
-      "It has known cryptographic vulnerabilities",
-      "It uses port 23"
-    ],
-    "answer": "C",
-    "explanation": "SSH version 1 has known cryptographic design weaknesses, so SSH version 2 is preferred and should be forced with ip ssh version 2. Both versions use TCP port 22 and require authentication.",
-    "option_notes": [
-      "Wrong: both versions use TCP.",
-      "Wrong: both versions use authentication.",
-      "Correct: SSHv1 has known cryptographic vulnerabilities.",
-      "Wrong: SSH uses TCP 22; port 23 is Telnet."
-    ],
-    "key_concept": "Prefer SSHv2.",
-    "cli_example": "",
-    "tip": "Always choose SSHv2 on exam questions about security."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "어려움",
-    "question": "A user receives Connection refused by remote host when connecting with SSH. The vty lines contain transport input telnet. What is the fix?",
-    "choices": [
-      "Configure ip ssh version 1",
-      "Increase the RSA modulus",
-      "Enable CDP",
-      "Add ssh with transport input ssh"
-    ],
-    "answer": "D",
-    "explanation": "Connection refused means the vty lines do not accept SSH. transport input telnet allows only Telnet, so the fix is to add ssh, for example with transport input ssh. Changing key size or the SSH version will not help while the line refuses SSH.",
-    "option_notes": [
-      "Wrong: ip ssh version 1 does not change which protocols the vty line accepts.",
-      "Wrong: a bigger RSA key does not fix a transport restriction.",
-      "Wrong: CDP is unrelated to SSH access.",
-      "Correct: transport input ssh lets the vty lines accept SSH."
-    ],
-    "key_concept": "transport input must include ssh.",
-    "cli_example": "R1(config)# line vty 0 4\nR1(config-line)# transport input ssh",
-    "tip": "Refused usually means transport input is wrong, not a missing key."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "어려움",
-    "question": "The command ip ssh version 2 is rejected, and the message says RSA keys of at least 768 bits are needed. The router has a 512-bit key. What is the solution?",
-    "choices": [
-      "Regenerate the RSA key with at least 768 bits",
-      "Add a domain name",
-      "Use telnet",
-      "Reduce vty lines"
-    ],
-    "answer": "A",
-    "explanation": "SSH version 2 needs an RSA key of at least 768 bits, and a 512-bit key is too small. You must generate a larger key, which replaces the old one, and then ip ssh version 2 can be accepted.",
-    "option_notes": [
-      "Correct: regenerate the RSA key with at least 768 bits.",
-      "Wrong: the domain name does not affect the key size requirement.",
-      "Wrong: Telnet is insecure and does not solve the problem.",
-      "Wrong: changing the number of vty lines has no effect on SSH version."
-    ],
-    "key_concept": "SSHv2 needs 768+ bit keys.",
-    "cli_example": "R1(config)# crypto key generate rsa modulus 1024\nR1(config)# ip ssh version 2",
-    "tip": "Message mentions 768 bits: regenerate the key bigger."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "어려움",
-    "question": "Why must hostname and domain name be configured before crypto key generate rsa?",
-    "choices": [
-      "They are used to encrypt the keys",
-      "The key pair is named hostname.domain-name",
-      "They define the SSH port",
-      "They set the vty password"
-    ],
-    "answer": "B",
-    "explanation": "IOS names the RSA key pair hostname.domain-name, for example R1.example.com. Therefore both must be set before generating keys. They are not used to encrypt the keys, to define the port or to set vty passwords.",
-    "option_notes": [
-      "Wrong: the names are labels, not encryption material.",
-      "Correct: the key pair is named hostname.domain-name.",
-      "Wrong: SSH uses TCP 22, which is not set by these names.",
-      "Wrong: vty passwords are set under the line."
-    ],
-    "key_concept": "Key label = hostname + domain.",
-    "cli_example": "",
-    "tip": "Key label = hostname.domain."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "어려움",
-    "question": "Output of show ip ssh includes SSH Enabled - version 1.99. What does this mean?",
-    "choices": [
-      "Only SSH version 1.99 exists",
-      "SSH is disabled",
-      "The server supports both SSH version 1 and 2 connections",
-      "Only version 2 is accepted"
-    ],
-    "answer": "C",
-    "explanation": "1.99 means the server is in compatibility mode and accepts both SSH version 1 and version 2 clients. It does not mean a real version 1.99 exists. Use ip ssh version 2 to accept version 2 only.",
-    "option_notes": [
-      "Wrong: there is no real version 1.99 of SSH.",
-      "Wrong: the output says SSH Enabled, so SSH is on.",
-      "Correct: 1.99 means the router supports both SSHv1 and SSHv2.",
-      "Wrong: only version 2 is accepted when the output shows 2.0."
-    ],
-    "key_concept": "1.99 = v1 and v2 compatibility.",
-    "cli_example": "R1# show ip ssh\nSSH Enabled - version 1.99",
-    "tip": "1.99 = v1 + v2; 2.0 = v2 only."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "어려움",
-    "question": "The vty lines have access-class 10 in, and ACL 10 permits only 10.1.1.0 0.0.0.255. A host 10.2.2.2 tries SSH. What happens?",
-    "choices": [
-      "It succeeds because SSH is encrypted",
-      "It succeeds with a password",
-      "It falls back to Telnet",
-      "The connection is rejected by the ACL"
-    ],
-    "answer": "D",
-    "explanation": "access-class 10 in on the vty lines applies ACL 10 to incoming remote sessions. Host 10.2.2.2 is not permitted by 10.1.1.0 0.0.0.255, so the ACL rejects it before SSH can authenticate. Encryption does not bypass an ACL.",
-    "option_notes": [
-      "Wrong: encryption does not bypass the vty ACL.",
-      "Wrong: a password cannot override the ACL.",
-      "Wrong: Telnet is also filtered by the same access-class.",
-      "Correct: the connection is rejected because 10.2.2.2 is not permitted."
-    ],
-    "key_concept": "access-class restricts vty sources.",
-    "cli_example": "R1(config)# access-list 10 permit 10.1.1.0 0.0.0.255\nR1(config)# line vty 0 4\nR1(config-line)# access-class 10 in",
-    "tip": "vty ACL = access-class, not ip access-group."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "어려움",
-    "question": "An admin wants a user to land in privileged EXEC mode directly after SSH login. Which command does this?",
-    "choices": [
-      "username admin privilege 15 secret Cisco123",
-      "username admin secret Cisco123 enable",
-      "enable secret admin",
-      "login privilege 15"
-    ],
-    "answer": "A",
-    "explanation": "The privilege 15 option on the username command gives the user full access and places them directly in privileged EXEC mode after login. Without it the user lands in user EXEC mode and must use enable.",
-    "option_notes": [
-      "Correct: username admin privilege 15 secret Cisco123 sets level 15 directly.",
-      "Wrong: this command has no privilege level, so the user lands in user EXEC mode; enable is not a valid option on username.",
-      "Wrong: enable secret sets the enable password, not the login privilege.",
-      "Wrong: login privilege 15 is not valid."
-    ],
-    "key_concept": "privilege 15 gives full access.",
-    "cli_example": "R1(config)# username admin privilege 15 secret Cisco123",
-    "tip": "privilege 15 = straight to #."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "어려움",
-    "question": "The vty lines use login and password Cisco123, with no usernames. A user connects with SSH. What happens?",
-    "choices": [
-      "It works with just the line password",
-      "Authentication fails because SSH needs a username",
-      "It switches to Telnet",
-      "It works only on the console"
-    ],
-    "answer": "B",
-    "explanation": "SSH always needs a username. With login and a line password only, there is no username to check, so SSH authentication fails. Configure login local plus a local username, or use AAA.",
-    "option_notes": [
-      "Wrong: the line password alone does not satisfy SSH.",
-      "Correct: authentication fails because SSH needs a username.",
-      "Wrong: the router never falls back to Telnet by itself.",
-      "Wrong: this has nothing to do with the console."
-    ],
-    "key_concept": "SSH needs usernames.",
-    "cli_example": "",
-    "tip": "Password-only vty works for Telnet, not SSH."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "어려움",
-    "question": "A Layer 2 switch is managed remotely by SSH from another subnet but the connection times out. SSH is configured correctly. What is most likely missing?",
-    "choices": [
-      "A second RSA key",
-      "An IP address on every port",
-      "A default gateway on the switch",
-      "Spanning tree configuration"
-    ],
-    "answer": "C",
-    "explanation": "A switch in another subnet needs a default gateway to send replies back off its own subnet. Without ip default-gateway, the SSH packets arrive but the replies cannot return, so the connection times out. A Layer 2 switch needs an IP address on the management SVI plus a gateway.",
-    "option_notes": [
-      "Wrong: one RSA key is enough.",
-      "Wrong: only the management interface needs an IP address.",
-      "Correct: the switch needs a default gateway to reply to another subnet.",
-      "Wrong: spanning tree does not affect remote management reachability here."
-    ],
-    "key_concept": "Switch needs a gateway.",
-    "cli_example": "SW1(config)# ip default-gateway 192.168.1.1",
-    "tip": "Switch management across subnets: SVI IP + ip default-gateway."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "어려움",
-    "question": "Router R1 prints Please define a domain-name first when generating keys. What should be entered?",
-    "choices": [
-      "ip name-server example.com",
-      "login local",
-      "ip ssh version 2",
-      "ip domain-name example.com"
-    ],
-    "answer": "D",
-    "explanation": "The error means the router has no domain name yet. ip domain-name example.com sets it, and then crypto key generate rsa can be run again.",
-    "option_notes": [
-      "Wrong: ip name-server sets a DNS server, not the router's domain.",
-      "Wrong: login local sets vty authentication.",
-      "Wrong: ip ssh version 2 does not fix a missing domain name.",
-      "Correct: ip domain-name example.com sets the required domain name."
-    ],
-    "key_concept": "Domain name first.",
-    "cli_example": "R1(config)# ip domain-name example.com\nR1(config)# crypto key generate rsa",
-    "tip": "The error text tells you the missing piece: read it."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "어려움",
-    "question": "Which command is better for storing the local user password and why?",
-    "choices": [
-      "username admin secret Cisco123, because it is hashed",
-      "username admin password Cisco123, because it is hashed",
-      "Both are identical",
-      "username admin nopassword"
-    ],
-    "answer": "A",
-    "explanation": "username admin secret stores the password hashed, using a strong hash, while username admin password stores it with weak reversible type 7 encryption or in plain text. Secret is therefore the better choice. nopassword removes the password.",
-    "option_notes": [
-      "Correct: secret stores the password hashed.",
-      "Wrong: password does not hash the password strongly; it is plain text or weak type 7.",
-      "Wrong: the two are not identical because secret is hashed.",
-      "Wrong: nopassword removes the password, which is insecure."
-    ],
-    "key_concept": "Prefer secret to password.",
-    "cli_example": "R1(config)# username admin secret Cisco123",
-    "tip": "secret = hashed (strong); password = weak or plain."
-  },
-  {
-    "sub": "4.8",
-    "difficulty": "보통",
-    "question": "Which sequence is a valid order for enabling SSH on a new router?",
-    "choices": [
-      "crypto key generate rsa, then hostname",
-      "hostname, domain name, username, crypto key generate rsa, vty login local and transport input ssh",
-      "transport input ssh, then no ip domain-name",
-      "login local, then telnet"
-    ],
-    "answer": "B",
-    "explanation": "Keys need the hostname and domain name first, and then vty lines need local login and SSH. The order is hostname, ip domain-name, username, crypto key generate rsa, then line vty with login local and transport input ssh.",
-    "option_notes": [
-      "Wrong: keys cannot be generated until the hostname and domain name are set.",
-      "Correct: it sets the prerequisites first and then generates keys and configures the vty lines.",
-      "Wrong: removing the domain name would stop key generation.",
-      "Wrong: telnet is not an SSH configuration step."
-    ],
-    "key_concept": "Prerequisites before keys.",
-    "cli_example": "R1(config)# hostname R1\nR1(config)# ip domain-name example.com\nR1(config)# username admin secret Cisco123\nR1(config)# crypto key generate rsa modulus 2048\nR1(config)# ip ssh version 2\nR1(config)# line vty 0 4\nR1(config-line)# login local\nR1(config-line)# transport input ssh",
-    "tip": "Learn the full SSH recipe in order."
-  }
+ {
+  "sub": "4.8",
+  "difficulty": "쉬움",
+  "question": "Why is SSH preferred over Telnet for remote management?",
+  "choices": [
+   "SSH encrypts the session, including passwords",
+   "SSH is faster than Telnet, especially on slow WAN links",
+   "SSH uses UDP",
+   "SSH does not require a login"
+  ],
+  "answer": "A",
+  "explanation": "Telnet sends usernames, passwords and every command in clear text, so anyone capturing the traffic can read them. SSH encrypts the whole session and supports stronger authentication such as public keys. That is why SSH is the recommended way to manage devices remotely.",
+  "option_notes": [
+   "Correct: SSH encrypts the session, so passwords cannot be read by a sniffer.",
+   "Wrong: SSH is not faster; encryption adds a little overhead.",
+   "Wrong: SSH runs over TCP port 22, not UDP.",
+   "Wrong: SSH always requires authentication."
+  ],
+  "key_concept": "SSH = encrypted; Telnet = clear text.",
+  "cli_example": "",
+  "tip": "Exam keyword: 'secure remote management' means SSH; 'clear text' means Telnet."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "쉬움",
+  "question": "Which TCP port does SSH use by default?",
+  "choices": [
+   "23",
+   "22",
+   "21",
+   "443"
+  ],
+  "answer": "B",
+  "explanation": "SSH uses TCP port 22 by default. Telnet uses TCP 23, FTP control uses TCP 21 and HTTPS uses TCP 443. A firewall or ACL that blocks TCP 22 will stop SSH from working.",
+  "option_notes": [
+   "Wrong: TCP 23 is Telnet.",
+   "Correct: TCP 22 is the well-known SSH port.",
+   "Wrong: TCP 21 is the FTP control connection.",
+   "Wrong: TCP 443 is HTTPS."
+  ],
+  "key_concept": "SSH = TCP 22.",
+  "cli_example": "",
+  "tip": "Memorize: 20/21 FTP, 22 SSH, 23 Telnet, 69 TFTP (UDP)."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "쉬움",
+  "question": "Which command generates the RSA keys needed for SSH on a Cisco router?",
+  "choices": [
+   "ssh generate key",
+   "ip ssh rsa keypair",
+   "crypto key generate rsa",
+   "crypto ssh enable"
+  ],
+  "answer": "C",
+  "explanation": "crypto key generate rsa is entered in global configuration mode and creates the RSA key pair that SSH needs for encryption. The router must already have a hostname other than the default and a domain name. IOS then asks for the modulus size, or you can add modulus 2048.",
+  "option_notes": [
+   "Wrong: ssh generate key is not an IOS command.",
+   "Wrong: ip ssh rsa keypair-name only names a key pair; ip ssh rsa keypair does not generate keys.",
+   "Correct: crypto key generate rsa creates the RSA key pair for SSH.",
+   "Wrong: crypto ssh enable does not exist in IOS."
+  ],
+  "key_concept": "crypto key generate rsa creates the SSH keys.",
+  "cli_example": "Router(config)# hostname R1\nR1(config)# ip domain-name example.com\nR1(config)# crypto key generate rsa modulus 2048",
+  "tip": "SSH is not active until an RSA key exists. Think: hostname, domain name, then keys."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "쉬움",
+  "question": "Which command on the vty lines restricts remote access to SSH only?",
+  "choices": [
+   "transport output ssh",
+   "login ssh",
+   "ssh only",
+   "transport input ssh"
+  ],
+  "answer": "D",
+  "explanation": "transport input ssh under line vty allows only SSH for incoming remote sessions, so Telnet attempts are refused. transport input controls the protocols accepted on incoming connections to the line.",
+  "option_notes": [
+   "Wrong: transport output controls which protocols the router can use for outgoing connections from that line.",
+   "Wrong: login ssh is not a valid command; login only sets password or local authentication.",
+   "Wrong: ssh only is not a valid IOS command.",
+   "Correct: transport input ssh accepts only SSH and blocks Telnet."
+  ],
+  "key_concept": "transport input ssh",
+  "cli_example": "R1(config)# line vty 0 4\nR1(config-line)# transport input ssh",
+  "tip": "Input = incoming connections to the router. Default on newer IOS may allow Telnet, so set ssh explicitly."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "쉬움",
+  "question": "Which command sets the domain name required for RSA key generation?",
+  "choices": [
+   "ip domain-name example.com",
+   "domain example.com",
+   "ip name-server example.com",
+   "hostname example.com"
+  ],
+  "answer": "A",
+  "explanation": "The router builds its RSA key name from the hostname and domain name, so a domain name must exist before keys can be generated. ip domain-name sets the domain used for the key pair and for DNS name completion.",
+  "option_notes": [
+   "Correct: ip domain-name example.com sets the router's domain name.",
+   "Wrong: domain example.com is not an IOS global command for this purpose.",
+   "Wrong: ip name-server sets the DNS server address, not the router's own domain name.",
+   "Wrong: hostname sets only the device name, not the domain."
+  ],
+  "key_concept": "Set hostname and domain name before keys.",
+  "cli_example": "R1(config)# ip domain-name example.com",
+  "tip": "Don't confuse ip domain-name (your domain) with ip name-server (DNS server) or ip domain-lookup."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "쉬움",
+  "question": "Which command creates a local user account for SSH login?",
+  "choices": [
+   "user add admin Cisco123",
+   "username admin secret Cisco123",
+   "login admin Cisco123",
+   "enable user admin"
+  ],
+  "answer": "B",
+  "explanation": "username <name> secret <password> creates a local account in the router's user database, and the secret is stored hashed. SSH logins can then be checked against this database when the vty lines use login local.",
+  "option_notes": [
+   "Wrong: user add is a Linux style command, not IOS.",
+   "Correct: username admin secret Cisco123 creates a local user with a hashed password.",
+   "Wrong: login admin Cisco123 is not valid; login is a line command.",
+   "Wrong: enable user is not an IOS command."
+  ],
+  "key_concept": "username <name> secret <password>",
+  "cli_example": "R1(config)# username admin secret Cisco123",
+  "tip": "Use secret rather than password because secret is hashed."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "쉬움",
+  "question": "Which command makes vty lines authenticate with the local user database?",
+  "choices": [
+   "login",
+   "no login",
+   "login local",
+   "password local"
+  ],
+  "answer": "C",
+  "explanation": "login local tells the vty lines to check the username and password against the local user database. SSH requires a username, so plain login with only a line password is not enough. Without login local (or AAA) SSH users cannot authenticate properly.",
+  "option_notes": [
+   "Wrong: plain login asks for the line password only, with no username.",
+   "Wrong: no login lets users in without authentication, which is insecure and not what is wanted.",
+   "Correct: login local uses the local usernames for vty authentication.",
+   "Wrong: password local is not a valid command."
+  ],
+  "key_concept": "login local uses local usernames.",
+  "cli_example": "R1(config)# line vty 0 4\nR1(config-line)# login local",
+  "tip": "SSH = username required, so use login local with a username command."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "쉬움",
+  "question": "Which command displays the SSH version and settings of a router?",
+  "choices": [
+   "show ssh version",
+   "show crypto vty",
+   "show line vty",
+   "show ip ssh"
+  ],
+  "answer": "D",
+  "explanation": "show ip ssh displays whether the SSH server is enabled, the SSH version (for example 1.99 or 2.0), the timeout and the authentication retries. It shows the server settings, not the active sessions.",
+  "option_notes": [
+   "Wrong: show ssh version is not a command.",
+   "Wrong: show crypto vty is not a command.",
+   "Wrong: show line vty shows line status, not SSH settings.",
+   "Correct: show ip ssh shows SSH status, version and settings."
+  ],
+  "key_concept": "show ip ssh = server status.",
+  "cli_example": "R1# show ip ssh",
+  "tip": "show ip ssh = server settings; show ssh = connected sessions."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "쉬움",
+  "question": "Which command shows active SSH sessions on a router?",
+  "choices": [
+   "show ssh",
+   "show telnet",
+   "show sessions ssh",
+   "show ip ssh sessions"
+  ],
+  "answer": "A",
+  "explanation": "show ssh lists the current incoming and outgoing SSH sessions, including version, encryption and username. show ip ssh is different because it shows the server configuration.",
+  "option_notes": [
+   "Correct: show ssh displays active SSH connections.",
+   "Wrong: show telnet is not the command for SSH sessions.",
+   "Wrong: show sessions ssh is not valid syntax.",
+   "Wrong: show ip ssh sessions is not valid; show ip ssh shows settings only."
+  ],
+  "key_concept": "show ssh = active sessions.",
+  "cli_example": "R1# show ssh",
+  "tip": "Two similar commands: show ssh (sessions) and show ip ssh (settings)."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "쉬움",
+  "question": "What must a router have besides a hostname to generate SSH keys?",
+  "choices": [
+   "A default gateway",
+   "A domain name",
+   "A DHCP pool",
+   "A loopback"
+  ],
+  "answer": "B",
+  "explanation": "SSH keys are named from the hostname and the domain name, so the router needs a domain name in addition to a non-default hostname. If it is missing, IOS prints an error asking you to define a domain name first.",
+  "option_notes": [
+   "Wrong: a default gateway is not needed to generate keys.",
+   "Correct: a domain name is required for RSA key generation.",
+   "Wrong: a DHCP pool has nothing to do with SSH keys.",
+   "Wrong: a loopback interface is not required."
+  ],
+  "key_concept": "Hostname and domain name are prerequisites.",
+  "cli_example": "R1(config)# hostname R1\nR1(config)# ip domain-name example.com",
+  "tip": "Order to remember: hostname, ip domain-name, crypto key generate rsa."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "보통",
+  "question": "What is the minimum RSA modulus size required for SSH version 2 on Cisco IOS?",
+  "choices": [
+   "512 bits",
+   "1024 bits only",
+   "768 bits",
+   "4096 bits"
+  ],
+  "answer": "C",
+  "explanation": "SSH version 2 needs an RSA key of at least 768 bits. A 512-bit key works only for SSH version 1. In practice use 1024 or 2048 bits.",
+  "option_notes": [
+   "Wrong: 512 bits is too small for SSHv2.",
+   "Wrong: 1024 works, but it is not the minimum; larger keys are also allowed.",
+   "Correct: 768 bits is the minimum for SSH version 2.",
+   "Wrong: 4096 is allowed but is not the minimum."
+  ],
+  "key_concept": "SSHv2 needs 768+ bits.",
+  "cli_example": "R1(config)# crypto key generate rsa modulus 1024",
+  "tip": "768 = minimum for SSHv2. Short keys = SSHv1 only."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "보통",
+  "question": "The error Please define a hostname other than Router appears. What should be done?",
+  "choices": [
+   "Enable password encryption",
+   "Configure transport input ssh on all of the vty lines first",
+   "Set the clock",
+   "Configure a unique hostname with the hostname command"
+  ],
+  "answer": "D",
+  "explanation": "The router refuses to generate keys while its hostname is still the default name Router. You must set a unique name with the hostname command and then generate the keys again.",
+  "option_notes": [
+   "Wrong: password encryption does not affect key generation.",
+   "Wrong: transport input ssh is a vty setting and not related to this error.",
+   "Wrong: the clock is not the cause of this message.",
+   "Correct: configure a unique hostname with the hostname command."
+  ],
+  "key_concept": "Change the default hostname.",
+  "cli_example": "Router(config)# hostname R1\nR1(config)# crypto key generate rsa",
+  "tip": "Default hostname is a classic SSH setup trap."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "보통",
+  "question": "Which command forces SSH version 2 only?",
+  "choices": [
+   "ip ssh version 2",
+   "ssh version 2",
+   "crypto ssh version 2",
+   "transport input ssh2"
+  ],
+  "answer": "A",
+  "explanation": "ip ssh version 2 makes the router accept only SSH version 2 connections. SSHv2 is more secure than version 1. It requires an RSA key of at least 768 bits.",
+  "option_notes": [
+   "Correct: ip ssh version 2 forces SSHv2 only.",
+   "Wrong: ssh version 2 is not a global command.",
+   "Wrong: crypto ssh version 2 does not exist.",
+   "Wrong: transport input ssh2 is not valid; transport input takes ssh, not a version."
+  ],
+  "key_concept": "ip ssh version 2.",
+  "cli_example": "R1(config)# ip ssh version 2",
+  "tip": "Version is set globally with ip ssh version 2, not on the vty line."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "보통",
+  "question": "What happens when login local is configured but no local usernames exist?",
+  "choices": [
+   "Everyone is allowed",
+   "Nobody can log in",
+   "The line password is used",
+   "The router reloads"
+  ],
+  "answer": "B",
+  "explanation": "login local checks usernames in the local database. If no username exists, no one can authenticate, and the line password is not used as a fallback. The router does not allow anyone in and does not reload.",
+  "option_notes": [
+   "Wrong: login local never allows everyone in.",
+   "Correct: with no local usernames, nobody can log in.",
+   "Wrong: with login local the line password is ignored.",
+   "Wrong: a failed login never reloads the router."
+  ],
+  "key_concept": "login local needs a username.",
+  "cli_example": "",
+  "tip": "login local + no username = locked out of remote access (console may still work)."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "보통",
+  "question": "Which command displays the public keys created on a router?",
+  "choices": [
+   "show ip ssh key",
+   "show crypto pki",
+   "show crypto key mypubkey rsa",
+   "show ip ssh public-key detail"
+  ],
+  "answer": "C",
+  "explanation": "show crypto key mypubkey rsa displays the public RSA keys created on the router, with their names and sizes. It is a quick way to confirm that SSH keys exist.",
+  "option_notes": [
+   "Wrong: show ip ssh key is not a valid command.",
+   "Wrong: show crypto pki is for certificate infrastructure, not the SSH key list.",
+   "Correct: show crypto key mypubkey rsa lists the router's RSA public keys.",
+   "Wrong: show ssh keys is not valid."
+  ],
+  "key_concept": "show crypto key mypubkey rsa.",
+  "cli_example": "R1# show crypto key mypubkey rsa",
+  "tip": "Memorize the full command: show crypto key mypubkey rsa."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "보통",
+  "question": "What does ip ssh authentication-retries 2 configure?",
+  "choices": [
+   "The number of simultaneous SSH sessions allowed on the vty lines",
+   "The RSA key length",
+   "The idle timeout",
+   "The number of failed login attempts allowed per connection"
+  ],
+  "answer": "D",
+  "explanation": "ip ssh authentication-retries sets how many times a user may fail authentication in one SSH connection before it is dropped. The default is 3. It does not limit total sessions or the idle timeout.",
+  "option_notes": [
+   "Wrong: simultaneous sessions are limited by the number of vty lines.",
+   "Wrong: key length is set with crypto key generate rsa.",
+   "Wrong: the idle timeout is set with ip ssh time-out or exec-timeout.",
+   "Correct: it limits failed login attempts per SSH connection."
+  ],
+  "key_concept": "authentication-retries limits login attempts.",
+  "cli_example": "R1(config)# ip ssh authentication-retries 2",
+  "tip": "Related settings: ip ssh time-out 60, ip ssh authentication-retries 3."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "보통",
+  "question": "Which command connects from a router to 10.1.1.1 using SSH as user admin?",
+  "choices": [
+   "ssh -l admin 10.1.1.1",
+   "telnet admin 10.1.1.1",
+   "ssh admin@@10.1.1.1",
+   "connect ssh 10.1.1.1 admin"
+  ],
+  "answer": "A",
+  "explanation": "The router's SSH client command is ssh -l <username> <address>. Here ssh -l admin 10.1.1.1 starts an SSH session to 10.1.1.1 as user admin. telnet uses the unencrypted Telnet protocol.",
+  "option_notes": [
+   "Correct: ssh -l admin 10.1.1.1 uses SSH with login name admin.",
+   "Wrong: telnet does not use SSH and would send data in clear text.",
+   "Wrong: admin@@10.1.1.1 is not valid IOS syntax.",
+   "Wrong: connect ssh is not valid IOS syntax."
+  ],
+  "key_concept": "ssh -l <user> <host>",
+  "cli_example": "R1# ssh -l admin 10.1.1.1",
+  "tip": "-l means login name."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "보통",
+  "question": "What is the effect of crypto key zeroize rsa?",
+  "choices": [
+   "It hashes passwords",
+   "It deletes the RSA keys and disables SSH",
+   "It resets the hostname",
+   "It enables Telnet as the only remote access method"
+  ],
+  "answer": "B",
+  "explanation": "crypto key zeroize rsa deletes all RSA key pairs on the router. Without keys the SSH server cannot work, so SSH is effectively disabled until new keys are generated. It does not change the hostname or enable Telnet.",
+  "option_notes": [
+   "Wrong: it does not hash passwords.",
+   "Correct: it deletes the RSA keys, which disables SSH.",
+   "Wrong: the hostname is not changed.",
+   "Wrong: Telnet is controlled by transport input, not by zeroize."
+  ],
+  "key_concept": "zeroize removes keys.",
+  "cli_example": "R1(config)# crypto key zeroize rsa",
+  "tip": "zeroize = wipe the keys. Use it to reset SSH or to regenerate keys."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "보통",
+  "question": "What is the weakness of SSH version 1 compared with version 2?",
+  "choices": [
+   "It uses UDP",
+   "It does not use a password for authentication",
+   "It has known cryptographic vulnerabilities",
+   "It uses port 23"
+  ],
+  "answer": "C",
+  "explanation": "SSH version 1 has known cryptographic design weaknesses, so SSH version 2 is preferred and should be forced with ip ssh version 2. Both versions use TCP port 22 and require authentication.",
+  "option_notes": [
+   "Wrong: both versions use TCP.",
+   "Wrong: both versions use authentication.",
+   "Correct: SSHv1 has known cryptographic vulnerabilities.",
+   "Wrong: SSH uses TCP 22; port 23 is Telnet."
+  ],
+  "key_concept": "Prefer SSHv2.",
+  "cli_example": "",
+  "tip": "Always choose SSHv2 on exam questions about security."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "어려움",
+  "question": "A user receives Connection refused by remote host when connecting with SSH. The vty lines contain transport input telnet. What is the fix?",
+  "choices": [
+   "Configure ip ssh version 1",
+   "Increase the RSA modulus",
+   "Enable CDP",
+   "Add ssh with transport input ssh"
+  ],
+  "answer": "D",
+  "explanation": "Connection refused means the vty lines do not accept SSH. transport input telnet allows only Telnet, so the fix is to add ssh, for example with transport input ssh. Changing key size or the SSH version will not help while the line refuses SSH.",
+  "option_notes": [
+   "Wrong: ip ssh version 1 does not change which protocols the vty line accepts.",
+   "Wrong: a bigger RSA key does not fix a transport restriction.",
+   "Wrong: CDP is unrelated to SSH access.",
+   "Correct: transport input ssh lets the vty lines accept SSH."
+  ],
+  "key_concept": "transport input must include ssh.",
+  "cli_example": "R1(config)# line vty 0 4\nR1(config-line)# transport input ssh",
+  "tip": "Refused usually means transport input is wrong, not a missing key."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "어려움",
+  "question": "The command ip ssh version 2 is rejected, and the message says RSA keys of at least 768 bits are needed. The router has a 512-bit key. What is the solution?",
+  "choices": [
+   "Regenerate the RSA key with at least 768 bits",
+   "Add a domain name with ip domain-name and reload",
+   "Use telnet",
+   "Reduce vty lines"
+  ],
+  "answer": "A",
+  "explanation": "SSH version 2 needs an RSA key of at least 768 bits, and a 512-bit key is too small. You must generate a larger key, which replaces the old one, and then ip ssh version 2 can be accepted.",
+  "option_notes": [
+   "Correct: regenerate the RSA key with at least 768 bits.",
+   "Wrong: the domain name does not affect the key size requirement.",
+   "Wrong: Telnet is insecure and does not solve the problem.",
+   "Wrong: changing the number of vty lines has no effect on SSH version."
+  ],
+  "key_concept": "SSHv2 needs 768+ bit keys.",
+  "cli_example": "R1(config)# crypto key generate rsa modulus 1024\nR1(config)# ip ssh version 2",
+  "tip": "Message mentions 768 bits: regenerate the key bigger."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "어려움",
+  "question": "Why must hostname and domain name be configured before crypto key generate rsa?",
+  "choices": [
+   "They are used to encrypt the keys",
+   "The key pair is named hostname.domain-name",
+   "They define the SSH port",
+   "They set the vty password"
+  ],
+  "answer": "B",
+  "explanation": "IOS names the RSA key pair hostname.domain-name, for example R1.example.com. Therefore both must be set before generating keys. They are not used to encrypt the keys, to define the port or to set vty passwords.",
+  "option_notes": [
+   "Wrong: the names are labels, not encryption material.",
+   "Correct: the key pair is named hostname.domain-name.",
+   "Wrong: SSH uses TCP 22, which is not set by these names.",
+   "Wrong: vty passwords are set under the line."
+  ],
+  "key_concept": "Key label = hostname + domain.",
+  "cli_example": "",
+  "tip": "Key label = hostname.domain."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "어려움",
+  "question": "Output of show ip ssh includes SSH Enabled - version 1.99. What does this mean?",
+  "choices": [
+   "Only the SSH version 1.99 protocol is supported by this IOS release",
+   "SSH is disabled",
+   "The server supports both SSH version 1 and 2 connections",
+   "Only version 2 is accepted"
+  ],
+  "answer": "C",
+  "explanation": "1.99 means the server is in compatibility mode and accepts both SSH version 1 and version 2 clients. It does not mean a real version 1.99 exists. Use ip ssh version 2 to accept version 2 only.",
+  "option_notes": [
+   "Wrong: there is no real version 1.99 of SSH.",
+   "Wrong: the output says SSH Enabled, so SSH is on.",
+   "Correct: 1.99 means the router supports both SSHv1 and SSHv2.",
+   "Wrong: only version 2 is accepted when the output shows 2.0."
+  ],
+  "key_concept": "1.99 = v1 and v2 compatibility.",
+  "cli_example": "R1# show ip ssh\nSSH Enabled - version 1.99",
+  "tip": "1.99 = v1 + v2; 2.0 = v2 only."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "어려움",
+  "question": "The vty lines have access-class 10 in, and ACL 10 permits only 10.1.1.0 0.0.0.255. A host 10.2.2.2 tries SSH. What happens?",
+  "choices": [
+   "It succeeds because SSH is encrypted",
+   "It succeeds with a password",
+   "It falls back to Telnet",
+   "The connection is rejected by the ACL"
+  ],
+  "answer": "D",
+  "explanation": "access-class 10 in on the vty lines applies ACL 10 to incoming remote sessions. Host 10.2.2.2 is not permitted by 10.1.1.0 0.0.0.255, so the ACL rejects it before SSH can authenticate. Encryption does not bypass an ACL.",
+  "option_notes": [
+   "Wrong: encryption does not bypass the vty ACL.",
+   "Wrong: a password cannot override the ACL.",
+   "Wrong: Telnet is also filtered by the same access-class.",
+   "Correct: the connection is rejected because 10.2.2.2 is not permitted."
+  ],
+  "key_concept": "access-class restricts vty sources.",
+  "cli_example": "R1(config)# access-list 10 permit 10.1.1.0 0.0.0.255\nR1(config)# line vty 0 4\nR1(config-line)# access-class 10 in",
+  "tip": "vty ACL = access-class, not ip access-group."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "어려움",
+  "question": "An admin wants a user to land in privileged EXEC mode directly after SSH login. Which command does this?",
+  "choices": [
+   "username admin privilege 15 secret Cisco123",
+   "username admin secret Cisco123 enable",
+   "enable secret admin",
+   "login privilege 15"
+  ],
+  "answer": "A",
+  "explanation": "The privilege 15 option on the username command gives the user full access and places them directly in privileged EXEC mode after login. Without it the user lands in user EXEC mode and must use enable.",
+  "option_notes": [
+   "Correct: username admin privilege 15 secret Cisco123 sets level 15 directly.",
+   "Wrong: this command has no privilege level, so the user lands in user EXEC mode; enable is not a valid option on username.",
+   "Wrong: enable secret sets the enable password, not the login privilege.",
+   "Wrong: login privilege 15 is not valid."
+  ],
+  "key_concept": "privilege 15 gives full access.",
+  "cli_example": "R1(config)# username admin privilege 15 secret Cisco123",
+  "tip": "privilege 15 = straight to #."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "어려움",
+  "question": "The vty lines use login and password Cisco123, with no usernames. A user connects with SSH. What happens?",
+  "choices": [
+   "It works, and the user enters only the line password Cisco123",
+   "Authentication fails because SSH needs a username",
+   "It switches to Telnet",
+   "It works only on the console"
+  ],
+  "answer": "B",
+  "explanation": "SSH always needs a username. With login and a line password only, there is no username to check, so SSH authentication fails. Configure login local plus a local username, or use AAA.",
+  "option_notes": [
+   "Wrong: the line password alone does not satisfy SSH.",
+   "Correct: authentication fails because SSH needs a username.",
+   "Wrong: the router never falls back to Telnet by itself.",
+   "Wrong: this has nothing to do with the console."
+  ],
+  "key_concept": "SSH needs usernames.",
+  "cli_example": "",
+  "tip": "Password-only vty works for Telnet, not SSH."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "어려움",
+  "question": "A Layer 2 switch is managed remotely by SSH from another subnet but the connection times out. SSH is configured correctly. What is most likely missing?",
+  "choices": [
+   "A second RSA key",
+   "An IP address on every port",
+   "A default gateway on the switch",
+   "Spanning tree configuration"
+  ],
+  "answer": "C",
+  "explanation": "A switch in another subnet needs a default gateway to send replies back off its own subnet. Without ip default-gateway, the SSH packets arrive but the replies cannot return, so the connection times out. A Layer 2 switch needs an IP address on the management SVI plus a gateway.",
+  "option_notes": [
+   "Wrong: one RSA key is enough.",
+   "Wrong: only the management interface needs an IP address.",
+   "Correct: the switch needs a default gateway to reply to another subnet.",
+   "Wrong: spanning tree does not affect remote management reachability here."
+  ],
+  "key_concept": "Switch needs a gateway.",
+  "cli_example": "SW1(config)# ip default-gateway 192.168.1.1",
+  "tip": "Switch management across subnets: SVI IP + ip default-gateway."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "어려움",
+  "question": "Router R1 prints Please define a domain-name first when generating keys. What should be entered?",
+  "choices": [
+   "ip name-server example.com",
+   "login local",
+   "ip ssh version 2",
+   "ip domain-name example.com"
+  ],
+  "answer": "D",
+  "explanation": "The error means the router has no domain name yet. ip domain-name example.com sets it, and then crypto key generate rsa can be run again.",
+  "option_notes": [
+   "Wrong: ip name-server sets a DNS server, not the router's domain.",
+   "Wrong: login local sets vty authentication.",
+   "Wrong: ip ssh version 2 does not fix a missing domain name.",
+   "Correct: ip domain-name example.com sets the required domain name."
+  ],
+  "key_concept": "Domain name first.",
+  "cli_example": "R1(config)# ip domain-name example.com\nR1(config)# crypto key generate rsa",
+  "tip": "The error text tells you the missing piece: read it."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "어려움",
+  "question": "Which command is better for storing the local user password and why?",
+  "choices": [
+   "username admin secret Cisco123, because it is hashed",
+   "username admin password Cisco123, because it is hashed",
+   "Both are identical",
+   "username admin nopassword"
+  ],
+  "answer": "A",
+  "explanation": "username admin secret stores the password hashed, using a strong hash, while username admin password stores it with weak reversible type 7 encryption or in plain text. Secret is therefore the better choice. nopassword removes the password.",
+  "option_notes": [
+   "Correct: secret stores the password hashed.",
+   "Wrong: password does not hash the password strongly; it is plain text or weak type 7.",
+   "Wrong: the two are not identical because secret is hashed.",
+   "Wrong: nopassword removes the password, which is insecure."
+  ],
+  "key_concept": "Prefer secret to password.",
+  "cli_example": "R1(config)# username admin secret Cisco123",
+  "tip": "secret = hashed (strong); password = weak or plain."
+ },
+ {
+  "sub": "4.8",
+  "difficulty": "보통",
+  "question": "Which sequence is a valid order for enabling SSH on a new router?",
+  "choices": [
+   "crypto key generate rsa first, then hostname and domain name",
+   "hostname, domain name, user, keys, then vty login local and SSH only",
+   "transport input ssh, then no ip domain-name",
+   "login local, then telnet"
+  ],
+  "answer": "B",
+  "explanation": "Keys need the hostname and domain name first, and then vty lines need local login and SSH. The order is hostname, ip domain-name, username, crypto key generate rsa, then line vty with login local and transport input ssh.",
+  "option_notes": [
+   "Wrong: keys cannot be generated until the hostname and domain name are set.",
+   "Correct: it sets the prerequisites first and then generates keys and configures the vty lines.",
+   "Wrong: removing the domain name would stop key generation.",
+   "Wrong: telnet is not an SSH configuration step."
+  ],
+  "key_concept": "Prerequisites before keys.",
+  "cli_example": "R1(config)# hostname R1\nR1(config)# ip domain-name example.com\nR1(config)# username admin secret Cisco123\nR1(config)# crypto key generate rsa modulus 2048\nR1(config)# ip ssh version 2\nR1(config)# line vty 0 4\nR1(config-line)# login local\nR1(config-line)# transport input ssh",
+  "tip": "Learn the full SSH recipe in order."
+ }
 ]

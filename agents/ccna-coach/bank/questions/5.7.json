@@ -4,7 +4,7 @@
   "difficulty": "쉬움",
   "question": "What is the main purpose of port security on a Cisco switch?",
   "choices": [
-   "Encrypt traffic on the port",
+   "Encrypt all of the traffic sent on the access port",
    "Limit which MAC addresses can use a switch port",
    "Assign VLANs dynamically",
    "Increase port speed"
@@ -114,7 +114,7 @@
   "difficulty": "쉬움",
   "question": "Which switch ports should be configured as DHCP snooping trusted ports?",
   "choices": [
-   "Ports connected to end users",
+   "Ports that connect to end users and their IP phones",
    "Ports toward the legitimate DHCP server or uplinks",
    "All ports",
    "Unused ports"
@@ -138,7 +138,7 @@
   "choices": [
    "Dynamic ARP Inspection",
    "VTP",
-   "CDP",
+   "CDP neighbor authentication",
    "EtherChannel"
   ],
   "answer": "A",
@@ -158,8 +158,8 @@
   "difficulty": "쉬움",
   "question": "What happens in a MAC flooding attack?",
   "choices": [
-   "The attacker overflows the CAM table so the switch floods frames out all ports",
-   "The attacker steals the root bridge",
+   "The attacker fills the CAM table so the switch floods frames",
+   "The attacker becomes the root bridge by sending superior BPDUs",
    "The attacker changes VLAN IDs",
    "The router overheats"
   ],
@@ -180,8 +180,8 @@
   "difficulty": "쉬움",
   "question": "What does the sticky option do in port security?",
   "choices": [
-   "Learns MAC addresses dynamically and saves them in the running configuration",
-   "Blocks all MAC addresses",
+   "Learns MACs dynamically and saves them to the running config",
+   "Blocks all MAC addresses except the one configured statically",
    "Disables the port",
    "Forces 100 Mb/s"
   ],
@@ -203,7 +203,7 @@
   "question": "Which command displays the port security status of one interface?",
   "choices": [
    "show port-security interface g0/1",
-   "show spanning-tree g0/1",
+   "show spanning-tree interface g0/1 detail",
    "show interface status",
    "show mac"
   ],
@@ -247,7 +247,7 @@
   "question": "A port is err-disabled from a port security violation. How is it restored after fixing the cause?",
   "choices": [
    "shutdown then no shutdown on the interface",
-   "clear mac address-table",
+   "clear mac address-table dynamic on the port",
    "reload the router",
    "no switchport"
   ],
@@ -270,7 +270,7 @@
   "choices": [
    "DHCP snooping binding table",
    "Routing table",
-   "VLAN database",
+   "VLAN database (vlan.dat)",
    "STP table"
   ],
   "answer": "A",
@@ -290,8 +290,8 @@
   "difficulty": "보통",
   "question": "What does ip dhcp snooping limit rate 15 do on an interface?",
   "choices": [
-   "Limits DHCP packets to 15 per second and err-disables the port if exceeded",
-   "Limits clients to 15 leases",
+   "Limits DHCP to 15 packets per second, else err-disables the port",
+   "Limits the clients on the port to a maximum of 15 DHCP leases",
    "Sets the lease time",
    "Reserves 15 Mbps"
   ],
@@ -357,7 +357,7 @@
   "question": "How do you manually define one allowed MAC on a secure port?",
   "choices": [
    "switchport port-security mac-address 0011.2233.4455",
-   "port-security allow 0011.2233.4455",
+   "switchport port-security permit-mac 0011.2233.4455",
    "mac-address static 0011.2233.4455",
    "switchport mac secure 0011.2233.4455"
   ],
@@ -401,7 +401,7 @@
   "question": "Which two things must be configured for DHCP snooping to inspect a VLAN?",
   "choices": [
    "Enable globally and enable for the VLAN",
-   "Only enable on the interface",
+   "Only enable it on each access interface",
    "Enable DAI first",
    "Configure VTP"
   ],
@@ -423,7 +423,7 @@
   "question": "show port-security interface g0/1 shows Port Status: Secure-shutdown, Violation Mode: Shutdown, Security Violation Count: 1. What is the state?",
   "choices": [
    "The port is err-disabled because of a violation",
-   "The port is up and passing traffic",
+   "The port is up and is still passing user traffic",
    "The port is trunking",
    "The port is in protect mode"
   ],
@@ -445,7 +445,7 @@
   "question": "A port has max 2 secure MACs set. Three different PCs connect through a hub. With default violation mode, what happens?",
   "choices": [
    "The port is err-disabled when the third MAC appears",
-   "The third PC is silently ignored",
+   "The third PC's frames are silently dropped, port stays up",
    "Only the first MAC is kept",
    "The port converts to a trunk"
   ],
@@ -468,7 +468,7 @@
   "choices": [
    "Create an ARP ACL with the static IP-to-MAC mapping",
    "Disable VTP",
-   "Raise the DHCP rate limit",
+   "Raise the DHCP snooping rate limit on the user's port",
    "Change the native VLAN"
   ],
   "answer": "A",
@@ -489,7 +489,7 @@
   "question": "On a switch with DAI enabled, the uplink to a neighboring switch is untrusted. What is the likely result?",
   "choices": [
    "ARP packets from hosts behind the neighbor can be dropped",
-   "STP stops working",
+   "Spanning tree stops working on the uplink between switches",
    "VLANs are deleted",
    "DHCP lease times change"
   ],
@@ -510,8 +510,8 @@
   "difficulty": "어려움",
   "question": "An attacker sends double-tagged 802.1Q frames to reach another VLAN. Which mitigation is most appropriate?",
   "choices": [
-   "Use a dedicated unused native VLAN on trunks and keep user ports out of it",
-   "Enable DHCP snooping",
+   "Use an unused native VLAN on trunks and keep user ports out of it",
+   "Enable DHCP snooping and DAI on every VLAN that has user ports",
    "Increase STP priority",
    "Enable sticky addresses"
   ],
@@ -555,7 +555,7 @@
   "question": "Which information is stored in the DHCP snooping binding table?",
   "choices": [
    "Client MAC, IP address, lease time, VLAN and interface",
-   "Routing prefixes",
+   "Routing prefixes and next hops learned from the server",
    "STP port roles",
    "VTP revision numbers"
   ],
@@ -577,7 +577,7 @@
   "question": "Which mitigation best reduces the effect of a MAC flooding attack on an access port?",
   "choices": [
    "Port security with a low maximum",
-   "DHCP snooping",
+   "DHCP snooping on all access VLANs",
    "DAI",
    "BPDU guard"
   ],
@@ -599,7 +599,7 @@
   "question": "Which statement about shutting down unused switch ports is correct?",
   "choices": [
    "It reduces the attack surface and is a recommended hardening step",
-   "It speeds STP",
+   "It speeds up spanning tree convergence for all the remaining ports",
    "It enables DAI",
    "It breaks the VLAN database"
   ],
@@ -620,8 +620,8 @@
   "difficulty": "보통",
   "question": "A secure port is set to protect mode with a maximum of 1 MAC. A second device sends frames. What happens?",
   "choices": [
-   "The frames from the second device are dropped without notification and the port stays up",
-   "The port is err-disabled",
+   "The second device's frames are dropped silently; the port stays up",
+   "The port is err-disabled and a violation counter increases",
    "A syslog message is generated for each frame",
    "The first device is disconnected"
   ],
@@ -642,8 +642,8 @@
   "difficulty": "어려움",
   "question": "What does ip arp inspection validate src-mac dst-mac ip additionally check?",
   "choices": [
-   "Ethernet source MAC vs ARP sender MAC, destination MAC vs ARP target MAC, and invalid IP addresses",
-   "VLAN IDs and trunk encapsulation",
+   "Ethernet vs ARP MACs at both ends, and invalid IP addresses",
+   "VLAN IDs and trunk encapsulation of all ARP packets",
    "STP port roles",
    "DHCP lease times"
   ],
