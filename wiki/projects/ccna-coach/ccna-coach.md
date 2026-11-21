@@ -16,7 +16,7 @@ date: 2026-11-18
 
 - **화면**: https://tracer-eosin.vercel.app/ccna/ (예전 https://dodo-yong.github.io/Obsidian/ccna/ 는 자동 이동)
 - **코드**: `agents/ccna-coach/` (답변 서버), `docs/ccna/` (화면·출제 범위)
-- **제미나이**: [[gemini-chat]]과 같은 무료 등급 키, 같은 모델 자동 전환 방식
+- **제미나이**: 볼트 루트 `.env`의 `GOOGLE_API_KEY`(무료 등급 — 보낸 내용이 구글 서비스 개선에 쓰일 수 있어 개인 자료는 보내지 않음), 모델 자동 전환
 
 ## 설계 결정
 - **키는 내 Mac에만**: 공개 화면에 키를 넣으면 누구나 볼 수 있다 → 화면이 `127.0.0.1:8765`의 내 서버에 묻고, 서버만 `.env`를 읽는다.

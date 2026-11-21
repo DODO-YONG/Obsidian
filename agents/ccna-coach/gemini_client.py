@@ -1,4 +1,4 @@
-"""Gemini REST API를 직접 호출한다 (설치할 것 없음). scripts/gemini.py와 같은 방식.
+"""Gemini REST API를 직접 호출한다 (설치할 것 없음).
 
 - 키: 환경 변수 또는 볼트 루트 .env 의 GOOGLE_API_KEY (요청 헤더로만 보냄, URL·브라우저에 노출 안 함)
 - 모델: GEMINI_MODEL 이 있으면 그것만, 없으면 아래 순서로 시도하고 바쁨(503)·한도(429)·없음(404)·시간 초과면 다음 모델로.

@@ -60,6 +60,18 @@
         "agents/ccna-coach/dev/harness.py"
       ],
       "port": 8798
+    },
+    {
+      "name": "tracer-route-app",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8812",
+        "--directory",
+        "../Tracer-Route/app/www"
+      ],
+      "port": 8812
     }
   ]
 }

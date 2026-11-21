@@ -36,13 +36,6 @@
       }
     },
     {
-      "query": "file:gemini-chat",
-      "color": {
-        "a": 1,
-        "rgb": 15485081
-      }
-    },
-    {
       "query": "path:private",
       "color": {
         "a": 1,
@@ -74,6 +67,6 @@
   "repelStrength": 12,
   "linkStrength": 1,
   "linkDistance": 180,
-  "scale": 1.246968067260266,
+  "scale": 0.3813701918950715,
   "close": true
 }

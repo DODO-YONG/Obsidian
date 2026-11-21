@@ -40,13 +40,6 @@ flowchart LR
   end
   W --> CC
 
-  subgraph BF["DY-005 PRIMER · 초보자 FAQ 15개"]
-    direction TB
-    BF1["🧭 시스템 지시<br/>역할·할 일·답 모양"] --> BF2["✨ Gemini 요청 1번<br/>(재시도 없음)"]
-    BF2 --> BF3["💾 answer.md<br/>있으면 다시 안 물음"]
-  end
-  W --> BF
-
   subgraph LH["DY-006 SWEEPER · 랩탑 정리 도우미 (홈 폴더)"]
     direction TB
     LH1["🔍 스캔 (AI 없음)<br/>다운로드·데스크탑 · 문서 찾기"] --> LH2["🧹 Claude가 정리 제안<br/>휴지통 후보 · 종류별 폴더"]
@@ -73,13 +66,12 @@ flowchart LR
   style SA fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
   style IC fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
   style CC fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
-  style BF fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
   style LH fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
   style HL fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
   style SH fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
 ```
 
-<sub>색: 🟨 기획 · 🟦 초기 버전·개발중 · 🟩 완료</sub>
+<sub>색: 🟨 기획 · 🟦 초기 버전·개발중 · 🟩 완료 · DY-004·005는 정리돼 빈 번호</sub>
 
 ## 📋 에이전트 목록
 
@@ -88,8 +80,6 @@ flowchart LR
 | 🛡️ DY-001 **SENTINEL** | URL을 주면 공격 없이 응답만 읽어 보안 약점을 찾고, 위험도와 고치는 법을 리포트로 써 줌 | 🟦 초기 버전 | [agents/security-agent](agents/security-agent) | [위키](wiki/projects/security-agent/security-agent.md) · [1일차 기록](https://dodo-yong.github.io/security-agent/) |
 | 🎤 DY-002 **MIRROR** | AWS 16가지 리더십 원칙 면접 연습. 약한 원칙부터 묻고, 꼬리 질문으로 파고든 뒤 STAR·수치·원칙 적합도로 평가 | 🟦 초기 버전 | [agents/interview-coach](agents/interview-coach) | [위키](wiki/projects/interview-coach/interview-coach.md) |
 | 🧠 DY-003 **TRACER** | CCNA 200-301 연습 사이트. 단원·범위를 골라 **영어 문제**를 받고 **영어 해설**(고른 보기가 왜 틀렸는지까지). 구글 로그인 · 진도는 계정에 저장 · XP·칭호·퀘스트·배지. Vercel + Supabase 무료로 항상 운영, 한 번 만든 문제는 **문제은행**에 저장해 다시 씀, 관리자 페이지(사용자 권한·활동 기록·문제 검토). [소개](https://tracer-eosin.vercel.app/ccna/about.html) · [작동 방식 그림](https://tracer-eosin.vercel.app/ccna/about.html#how) | 🟦 상시 운영 · 공개 (구글 로그인·문제은행·관리자) | [agents/ccna-coach](agents/ccna-coach) · [**사이트**](https://tracer-eosin.vercel.app/ccna/) | [위키](wiki/projects/ccna-coach/ccna-coach.md) |
-| 💬 DY-004 **TWIN** | 터미널에서 구글 제미나이와 대화 (키는 `.env`, 대화 기록은 볼트 밖) | 사용 중 | [scripts/gemini.py](scripts/gemini.py) | [위키](wiki/shared/gemini-chat.md) |
-| 📝 DY-005 **PRIMER** | 내 분야 초보자가 자주 묻는 질문 15개와 두 줄 답을 Gemini에게 한 번 받아 `answer.md`로 저장 | 🟦 초기 버전 | [agents/beginner-faq](agents/beginner-faq) | — |
 | 🧹 DY-006 **SWEEPER** | 홈 폴더 정리 도우미. 다운로드·데스크탑 현황과 휴지통 후보, 흩어진 문서를 위키 `raw/`로 모으기, 폴더를 종류별로 정리. 스캔은 코드(사용량 0), 옮기기·지우기는 터미널에서 직접 승인·휴지통만 | 🟦 초기 버전 | [agents/laptop-helper](agents/laptop-helper) | [위키](wiki/projects/laptop-helper/laptop-helper.md) |
 | 💗 DY-007 **CUPID** | Heartline: 내 취향대로 만드는 나만의 가상 연인 웹앱. 성격·말투·호칭·관계를 정하고(프리셋 6종·실시간 미리보기), 최대 5명을 바꿔 가며 메신저처럼 톡해요. 부가로 영어 모드(교정 카드) | 🟦 초기 버전 | [agents/heartline](agents/heartline) · [**앱**](https://dodo-yong.github.io/Obsidian/heartline/) | [위키](wiki/projects/heartline/heartline.md) · [PRD](wiki/projects/heartline/topics/Heartline%20PRD_261119.md) · [**PRD 페이지**](https://dodo-yong.github.io/Obsidian/heartline/prd.html) · [체크리스트](https://dodo-yong.github.io/Obsidian/heartline/checklist.html) · [테스트](https://dodo-yong.github.io/Obsidian/heartline/tests.html) · [발표](https://dodo-yong.github.io/Obsidian/heartline/deck.html) |
 | 🎧 DY-008 **SHADOW** | 영어 섀도잉 코치(내 Mac 전용). 유튜브 주소를 넣으면 소리를 내려받아 문장 단위로 나누고, 문장을 듣고 **Space를 누르는 동안 녹음 → 떼면 바로 재생**. 원본과 내 **억양 곡선**, Whisper가 **알아들은 단어**를 비교하고 녹음은 날짜별로 쌓임. 모두 로컬·추가 비용 0원 | 🟦 초기 버전 · 개인용 | [agents/shadowing-coach](agents/shadowing-coach) · [**열기**](https://dodo-yong.github.io/Obsidian/shadow/) | [위키](wiki/projects/shadowing-coach/shadowing-coach.md) |
@@ -134,7 +124,6 @@ private/                비공개 — 이 저장소에서 제외, 별도 비공�
 
 | 스크립트 | 하는 일 |
 |---|---|
-| `scripts/gemini.py` | DY-004 TWIN: 터미널에서 제미나이와 대화 |
 | `scripts/backup-private.sh` | `private/`를 비공개 저장소에 백업 (푸시 전 비공개 여부 확인) |
 | `scripts/bump-site-version.sh` | 공개 사이트 버전 올리기 (자동 새로고침용, `tracer-how.*?v=` 포함) + 아래 git log 상자 갱신 |
 | `scripts/update-site-log.py` | 소개 페이지 맨 위 git log 상자를 실제 커밋으로 다시 만듦. 하루 커밋이 많으면 4개만 보이고 '외 N개'로 축약(서버 주소 갱신 등 잡음 제외, 최근 3일만 펼침). 먼저 보여 줄 커밋·문구는 `docs/gitlog-highlights.txt` |

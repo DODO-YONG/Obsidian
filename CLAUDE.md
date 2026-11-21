@@ -8,12 +8,12 @@
 | 질문 대상 | 먼저 볼 곳 |
 |---|---|
 | 다음에 할 일·"보드 맨 위 거 해줘" | `wiki/개발 보드.md` |
-| 에이전트 기능·사용법 | `agents/<이름>/README.md` (security-agent·interview-coach·ccna-coach·laptop-helper·beginner-faq) |
+| 에이전트 기능·사용법 | `agents/<이름>/README.md` (security-agent·interview-coach·ccna-coach·laptop-helper·heartline·shadowing-coach) |
 | 에이전트 설계 결정·남은 일 | `wiki/projects/<이름>/<이름>.md` |
 | 코드명 DY-00x | `wiki/shared/에이전트 코드명.md` |
 | CCNA 공부 내용 | `wiki/projects/ccna/` |
 | 공개 사이트 | `docs/` |
-| 백업·제미나이 스크립트 | `wiki/shared/백업 현황.md` · `wiki/shared/gemini-chat.md` |
+| 백업 | `wiki/shared/백업 현황.md` |
 
 ## 상세 규칙 (해당 작업 때만 읽는다)
 - **ingest·질문 저장·lint·첫 세션 세팅·hwp/엑셀/데이터 파일** → `wiki/_규칙/작업 규칙.md`
@@ -54,4 +54,4 @@
 - 구독 사용량도 아낀다: 시험 실행은 짧게, 실행 전 사용량이 든다고 알린다. 화면의 "$"는 API 요금 환산 참고치라고 명시.
 
 ## 🔒 외부 AI(제미나이 등)로 보내지 않는 것
-- 개인정보, 비자, 면접 경험, `private/` 내용, 키·토큰은 `scripts/gemini.py` 등 외부 AI로 **보내지 않는다**(무료 등급은 서비스 개선에 쓰일 수 있음 — [[gemini-chat]]).
+- 개인정보, 비자, 면접 경험, `private/` 내용, 키·토큰은 제미나이(TRACER·CUPID가 쓰는 볼트 루트 `.env`의 `GOOGLE_API_KEY`, 무료 등급) 등 외부 AI로 **보내지 않는다**(무료 등급은 보낸 내용이 서비스 개선에 쓰일 수 있음).
