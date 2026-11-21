@@ -197,3 +197,6 @@
 
 ## [2026-11-22] output | Tracer Route 앱 1차 화면
 - 비공개 저장소 Tracer-Route `app/`: 서버 없는 오프라인 앱 화면(세트 풀기·틀린 문제 복습·내 기록·레벨), 화면 언어 한국어·영어 전환(문제·해설은 영어 원문), Capacitor 8 안드로이드 프로젝트(targetSdk 36). 개발 도구 Node·JDK 21·Android 명령줄 도구 설치.
+
+## [2026-11-22] output | Tracer Route 앱 개인정보 처리방침
+- `docs/tracer-route/privacy.html`(한·영, GitHub Pages 공개): 수집하는 개인정보 없음, 기록은 기기 안에만, 이메일 문의·오류 신고만 답장·수정 용도로 1년 내 삭제, 광고 넣기 전 개정 예고. 앱 오류 신고 버튼(메일 앱)·방침 링크 연결.
