@@ -542,3 +542,36 @@ def test_retry_again_with_none_left_shows_toast(logged_in, errors, base_url):
     _play_set(page, ["B"], "다시 풀기 완료")
     page.click("#setAgain")                                   # 남은 게 없음
     expect(page.locator("body")).to_contain_text("다시 풀 틀린 문제가 없어요.")
+
+
+def _serve_question(page, base_url, question):
+    """/api/question 응답만 시험용 문제로 바꿔서 글 표시 규칙(formatQ)을 확인한다."""
+    import json
+    body = {"id": "t-fmt", "question": question, "choices": ["A. one", "B. two", "C. three", "D. four"],
+            "sub": "1.1", "sub_name": "x", "domain": "d", "domain_id": "1", "qtype": "mcq",
+            "difficulty": "보통", "model": "", "source": "bank"}
+    page.route("**/api/question", lambda r: r.fulfill(status=200, content_type="application/json", body=json.dumps(body)))
+    page.goto(base_url + "/ccna/app.html")
+    page.click('#qtypeSeg [data-v="mcq"]')
+    page.click("#newQ")
+    expect(page.locator("#qCard .choice")).to_have_count(4)
+
+
+def test_question_table_lines_become_one_cli_block(logged_in, errors, base_url):
+    q = ("Refer to the output.\nInterface  Grp  Pri  P  State    Active\n"
+         "Vl10       10   90   P  Standby  10.1.10.2\nWhich router is active?")
+    _serve_question(logged_in, base_url, q)
+    cli = logged_in.locator("#qCard .q-text .cli")
+    expect(cli).to_have_count(1)
+    expect(cli).to_contain_text("Interface")
+    expect(cli).to_contain_text("Vl10")
+    expect(cli).not_to_contain_text("Refer to the output")
+    expect(cli).not_to_contain_text("Which router")
+    expect(logged_in.locator("#qCard .q-text")).to_contain_text("Refer to the output.")
+    expect(logged_in.locator("#qCard .q-text")).to_contain_text("Which router is active?")
+
+
+def test_question_single_line_with_show_command_has_no_cli(logged_in, errors, base_url):
+    _serve_question(logged_in, base_url, "show crypto isakmp sa shows QM_IDLE. What does that indicate?")
+    expect(logged_in.locator("#qCard .q-text")).to_contain_text("QM_IDLE")
+    expect(logged_in.locator("#qCard .q-text .cli")).to_have_count(0)
