@@ -7,10 +7,13 @@ for tok in ("b",): fakes.core.current_user(tok)   # 다른 사용자 한 명
 fakes.core.BANK_MIN = 3
 # 객관식은 문제은행에서만 나오므로 미리 채운다.
 #  - 기본(자동 시험용): 모든 범위·난이도에 가짜 객관식 2개씩(정답은 늘 B, 해설은 'B because…')
-#  - TRACER_HARNESS_REAL=1: 저장소의 실제 문제은행(bank/questions, 1,808문제)을 넣어 실제 문제·해설로 화면 확인
+#  - TRACER_HARNESS_REAL=1: 비공개 저장소의 실제 문제은행(기본 ~/Tracer-Route/bank, 다르면 TRACER_BANK_DIR)을 넣어 실제 문제·해설로 화면 확인
 _owner = fakes.core.current_user("o")
 if os.environ.get("TRACER_HARNESS_REAL") == "1":
-    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "bank"))
+    _bank = os.environ.get("TRACER_BANK_DIR") or os.path.expanduser("~/Tracer-Route/bank")
+    if not os.path.isdir(os.path.join(_bank, "questions")):
+        sys.exit(f"실제 문제은행을 찾지 못했어요: {_bank} (비공개 저장소 Tracer-Route를 받아 두거나 TRACER_BANK_DIR 지정)")
+    sys.path.insert(0, _bank)
     sys.argv = sys.argv[:1]
     import import_bank
     _rows, _errs = import_bank.load_rows()

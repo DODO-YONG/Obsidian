@@ -38,6 +38,11 @@
 - 올리면 안 되는 문서는 `private/` 또는 `*.private.*`(gitignore). 커밋 훅 `.githooks/pre-commit`이 막으면 우회하지 말고 값을 `.env`로 옮긴다(`--no-verify` 금지).
 - 개인정보(실명·연락처 등)를 위키에 쓰기 전엔 공개돼도 되는지 사용자에게 확인한다.
 
+## 🔒 Tracer Route 앱·문제은행 = 비공개 저장소
+- 안드로이드 앱 **Tracer Route**(웹 TRACER의 앱판) 코드, **문제은행 원본(문제 JSON)**, 출시 문서는 비공개 저장소 `DODO-YONG/Tracer-Route`(로컬 `~/Tracer-Route`)에만 둔다. 이 볼트(공개)에 문제 파일·앱 코드를 만들거나 올리지 않는다(`.gitignore`에 `agents/ccna-coach/bank/`).
+- 웹 TRACER(`agents/ccna-coach`·`docs/ccna`·`docs/api`, Vercel)는 그대로 이 볼트에서 공개 운영. 문제는 Supabase DB에서 읽는다.
+- 문제를 DB에 넣을 땐 `python3 ~/Tracer-Route/bank/import_bank.py`. 실제 문제로 로컬 화면 확인은 미리보기 `tracer-real`.
+
 ## 🔒 `private/` (git 제외, Obsidian엔 보임)
 - 비공개 작업(면접 경험, 비자, 일정 등)은 `private/<주제>/`에, 그 안에 `_<주제> 인덱스.md`.
 - **공개 파일(`index.md`·`00_홈`·`log.md`·`README.md`·공개 위키)에서 `private/`를 링크하거나 언급하지 않는다.** log에도 남기지 않는다.

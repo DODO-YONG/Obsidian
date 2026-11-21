@@ -40,3 +40,6 @@ reports/
 
 # Playwright 시험 실패 기록
 test-results/
+
+# 문제은행 원본은 비공개 저장소 Tracer-Route 에만(공개 저장소에 다시 올리지 않음)
+agents/ccna-coach/bank/
