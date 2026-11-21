@@ -262,6 +262,7 @@
   .hist .qt { font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
   .hist .mine { font-size: 12.5px; color: var(--ink-2); }
   .my-login { text-align: center; padding: 28px 16px; }
+  .retry-card { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
   #myName { text-transform: none; letter-spacing: 0; font-size: 16px; color: var(--ink); }
   /* 마이페이지에선 출제 범위·진도 패널 없이 넓게 */
   body.on-my .layout { grid-template-columns: minmax(0, 1fr); max-width: 1100px; }
@@ -280,7 +281,7 @@
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261122012117';
+  var SITE_V = '20261122013046';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -290,7 +291,7 @@
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
-<script src="tracer-auth.js?v=20261122012117"></script>
+<script src="tracer-auth.js?v=20261122013046"></script>
 </head>
 <body>
 <header>
@@ -333,7 +334,7 @@
       <div class="panel controls">
         <div class="seg" role="group" aria-label="형식" id="qtypeSeg">
           <button aria-pressed="true" data-v="mcq">객관식</button>
-          <button aria-pressed="false" data-v="short">주관식</button>
+          <!-- 주관식은 잠시 멈춤(2026-11-22). 다시 열 때: <button aria-pressed="false" data-v="short">주관식</button> + 서버 TRACER_SHORT=1 -->
           <button aria-pressed="false" data-v="subnet">서브넷 계산</button>
         </div>
         <div class="seg" role="group" aria-label="난이도" id="diffSeg">
@@ -396,6 +397,11 @@
           </div>
           <div class="panel my-card"><h2>단원별 정답률</h2><div id="myDomains"></div></div>
           <div class="panel my-card"><h2>난이도별 정답률</h2><div id="myDiffs"></div></div>
+        </div>
+        <div style="height:16px"></div>
+        <div class="panel my-card retry-card" id="retryCard">
+          <div><h2>틀린 문제 다시 풀기</h2><p class="muted" id="retryInfo" style="margin:0">불러오는 중…</p></div>
+          <button class="btn primary" id="retryBtn" type="button" disabled>틀린 문제 다시 풀기</button>
         </div>
         <div style="height:16px"></div>
         <div class="panel my-card">
@@ -643,7 +649,7 @@ var Subnet = (function () {
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) {
         if (r.status === 401) { setUser(null); showHelp(); }
         if (r.status === 403 && (j.code === 'blocked' || j.code === 'pending')) { state.user && (state.user.status = j.code); setOnline(false); }
-        if (!r.ok) throw new Error(j.error || '요청 실패'); return j; }); });
+        if (!r.ok) { var err = new Error(j.error || '요청 실패'); err.code = j.code; throw err; } return j; }); });
   }
   function saveSel() { try { localStorage.setItem('ccna-sel', JSON.stringify(Array.from(state.selected))); } catch (e) {} }
 
@@ -708,6 +714,18 @@ var Subnet = (function () {
   // 고른 범위에 안 푼 문제가 모자라도 서버가 다른 범위·이미 푼 문제로 채워 주므로 세트는 끝까지 이어진다.
   function fetchQ() {
     var btn = $('#newQ');
+    if (state.set && state.set.retry) {   // 틀린 문제 다시 풀기: 이번 세트에서 낸 문제는 빼고 하나씩
+      busy(btn, true, '문제 준비 중');
+      api('/api/question', { retry: true, exclude: state.set.seen })
+        .then(function (q) { state.set.seen.push(q.id); state.q = q; state.choice = null; $('#qCard').classList.remove('graded'); renderQ(); $('#expBox').innerHTML = ''; showCard(); })
+        .catch(function (e) {
+          ['#gradeBtn', '#nextBtn2'].forEach(function (k) { var b = $(k); if (b && b.dataset.label) busy(b, false); });
+          if (e.code === 'no_wrong' && state.set && state.set.items.length) { renderSummary(); return; }
+          toast(e.message);
+        })
+        .finally(function () { busy(btn, false); });
+      return;
+    }
     if (state.qtype === 'subnet') { state.busy = false; state.q = Subnet.make(state.diff); state.choice = null; $('#qCard').classList.remove('graded'); renderQ(); $('#expBox').innerHTML = ''; showCard(); return; }
     busy(btn, true, '문제 준비 중');
     api('/api/question', { subs: Array.from(state.selected), difficulty: state.diff, qtype: state.qtype })
@@ -723,7 +741,7 @@ var Subnet = (function () {
   function setBar() {
     var s = state.set; if (!s) return '';
     var n = Math.min(s.items.length + (state.graded ? 0 : 1), s.size);
-    return '<div class="setbar" id="setBar"><span>세트 <b>' + n + ' / ' + s.size + '</b></span><span class="track"><i style="width:' + Math.round(s.items.length / s.size * 100) + '%"></i></span></div>';
+    return '<div class="setbar" id="setBar"><span>' + (s.retry ? '다시 풀기' : '세트') + ' <b>' + n + ' / ' + s.size + '</b></span><span class="track"><i style="width:' + Math.round(s.items.length / s.size * 100) + '%"></i></span></div>';
   }
   function vClass(v) { return v === '정답' ? 'ok' : v === '부분 정답' ? 'part' : 'bad'; }
   function renderSummary() {
@@ -736,12 +754,13 @@ var Subnet = (function () {
         '</span><span class="vb ' + c + '">' + esc(x.verdict) + '</span></li>';
     }).join('');
     $('#qCard').classList.remove('graded');
-    $('#qCard').innerHTML = '<div class="set-sum" id="setSummary"><h3>세트 완료</h3><div class="score">' + ok + ' / ' + s.items.length + '</div>' +
+    var retry = !!s.retry;
+    $('#qCard').innerHTML = '<div class="set-sum" id="setSummary"><h3>' + (retry ? '다시 풀기 완료' : '세트 완료') + '</h3><div class="score">' + ok + ' / ' + s.items.length + '</div>' +
       '<div class="muted">정답률 ' + pct + '%' + (wrong ? ' · 틀린 문제 ' + wrong + '개' : ' · 모두 맞혔어요!') + '</div><ol>' + rows + '</ol>' +
-      '<div class="acts"><button class="btn primary" id="setAgain" type="button">다음 세트 시작</button>' +
+      '<div class="acts"><button class="btn primary" id="setAgain" type="button">' + (retry ? '틀린 문제 계속 풀기' : '다음 세트 시작') + '</button>' +
       (state.user ? '<button class="btn" id="setMy" type="button">마이페이지에서 기록 보기</button>' : '') + '</div></div>';
     $('#expBox').innerHTML = ''; state.set = null; state.q = null; showCard();
-    $('#setAgain').addEventListener('click', function () { $('#newQ').click(); });
+    $('#setAgain').addEventListener('click', function () { retry ? startRetry() : $('#newQ').click(); });
     var m = $('#setMy'); if (m) m.addEventListener('click', function () { switchTab('mypage'); });
   }
   function showCard() {   // 새 문제가 화면 위쪽에 보이도록(해설을 읽느라 내려가 있었을 때)
@@ -799,7 +818,7 @@ var Subnet = (function () {
       var ans = state.choice || (inp && inp.value.trim());
       if (!ans) { toast('답을 입력해 주세요.'); return; }
       busy(g, true, q.qtype === 'short' ? '제미나이가 채점 중' : '채점 중');
-      var req = q.qtype === 'subnet' ? Promise.resolve(Subnet.explain(q, ans)) : api('/api/grade', { id: q.id, answer: ans });
+      var req = q.qtype === 'subnet' ? Promise.resolve(Subnet.explain(q, ans)) : api('/api/grade', { id: q.id, answer: ans, retry: !!(state.set && state.set.retry) });
       if (q.qtype === 'subnet' && state.user) {
         var r0 = Subnet.explain(q, ans);
         api('/api/log', { verdict: r0.verdict, difficulty: q.difficulty, question: q.question, user: ans, answer: q.answer }).catch(function () {});
@@ -905,8 +924,27 @@ var Subnet = (function () {
       $('#myDomains').innerHTML = s.by_domain.map(function (d) { return rateRow(d.id + '. ' + d.name, d.ok, d.n); }).join('');
       $('#myDiffs').innerHTML = (s.by_diff || []).map(function (d) { return rateRow(d.name, d.ok, d.n); }).join('');
     }).catch(function (e) { toast(e.message); });
+    loadWrong();
     loadHist(true);
   }
+  // 틀린 문제 다시 풀기: 남은 개수를 보여 주고, 누르면 틀린 문제로 세트(최대 세트 크기)를 시작
+  function loadWrong() {
+    return api('/api/wrong').then(function (w) {
+      state.wrongN = w.count;
+      $('#retryInfo').textContent = w.count ? '틀린 문제 ' + w.count + '개가 남았어요. 다시 풀어 맞히면 목록에서 빠져요.' : '다시 풀 틀린 문제가 없어요. 새 세트로 실력을 더 쌓아 보세요.';
+      $('#retryBtn').disabled = !w.count;
+      return w.count;
+    }).catch(function (e) { $('#retryInfo').textContent = e.message; return 0; });
+  }
+  function startRetry() {
+    loadWrong().then(function (n) {
+      if (!n) { toast('다시 풀 틀린 문제가 없어요.'); return; }
+      switchTab('practice');
+      state.set = { size: Math.min(+state.setSize || 5, n), items: [], retry: true, seen: [] };
+      fetchQ();
+    });
+  }
+  $('#retryBtn').addEventListener('click', startRetry);
   function loadHist(reset) {
     if (reset) { my.offset = 0; $('#histList').innerHTML = '<li class="muted" style="border:0">불러오는 중…</li>'; }
     var b = $('#histMore'); b.disabled = true;
@@ -916,7 +954,7 @@ var Subnet = (function () {
         var c = vClass(x.verdict);
         return '<li><div class="top"><span class="vb ' + c + '">' + esc(x.verdict) + '</span>' +
           (x.sub ? '<span class="pill acc" title="' + esc(x.sub_name) + '">' + esc(x.sub) + '</span>' : '') +
-          '<span class="pill">' + esc(QT[x.qtype] || x.qtype || '') + '</span>' + (x.difficulty ? '<span class="pill">' + esc(x.difficulty) + '</span>' : '') +
+          '<span class="pill">' + esc(QT[x.qtype] || x.qtype || '') + '</span>' + (x.mode === 'retry' ? '<span class="pill" title="틀린 문제를 다시 푼 기록(진도 통계에는 안 셈)">다시 풀기</span>' : '') + (x.difficulty ? '<span class="pill">' + esc(x.difficulty) + '</span>' : '') +
           '<span class="when">' + when(x.at) + '</span></div><div class="qt">' + esc(x.question) + '</div>' +
           (x.user_answer ? '<div class="mine">내 답: ' + esc(x.user_answer) + '</div>' : '') + '</li>';
       }).join(''));

@@ -32,7 +32,11 @@ ok(r2["first"] is False and len([x for x in T["attempts"] if x["user_id"] == "u-
 try: core.grade(a, T["questions"][-1]["id"] if T["questions"][-1]["id"] not in seen_a + [q4["id"]] else "0"*36, "A"); ok(False, "")
 except core.ApiError as e: ok(e.code in (400, 404), "안 받은 문제는 채점 불가")
 
-# 주관식은 판정만 제미나이
+# 주관식은 잠시 멈춤(기본) → 403, 켜면(TRACER_SHORT=1) 판정만 제미나이
+before = calls["n"]
+try: core.new_question(a, ["3.4"], "쉬움", "short"); ok(False, "")
+except core.ApiError as e: ok(e.code == 403 and e.extra.get("code") == "short_off" and calls["n"] == before, "주관식 멈춤 → 403, 제미나이 안 부름")
+core.SHORT_ON = True
 core.BANK_RATIO = 0.0
 s = core.new_question(a, ["3.4"], "쉬움", "short")
 before = calls["n"]; r = core.grade(a, s["id"], "it is OSPF")
@@ -94,4 +98,26 @@ try: core.history(o, {"limit": "x"}); ok(False, "")
 except core.ApiError as e: ok(e.code == 400, "잘못된 쪽 번호 → 400")
 s = core.stats(o)
 ok([d["n"] for d in s["by_diff"]] == [0, 5, 0] and s["by_diff"][1]["ok"] == 2, "진도: 난이도별 정답 수")
+
+# 틀린 문제 다시 풀기: 가장 최근 결과가 오답인 문제은행 객관식만, 맞히면 빠짐, 진도 통계엔 안 셈
+for _ in range(3): core.generate("1.1", "쉬움", "mcq", o)
+q1 = core.new_question(o, ["1.1"], "쉬움", "mcq"); q2 = core.new_question(o, ["1.1"], "쉬움", "mcq")
+core.grade(o, q1["id"], "C"); core.grade(o, q2["id"], "B")
+ok(core.wrong_summary(o)["count"] == 1, "틀린 문제 1개(맞힌 문제·기록에 문제 번호 없는 것은 제외)")
+before = calls["n"]
+r = core.retry_question(o, [])
+ok(r["id"] == q1["id"] and r["source"] == "retry" and r["left"] == 1 and calls["n"] == before, "다시 풀기: 틀린 문제를 냄 — 제미나이 0번")
+try: core.retry_question(o, [q1["id"]]); ok(False, "")
+except core.ApiError as e: ok(e.code == 404 and e.extra.get("code") == "no_wrong", "이번 세트에서 낸 문제는 빼고, 없으면 404")
+total = core.stats(o)["total"]
+g = core.grade(o, q1["id"], "C", retry=True)
+ok(g["verdict"] == "오답" and core.wrong_summary(o)["count"] == 1, "다시 틀리면 계속 남음")
+core.grade(o, q1["id"], "B", retry=True)
+ok(core.wrong_summary(o)["count"] == 0, "다시 풀어 맞히면 목록에서 빠짐")
+ok(core.stats(o)["total"] == total, "다시 풀기 기록은 진도 통계에 안 셈")
+ok(any(x["mode"] == "retry" for x in core.history(o, {"limit": "50"})["items"]), "풀이 기록에는 다시 풀기도 보임")
+T["questions"][[x["id"] for x in T["questions"]].index(q2["id"])]["status"] = "active"
+core.grade(o, q2["id"], "C", retry=True)
+T["questions"][[x["id"] for x in T["questions"]].index(q2["id"])]["status"] = "hidden"
+ok(core.wrong_summary(o)["count"] == 0, "숨긴 문제는 다시 풀기에서 뺌")
 print("모두 통과")

@@ -30,6 +30,8 @@ SUB_INDEX = {s["id"]: (d, s["name"]) for d in DOMAINS for s in d["subs"]}
 BANK_MIN = int(os.environ.get("TRACER_BANK_MIN") or 10)
 BANK_RATIO = float(os.environ.get("TRACER_BANK_RATIO") or 0.9)
 REPORT_THRESHOLD = int(os.environ.get("TRACER_REPORT_THRESHOLD") or 3)
+# 주관식(제미나이로 출제·판정)은 2026-11-22 사용자 결정으로 잠시 멈춤. 다시 켜려면 환경변수 TRACER_SHORT=1
+SHORT_ON = os.environ.get("TRACER_SHORT") == "1"
 GLOBAL_DAILY_AI = int(os.environ.get("TRACER_GLOBAL_DAILY_AI") or 300)
 NEW_USER_STATUS = os.environ.get("TRACER_NEW_USER_STATUS") or "active"   # active(바로 사용) | pending(승인 후)
 DIFFS = ("쉬움", "보통", "어려움")
@@ -275,6 +277,8 @@ def new_question(p: dict, subs: list, difficulty: str, qtype: str) -> dict:
         raise ApiError(403, "AI 문제 권한이 꺼져 있어요. 서브넷 계산 문제는 계속 풀 수 있어요.", {"code": "no_perm"})
     difficulty = difficulty if difficulty in DIFFS else "보통"
     qtype = qtype if qtype in ("mcq", "short") else "mcq"
+    if qtype == "short" and not SHORT_ON:
+        raise ApiError(403, "주관식은 잠시 쉬고 있어요. 객관식이나 서브넷 계산을 풀어 주세요.", {"code": "short_off"})
     pool = [s for s in subs if s in SUB_INDEX] or list(SUB_INDEX)
 
     if qtype == "mcq":
@@ -315,7 +319,51 @@ def new_question(p: dict, subs: list, difficulty: str, qtype: str) -> dict:
 
 # ---- 채점 ------------------------------------------------------------------------
 
-def grade(p: dict, qid: str, user_answer: str) -> dict:
+def _wrong_ids(p: dict) -> list:
+    """다시 풀 틀린 문제: 문제은행 객관식 중 '가장 최근 결과'가 정답이 아닌 것(다시 풀어 맞히면 빠진다).
+    숨김·신고로 출제가 멈춘 문제는 뺀다. 오래 전에 틀린 것부터."""
+    rows = db.select("attempts", {"user_id": f"eq.{p['id']}", "qtype": "eq.mcq", "question_id": "not.is.null",
+                                  "verdict": "not.is.null", "select": "question_id,verdict,at", "order": "at.desc",
+                                  "limit": "3000"}) or []
+    latest: dict[str, dict] = {}
+    for r in rows:   # 최신순이라 처음 본 것이 그 문제의 마지막 결과
+        latest.setdefault(r["question_id"], r)
+    wrong = sorted((r for r in latest.values() if r["verdict"] != "정답"), key=lambda r: str(r.get("at") or ""))
+    ids = [r["question_id"] for r in wrong]
+    if not ids:
+        return []
+    active = set()
+    for i in range(0, len(ids), 100):
+        for q in db.select("questions", {"id": "in.(" + ",".join(ids[i:i + 100]) + ")", "status": "eq.active",
+                                         "select": "id"}) or []:
+            active.add(q["id"])
+    return [i for i in ids if i in active]
+
+
+def wrong_summary(p: dict) -> dict:
+    return {"count": len(_wrong_ids(p))}
+
+
+def retry_question(p: dict, exclude: list) -> dict:
+    """틀린 문제 다시 풀기: 이번 세트에서 이미 낸 문제(exclude)는 빼고 하나를 낸다. AI 0번."""
+    require_active(p)
+    if not p["can_practice"]:
+        raise ApiError(403, "문제 풀기 권한이 꺼져 있어요.", {"code": "no_perm"})
+    skip = {str(x) for x in exclude}
+    ids = [i for i in _wrong_ids(p) if i not in skip]
+    if not ids:
+        raise ApiError(404, "다시 풀 틀린 문제가 없어요.", {"code": "no_wrong"})
+    q = db.one("questions", {"id": f"eq.{ids[0]}", "select": "*"})
+    if not q:
+        raise ApiError(404, "다시 풀 틀린 문제가 없어요.", {"code": "no_wrong"})
+    log_activity(p, "question", {"sub": q["sub"], "difficulty": q["difficulty"], "qtype": "mcq", "source": "retry",
+                                 "qid": q["id"]}, ai=False)
+    out = public_q(q, "retry")
+    out["left"] = len(ids)
+    return out
+
+
+def grade(p: dict, qid: str, user_answer: str, retry: bool = False) -> dict:
     require_active(p)
     if not re.fullmatch(r"[0-9a-f-]{36}", qid or ""):
         raise ApiError(400, "문제를 찾을 수 없어요. 새 문제를 받아 주세요.")
@@ -351,9 +399,9 @@ def grade(p: dict, qid: str, user_answer: str) -> dict:
             res["correct_answer"] = q["answer"]
         used_ai = True
     first = db.rpc("mark_graded", {"p_user": p["id"], "p_qid": qid, "p_ok": res["verdict"] == "정답"})
-    if first:
+    if first or retry:   # 다시 풀기는 매번 기록(가장 최근 결과로 틀린 문제 목록이 바뀐다). 진도 통계에는 안 셈
         d = SUB_INDEX.get(q["sub"], ({"id": ""}, ""))[0]
-        db.insert("attempts", [{"user_id": p["id"], "question_id": qid, "mode": "practice", "domain_id": d["id"],
+        db.insert("attempts", [{"user_id": p["id"], "question_id": qid, "mode": "retry" if retry else "practice", "domain_id": d["id"],
                                 "sub": q["sub"], "qtype": q["qtype"], "difficulty": q["difficulty"],
                                 "verdict": res["verdict"], "question": q["question"][:500],
                                 "user_answer": user_answer[:500]}], returning=False)
@@ -418,7 +466,7 @@ def report(p: dict, qid: str, reason: str) -> dict:
 # ---- 진도 ------------------------------------------------------------------------
 
 def stats(p: dict) -> dict:
-    rows = db.select("attempts", {"user_id": f"eq.{p['id']}", "verdict": "not.is.null",
+    rows = db.select("attempts", {"user_id": f"eq.{p['id']}", "verdict": "not.is.null", "mode": "neq.retry",
                                   "select": "sub,verdict,question,difficulty,at", "order": "at.desc", "limit": "3000"})
     by_sub: dict[str, dict] = {}
     for r in rows:

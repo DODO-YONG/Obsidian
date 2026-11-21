@@ -5,11 +5,21 @@ import fakes  # noqa  (가짜 DB·제미나이·로그인 설치)
 fakes.users["a"]["email"] = "owner@example.com"   # 화면 시험: 로그인하면 주인(관리자 화면까지)
 for tok in ("b",): fakes.core.current_user(tok)   # 다른 사용자 한 명
 fakes.core.BANK_MIN = 3
-# 객관식은 문제은행에서만 나오므로, 시험용으로 모든 범위·난이도에 가짜 객관식을 2개씩 미리 채운다
+# 객관식은 문제은행에서만 나오므로 미리 채운다.
+#  - 기본(자동 시험용): 모든 범위·난이도에 가짜 객관식 2개씩(정답은 늘 B, 해설은 'B because…')
+#  - TRACER_HARNESS_REAL=1: 저장소의 실제 문제은행(bank/questions, 1,808문제)을 넣어 실제 문제·해설로 화면 확인
 _owner = fakes.core.current_user("o")
-for _sid in fakes.core.SUB_INDEX:
-    for _d in fakes.core.DIFFS:
-        for _ in range(2): fakes.core.generate(_sid, _d, "mcq", _owner)
+if os.environ.get("TRACER_HARNESS_REAL") == "1":
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "bank"))
+    sys.argv = sys.argv[:1]
+    import import_bank
+    _rows, _errs = import_bank.load_rows()
+    fakes.db.insert("questions", _rows)
+    print(f"실제 문제은행 {len(_rows)}문제를 넣었어요" + (f" (오류 {len(_errs)}개)" if _errs else ""), flush=True)
+else:
+    for _sid in fakes.core.SUB_INDEX:
+        for _d in fakes.core.DIFFS:
+            for _ in range(2): fakes.core.generate(_sid, _d, "mcq", _owner)
 fakes.calls["n"] = 0
 os.environ["SUPABASE_URL"] = "http://fake"; os.environ["SUPABASE_ANON_KEY"] = "fake-anon"
 import index as api

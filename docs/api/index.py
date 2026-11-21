@@ -90,6 +90,8 @@ class handler(BaseHTTPRequestHandler):
                 return core.stats(p)
             if route == "history":
                 return core.history(p, qs)
+            if route == "wrong":
+                return core.wrong_summary(p)
             if route == "admin/summary":
                 return core.admin_summary(p)
             if route == "admin/users":
@@ -115,6 +117,8 @@ class handler(BaseHTTPRequestHandler):
 
         def go():
             p = self._user()
+            if route == "question" and body.get("retry"):
+                return core.retry_question(p, [str(x) for x in (body.get("exclude") or [])][:100])
             if route == "question":
                 return core.new_question(p, list(body.get("subs") or [])[:60], str(body.get("difficulty", "")),
                                          str(body.get("qtype", "")))
@@ -122,7 +126,7 @@ class handler(BaseHTTPRequestHandler):
                 ans = str(body.get("answer", "")).strip()[:2000]
                 if not ans:
                     raise core.ApiError(400, "답을 입력해 주세요.")
-                return core.grade(p, str(body.get("id", "")), ans)
+                return core.grade(p, str(body.get("id", "")), ans, retry=bool(body.get("retry")))
             if route == "explain":
                 q = str(body.get("question", "")).strip()[:4000]
                 if not q:

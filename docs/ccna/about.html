@@ -12,7 +12,7 @@
 <script>
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 (function () {
-  var SITE_V = '20261122012117';
+  var SITE_V = '20261122013046';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -21,8 +21,8 @@
   }).catch(function () {});
 })();
 </script>
-<link rel="stylesheet" href="tracer-site.css?v=20261122012117">
-<link rel="stylesheet" href="../tracer-how.css?v=20261122012117">
+<link rel="stylesheet" href="tracer-site.css?v=20261122013046">
+<link rel="stylesheet" href="../tracer-how.css?v=20261122013046">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -63,7 +63,7 @@
     <div class="sec-h"><div class="k">HOW TO USE</div><h2 id="s2">이렇게 써요</h2></div>
     <div class="grid3">
       <div class="card"><span class="n">STEP 1</span><h3>구글로 로그인</h3><p>오른쪽 위 <b>Google로 로그인</b>을 누르면 끝이에요. 가입 양식은 없어요. 서브넷 계산은 로그인 없이도 풀 수 있어요.</p></div>
-      <div class="card"><span class="n">STEP 2</span><h3>범위 고르고 문제 받기</h3><p>단원과 세부 범위, 난이도, 객관식·주관식을 고르고 <b>문제 받기</b>를 누르세요. 실제 시험처럼 영어로 나와요.</p></div>
+      <div class="card"><span class="n">STEP 2</span><h3>범위 고르고 문제 받기</h3><p>단원과 세부 범위, 난이도를 고르고 <b>세트 시작</b>을 누르세요. 5문제씩 이어서 풀고, 실제 시험처럼 영어로 나와요.</p></div>
       <div class="card"><span class="n">STEP 3</span><h3>해설 보고 레벨업</h3><p>답을 내면 정답, 해설, 핵심 개념, IOS 명령 예시가 나와요. XP가 쌓여 <b>Cable Rookie → CCNA Ready</b>까지 올라가요.</p></div>
     </div>
   </section>
@@ -93,7 +93,7 @@
       <div class="card yes"><h3>저장하는 것</h3><ul><li>구글 계정의 이메일·이름</li><li>푼 문제와 결과, 레벨·배지</li><li>언제 무엇을 했는지, 기기 종류(예: 모바일 · iOS)</li></ul></div>
       <div class="card no"><h3>저장하지 않는 것</h3><ul><li>비밀번호 — 로그인은 구글이 처리해요</li><li>IP 주소</li><li>"내 문제 해설"에 붙여 넣은 문제를 다른 사람과 공유하지 않아요</li></ul></div>
     </div>
-    <p class="note" style="margin-top:12px">객관식 문제·해설은 미리 준비한 문제은행에서, 주관식 문제·채점은 구글 제미나이(AI)가 만들어요. 입력한 문제와 답은 제미나이로 전송되니 개인정보는 넣지 마세요. AI 해설은 틀릴 수 있으니 이상하면 <b>신고하기</b>를 눌러 주세요. 자세한 내용은 <a href="privacy.html">개인정보 처리방침</a>에 있어요.</p>
+    <p class="note" style="margin-top:12px">객관식 문제·해설은 미리 준비한 문제은행에서 나와요(주관식은 잠시 쉬고 있어요). "내 문제 해설"은 구글 제미나이(AI)가 만들어요. 입력한 문제와 답은 제미나이로 전송되니 개인정보는 넣지 마세요. AI 해설은 틀릴 수 있으니 이상하면 <b>신고하기</b>를 눌러 주세요. 자세한 내용은 <a href="privacy.html">개인정보 처리방침</a>에 있어요.</p>
   </section>
 
   <!-- 5-1. 운영 관리 -->
@@ -127,8 +127,8 @@
   <p class="fine">TRACER는 개인이 만든 비공식 학습 도구입니다. Cisco·CCNA는 Cisco Systems의 상표이며 이 사이트와 관계없습니다. · <a href="privacy.html">개인정보 처리방침</a></p>
 </main>
 
-<script src="tracer-auth.js?v=20261122012117"></script>
-<script src="../tracer-how.js?v=20261122012117" defer></script>
+<script src="tracer-auth.js?v=20261122013046"></script>
+<script src="../tracer-how.js?v=20261122013046" defer></script>
 <script>
 document.getElementById('themeBtn').addEventListener('click', function () {
   var r = document.documentElement, light = r.getAttribute('data-theme') === 'light';

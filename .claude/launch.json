@@ -49,6 +49,17 @@
         "--no-browser"
       ],
       "port": 8777
+    },
+    {
+      "name": "tracer-real",
+      "runtimeExecutable": "/usr/bin/env",
+      "runtimeArgs": [
+        "TRACER_HARNESS_REAL=1",
+        "TRACER_HARNESS_PORT=8798",
+        "python3",
+        "agents/ccna-coach/dev/harness.py"
+      ],
+      "port": 8798
     }
   ]
 }

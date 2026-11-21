@@ -90,7 +90,7 @@ create table if not exists public.attempts (
   id           bigint generated always as identity primary key,
   user_id      uuid not null references public.profiles (id) on delete cascade,
   question_id  uuid references public.questions (id) on delete set null,
-  mode         text not null default 'practice',  -- practice · custom
+  mode         text not null default 'practice',  -- practice · custom · retry(틀린 문제 다시 풀기, 진도 통계 제외)
   domain_id    text,
   sub          text,
   qtype        text,             -- mcq · short · subnet · custom

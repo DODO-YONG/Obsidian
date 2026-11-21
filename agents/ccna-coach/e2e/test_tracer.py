@@ -405,3 +405,83 @@ def test_no_horizontal_scroll_mypage_phone(browser, base_url, logged):
 def test_no_horizontal_scroll_practice_tablet(browser, base_url, width):
     over = _overflow(browser, base_url, width, False, False)
     assert over <= 1, f"문제 풀기 {width}px: 가로로 {over}px 넘침"
+
+
+# ---------- 주관식 중단 / 틀린 문제 다시 풀기 ----------
+def test_short_answer_button_removed(page, errors, base_url):
+    page.goto(base_url + "/ccna/app.html")
+    expect(page.locator('#qtypeSeg [data-v="mcq"]')).to_be_visible()
+    expect(page.locator('#qtypeSeg [data-v="subnet"]')).to_be_visible()
+    expect(page.locator('#qtypeSeg [data-v="short"]')).to_have_count(0)
+
+
+def _drain_wrong(page, base_url):
+    """공유 가짜 DB에 앞선 시험이 남긴 틀린 문제를 모두 맞혀 0으로 만든다(API 직접 호출)."""
+    h = {"Authorization": "Bearer a"}
+    for _ in range(200):
+        r = page.request.post(base_url + "/api/question", data={"retry": True, "exclude": []}, headers=h)
+        q = r.json()
+        if not r.ok or not q.get("id"):
+            break
+        page.request.post(base_url + "/api/grade", data={"id": q["id"], "answer": "B", "retry": True}, headers=h)
+    assert page.request.get(base_url + "/api/wrong", headers=h).json()["count"] == 0
+
+
+def _play_set(page, answers, last_text):
+    """진행 중인 세트를 answers(보기 글자 목록)대로 끝까지 풀고 결과 화면까지 간다."""
+    n = len(answers)
+    for i, a in enumerate(answers, 1):
+        expect(page.locator("#setBar")).to_contain_text(f"/ {n}")
+        expect(page.locator("#qCard .choice")).to_have_count(4)
+        page.click(f'#qCard .choice[data-l="{a}"]')
+        page.click("#gradeBtn")
+        expect(page.locator("#nextBtn2")).to_be_visible()
+        page.click("#nextBtn2")
+    expect(page.locator("#setSummary")).to_contain_text(last_text)
+
+
+def test_retry_wrong_questions_flow(logged_in, errors, base_url):
+    page = logged_in
+    page.goto(base_url + "/ccna/app.html")
+    _drain_wrong(page, base_url)
+    page.click('#setSeg [data-v="5"]')
+    page.click('#qtypeSeg [data-v="mcq"]')
+    page.click("#newQ")
+    _play_set(page, ["A", "A", "A", "B", "B"], "세트 완료")   # 앞 3개 오답
+    page.click("#setMy")
+    expect(page.locator("#retryInfo")).to_contain_text("틀린 문제 3개가 남았어요")
+    expect(page.locator("#retryBtn")).to_be_enabled()
+    total = page.locator("#myTotal").inner_text()
+
+    page.click("#retryBtn")                                   # 다시 풀기 세트(3문제)
+    expect(page.locator("#tab-practice")).to_have_attribute("aria-selected", "true")
+    expect(page.locator("#setBar")).to_contain_text("다시 풀기 1 / 3")
+    _play_set(page, ["A", "B", "B"], "다시 풀기 완료")
+    expect(page.locator("#setSummary .score")).to_have_text("2 / 3")
+    expect(page.locator("#setAgain")).to_have_text("틀린 문제 계속 풀기")
+    page.click("#setMy")
+    expect(page.locator("#retryInfo")).to_contain_text("틀린 문제 1개가 남았어요")
+    expect(page.locator("#myTotal")).to_have_text(total)       # 다시 풀기는 통계에 안 셈
+    expect(page.locator("#histList li").first.locator(".pill", has_text="다시 풀기")).to_be_visible()
+
+    page.click("#retryBtn")                                   # 남은 1개
+    expect(page.locator("#setBar")).to_contain_text("다시 풀기 1 / 1")
+    _play_set(page, ["B"], "다시 풀기 완료")
+    page.click("#setMy")
+    expect(page.locator("#retryInfo")).to_contain_text("다시 풀 틀린 문제가 없어요")
+    expect(page.locator("#retryBtn")).to_be_disabled()
+
+
+def test_retry_again_with_none_left_shows_toast(logged_in, errors, base_url):
+    page = logged_in
+    page.goto(base_url + "/ccna/app.html")
+    _drain_wrong(page, base_url)
+    page.click('#qtypeSeg [data-v="mcq"]')
+    page.click("#newQ")
+    _play_set(page, ["A", "B", "B", "B", "B"], "세트 완료")
+    page.click("#setMy")
+    expect(page.locator("#retryInfo")).to_contain_text("틀린 문제 1개가 남았어요")
+    page.click("#retryBtn")
+    _play_set(page, ["B"], "다시 풀기 완료")
+    page.click("#setAgain")                                   # 남은 게 없음
+    expect(page.locator("body")).to_contain_text("다시 풀 틀린 문제가 없어요.")
