@@ -200,3 +200,8 @@
 
 ## [2026-11-22] output | Tracer Route 앱 개인정보 처리방침
 - `docs/tracer-route/privacy.html`(한·영, GitHub Pages 공개): 수집하는 개인정보 없음, 기록은 기기 안에만, 이메일 문의·오류 신고만 답장·수정 용도로 1년 내 삭제, 광고 넣기 전 개정 예고. 앱 오류 신고 버튼(메일 앱)·방침 링크 연결.
+
+## [2026-11-22] output | Tracer Route 앱 익명 오류 신고 + 관리자 앱 신고 탭
+- 앱: 해설 아래 오류 신고 → 이유·메모 → Supabase `app_reports`(공개 키로 넣기만, 실패 시 기기에 모았다가 재전송). 메일 앱 방식은 뺌.
+- Supabase: `agents/ccna-coach/supabase/app_reports.sql` 적용(읽기·수정·삭제 막힘, 1분 30건·하루 500건 제한), 권한 확인·에뮬레이터 실제 전송 확인.
+- 웹 TRACER 관리자 페이지 '앱 신고' 탭·대시보드 타일, /api/admin/app-reports. 로직 시험 8개·화면 시험 4개 추가(전체 통과). 개인정보 처리방침 4번을 익명 신고로 개정.

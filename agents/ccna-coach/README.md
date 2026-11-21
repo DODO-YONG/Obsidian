@@ -47,6 +47,7 @@
 | `../../docs/ccna/tracer-site.css` | 처음 화면·소개 공용 스타일 |
 | `../../docs/ccna/admin.html` | 관리자 페이지 |
 | `supabase/schema.sql` | 표·RLS·함수 — Supabase SQL Editor에 붙여 넣기 |
+| `supabase/app_reports.sql` | 안드로이드 앱 Tracer Route 익명 오류 신고 표(앱은 공개 키로 넣기만, 관리자 페이지 '앱 신고' 탭에서 처리) — schema.sql 다음에 따로 실행 |
 | `SETUP.md` | 계정 준비·배포 순서(직접 할 일) |
 | `migrate_private_log.py` | 예전 `private/` 풀이 기록을 내 계정으로 옮기는 스크립트 (2026-11-20 옮기지 않기로 결정, 필요할 때만) |
 | `dev/test_core.py` | 로직 시험 24개(가짜 DB·가짜 제미나이, 사용량 0) |

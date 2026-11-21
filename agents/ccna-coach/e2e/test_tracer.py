@@ -364,6 +364,63 @@ def test_admin_dashboard_for_owner(logged_in, errors, base_url):
     expect(page.locator("#who")).to_contain_text("로그인됨")
 
 
+# ---------- 관리자: 앱 신고 탭 (가짜 DB는 서버 하나를 같이 쓰므로, 상태를 바꾼 시험은 끝에서 되돌린다) ----------
+def _open_app_reports(page, base_url):
+    page.goto(base_url + "/ccna/admin.html#appr")
+    expect(page.locator("#arCount")).to_contain_text("미처리")
+
+
+def test_admin_app_reports_list_shows_open_with_reason_and_note(logged_in, errors, base_url):
+    page = logged_in
+    _open_app_reports(page, base_url)
+    expect(page.locator("#arCount")).to_contain_text("미처리 3건")
+    cards = page.locator("#arList .qc")
+    expect(cards).to_have_count(3)
+    expect(cards.filter(has_text="정답이 틀림")).to_have_count(1)
+    expect(cards.filter(has_text="해설이 틀림")).to_have_count(1)
+    expect(cards.filter(has_text="오타·표현")).to_have_count(1)
+    expect(page.locator("#arList")).to_contain_text("정답이 C 같아요")
+    expect(page.locator("#arList")).to_contain_text("Typo in choice B")
+
+
+def test_admin_app_reports_app_only_question_has_no_stop_web(logged_in, errors, base_url):
+    page = logged_in
+    _open_app_reports(page, base_url)
+    app_only = page.locator("#arList .qc").filter(has_text="ffff000011")
+    expect(app_only).to_have_count(1)
+    expect(app_only).to_contain_text("웹 문제은행에는 없는 문제")
+    expect(app_only.locator("[data-a=stopWeb]")).to_have_count(0)
+    # 웹 문제와 연결된 신고에는 출제 중지 버튼이 있다
+    linked = page.locator("#arList .qc").filter(has_text="a1b2c3d4e5")
+    expect(linked.first).to_contain_text("웹 문제은행에도 있음")
+    expect(linked.first.locator("[data-a=stopWeb]")).to_have_count(1)
+
+
+def test_admin_app_reports_done_all_same_then_reopen(logged_in, errors, base_url):
+    page = logged_in
+    _open_app_reports(page, base_url)
+    expect(page.locator("#arList [data-a=doneAll]")).to_have_count(2)
+    page.locator("#arList .qc").filter(has_text="a1b2c3d4e5").first.locator("[data-a=doneAll]").click()
+    expect(page.locator("#arCount")).to_contain_text("미처리 1건")
+    expect(page.locator("#arList .qc")).to_have_count(1)
+    # 전체 보기: 처리된 2건에 다시 열기 버튼
+    page.select_option("#arOpen", "0")
+    expect(page.locator("#arList [data-a=reopen]")).to_have_count(2)
+    # 상태 되돌리기(다른 시험에 영향 없게)
+    page.locator("#arList [data-a=reopen]").first.click()
+    expect(page.locator("#arCount")).to_contain_text("미처리 2건")
+    page.locator("#arList [data-a=reopen]").first.click()
+    expect(page.locator("#arCount")).to_contain_text("미처리 3건")
+
+
+def test_admin_dashboard_app_report_tile(logged_in, errors, base_url):
+    page = logged_in
+    page.goto(base_url + "/ccna/admin.html")
+    tile = page.locator("#tiles .tile").filter(has_text="앱 신고")
+    expect(tile).to_have_count(1)
+    expect(tile.locator(".v")).to_have_text("3")
+
+
 # ---------- 휴대폰 화면 ----------
 @pytest.mark.parametrize("path", ["/ccna/", "/ccna/about.html", "/ccna/app.html"])
 def test_no_horizontal_scroll_on_phone(browser, base_url, path):

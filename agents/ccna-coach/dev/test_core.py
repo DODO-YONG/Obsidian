@@ -120,4 +120,23 @@ T["questions"][[x["id"] for x in T["questions"]].index(q2["id"])]["status"] = "a
 core.grade(o, q2["id"], "C", retry=True)
 T["questions"][[x["id"] for x in T["questions"]].index(q2["id"])]["status"] = "hidden"
 ok(core.wrong_summary(o)["count"] == 0, "숨긴 문제는 다시 풀기에서 뺌")
+
+# 앱(Tracer Route) 익명 신고: 관리자만 읽고 처리
+qb = T["questions"][0]
+db.insert("app_reports", [{"app_qid": "abc123", "sub": qb["sub"], "question": qb["question"], "reason": "answer", "note": "x"},
+                          {"app_qid": "abc123", "sub": qb["sub"], "question": qb["question"], "reason": "both"},
+                          {"app_qid": "zzz999", "sub": "1.1", "question": "Only in the app?", "reason": "typo"}])
+try: core.admin_app_reports(a, {}); ok(False, "")
+except core.ApiError as e: ok(e.code == 403, "앱 신고 목록은 관리자만")
+r = core.admin_app_reports(o, {})
+ok(r["open"] == 3 and len(r["reports"]) == 3, "미처리 앱 신고 3건")
+linked = [x for x in r["reports"] if x["app_qid"] == "abc123"]
+ok(all(x["bank"] and x["bank"]["id"] == qb["id"] and x["open_same"] == 2 for x in linked), "웹 문제은행의 같은 문제와 연결, 같은 문제 신고 2건")
+ok([x for x in r["reports"] if x["app_qid"] == "zzz999"][0]["bank"] is None, "앱에만 있는 문제는 연결 없음")
+one = linked[0]["id"]
+ok(core.admin_update_app_report(o, {"id": one, "all_same": True})["updated"] == 2, "같은 문제 신고 한꺼번에 처리 완료")
+ok(core.admin_app_reports(o, {})["open"] == 1 and len(core.admin_app_reports(o, {"open": "0"})["reports"]) == 3, "미처리만 / 전체 보기")
+ok(core.admin_summary(o)["open_app_reports"] == 1, "대시보드에 미처리 앱 신고 수")
+try: core.admin_update_app_report(o, {"id": 999999}); ok(False, "")
+except core.ApiError as e: ok(e.code == 404, "없는 신고는 404")
 print("모두 통과")

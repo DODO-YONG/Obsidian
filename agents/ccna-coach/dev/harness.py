@@ -24,6 +24,13 @@ else:
         for _d in fakes.core.DIFFS:
             for _ in range(2): fakes.core.generate(_sid, _d, "mcq", _owner)
 fakes.calls["n"] = 0
+# 앱(Tracer Route) 익명 신고 예시: 첫 문제는 웹 문제은행과 연결, 같은 문제 신고 2건, 나머지는 앱 전용
+_q0 = fakes.T["questions"][0]
+fakes.db.insert("app_reports", [
+    {"app_qid": "a1b2c3d4e5", "sub": _q0["sub"], "question": _q0["question"], "reason": "answer", "note": "정답이 C 같아요", "app_version": "1.0", "lang": "ko"},
+    {"app_qid": "a1b2c3d4e5", "sub": _q0["sub"], "question": _q0["question"], "reason": "explanation", "note": None, "app_version": "1.0", "lang": "en"},
+    {"app_qid": "ffff000011", "sub": "4.3", "question": "Which DNS record maps a hostname to an IPv6 address?", "reason": "typo", "note": "Typo in choice B", "app_version": "1.0", "lang": "en"},
+])
 os.environ["SUPABASE_URL"] = "http://fake"; os.environ["SUPABASE_ANON_KEY"] = "fake-anon"
 import index as api
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler

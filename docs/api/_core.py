@@ -546,9 +546,57 @@ def admin_summary(p: dict) -> dict:
         "bank_active": db.count("questions", {"status": "eq.active"}),
         "bank_flagged": db.count("questions", {"status": "eq.flagged"}),
         "open_reports": db.count("question_reports", {"resolved": "is.false"}),
+        "open_app_reports": _safe_count("app_reports", {"resolved": "is.false"}),
         "bank_min": BANK_MIN, "bank_ratio": BANK_RATIO,
         "daily": db.rpc("admin_daily", {"p_days": 14}) or [],
     }
+
+
+def _safe_count(table: str, params: dict) -> int:
+    """표가 아직 없어도(SQL 적용 전) 대시보드가 깨지지 않게 0을 돌려준다."""
+    try:
+        return db.count(table, params)
+    except db.DBError:
+        return 0
+
+
+# ── Tracer Route 앱(안드로이드) 익명 오류 신고 — 앱이 공개 키로 app_reports에 넣고, 관리자만 여기서 읽는다
+APP_REASONS = {"answer", "both", "explanation", "typo", "other"}
+
+
+def admin_app_reports(p: dict, params: dict) -> dict:
+    require_admin(p)
+    q = {"select": "id,app_qid,sub,question,reason,note,app_version,lang,resolved,at", "order": "at.desc",
+         "limit": str(max(1, min(int(params.get("limit") or 200), 500)))}
+    if params.get("open", "1") == "1":
+        q["resolved"] = "is.false"
+    rows = db.select("app_reports", q)
+    # 웹 문제은행(questions)에 같은 문제가 있으면 연결(문제 글 해시로) → 웹에서도 바로 고칠 수 있게
+    hashes = sorted({norm_hash(r["question"]) for r in rows})
+    found = db.select("questions", {"norm_hash": f"in.({','.join(hashes)})", "select": "id,norm_hash,status,answer"}) if hashes else []
+    by = {f["norm_hash"]: f for f in found}
+    same = {}
+    for r in rows:
+        same[r["app_qid"]] = same.get(r["app_qid"], 0) + (0 if r["resolved"] else 1)
+    for r in rows:
+        m = by.get(norm_hash(r["question"]))
+        r["bank"] = {"id": m["id"], "status": m["status"], "answer": m["answer"]} if m else None
+        r["open_same"] = same.get(r["app_qid"], 0)
+    return {"reports": rows, "open": _safe_count("app_reports", {"resolved": "is.false"})}
+
+
+def admin_update_app_report(p: dict, body: dict) -> dict:
+    """처리 완료/다시 열기. all_same=true면 같은 문제의 미처리 신고를 한꺼번에."""
+    require_admin(p)
+    rid = int(body.get("id", 0))
+    resolved = bool(body.get("resolved", True))
+    row = db.one("app_reports", {"id": f"eq.{rid}", "select": "id,app_qid"})
+    if not row:
+        raise ApiError(404, "신고를 찾을 수 없어요.")
+    where = {"app_qid": f"eq.{row['app_qid']}"} if body.get("all_same") else {"id": f"eq.{rid}"}
+    out = db.update("app_reports", where, {"resolved": resolved})
+    log_activity(p, "admin", {"app_report": rid, "resolved": resolved, "n": len(out)})
+    return {"ok": True, "updated": len(out)}
 
 
 def admin_users(p: dict) -> list:

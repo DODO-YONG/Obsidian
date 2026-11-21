@@ -100,6 +100,8 @@ class handler(BaseHTTPRequestHandler):
                 return core.admin_activity(p, qs)
             if route == "admin/questions":
                 return core.admin_questions(p, qs)
+            if route == "admin/app-reports":
+                return core.admin_app_reports(p, qs)
             raise core.ApiError(404, "없는 주소")
 
         self._run(go)
@@ -143,6 +145,8 @@ class handler(BaseHTTPRequestHandler):
                 return core.admin_update_user(p, body)
             if route == "admin/question":
                 return core.admin_update_question(p, body)
+            if route == "admin/app-report":
+                return core.admin_update_app_report(p, body)
             raise core.ApiError(404, "없는 주소")
 
         self._run(go)

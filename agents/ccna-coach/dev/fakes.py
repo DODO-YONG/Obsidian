@@ -5,7 +5,7 @@ os.environ.update(SUPABASE_URL="x", SUPABASE_SERVICE_ROLE_KEY="x", SUPABASE_ANON
                   TRACER_OWNER_EMAIL="owner@example.com", TRACER_BANK_MIN="3")
 import _db as db, _gemini as gc, _core as core
 
-T = {k: [] for k in ["profiles", "activity_log", "questions", "question_seen", "question_reports", "attempts", "progress"]}
+T = {k: [] for k in ["profiles", "activity_log", "questions", "question_seen", "question_reports", "attempts", "progress", "app_reports"]}
 ids = itertools.count(1)
 def match(r, params):
     for k, v in params.items():
@@ -50,6 +50,7 @@ def insert(t, rows, on_conflict=None, ignore_dupes=False, returning=True):
         if t == "questions": r = {"id": str(uuid.uuid4()), "status": "active", "served": 0, "graded": 0, "correct": 0, "reports": 0, **r}
         if t == "activity_log": r = {"ai": False, "counted": False, "at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(), **r}
         if t == "question_reports": r = {"resolved": False, **r}
+        if t == "app_reports": r = {"id": next(ids), "resolved": False, "note": None, "app_version": None, "lang": None, "at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(), **r}
         if t == "attempts": r = {"at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(), **r}
         T[t].append(r); out.append(r)
     return [dict(x) for x in out] if returning else None
