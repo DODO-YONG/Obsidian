@@ -9,10 +9,11 @@ T = {k: [] for k in ["profiles", "activity_log", "questions", "question_seen", "
 ids = itertools.count(1)
 def match(r, params):
     for k, v in params.items():
-        if k in ("select", "order", "limit", "on_conflict"): continue
+        if k in ("select", "order", "limit", "offset", "on_conflict"): continue
         op, _, val = v.partition(".")
         x = r.get(k)
         if op == "eq" and str(x) != val: return False
+        if op == "neq" and (x is None or str(x) == val): return False
         if op == "is" and val == "true" and x is not True: return False
         if op == "is" and val == "false" and x is not False: return False
         if op == "is" and val == "null" and x is not None: return False
@@ -30,7 +31,11 @@ def _select(t, p=None):
             pr = [x for x in T["profiles"] if x["id"] == r.get("user_id")]
             r["profiles"] = {"email": pr[0]["email"], "name": pr[0]["name"]} if pr else None
         rows.reverse()
-    return rows[: int(p.get("limit", 10**9))]
+    o = p.get("order", "")
+    if t != "activity_log" and o.endswith(".desc"):
+        rows.sort(key=lambda r: str(r.get(o[:-5]) or ""), reverse=True)
+    off = int(p.get("offset", 0))
+    return rows[off: off + int(p.get("limit", 10**9))]
 db.select = _select
 db.one = lambda t, p: (db.select(t, p) or [None])[0]
 db.count = lambda t, p: len([r for r in T[t] if match(r, p)])
@@ -45,6 +50,7 @@ def insert(t, rows, on_conflict=None, ignore_dupes=False, returning=True):
         if t == "questions": r = {"id": str(uuid.uuid4()), "status": "active", "served": 0, "graded": 0, "correct": 0, "reports": 0, **r}
         if t == "activity_log": r = {"ai": False, "counted": False, "at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(), **r}
         if t == "question_reports": r = {"resolved": False, **r}
+        if t == "attempts": r = {"at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(), **r}
         T[t].append(r); out.append(r)
     return [dict(x) for x in out] if returning else None
 db.insert = insert

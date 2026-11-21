@@ -12,7 +12,7 @@
 <script>
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 (function () {
-  var SITE_V = '20261122005239';
+  var SITE_V = '20261122012117';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -21,8 +21,8 @@
   }).catch(function () {});
 })();
 </script>
-<link rel="stylesheet" href="tracer-site.css?v=20261122005239">
-<link rel="stylesheet" href="../tracer-how.css?v=20261122005239">
+<link rel="stylesheet" href="tracer-site.css?v=20261122012117">
+<link rel="stylesheet" href="../tracer-how.css?v=20261122012117">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -127,8 +127,8 @@
   <p class="fine">TRACER는 개인이 만든 비공식 학습 도구입니다. Cisco·CCNA는 Cisco Systems의 상표이며 이 사이트와 관계없습니다. · <a href="privacy.html">개인정보 처리방침</a></p>
 </main>
 
-<script src="tracer-auth.js?v=20261122005239"></script>
-<script src="../tracer-how.js?v=20261122005239" defer></script>
+<script src="tracer-auth.js?v=20261122012117"></script>
+<script src="../tracer-how.js?v=20261122012117" defer></script>
 <script>
 document.getElementById('themeBtn').addEventListener('click', function () {
   var r = document.documentElement, light = r.getAttribute('data-theme') === 'light';

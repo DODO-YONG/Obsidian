@@ -183,6 +183,172 @@ def test_conn_me_failure_then_retry_on_click(logged_in, errors, base_url):
     expect(page.locator("#helpLogin")).to_be_hidden()
 
 
+# ---------- 세트 ----------
+def _finish_set(page, n, answer="0"):
+    """서브넷 세트를 끝까지 푼다(로그인 불필요). 마지막 문제에서 버튼 문구를 확인."""
+    for i in range(1, n + 1):
+        expect(page.locator("#setBar")).to_contain_text(f"세트 {i} / {n}")
+        page.fill("#ansIn", answer)
+        page.click("#gradeBtn")
+        expect(page.locator("#expBox .verdict")).to_be_visible()
+        if i < n:
+            expect(page.locator("#gradeBtn")).to_contain_text("다음 문제 →")
+            expect(page.locator("#nextBtn2")).to_contain_text("다음 문제 →")
+            page.click("#nextBtn2")
+        else:
+            expect(page.locator("#gradeBtn")).to_contain_text("세트 결과 보기 →")
+            expect(page.locator("#nextBtn2")).to_contain_text("세트 결과 보기 →")
+            page.click("#nextBtn2")
+
+
+def test_set_size_control_default_and_remembered(page, errors, base_url):
+    page.goto(base_url + "/ccna/app.html")
+    expect(page.locator("#newQ")).to_have_text("세트 시작")
+    expect(page.locator('#setSeg [data-v="5"]')).to_have_attribute("aria-pressed", "true")
+    page.click('#setSeg [data-v="10"]')
+    expect(page.locator('#setSeg [data-v="10"]')).to_have_attribute("aria-pressed", "true")
+    assert page.evaluate("localStorage.getItem('ccna-setsize')") == "10"
+    page.reload()
+    expect(page.locator('#setSeg [data-v="10"]')).to_have_attribute("aria-pressed", "true")
+    page.click('#qtypeSeg [data-v="subnet"]')
+    page.click("#newQ")
+    expect(page.locator("#setBar")).to_contain_text("세트 1 / 10")
+
+
+def test_subnet_set_of_5_summary_logged_out(page, errors, base_url):
+    page.goto(base_url + "/ccna/app.html")
+    page.click('#qtypeSeg [data-v="subnet"]')
+    page.click("#newQ")
+    expect(page.locator("#qCard .pill", has_text="서브넷 계산")).to_be_visible()
+    _finish_set(page, 5)
+    expect(page.locator("#setSummary")).to_be_visible()
+    expect(page.locator("#setSummary")).to_contain_text("세트 완료")
+    expect(page.locator("#setSummary .score")).to_have_text(re.compile(r"^\d / 5$"))
+    expect(page.locator("#setSummary li")).to_have_count(5)
+    expect(page.locator("#setMy")).to_have_count(0)          # 로그아웃이면 마이페이지 버튼 없음
+    page.click("#setAgain")                                  # 새 세트
+    expect(page.locator("#setBar")).to_contain_text("세트 1 / 5")
+    expect(page.locator("#setSummary")).to_have_count(0)
+
+
+def test_mcq_set_logged_in_summary_and_go_mypage(logged_in, errors, base_url):
+    page = logged_in
+    page.goto(base_url + "/ccna/app.html")
+    page.click('#setSeg [data-v="5"]')
+    page.click('#qtypeSeg [data-v="mcq"]')
+    page.click("#newQ")
+    for i in range(1, 6):
+        expect(page.locator("#setBar")).to_contain_text(f"세트 {i} / 5")
+        expect(page.locator("#qCard .choice")).to_have_count(4)
+        page.click('#qCard .choice[data-l="B"]')            # 가짜 정답은 항상 B
+        page.click("#gradeBtn")
+        expect(page.locator("#nextBtn2")).to_be_visible()
+        expect(page.locator("#gradeBtn")).to_contain_text("세트 결과 보기" if i == 5 else "다음 문제")
+        page.click("#nextBtn2")
+    expect(page.locator("#setSummary")).to_contain_text("세트 완료")
+    expect(page.locator("#setSummary .score")).to_have_text("5 / 5")
+    expect(page.locator("#setSummary li")).to_have_count(5)
+    page.click("#setMy")
+    expect(page.locator("#view-mypage")).to_be_visible()
+    expect(page.locator("#tab-mypage")).to_have_attribute("aria-selected", "true")
+
+
+# ---------- 마이페이지 ----------
+def test_mypage_logged_out_shows_login(page, errors, base_url):
+    page.goto(base_url + "/ccna/app.html")
+    page.click("#tab-mypage")
+    expect(page.locator("#view-mypage")).to_be_visible()
+    expect(page.locator("#myLogin")).to_be_visible()
+    expect(page.locator("#myLoginBtn")).to_be_visible()
+    expect(page.locator("#myBody")).to_be_hidden()
+    expect(page.locator("body")).to_have_class(re.compile(r"\bon-my\b"))
+    page.click("#myLoginBtn")                                # 가짜 로그인
+    expect(page.locator("#myBody")).to_be_visible()
+
+
+def test_mypage_logged_in_stats_and_side_panels_hidden(logged_in, errors, base_url):
+    page = logged_in
+    page.goto(base_url + "/ccna/app.html")
+    expect(page.locator("aside.scope")).to_be_visible()
+    page.click("#tab-mypage")
+    expect(page.locator("#myBody")).to_be_visible()
+    expect(page.locator("#myLogin")).to_be_hidden()
+    expect(page.locator("body")).to_have_class(re.compile(r"\bon-my\b"))
+    expect(page.locator("aside.scope")).to_be_hidden()
+    expect(page.locator("aside.side")).to_be_hidden()
+    expect(page.locator("#myTotal")).to_have_text(re.compile(r"^\d+$"))
+    expect(page.locator("#myRate")).not_to_be_empty()
+    expect(page.locator("#myLv")).to_contain_text("Lv")
+    expect(page.locator("#myDomains .rate").first).to_be_visible()
+    expect(page.locator("#myDiffs .rate").first).to_be_visible()
+    page.click("#tab-practice")                              # 돌아오면 옆 패널이 다시 보임
+    expect(page.locator("aside.scope")).to_be_visible()
+    expect(page.locator("body")).not_to_have_class(re.compile(r"\bon-my\b"))
+
+
+def _fake_hist(total):
+    """최신순으로 total개. 3개마다 하나는 오답."""
+    items = [{"at": f"2026-11-20T10:{59 - i % 60:02d}:00+00:00", "mode": "practice", "sub": "1.1", "sub_name": "",
+              "qtype": "mcq", "difficulty": "중", "verdict": "오답" if i % 3 == 0 else "정답",
+              "question": f"Q{i}", "user_answer": "B"} for i in range(total)]
+
+    def handler(route):
+        from urllib.parse import urlparse, parse_qs
+        q = parse_qs(urlparse(route.request.url).query)
+        rows = [x for x in items if x["verdict"] != "정답"] if q.get("only") == ["wrong"] else items
+        off, lim = int(q.get("offset", ["0"])[0]), int(q.get("limit", ["20"])[0])
+        route.fulfill(json={"items": rows[off:off + lim], "more": len(rows) > off + lim, "offset": off})
+    return handler
+
+
+def test_mypage_history_newest_first_wrong_filter_and_more(logged_in, errors, base_url):
+    page = logged_in
+    page.route("**/api/history*", _fake_hist(45))
+    page.goto(base_url + "/ccna/app.html")
+    page.click("#tab-mypage")
+    expect(page.locator("#histList li")).to_have_count(20)
+    expect(page.locator("#histList li").first).to_contain_text("Q0")      # 최신 먼저
+    expect(page.locator("#histMore")).to_be_visible()
+    page.click("#histMore")
+    expect(page.locator("#histList li")).to_have_count(40)
+    page.click("#histMore")
+    expect(page.locator("#histList li")).to_have_count(45)
+    expect(page.locator("#histMore")).to_be_hidden()
+    page.click('#histSeg [data-v="wrong"]')                  # 틀린 문제만: 45개 중 15개
+    expect(page.locator("#histList li")).to_have_count(15)
+    expect(page.locator("#histList .vb")).to_have_count(15)
+    expect(page.locator("#histList .vb.ok")).to_have_count(0)
+    expect(page.locator("#histMore")).to_be_hidden()
+    page.click('#histSeg [data-v=""]')
+    expect(page.locator("#histList li")).to_have_count(20)
+
+
+def test_mypage_history_no_more_button_for_20_or_less(logged_in, errors, base_url):
+    page = logged_in
+    page.route("**/api/history*", _fake_hist(20))
+    page.goto(base_url + "/ccna/app.html")
+    page.click("#tab-mypage")
+    expect(page.locator("#histList li")).to_have_count(20)
+    expect(page.locator("#histMore")).to_be_hidden()
+
+
+def test_mypage_real_history_records_solved_subnet(logged_in, errors, base_url):
+    """가짜 DB까지 이어서: 서브넷 문제를 풀면(로그 저장) 마이페이지 기록 맨 위에 나온다."""
+    page = logged_in
+    page.goto(base_url + "/ccna/app.html")
+    page.click('#qtypeSeg [data-v="subnet"]')
+    page.click("#newQ")
+    page.fill("#ansIn", "zzz-wrong")
+    with page.expect_response(lambda r: "/api/log" in r.url):
+        page.click("#gradeBtn")
+    page.click("#tab-mypage")
+    expect(page.locator("#histList li .vb").first).to_be_visible()
+    expect(page.locator("#histList li").first).to_contain_text("zzz-wrong")
+    page.click('#histSeg [data-v="wrong"]')
+    expect(page.locator("#histList li").first).to_contain_text("zzz-wrong")
+    expect(page.locator("#histList .vb.ok")).to_have_count(0)
+
+
 # ---------- 관리자 ----------
 def test_admin_requires_login(page, errors, base_url):
     page.goto(base_url + "/ccna/admin.html")
@@ -208,3 +374,34 @@ def test_no_horizontal_scroll_on_phone(browser, base_url, path):
     over = page.evaluate("document.documentElement.scrollWidth - window.innerWidth")
     ctx.close()
     assert over <= 1, f"{path}: 휴대폰 폭에서 가로로 {over}px 넘침"
+
+
+def _overflow(browser, base_url, width, logged, click_mypage):
+    ctx = browser.new_context(viewport={"width": width, "height": 900})
+    if logged:
+        ctx.add_init_script("localStorage.setItem('fake-tok', 'a')")
+    page = ctx.new_page()
+    page.goto(base_url + "/ccna/app.html")
+    if click_mypage:
+        page.click("#tab-mypage")
+        expect(page.locator("#view-mypage")).to_be_visible()
+        if logged:
+            expect(page.locator("#myDomains .rate").first).to_be_visible()
+            expect(page.locator("#histList li").first).to_be_visible()
+    else:
+        expect(page.locator("#scopeList .dom-head").first).to_be_visible()
+    over = page.evaluate("document.documentElement.scrollWidth - window.innerWidth")
+    ctx.close()
+    return over
+
+
+@pytest.mark.parametrize("logged", [False, True])
+def test_no_horizontal_scroll_mypage_phone(browser, base_url, logged):
+    over = _overflow(browser, base_url, 375, logged, True)
+    assert over <= 1, f"마이페이지 375px: 가로로 {over}px 넘침"
+
+
+@pytest.mark.parametrize("width", [820, 1024])
+def test_no_horizontal_scroll_practice_tablet(browser, base_url, width):
+    over = _overflow(browser, base_url, width, False, False)
+    assert over <= 1, f"문제 풀기 {width}px: 가로로 {over}px 넘침"

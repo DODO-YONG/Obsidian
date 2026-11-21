@@ -88,6 +88,8 @@ class handler(BaseHTTPRequestHandler):
                 return core.me(p)
             if route == "stats":
                 return core.stats(p)
+            if route == "history":
+                return core.history(p, qs)
             if route == "admin/summary":
                 return core.admin_summary(p)
             if route == "admin/users":

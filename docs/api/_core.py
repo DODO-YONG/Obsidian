@@ -419,7 +419,7 @@ def report(p: dict, qid: str, reason: str) -> dict:
 
 def stats(p: dict) -> dict:
     rows = db.select("attempts", {"user_id": f"eq.{p['id']}", "verdict": "not.is.null",
-                                  "select": "sub,verdict,question,at", "order": "at.desc", "limit": "3000"})
+                                  "select": "sub,verdict,question,difficulty,at", "order": "at.desc", "limit": "3000"})
     by_sub: dict[str, dict] = {}
     for r in rows:
         s = by_sub.setdefault(r.get("sub") or "", {"n": 0, "ok": 0})
@@ -433,10 +433,33 @@ def stats(p: dict) -> dict:
     weak = sorted(((s, v) for s, v in by_sub.items() if s in SUB_INDEX and v["n"] >= 2),
                   key=lambda kv: kv[1]["ok"] / kv[1]["n"])[:3]
     recent = [{"sub": r.get("sub"), "verdict": r["verdict"], "question": (r.get("question") or "")[:70]} for r in rows[:8]]
+    by_diff = [{"name": d, "n": sum(1 for r in rows if r.get("difficulty") == d),
+                "ok": sum(1 for r in rows if r.get("difficulty") == d and r["verdict"] == "정답")} for d in DIFFS]
     return {"total": len(rows), "ok": sum(1 for r in rows if r["verdict"] == "정답"), "by_domain": by_domain,
+            "by_diff": by_diff,
             "weak": [{"sub": s, "name": SUB_INDEX[s][1], "n": v["n"], "ok": v["ok"]} for s, v in weak],
             "recent": recent, "exam_date": os.environ.get("CCNA_EXAM_DATE") if p["role"] == "owner" else None,
             "has_key": gc.has_key()}
+
+
+def history(p: dict, params: dict) -> dict:
+    """마이페이지: 내 풀이 기록(최신순). only=wrong 이면 정답이 아닌 것만. 본인 기록만 본다."""
+    try:
+        offset = max(0, int(params.get("offset") or 0))
+        limit = min(50, max(1, int(params.get("limit") or 20)))
+    except ValueError:
+        raise ApiError(400, "잘못된 요청이에요.")
+    q = {"user_id": f"eq.{p['id']}", "verdict": "not.is.null", "order": "at.desc",
+         "select": "at,mode,sub,qtype,difficulty,verdict,question,user_answer", "limit": str(limit + 1), "offset": str(offset)}
+    if params.get("only") == "wrong":
+        q["verdict"] = "neq.정답"
+    rows = db.select("attempts", q) or []
+    items = [{"at": r.get("at"), "mode": r.get("mode"), "sub": r.get("sub") or "",
+              "sub_name": SUB_INDEX[r["sub"]][1] if r.get("sub") in SUB_INDEX else "",
+              "qtype": r.get("qtype"), "difficulty": r.get("difficulty") or "", "verdict": r.get("verdict"),
+              "question": (r.get("question") or "")[:300], "user_answer": (r.get("user_answer") or "")[:120]}
+             for r in rows[:limit]]
+    return {"items": items, "more": len(rows) > limit, "offset": offset}
 
 
 def me(p: dict) -> dict:

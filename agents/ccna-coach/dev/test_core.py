@@ -74,4 +74,24 @@ core.admin_update_question(o, {"id": qid, "resolve": True})
 ok(T["questions"][0]["status"] == "active" and T["questions"][0]["reports"] == 0, "검토 완료 → 다시 출제")
 ok(any(x["action"] == "admin" for x in T["activity_log"]), "관리자 작업도 활동 기록에 남음")
 ok(not any("ip" in str(x).lower().split("'")[1::2] for x in T["activity_log"]), "IP 저장 안 함")
+
+# 마이페이지 풀이 기록: 본인 것만, 최신순, 오답만 거르기, 더 보기
+T["attempts"].clear()
+for i, v in enumerate(["정답", "오답", "부분 정답", "정답", "오답"]):
+    T["attempts"].append({"user_id": "u-owner", "mode": "practice", "sub": "3.4", "qtype": "mcq", "difficulty": "보통",
+                          "verdict": v, "question": f"Q{i}", "user_answer": "A", "at": f"2026-11-22T10:0{i}:00+00:00"})
+T["attempts"].append({"user_id": "u-alice", "mode": "practice", "sub": "1.1", "qtype": "mcq", "verdict": "오답",
+                      "question": "남의 기록", "at": "2026-11-22T11:00:00+00:00"})
+h = core.history(o, {"limit": "2"})
+ok([x["question"] for x in h["items"]] == ["Q4", "Q3"] and h["more"], "풀이 기록: 최신순 · 더 보기 있음")
+h2 = core.history(o, {"limit": "2", "offset": "4"})
+ok([x["question"] for x in h2["items"]] == ["Q0"] and not h2["more"], "풀이 기록: 다음 쪽")
+w = core.history(o, {"only": "wrong"})
+ok([x["question"] for x in w["items"]] == ["Q4", "Q2", "Q1"], "틀린 문제만(부분 정답 포함)")
+ok(all(x["question"] != "남의 기록" for x in core.history(o, {"limit": "50"})["items"]), "남의 기록은 안 보임")
+ok(w["items"][0]["sub_name"].startswith("단일 영역 OSPFv2"), "범위 이름 함께 보냄")
+try: core.history(o, {"limit": "x"}); ok(False, "")
+except core.ApiError as e: ok(e.code == 400, "잘못된 쪽 번호 → 400")
+s = core.stats(o)
+ok([d["n"] for d in s["by_diff"]] == [0, 5, 0] and s["by_diff"][1]["ok"] == 2, "진도: 난이도별 정답 수")
 print("모두 통과")
