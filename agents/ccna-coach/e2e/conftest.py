@@ -11,12 +11,26 @@ import pytest
 
 HERE = Path(__file__).resolve().parent
 HARNESS = HERE.parent / "dev" / "harness.py"
-PORT = int(os.environ.get("TRACER_E2E_PORT", "8798"))
+def _free_port():
+    """빈 포트를 고른다. 고정 포트(8798)를 쓰면 예전에 안 꺼진 시험 서버에 붙어
+    그 서버에 쌓인 가짜 데이터 때문에 시험이 엉뚱하게 실패한다(2026-11-22)."""
+    with socket.socket() as s:
+        s.bind(("127.0.0.1", 0))
+        return s.getsockname()[1]
+
+
+PORT = int(os.environ.get("TRACER_E2E_PORT") or _free_port())
 BASE = f"http://127.0.0.1:{PORT}"
 
 
 @pytest.fixture(scope="session")
 def base_url():
+    try:
+        socket.create_connection(("127.0.0.1", PORT), timeout=0.2).close()
+        raise RuntimeError(f"{PORT}번 포트를 이미 다른 서버가 쓰고 있음(예전 시험 서버가 안 꺼졌을 수 있음). "
+                           f"`lsof -nP -iTCP:{PORT} -sTCP:LISTEN`로 확인 후 끄기")
+    except OSError:
+        pass
     env = {**os.environ, "TRACER_HARNESS_PORT": str(PORT)}
     for k in ("GOOGLE_API_KEY", "SUPABASE_SERVICE_ROLE_KEY", "ANTHROPIC_API_KEY"):
         env.pop(k, None)  # 진짜 키가 섞여 들어가지 않게

@@ -63,6 +63,7 @@ date: 2026-11-18
   - 교훈: 다크모드는 `--rule`처럼 옅은 색을 선에 쓰면 거의 안 보임 → 도형용 색을 따로 정하고 다크 화면을 원래 크기로 확인할 것.
   - **공용 파일로 분리**: `docs/tracer-how.js`(그림·트리·문구) + `docs/tracer-how.css`(색 `--tq-*`). 소개 페이지 `#how`와 TRACER 사이트 소개 영역("HOW IT WORKS", 출제 비중·칭호 아래)이 `<div class="tq-how" data-tracer-how>`로 같이 씀 → 한 곳만 고치면 둘 다 바뀜. 캐시 대비로 `?v=` 붙이고 `bump-site-version.sh`가 함께 올림.
   - 바로가기 주소: https://dodo-yong.github.io/Obsidian/ccna/#intro (소개 처음부터) · …/ccna/#how (작동 방식). 소개가 접혀 있던 사람도 펼쳐서 보여 주고, 접힘 설정은 그대로 둠. 소개 페이지 쪽은 https://dodo-yong.github.io/Obsidian/#how
+- 2026-11-22 TRACER 소개(`docs/ccna/about.html`) 개편: **Tracer Route 앱 소개 + 웹은 데모**. 한 파일에 영어(기본)·한국어 블록, `?lang=ko`·`#ko`·머리말 EN/한국어 버튼(선택은 브라우저에 기억). 작동 방식 그림·로그인 버튼은 한국어 쪽에만(공용 부품이 한국어라서). 한국어 웹 화면들의 '소개' 링크는 `about.html?lang=ko`. 출시 뒤 Play 링크·QR을 '출시 예정' 자리에 넣는다. **공식 소개 주소는 GitHub Pages**(`https://dodo-yong.github.io/Obsidian/ccna/about.html`): Vercel 무료 등급은 비상업 전용이라, Vercel 주소로 소개에 들어오면 GitHub Pages로 넘기고 Vercel엔 광고 없는 웹 데모만 둔다. GitHub Pages에서는 웹 데모 링크·로고를 Vercel 주소로 바꾸고 로그인 칸은 숨김(서버 없음). Play 스토어 웹사이트 칸·QR도 이 주소/스토어 주소로.
   - 공개 문구 원칙(사용자 요청): "제 Mac·내 Mac" 대신 **"개인 서버", "개인 컴퓨터 환경"** 같은 공식 표현.
   - 설계 이유 4개: 키는 Mac에만, 정답은 서버에만, 계산은 코드로, 추가 비용 없음.
   - 확인: 데스크톱(어둡게)·모바일(밝게) 화면, 가로 스크롤 없음.

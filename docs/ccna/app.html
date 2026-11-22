@@ -281,7 +281,7 @@
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261122074145';
+  var SITE_V = '20261122134020';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -291,7 +291,7 @@
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
-<script src="tracer-auth.js?v=20261122074145"></script>
+<script src="tracer-auth.js?v=20261122134020"></script>
 </head>
 <body>
 <header>
@@ -310,7 +310,7 @@
     <span class="dday" id="dday" hidden></span>
     <button class="conn" id="conn" type="button" aria-describedby="connHelp"><span class="cd" aria-hidden="true"></span><span id="connText">서버 확인 중</span></button>
     <a class="adm" id="adminLink" href="admin.html" hidden title="관리자 페이지" aria-label="관리자 페이지">⚙<span class="t"> 관리자</span></a>
-    <a class="about" href="about.html" title="TRACER 소개">소개</a>
+    <a class="about" href="about.html?lang=ko" title="TRACER 소개">소개</a>
     <div data-auth data-auth-next="app.html"></div>
     <button class="icon-btn" id="themeBtn" type="button" aria-label="어두운 화면으로 전환">◐</button>
   </div>

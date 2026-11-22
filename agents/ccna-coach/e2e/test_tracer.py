@@ -421,8 +421,58 @@ def test_admin_dashboard_app_report_tile(logged_in, errors, base_url):
     expect(tile.locator(".v")).to_have_text("3")
 
 
+# ---------- 소개 페이지 (영어/한국어) ----------
+EN = '[data-lang-block="en"]'
+KO = '[data-lang-block="ko"]'
+
+
+def test_about_default_english(page, errors, base_url):
+    page.goto(base_url + "/ccna/about.html")
+    expect(page.locator(EN)).to_be_visible()
+    expect(page.locator(KO)).to_be_hidden()
+    expect(page.locator(EN)).to_contain_text("Get Tracer Route")
+    expect(page.locator("html")).to_have_attribute("lang", "en")
+    expect(page.locator(".top " + AUTH)).to_be_hidden()
+    expect(page.locator("[data-tracer-how]")).to_have_count(1)
+    expect(page.locator(EN + " [data-tracer-how]")).to_have_count(0)
+
+
+@pytest.mark.parametrize("suffix", ["?lang=ko", "#ko"])
+def test_about_korean_by_url(page, errors, base_url, suffix):
+    page.goto(base_url + "/ccna/about.html" + suffix)
+    expect(page.locator(KO)).to_be_visible()
+    expect(page.locator(EN)).to_be_hidden()
+    expect(page.locator("html")).to_have_attribute("lang", "ko")
+    expect(page.locator(".top " + AUTH).first).to_be_visible()
+
+
+def test_about_lang_switch_is_remembered(page, errors, base_url):
+    page.goto(base_url + "/ccna/about.html")
+    page.click('.lang-sw [data-lang="ko"]')
+    expect(page.locator(KO)).to_be_visible()
+    expect(page.locator(EN)).to_be_hidden()
+    expect(page.locator('.lang-sw [data-lang="ko"]')).to_have_attribute("aria-pressed", "true")
+    expect(page.locator('.lang-sw [data-lang="en"]')).to_have_attribute("aria-pressed", "false")
+    page.reload()
+    expect(page.locator(KO)).to_be_visible()
+    expect(page.locator("html")).to_have_attribute("lang", "ko")
+    page.click('.lang-sw [data-lang="en"]')
+    expect(page.locator(EN)).to_be_visible()
+    expect(page.locator(".top " + AUTH)).to_be_hidden()
+    page.reload()
+    expect(page.locator(EN)).to_be_visible()
+
+
+def test_korean_home_about_link_uses_lang_ko(page, errors, base_url):
+    page.goto(base_url + "/ccna/")
+    links = page.locator('a[href*="about.html"]')
+    assert links.count() >= 1
+    for i in range(links.count()):
+        assert "lang=ko" in links.nth(i).get_attribute("href")
+
+
 # ---------- 휴대폰 화면 ----------
-@pytest.mark.parametrize("path", ["/ccna/", "/ccna/about.html", "/ccna/app.html"])
+@pytest.mark.parametrize("path", ["/ccna/", "/ccna/about.html", "/ccna/about.html?lang=ko", "/ccna/app.html"])
 def test_no_horizontal_scroll_on_phone(browser, base_url, path):
     ctx = browser.new_context(viewport={"width": 375, "height": 812})
     page = ctx.new_page()
