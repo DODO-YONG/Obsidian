@@ -6,14 +6,14 @@ AI가 매번 브라우저를 눌러 보는 대신, **한 번 써 둔 시험을 G
 - 자동 실행: `.github/workflows/tracer-test.yml` — `docs/ccna/`·`docs/api/`·`agents/ccna-coach/`가 바뀐 푸시·PR
 - 결과: GitHub 저장소 **Actions → tracer-test** (초록 ✓ / 빨강 ✗). 실패하면 아래 `tracer-test-failures`에 스크린샷·trace(https://trace.playwright.dev 에 끌어다 놓으면 재생)
 
-## 지금 확인하는 것 (49개)
+## 지금 확인하는 것 (52개)
 | 영역 | 내용 |
 |---|---|
 | 공개 페이지 | 선택 화면·소개·개인정보 방침이 열림, 소개/이용 링크, 로그아웃 상태 "Google로 로그인" |
 | 로그인 없이 | 출제 범위 목록, AI 문제는 로그인 안내, 서브넷 문제 출제·채점("Calculated by code") |
 | 로그인 | 로그인 → 이름 표시 → 로그아웃, 객관식 출제 → B 선택 → Correct·신고 버튼·"다음 문제" |
 | 채점→다음 문제 | 채점 전(버튼 비활성·안내)·보기 선택·채점 후(`graded`·"채점 완료"·`#nextBtn2`·선택 고정), "다음 문제"(위 `#gradeBtn`·아래 `#nextBtn2` 둘 다)는 `/api/grade`를 다시 부르지 않고 새 문제로 초기화 |
-| 소개 페이지 언어 | 기본 영어(`data-lang-block=en`, "Get Tracer Route", 머리말 `[data-auth]` 숨김), `?lang=ko`·`#ko`면 한국어+로그인 부품 보임, `.lang-sw` 버튼 전환·aria-pressed·새로고침 후 기억, 한국어 처음 화면의 소개 링크 `lang=ko` |
+| 소개 페이지 언어 | 기본 영어(`data-lang-block=en`, "Get Tracer Route", 머리말 `[data-auth]` 숨김), `?lang=ko`·`#ko`면 한국어+로그인 부품 보임, `.lang-sw` 버튼 전환·aria-pressed·새로고침 후 기억, 한국어 처음 화면의 소개 링크 `lang=ko`; 작동 방식 그림 탭 4개 글자(로그인·문제 받기·채점·서브넷)가 한국어·전환 후에도 유지, 파비콘 `icon.svg` 200 |
 | 상태 버튼 | `#conn` 클릭 → 설명 패널 열기/닫기, 로그인 상태엔 로그인 버튼·개인정보 안내 숨김, 로그아웃이면 표시 |
 | 관리자 | 로그아웃이면 로그인 버튼, 주인이면 탭·"로그인됨" |
 | 관리자 앱 신고 | 탭에 미처리 3건·이유 라벨·메모, 앱 전용 문제는 "웹 문제은행에는 없는 문제"·stopWeb 없음, "같은 문제 모두 처리"→미처리 감소·전체 보기 reopen 버튼(시험 끝에 되돌림), 대시보드 "앱 신고" 타일 |

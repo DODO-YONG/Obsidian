@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23146C63'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h16' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script>
 /* 공식 소개 주소는 GitHub Pages. Vercel(무료=비상업 전용)에는 웹 데모만 두고, 소개(앱 홍보)는 넘긴다 */
 if (/\.vercel\.app$/.test(location.hostname)) location.replace('https://dodo-yong.github.io/Obsidian/ccna/about.html' + location.search + location.hash);
@@ -21,7 +22,7 @@ if (/\.vercel\.app$/.test(location.hostname)) location.replace('https://dodo-yon
   document.documentElement.setAttribute('lang', l);
 })();
 (function () {
-  var SITE_V = '20261122134533';
+  var SITE_V = '20261122135345';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -30,14 +31,14 @@ if (/\.vercel\.app$/.test(location.hostname)) location.replace('https://dodo-yon
   }).catch(function () {});
 })();
 </script>
-<link rel="stylesheet" href="tracer-site.css?v=20261122134533">
-<link rel="stylesheet" href="../tracer-how.css?v=20261122134533">
+<link rel="stylesheet" href="tracer-site.css?v=20261122135345">
+<link rel="stylesheet" href="../tracer-how.css?v=20261122135345">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <header class="top"><div class="in">
-  <a class="brand" href="./"><span class="mk" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M2 4h12M2 8h12M2 12h12"/></svg></span><span class="nm">TRACER</span><small>DY-003 · Tracer Route</small></a>
-  <nav class="nav" aria-label="Pages"><a href="about.html" aria-current="page" data-t="About|소개">About</a><a href="app.html" data-t="Web demo|웹 데모">Web demo</a></nav>
+  <a class="brand" href="./"><img class="mk" src="icon.svg" alt="" aria-hidden="true"><span class="nm">TRACER</span><small>DY-003 · Tracer Route</small></a>
+  <nav class="nav" aria-label="Pages"><a href="about.html" aria-current="page" data-i18n="About|소개">About</a><a href="app.html" data-i18n="Web demo|웹 데모">Web demo</a></nav>
   <span class="sp"></span>
   <div class="lang-sw" role="group" aria-label="Language"><button type="button" data-lang="en">EN</button><button type="button" data-lang="ko">한국어</button></div>
   <div data-auth data-auth-next="app.html"></div>
@@ -58,7 +59,7 @@ if (/\.vercel\.app$/.test(location.hostname)) location.replace('https://dodo-yon
       <div class="chips"><span>Free</span><span>No account</span><span>Works offline</span><span>6 domains · 52 topics</span></div>
     </div>
     <aside class="getapp" aria-label="Get the app">
-      <span class="app-ic" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M2 4h12M2 8h12M2 12h12"/></svg></span>
+      <img class="app-ic" src="icon.svg" alt="" aria-hidden="true" width="72" height="72">
       <h2>Get Tracer Route</h2>
       <div class="qr" role="img" aria-label="QR code placeholder"><b>▦</b>QR code<br>at launch</div>
       <p>Scan with your Android phone to open the app on Google Play. Launching soon.</p>
@@ -157,7 +158,7 @@ if (/\.vercel\.app$/.test(location.hostname)) location.replace('https://dodo-yon
       <div class="chips"><span>무료</span><span>회원 가입 없음</span><span>인터넷 없이</span><span>6개 단원 · 52개 범위</span></div>
     </div>
     <aside class="getapp" aria-label="앱 받기">
-      <span class="app-ic" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M2 4h12M2 8h12M2 12h12"/></svg></span>
+      <img class="app-ic" src="icon.svg" alt="" aria-hidden="true" width="72" height="72">
       <h2>Tracer Route 받기</h2>
       <div class="qr" role="img" aria-label="QR 코드 자리"><b>▦</b>출시하면<br>QR 코드</div>
       <p>안드로이드 폰으로 찍으면 Google Play의 앱 페이지가 열려요. 곧 출시해요.</p>
@@ -249,8 +250,8 @@ if (/\.vercel\.app$/.test(location.hostname)) location.replace('https://dodo-yon
   <p class="fine">Tracer Route와 TRACER는 개인이 만든 비공식 학습 도구입니다. Cisco·CCNA는 Cisco Systems의 상표이며 이 사이트와 관계없습니다. · <a href="../tracer-route/privacy.html#ko">개인정보 처리방침</a></p>
 </main>
 
-<script src="tracer-auth.js?v=20261122134533"></script>
-<script src="../tracer-how.js?v=20261122134533" defer></script>
+<script src="tracer-auth.js?v=20261122135345"></script>
+<script src="../tracer-how.js?v=20261122135345" defer></script>
 <script>
 document.getElementById('themeBtn').addEventListener('click', function () {
   var r = document.documentElement, light = r.getAttribute('data-theme') === 'light';
@@ -263,7 +264,7 @@ document.getElementById('themeBtn').addEventListener('click', function () {
     document.documentElement.setAttribute('lang', l);
     document.querySelectorAll('[data-lang-block]').forEach(function (m) { m.hidden = m.getAttribute('data-lang-block') !== l; });
     document.querySelectorAll('.lang-sw button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === l)); });
-    document.querySelectorAll('[data-t]').forEach(function (a) { var p = a.getAttribute('data-t').split('|'); a.textContent = l === 'ko' ? p[1] : p[0]; });
+    document.querySelectorAll('[data-i18n]').forEach(function (a) { var p = a.getAttribute('data-i18n').split('|'); a.textContent = l === 'ko' ? p[1] : p[0]; });
     document.title = TITLE[l];
   }
   function choose(l) { try { localStorage.setItem('tracer-about-lang', l); } catch (e) {} apply(l); }

@@ -463,6 +463,33 @@ def test_about_lang_switch_is_remembered(page, errors, base_url):
     expect(page.locator(EN)).to_be_visible()
 
 
+def _check_how_tabs(page):
+    tabs = page.locator("#how .tq-tabs button")
+    expect(tabs).to_have_count(4)
+    for i, t in enumerate(["로그인", "문제 받기", "채점", "서브넷"]):
+        expect(tabs.nth(i)).to_contain_text(t)
+
+
+def test_about_how_tabs_keep_text_ko(page, errors, base_url):
+    page.goto(base_url + "/ccna/about.html?lang=ko")
+    _check_how_tabs(page)
+
+
+def test_about_how_tabs_keep_text_after_switch(page, errors, base_url):
+    page.goto(base_url + "/ccna/about.html")
+    page.click('.lang-sw [data-lang="ko"]')
+    expect(page.locator(KO)).to_be_visible()
+    _check_how_tabs(page)
+
+
+def test_about_favicon_is_app_icon(page, errors, base_url):
+    page.goto(base_url + "/ccna/about.html")
+    href = page.locator("link[rel=icon]").first.get_attribute("href")
+    assert href.endswith("icon.svg")
+    r = page.request.get(page.evaluate("document.querySelector('link[rel=icon]').href"))
+    assert r.status == 200
+
+
 def test_korean_home_about_link_uses_lang_ko(page, errors, base_url):
     page.goto(base_url + "/ccna/")
     links = page.locator('a[href*="about.html"]')

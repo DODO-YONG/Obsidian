@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <!-- Tracer Route 앱 아이콘(앱 저장소 app/assets/src bg.svg + fg.svg)을 웹용으로 합친 것 -->
+  <defs>
+    <radialGradient id="g" cx="70%" cy="25%" r="90%">
+      <stop offset="0" stop-color="#174A43"/>
+      <stop offset="0.55" stop-color="#11201E"/>
+      <stop offset="1" stop-color="#0B1110"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="230" fill="url(#g)"/>
+  <polyline points="322,704 446,546 586,606 694,372" fill="none" stroke="#5FC7B8" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="322" cy="704" r="40" fill="#E5EDEA"/>
+  <circle cx="446" cy="546" r="34" fill="#0E1413" stroke="#5FC7B8" stroke-width="20"/>
+  <circle cx="586" cy="606" r="34" fill="#0E1413" stroke="#5FC7B8" stroke-width="20"/>
+  <circle cx="694" cy="372" r="78" fill="#0E1413" stroke="#E5EDEA" stroke-width="22"/>
+  <circle cx="694" cy="372" r="30" fill="#5FC7B8"/>
+</svg>

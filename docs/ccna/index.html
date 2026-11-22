@@ -8,13 +8,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23146C63'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h16' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script>
 /* 예전 바로가기(#intro, #how)는 소개 페이지로 */
 if (/^#(intro|how)$/.test(location.hash)) location.replace('about.html?lang=ko' + (location.hash === '#how' ? '#how' : ''));
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 (function () {
-  var SITE_V = '20261122134533';
+  var SITE_V = '20261122135345';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -23,12 +24,12 @@ if (/^#(intro|how)$/.test(location.hash)) location.replace('about.html?lang=ko' 
   }).catch(function () {});
 })();
 </script>
-<link rel="stylesheet" href="tracer-site.css?v=20261122134533">
+<link rel="stylesheet" href="tracer-site.css?v=20261122135345">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <header class="top"><div class="in">
-  <a class="brand" href="./"><span class="mk" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M2 4h12M2 8h12M2 12h12"/></svg></span><span class="nm">TRACER</span><small>DY-003 · CCNA 200-301</small></a>
+  <a class="brand" href="./"><img class="mk" src="icon.svg" alt="" aria-hidden="true"><span class="nm">TRACER</span><small>DY-003 · CCNA 200-301</small></a>
   <nav class="nav" aria-label="페이지"><a href="about.html?lang=ko">소개</a><a href="app.html">이용하기</a></nav>
   <span class="sp"></span>
   <div data-auth data-auth-next="app.html"></div>
@@ -62,7 +63,7 @@ if (/^#(intro|how)$/.test(location.hash)) location.replace('about.html?lang=ko' 
   </section>
 </main>
 
-<script src="tracer-auth.js?v=20261122134533"></script>
+<script src="tracer-auth.js?v=20261122135345"></script>
 <script>
 document.getElementById('themeBtn').addEventListener('click', function () {
   var r = document.documentElement, light = r.getAttribute('data-theme') === 'light';

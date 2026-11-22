@@ -139,7 +139,7 @@ section.sec { padding: 56px 0 8px; }
 .lang-sw button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
 html[lang="en"] .top [data-auth] { display: none; }
 .getapp { background: linear-gradient(160deg, var(--accent-soft), var(--panel) 65%); border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--rule)); border-radius: 22px; padding: 24px; display: grid; gap: 14px; justify-items: center; text-align: center; }
-.getapp .app-ic { width: 64px; height: 64px; border-radius: 16px; background: var(--accent); display: grid; place-items: center; }
+.getapp .app-ic { width: 72px; height: 72px; border-radius: 17px; box-shadow: 0 10px 30px -12px rgba(0,0,0,.6); }
 .getapp h2 { margin: 0; font-size: 22px; }
 .getapp p { margin: 0; color: var(--ink-2); font-size: 14.5px; }
 .qr { width: 168px; height: 168px; border: 2px dashed var(--rule); border-radius: 16px; display: grid; place-items: center; align-content: center; gap: 6px; background: var(--bg); color: var(--ink-3); font-family: var(--mono); font-size: 12px; padding: 12px; }
