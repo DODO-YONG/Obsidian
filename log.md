@@ -222,3 +222,4 @@
 - TRACER 소개 페이지를 Tracer Route 앱 소개 + 웹 데모 소개로 개편, 영어 기본·한국어 전환(한 파일). 한국어 웹 화면의 소개 링크는 한국어판으로. QR·스토어 링크 자리는 출시 뒤 채움.
 - 소개 페이지 공식 주소를 GitHub Pages로: Vercel 주소로 들어오면 넘김(Vercel 무료=비상업 전용, 2차 광고 대비). Vercel엔 웹 데모만.
 - TRACER 화면 시험 8개 실패 원인: 아침에 안 꺼진 가짜 시험 서버(8798 포트)에 새 시험이 붙어 쌓인 데이터로 실패. 서버 끄고 conftest가 매번 빈 포트를 고르게 + 포트가 이미 쓰이면 멈추게 고침 → 49개 전부 통과.
+- 소개 페이지 무한 이동 수정: tracer-auth.js의 'github.io → Vercel' 규칙과 about.html의 'Vercel → github.io'가 서로 넘김 → 규칙에서 about.html 제외.

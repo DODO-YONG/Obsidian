@@ -43,7 +43,9 @@
   function emit() { render(); S.cbs.forEach(function (f) { try { f(S.session); } catch (e) {} }); }
 
   var ready = (function () {
-    if (/github\.io$/.test(location.hostname)) {   // 예전 주소 → 새 주소의 같은 페이지
+    // 예전 주소 → 새 주소의 같은 페이지. 단 소개(about.html)는 GitHub Pages가 공식 주소라 제외
+    // (about.html은 반대로 Vercel → GitHub Pages로 넘기므로, 빼지 않으면 서로 무한히 넘김)
+    if (/github\.io$/.test(location.hostname) && !/\/about\.html$/.test(location.pathname)) {
       return fetch('server.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
         if (j && j.home) location.replace(j.home.replace(/\/+$/, '') + location.pathname.replace(/^\/Obsidian/, '') + location.search + location.hash);
         return null;
