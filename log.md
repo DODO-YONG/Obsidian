@@ -287,3 +287,6 @@
 ## [2026-11-23] output | Claude·agy 코드 작업 비교 실험
 - 소개팅 앱 1단계(DB·RLS·함수)로 A(Claude 작성→agy 검토→Claude 수정) vs B(agy 작성→Claude 검토·수정) + agy xhigh·argon 비교. 전부 시험 37/37, Claude 사용량 A 약 95k ≈ B 97k, agy 검토가 진짜 문제 8건 → 작업지시서에 '코드는 Claude가 짜고 agy가 검토' 기본으로.
 - 실험 파일을 공개 위키로 옮김: wiki/projects/dating/output/2026_11_23_코드비교실험/ (채점 시험·참고 답안 포함, node_modules 제외).
+
+## [2026-11-23] output | 모의 관리자 보고서 탭
+- 활동 기록(사용자)·명령 기록(관리자)을 기간별로 요약: 한 줄 요약, 타일(지난 기간 대비), 날마다·행동별·시간대별·기기·활발한 사용자, 명령 성공률·AI 해석 비율·못 알아들은 문장. HTML 파일로 받기, 명령 `show_report`. 화면 시험 94개.

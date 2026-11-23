@@ -6,7 +6,7 @@ AI가 매번 브라우저를 눌러 보는 대신, **한 번 써 둔 시험을 G
 - 자동 실행: `.github/workflows/tracer-test.yml` — `docs/ccna/`·`docs/api/`·`agents/ccna-coach/`가 바뀐 푸시·PR
 - 결과: GitHub 저장소 **Actions → tracer-test** (초록 ✓ / 빨강 ✗). 실패하면 아래 `tracer-test-failures`에 스크린샷·trace(https://trace.playwright.dev 에 끌어다 놓으면 재생)
 
-## 지금 확인하는 것 (87개)
+## 지금 확인하는 것 (94개)
 | 영역 | 내용 |
 |---|---|
 | 공개 페이지 | 선택 화면·소개·개인정보 방침이 열림, 소개/이용 링크, 로그아웃 상태 "Google로 로그인" |
@@ -28,6 +28,7 @@ AI가 매번 브라우저를 눌러 보는 대신, **한 번 써 둔 시험을 G
 | 관리자 모의 3단계 | 대시보드 비교 `#cmpPanel`(칸 5개·▲▼·날짜별 "가입")·범위별 정답률 `#subPanel`(`[data-sub]` ≤10·`#subMore`·클릭 시 문제은행 `#qSub`·`#qSort=rate_asc`), `[data-csv]` 다운로드(파일명·BOM·줄 수=DB 전체+1), 명령(지난주 비교 `#dDays`=7·약한 범위·사용자 CSV '실행함'), 모의 `#buckets` 기본 숨김→`#bkToggle`, 실제 화면엔 비교·범위·CSV 없음 |
 | 관리자 모의 명령 기록 | `[data-tab=trace]`·`#tRows`: 규칙 답변("규칙으로 해석"·"숫자 계산(화면 안)")·확인창 아니요("관리자: 취소")·규칙 밖 "오늘 날씨 어때"(AI·'못 함'·"해당 명령 없음"), `#tSt`·`#tPath` 필터, 새로고침 뒤 유지, "명령 기록 보여줘", `[data-csv=trace]`, `#tClear` 확인창 예; 실제 화면엔 탭 없음 |
 | 관리자 모의 해석 방식·SQL | `#cmdMode` 기본 ai(규칙 시험은 localStorage `tracer-admin-demo-mode`=rules로 시작), 가짜 AI none이면 규칙으로 대신(명령 기록 단계), 모드 저장, 아무 숫자 기간("최근 10일 신고"→`#arDays`=10·"45일 미접속"→`#uIdle`=45, "직접 입력…" custom), SQL 조회 탭(`#qrSql`·`#qrRows`·`#qrInfo`, SELECT 직접 입력, DELETE 거부), 결과 행 `#qrAll`→`#qrSel` 차단→되돌리기 |
+| 관리자 모의 보고서 탭 | `[data-tab=report]`·`#v-report`: 열면 타일 5개·"한 줄 요약", `#rDays` 변경→`#rInfo` 숫자·주소 `days=` 저장, `#report?days=7` 직접 열기, 명령 기록 없으면 `.rp-empty`, 규칙 명령 뒤 명령 수·못 알아들은 문장(`/api/demo/ask` route 차단), "7일 보고서 파일로 받아줘" 다운로드(`tracer-demo-report-7d-날짜.html`)+기록, 실제 화면엔 탭 숨김 |
 | 공통 대기 카드 | `TracerWait.start`(tracer-wait.js): 0.4초 뒤 `.tw`(제목 "해설"·`.tip`) → `done()` 뒤 사라짐, 0.1초 안에 끝나면 안 뜸, 모의 관리자에서 `step(3)` → `.term`에 "ms" |
 | 마이페이지 체험 카드 | `a#demoAdmin`(href `admin.html?demo=1`)이 로그인 전·후 모두 보이고 누르면 모의 관리자 화면(`#modeTag` "모의") |
 | 문제 글 표시(formatQ) | 여러 줄 문제에서 표·출력 줄은 `.q-text .cli` 한 블록, 첫 설명·마지막 질문 줄은 블록 밖; 한 줄짜리 문제는 show 명령이 있어도 `.cli` 없음(시험 안에서 `/api/question` 응답만 바꿔 넣음) |

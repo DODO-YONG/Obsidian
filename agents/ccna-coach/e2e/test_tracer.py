@@ -1290,3 +1290,95 @@ def test_admin_demo_wait_card_step_shows_ms(page, errors, base_url):
     expect(page.locator(".tw .term")).to_contain_text("ms")
     page.evaluate("() => window.__w.done()")
     expect(page.locator(".tw")).to_have_count(0)
+
+
+# ---------- 관리자 모의 화면: 보고서 탭 ----------
+def _block_ask(page):
+    """규칙에 안 맞는 말은 /api/demo/ask(제미나이)로 간다. 항상 실패시켜 '못 함'이 되게 한다."""
+    page.route("**/api/demo/ask*", lambda r: r.abort())
+
+
+def _open_report(page):
+    page.locator("#tabs [data-tab=report]").click()
+    expect(page.locator("#v-report")).to_be_visible()
+
+
+def test_admin_demo_report_tab_opens(page, errors, base_url):
+    _demo(page, base_url)
+    _open_report(page)
+    expect(page.locator("#rDays")).to_have_value("30")
+    expect(page.locator("#rInfo")).to_contain_text("활동")
+    expect(page.locator("#rBody .tile")).to_have_count(5)
+    expect(page.locator("#rBody")).to_contain_text("한 줄 요약")
+    expect(page.locator("#rBody")).to_contain_text("사용자 활동")
+
+
+def test_admin_demo_report_days_change_updates_info_and_hash(page, errors, base_url):
+    _demo(page, base_url)
+    _open_report(page)
+    expect(page.locator("#rInfo")).to_contain_text("활동")
+    n = lambda: int(re.search(r"활동 ([\d,]+)건", page.locator("#rInfo").inner_text()).group(1).replace(",", ""))
+    t30 = page.locator("#rInfo").inner_text()
+    n30 = n()
+    page.locator("#rDays").select_option("7")
+    page.wait_for_function("() => /days=7/.test(location.hash)")
+    page.wait_for_function("t => document.querySelector('#rInfo').textContent !== t", arg=t30)
+    assert n() < n30
+
+
+def test_admin_demo_report_hash_opens_directly(page, errors, base_url):
+    page.goto(base_url + "/ccna/admin.html?demo=1#report?days=7")
+    expect(page.locator("#v-report")).to_be_visible()
+    expect(page.locator("#rDays")).to_have_value("7")
+    expect(page.locator("#rInfo")).to_contain_text("활동")
+
+
+def test_admin_demo_report_no_commands_shows_empty_notice(page, errors, base_url):
+    _demo(page, base_url)
+    page.evaluate("() => localStorage.removeItem('tracer-admin-demo-trace')")
+    page.reload()
+    expect(page.locator("#demoBar")).to_be_visible()
+    _open_report(page)
+    expect(page.locator("#rBody .rp-empty")).to_contain_text("명령 기록이 없어요")
+    expect(page.locator("#rInfo")).to_contain_text("명령 0건")
+
+
+def test_admin_demo_report_counts_commands_and_unrecognized(page, errors, base_url):
+    _block_ask(page)
+    _demo(page, base_url, "rules")
+    page.evaluate("() => localStorage.removeItem('tracer-admin-demo-trace')")
+    page.reload()
+    expect(page.locator("#cmd")).to_be_visible()
+    _cmd(page, "1년 동안 접속 안 한 유저 찾아줘")
+    expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("화면 바꿈")
+    li = _cmd(page, "오늘 날씨 어때")
+    expect(li.locator(".st")).to_contain_text("못 함")
+    _cmd(page, "최근 30일 보고서 보여줘")
+    expect(page.locator("#v-report")).to_be_visible()
+    expect(page.locator("#rDays")).to_have_value("30")
+    # 보고서 명령 자체도 기록에 남는다(명령이 끝난 뒤 저장되므로 기간을 바꿔 다시 만들면 3건)
+    page.locator("#rDays").select_option("90")
+    expect(page.locator("#rInfo")).to_contain_text("명령 3건")
+    expect(page.locator("#rBody")).to_contain_text("못 알아들은 문장")
+    expect(page.locator("#rBody .rlist li")).to_contain_text("오늘 날씨 어때")
+    expect(page.locator("#rBody .rp-empty", has_text="명령 기록이 없어요")).to_have_count(0)
+
+
+def test_admin_demo_report_download_command_saves_file_and_is_recorded(page, errors, base_url):
+    _demo(page, base_url, "rules")
+    page.evaluate("() => localStorage.removeItem('tracer-admin-demo-trace')")
+    page.reload()
+    expect(page.locator("#cmd")).to_be_visible()
+    with page.expect_download() as dl:
+        _cmd(page, "최근 7일 보고서 파일로 받아줘")
+    assert re.fullmatch(r"tracer-demo-report-7d-\d{8}\.html", dl.value.suggested_filename)
+    expect(page.locator("#rDays")).to_have_value("7")
+    page.locator("#rDays").select_option("14")  # 다시 만들면 방금 명령이 기록에 보인다
+    expect(page.locator("#rInfo")).to_contain_text("명령 1건")
+
+
+def test_admin_real_hides_report_tab(logged_in, errors, base_url):
+    page = logged_in
+    page.goto(base_url + "/ccna/admin.html")
+    expect(page.locator("#modeTag")).to_contain_text("실제")
+    expect(page.locator("#tabs [data-tab=report]")).to_be_hidden()
