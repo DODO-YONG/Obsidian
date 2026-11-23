@@ -20,6 +20,8 @@ alter table public.app_reports enable row level security;
 
 -- 앱(anon): 새 신고 넣기만. 처리 여부·시각은 직접 못 정한다(아래 트리거가 덮어씀)
 revoke all on public.app_reports from anon, authenticated;
+grant all on public.app_reports to service_role;  -- 관리자 /api(비밀 키)가 읽고 처리하려면 필요(2026-11-23 추가: 빠져 있어 앱 신고 탭이 권한 오류)
+grant usage, select on all sequences in schema public to service_role;
 grant insert (app_qid, sub, question, reason, note, app_version, lang) on public.app_reports to anon;
 drop policy if exists app_reports_insert on public.app_reports;
 create policy app_reports_insert on public.app_reports for insert to anon with check (resolved = false);
