@@ -11,6 +11,7 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script src="tracer-wait.js?v=20261123112307"></script>
 <style>
   /* 관리자 화면: TRACER와 같은 색. 기본은 어두운 화면. */
   :root {
@@ -570,6 +571,7 @@
 
   // 위험한 작업은 대상을 보여 주고 한 번 더 묻는다
   function askConfirm(title, msg, items, yes) {
+    if (window.TracerWait && TracerWait.current()) TracerWait.current().done(true);  // 확인창이 뜨면 대기 카드는 닫는다
     var d = $('#ask'), rec = TR.cur;
     if (rec) TR.step(rec, '확인창: ' + title + ' (대상 ' + items.length + ')');
     $('#askT').textContent = title; $('#askP').textContent = msg; $('#askYes').textContent = yes || '실행';
@@ -1480,12 +1482,16 @@
       var rq = TR.start(text); if (rq) { rq.path = 'sql'; rq.command = 'sql_query'; rq.desc = 'SQL 직접 입력'; TR.step(rq, 'SQL 직접 입력'); }
       var tg = /\bfrom\s+users\b/i.test(text) ? 'users' : /\bfrom\s+questions\b/i.test(text) ? 'questions' : /\bfrom\s+app_reports\b/i.test(text) ? 'app_reports' : 'other';
       $('#cmdGo').disabled = true;
+      var ws = window.TracerWait ? TracerWait.start('sql', { title: 'SQL을 실행하고 있어요', steps: ['SQL 입력', '읽기 전용 검사', 'SQL 엔진 준비', '모의 데이터 맞추기', '결과 도착'], expect: 3 }) : null;
       return SHOW.sql_query({ sql: text, title: '직접 입력한 SQL', target: tg }).then(function (m) { logResult(text, 'show', m, 'SQL 직접 실행(읽기 전용)'); })
-        .catch(function (e) { if (rq) TR.step(rq, '오류'); logResult(text, 'fail', e.message, 'SQL 직접 실행'); }).then(function () { $('#cmdGo').disabled = false; });
+        .catch(function (e) { if (rq) TR.step(rq, '오류'); logResult(text, 'fail', e.message, 'SQL 직접 실행'); }).then(function () { $('#cmdGo').disabled = false; if (ws) ws.done(); });
     }
     var rule = ruleCommand(text.replace(/\s+/g, ' ')), rec = TR.start(text);
     $('#cmdGo').disabled = true; $('#cmdOut').textContent = rule && cmdMode() !== 'ai' ? '' : 'AI가 명령을 해석하는 중…';
+    var wt = window.TracerWait && (!rule || cmdMode() === 'ai') ? TracerWait.start('admin') : null;  // 규칙으로 바로 끝나는 명령은 카드 없이
     interpret(text, rule, rec).then(function (r) {
+      if (wt && r.command === 'sql_query') { wt.setTitle('조회하고 있어요'); }
+      if (wt) wt.step(3);
       if (rec) {
         rec.path = r.source === 'rules' ? 'rules' : 'ai'; rec.conf = r.source === 'rules' ? null : (r.confidence == null ? null : r.confidence);
         rec.command = r.command; rec.desc = r.command === 'none' ? '' : describe(r.command, r.args);
@@ -1498,9 +1504,10 @@
         box.appendChild(btn('아니에요', function () { li.remove(); TR.cur = rec; TR.step(rec, '관리자: 해석 틀림'); logResult(text, 'cancel', '실행하지 않았어요. 아래 예시처럼 기간·대상을 넣어 다시 말해 주세요.', ''); }));
         return;
       }
+      if (wt) wt.step(4);
       return execute(text, r);
     }).catch(function (e) { if (rec) TR.step(rec, '오류'); logResult(text, 'fail', e.message, ''); })
-      .then(function () { $('#cmdGo').disabled = false; $('#cmdOut').textContent = ''; });
+      .then(function () { $('#cmdGo').disabled = false; $('#cmdOut').textContent = ''; if (wt) wt.done(); });
   }
   // "직접 입력…"을 고르면 숫자를 물어 그 기간으로(취소하면 원래 값, 다른 처리 안 함)
   document.addEventListener('focusin', function (e) { var el = e.target; if (el.tagName === 'SELECT' && DAYLAB['#' + el.id]) el.dataset.prev = el.value; }, true);

@@ -292,7 +292,7 @@
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261123111309';
+  var SITE_V = '20261123112307';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -302,7 +302,8 @@
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
-<script src="tracer-auth.js?v=20261123111309"></script>
+<script src="tracer-auth.js?v=20261123112307"></script>
+<script src="tracer-wait.js?v=20261123112307"></script>
 </head>
 <body>
 <header>
@@ -725,7 +726,13 @@ var Subnet = (function () {
   })();
 
   // ---- 문제
-  function busy(btn, on, label) { state.busy = on; btn.disabled = on; btn.innerHTML = on ? '<span class="spin" aria-hidden="true"></span>' + label : btn.dataset.label; }
+  function busy(btn, on, label) {
+    state.busy = on; btn.disabled = on; btn.innerHTML = on ? '<span class="spin" aria-hidden="true"></span>' + label : btn.dataset.label;
+    // 기다리는 동안 화면 아래 공통 대기 카드(0.4초 안에 끝나면 안 보임)
+    if (!window.TracerWait) return;
+    if (on && !state.wait) state.wait = TracerWait.start(/채점/.test(label) ? 'grade' : /해설/.test(label) ? 'explain' : 'question');
+    if (!on && state.wait) { state.wait.done(); state.wait = null; }
+  }
   $('#newQ').dataset.label = '세트 시작';
   // 세트: '세트 시작'을 누르면 정한 수(기본 5)만큼 이어서 풀고, 마지막 문제 뒤에 결과를 보여 준다.
   // 고른 범위에 안 푼 문제가 모자라도 서버가 다른 범위·이미 푼 문제로 채워 주므로 세트는 끝까지 이어진다.
