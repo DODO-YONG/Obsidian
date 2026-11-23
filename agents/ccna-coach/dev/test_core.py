@@ -139,4 +139,39 @@ ok(core.admin_app_reports(o, {})["open"] == 1 and len(core.admin_app_reports(o, 
 ok(core.admin_summary(o)["open_app_reports"] == 1, "대시보드에 미처리 앱 신고 수")
 try: core.admin_update_app_report(o, {"id": 999999}); ok(False, "")
 except core.ApiError as e: ok(e.code == 404, "없는 신고는 404")
+
+# 관리자 명령창 + 일괄 작업(웹 관리자 전용)
+ok(core.admin_summary(o, {"days": "30"})["days"] == 30 and len(core.admin_summary(o, {"days": "30"})["daily"]) == 30, "대시보드 기간 30일")
+ok(core.admin_summary(o, {"days": "999"})["days"] == 14, "허용 밖 기간은 14일")
+ok(len(core.admin_app_reports(o, {"open": "0", "days": "7"})["reports"]) == 3, "앱 신고 기간 필터")
+uid_a = [x for x in T["profiles"] if x["email"] == "alice@example.com"][0]["id"]
+uid_o = [x for x in T["profiles"] if x["role"] == "owner"][0]["id"]
+try: core.admin_users_bulk(a, {"op": "mark_delete", "ids": [uid_o]}); ok(False, "")
+except core.ApiError as e: ok(e.code == 403, "일괄 작업은 관리자만")
+r = core.admin_users_bulk(o, {"op": "mark_delete", "ids": [uid_a, uid_o]})
+ok(r["updated"] == 1 and r["skipped"] == 1, "주인(자기 자신)은 삭제 예정에서 제외")
+ok(T["profiles"][[x["id"] for x in T["profiles"]].index(uid_a)]["delete_at"], "삭제 예정 표시됨(지우지 않음)")
+ok(len([x for x in T["profiles"] if x["id"] == uid_a]) == 1, "사용자는 그대로 남아 있음")
+core.touch(core.current_user("a"))
+ok(not T["profiles"][[x["id"] for x in T["profiles"]].index(uid_a)]["delete_at"], "다시 접속하면 삭제 예정 자동 취소")
+try: core.admin_users_bulk(o, {"op": "drop_table", "ids": [uid_a]}); ok(False, "")
+except core.ApiError as e: ok(e.code == 400, "목록 밖 작업은 거부")
+c = core.clean_command({"command": "show_users", "args": {"inactive_days": 400, "status": "hacked"}, "confidence": 0.95})
+ok(c["args"] == {"status": "", "inactive_days": 365} and c["kind"] == "show" and not c["unsure"], "AI 값은 허용 목록 안으로 맞춤")
+ok(core.clean_command({"command": "drop_all", "confidence": 1})["command"] == "none", "목록 밖 명령은 none")
+ok(core.clean_command({"command": "mark_delete_inactive", "args": {}, "confidence": 0.4})["unsure"], "확신 낮으면 실행 전 확인")
+ok(core.clean_command({"command": "answer", "args": {"what": "inactive", "days": 300}, "confidence": 1})["kind"] == "answer", "질문은 답변 종류")
+seen = {}
+_orig = gc.ask_json
+gc.ask_json = lambda s_, pr, sc=None, temperature=0.7: (seen.update(p=pr, t=temperature) or {"command": "none", "confidence": 1, "reply": "x"}, "f")
+core.admin_ask(o, {"prompt": "bob@example.com 계정 차단해줘"})
+ok("bob@example.com" not in seen["p"] and seen["t"] == 0.1, "이메일은 제미나이로 보내지 않음, 낮은 온도")
+ok(not any("bob@example.com" in str(x.get("detail")) for x in T["activity_log"] if x["action"] == "admin"), "명령 문장은 기록하지 않음")
+try: core.admin_ask(a, {"prompt": "x"}); ok(False, "")
+except core.ApiError as e: ok(e.code == 403, "명령창은 관리자만")
+core.DEMO_DAILY_AI = 1
+core.demo_ask({"prompt": "신고 보여줘"})
+try: core.demo_ask({"prompt": "신고 보여줘"}); ok(False, "")
+except core.ApiError as e: ok(e.code == 429, "모의 화면 AI는 하루 횟수 제한")
+gc.ask_json = _orig
 print("모두 통과")

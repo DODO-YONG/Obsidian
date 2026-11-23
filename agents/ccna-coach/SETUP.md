@@ -9,7 +9,7 @@
 ## 1. Supabase (DB·로그인) — 약 5분
 1. https://supabase.com → **Start your project** → GitHub로 가입 (요금제: **Free**).
 2. **New project**: 이름 `tracer`, Region **Northeast Asia (Seoul)**, DB 비밀번호는 비밀번호 관리자에 저장.
-3. 왼쪽 **SQL Editor** → 새 쿼리 → 이 폴더의 [`supabase/schema.sql`](supabase/schema.sql) 내용을 통째로 붙여 넣고 **Run** → "Success" 확인. 안드로이드 앱(Tracer Route) 오류 신고도 받으려면 [`supabase/app_reports.sql`](supabase/app_reports.sql)도 같은 방법으로 실행.
+3. 왼쪽 **SQL Editor** → 새 쿼리 → 이 폴더의 [`supabase/schema.sql`](supabase/schema.sql) 내용을 통째로 붙여 넣고 **Run** → "Success" 확인. 안드로이드 앱(Tracer Route) 오류 신고도 받으려면 [`supabase/app_reports.sql`](supabase/app_reports.sql)도 같은 방법으로 실행. 관리자 명령창의 '삭제 예정'을 쓰려면 [`supabase/admin_ai.sql`](supabase/admin_ai.sql)도 실행.
 4. **Project Settings → API Keys**에서 세 값을 메모(다음 단계에서 Vercel에 붙여 넣음):
    - Project URL (`https://xxxx.supabase.co`)
    - **Publishable key** (`sb_publishable_…`, 예전 이름 anon) — 공개돼도 되는 키

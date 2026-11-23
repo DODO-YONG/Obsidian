@@ -141,7 +141,10 @@ def touch(p: dict) -> None:
             gap = datetime.now(timezone.utc) - datetime.fromisoformat(last.replace("Z", "+00:00")) > timedelta(minutes=30)
         except ValueError:
             pass
-    db.update("profiles", {"id": f"eq.{p['id']}"}, {"last_seen": now_iso()})
+    f = {"last_seen": now_iso()}
+    if p.get("delete_at"):  # 삭제 예정이던 사용자가 다시 접속하면 예정을 취소한다
+        f["delete_at"] = None
+    db.update("profiles", {"id": f"eq.{p['id']}"}, f)
     if gap:
         log_activity(p, "visit", {})
 
@@ -533,10 +536,15 @@ def require_admin(p: dict) -> None:
         raise ApiError(403, "관리자만 볼 수 있어요.")
 
 
-def admin_summary(p: dict) -> dict:
+DASH_DAYS = (7, 14, 30, 90)
+
+
+def admin_summary(p: dict, params: dict | None = None) -> dict:
     require_admin(p)
     since = today_start_iso()
-    return {
+    days = int((params or {}).get("days") or 14)
+    days = days if days in DASH_DAYS else 14
+    return {"days": days,
         "users": db.count("profiles", {}),
         "blocked": db.count("profiles", {"status": "eq.blocked"}),
         "pending": db.count("profiles", {"status": "eq.pending"}),
@@ -548,7 +556,7 @@ def admin_summary(p: dict) -> dict:
         "open_reports": db.count("question_reports", {"resolved": "is.false"}),
         "open_app_reports": _safe_count("app_reports", {"resolved": "is.false"}),
         "bank_min": BANK_MIN, "bank_ratio": BANK_RATIO,
-        "daily": db.rpc("admin_daily", {"p_days": 14}) or [],
+        "daily": db.rpc("admin_daily", {"p_days": days}) or [],
     }
 
 
@@ -570,6 +578,9 @@ def admin_app_reports(p: dict, params: dict) -> dict:
          "limit": str(max(1, min(int(params.get("limit") or 200), 500)))}
     if params.get("open", "1") == "1":
         q["resolved"] = "is.false"
+    days = int(params.get("days") or 0)
+    if days > 0:  # 최근 N일만(0 = 기간 제한 없음)
+        q["at"] = "gte." + (datetime.now(timezone.utc) - timedelta(days=min(days, 365))).isoformat()
     rows = db.select("app_reports", q)
     # 웹 문제은행(questions)에 같은 문제가 있으면 연결(문제 글 해시로) → 웹에서도 바로 고칠 수 있게
     hashes = sorted({norm_hash(r["question"]) for r in rows})
@@ -703,3 +714,156 @@ def admin_update_question(p: dict, body: dict) -> dict:
         raise
     log_activity(p, "admin", {"qid": qid, "set": sorted(k for k in fields if k != "updated_at")})
     return out[0] if out else {}
+
+
+# ── 여러 사용자 한꺼번에(사용자 탭의 일괄 버튼). 한 명씩 같은 권한 검사를 거친다.
+BULK_OPS = {"mark_delete", "unmark_delete", "approve"}
+
+
+def admin_users_bulk(p: dict, body: dict) -> dict:
+    """mark_delete: 삭제 예정 표시(실제로 지우지 않음) · unmark_delete: 예정 취소 · approve: 승인 대기 → 사용 중."""
+    require_admin(p)
+    op = str(body.get("op", ""))
+    if op not in BULK_OPS:
+        raise ApiError(400, "할 수 없는 작업이에요.")
+    ids = [str(x) for x in (body.get("ids") or []) if re.fullmatch(r"[0-9a-zA-Z-]{1,36}", str(x))][:500]
+    if not ids:
+        raise ApiError(400, "대상 사용자가 없어요.")
+    rows = db.select("profiles", {"id": f"in.({','.join(ids)})", "select": "*"})
+    done, skipped = [], 0
+    for t in rows:
+        if t["id"] == p["id"] or t["role"] == "owner" or (t["role"] == "admin" and p["role"] != "owner"):
+            skipped += 1
+            continue
+        if op == "approve":
+            if t["status"] != "pending":
+                skipped += 1
+                continue
+            fields = {"status": "active"}
+        else:
+            fields = {"delete_at": now_iso() if op == "mark_delete" else None}
+        db.update("profiles", {"id": f"eq.{t['id']}"}, fields)
+        done.append(t["id"])
+    log_activity(p, "admin", {"bulk": op, "n": len(done)})
+    return {"ok": True, "op": op, "updated": len(done), "skipped": skipped + len(ids) - len(rows), "ids": done}
+
+
+# ── 관리자 명령창(웹 관리자 화면 전용): 말로 한 명령 → '정해진 명령 하나'로 바꾼다. 실행은 화면의 기존 필터·버튼이 한다.
+#    자주 쓰는 표현은 화면(admin.html)의 규칙이 먼저 처리하고, 규칙으로 안 되는 말만 여기로 온다.
+#    제미나이에는 관리자가 쓴 명령 문장만 보낸다(사용자 이름·이메일·DB 내용은 보내지 않음).
+ANSWER_WHAT = ["users_total", "pending", "blocked", "delete_marked", "inactive", "visitors", "today_ai",
+               "open_app_reports", "app_reports", "bank_flagged", "bank_active"]
+ADMIN_COMMANDS = {
+    "show_dashboard":       {"days": [7, 14, 30, 90]},
+    "show_users":           {"status": ["", "active", "pending", "blocked", "delete"], "inactive_days": [0, 30, 90, 180, 365]},
+    "show_activity":        {"days": [1, 7, 30, 90], "action": ["", "visit", "signup", "question", "grade", "subnet", "explain", "report", "admin"]},
+    "show_bank":            {"status": ["flagged", "", "active", "hidden"], "low": [False, True]},
+    "show_app_reports":     {"open": ["1", "0"], "days": [0, 1, 7, 30, 90]},
+    "answer":               {"what": ANSWER_WHAT, "days": [7, 1, 14, 30, 90, 180, 365]},
+    "mark_delete_inactive": {"inactive_days": [365, 30, 90, 180]},
+    "unmark_delete_all":    {},
+    "approve_all_pending":  {},
+    "resolve_app_reports":  {"days": [0, 1, 7, 30, 90]},
+}
+COMMAND_KIND = {"answer": "answer", "mark_delete_inactive": "act", "unmark_delete_all": "act",
+                "approve_all_pending": "act", "resolve_app_reports": "act"}
+ADMIN_ASK_SYS = """You turn a Korean admin's request for the TRACER web admin page into exactly ONE command from this fixed list.
+You cannot do anything outside this list. Never invent commands or values. Snap numbers to the closest allowed value
+("오늘"=1, "며칠/일주일"=7, "2주"=14, "한 달"=30, "3달"=90, "반년"=180, "1년/일년"=365).
+
+A) Open a tab with filters (when they say 보여줘/찾아줘/열어줘/목록/확인):
+- show_dashboard {days: 7|14|30|90} — daily visitors (사용자 수·접속자), AI calls, answers.
+- show_users {status: ""|active|pending|blocked|delete, inactive_days: 0|30|90|180|365} — user list. "delete" = users marked 삭제 예정. inactive_days = not visited for more than that many days.
+- show_activity {days: 1|7|30|90, action: ""|visit|signup|question|grade|subnet|explain|report|admin} — activity log.
+- show_bank {status: flagged|""|active|hidden, low: bool} — web question bank. flagged = stopped by reports. low = suspiciously low correct rate.
+- show_app_reports {open: "1"|"0", days: 0|1|7|30|90} — anonymous error reports (신고). open "1" = unresolved only, "0" = all. days 0 = any time.
+B) Answer a question with a number only, without changing the screen (몇 명/몇 건/얼마나/있어?):
+- answer {what, days} — what: users_total | pending | blocked | delete_marked | inactive (not visited for more than `days`) |
+  visitors (visitors over the last `days`) | today_ai (Gemini calls today) | open_app_reports | app_reports (reports in last `days`) |
+  bank_flagged | bank_active.
+C) Change data (the page shows the targets and asks the admin to confirm first):
+- mark_delete_inactive {inactive_days: 30|90|180|365} — "지워줘/삭제/정리" for users who haven't visited. Only marks them 삭제 예정.
+- unmark_delete_all {} — cancel all 삭제 예정 marks.
+- approve_all_pending {} — approve every user waiting for approval.
+- resolve_app_reports {days} — mark unresolved reports as handled.
+D) none — anything else: a specific person, editing or deleting questions, settings, the Android app, general chat.
+
+Examples:
+"최근 며칠 사용자 수 보여줘" -> show_dashboard {days:7}
+"한 달 동안 접속 안 한 사람 몇 명이야?" -> answer {what:"inactive", days:30}
+"오래 안 들어온 사람들 정리해줘" -> mark_delete_inactive {inactive_days:365}, confidence 0.6
+"신고 들어온 거 있어?" -> answer {what:"open_app_reports"}
+"정답 이상한 문제" -> show_bank {low:true}
+"김철수 차단해줘" -> none
+
+Return JSON: {"command": "...", "args": {...}, "confidence": 0..1 (how sure you are this is what they meant),
+"reply": "one short Korean sentence: what you understood"}."""
+ADMIN_ASK_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "command": {"type": "string", "enum": list(ADMIN_COMMANDS) + ["none"]},
+        "args": {"type": "object", "properties": {
+            "days": {"type": "integer"}, "inactive_days": {"type": "integer"}, "status": {"type": "string"},
+            "action": {"type": "string"}, "open": {"type": "string"}, "low": {"type": "boolean"}, "what": {"type": "string"}}},
+        "confidence": {"type": "number"},
+        "reply": {"type": "string"},
+    },
+    "required": ["command", "confidence", "reply"],
+}
+_EMAIL = re.compile(r"[\w.+-]+@[\w-]+(\.[\w-]+)+")
+
+
+def _closest(v, allowed: list):
+    if v in allowed:
+        return v
+    nums = [a for a in allowed if isinstance(a, int) and not isinstance(a, bool)]
+    if nums and isinstance(v, (int, float)) and not isinstance(v, bool):
+        return min(nums, key=lambda a: abs(a - v))
+    return allowed[0]
+
+
+def clean_command(out: dict) -> dict:
+    """제미나이 답을 허용 목록 안으로 맞춘다. 목록 밖이면 none. 확신이 낮으면 unsure(화면이 실행 전에 물어본다)."""
+    cmd = str(out.get("command", "none"))
+    try:
+        conf = max(0.0, min(float(out.get("confidence", 0.5)), 1.0))
+    except (TypeError, ValueError):
+        conf = 0.5
+    reply = str(out.get("reply") or "")[:200]
+    if cmd not in ADMIN_COMMANDS:
+        return {"command": "none", "kind": "none", "args": {}, "reply": reply or "이 화면에서 할 수 없는 일이에요.",
+                "confidence": conf, "unsure": False}
+    raw = out.get("args") if isinstance(out.get("args"), dict) else {}
+    args = {k: _closest(raw.get(k, allowed[0]), allowed) for k, allowed in ADMIN_COMMANDS[cmd].items()}
+    return {"command": cmd, "kind": COMMAND_KIND.get(cmd, "show"), "args": args, "reply": reply,
+            "confidence": conf, "unsure": conf < 0.7}
+
+
+def _interpret(text: str) -> dict:
+    text = _EMAIL.sub("(이메일)", str(text).strip()[:300])  # 혹시 적은 이메일은 제미나이로 보내지 않는다
+    if not text:
+        raise ApiError(400, "명령을 입력해 주세요.")
+    out, _model = gc.ask_json(ADMIN_ASK_SYS, text, ADMIN_ASK_SCHEMA, temperature=0.1)
+    return {**clean_command(out if isinstance(out, dict) else {}), "source": "ai"}
+
+
+def admin_ask(p: dict, body: dict) -> dict:
+    require_admin(p)
+    if p["role"] != "owner" and ai_left(p) <= 0:
+        raise ApiError(429, "오늘 AI 사용 한도를 다 썼어요.")
+    res = _interpret(body.get("prompt", ""))
+    log_activity(p, "admin", {"ask": res["command"]}, ai=True)  # 명령 문장 자체는 기록하지 않는다
+    return res
+
+
+DEMO_DAILY_AI = int(os.environ.get("TRACER_DEMO_DAILY_AI", "30"))
+
+
+def demo_ask(body: dict) -> dict:
+    """모의 관리자 화면(로그인 없음)용. 명령 해석만 하고 DB는 건드리지 않는다. 하루 전체 횟수 제한."""
+    used = db.count("activity_log", {"action": "eq.demo", "at": f"gte.{today_start_iso()}"})
+    if used >= DEMO_DAILY_AI:
+        raise ApiError(429, "오늘 모의 화면의 AI 사용 횟수를 다 썼어요.")
+    res = _interpret(body.get("prompt", ""))
+    log_activity(None, "demo", {"ask": res["command"]}, ai=True)
+    return res

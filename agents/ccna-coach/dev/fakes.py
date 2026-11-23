@@ -46,7 +46,7 @@ def insert(t, rows, on_conflict=None, ignore_dupes=False, returning=True):
         if on_conflict and any(x.get(on_conflict) == r.get(on_conflict) for x in T[t]):
             if ignore_dupes: continue
             ex = [x for x in T[t] if x[on_conflict] == r[on_conflict]][0]; ex.update(r); out.append(ex); continue
-        if t == "profiles": r = {"role": "user", "status": "active", "can_practice": True, "can_explain": True, "daily_limit": 30, "last_seen": None, **r}
+        if t == "profiles": r = {"role": "user", "status": "active", "can_practice": True, "can_explain": True, "daily_limit": 30, "last_seen": None, "delete_at": None, "created_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(), **r}
         if t == "questions": r = {"id": str(uuid.uuid4()), "status": "active", "served": 0, "graded": 0, "correct": 0, "reports": 0, **r}
         if t == "activity_log": r = {"ai": False, "counted": False, "at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(), **r}
         if t == "question_reports": r = {"resolved": False, **r}
@@ -90,8 +90,9 @@ def rpc(name, a=None):
     if name == "admin_daily":
         import datetime as _d
         t = _d.date.today()
-        return [{"day": str(t - _d.timedelta(days=13 - i)), "visitors": i % 4 + 1, "ai_calls": 12 - i // 2, "bank_serves": i * 2,
-                 "new_questions": max(1, 10 - i), "answers": 8 + i} for i in range(14)]
+        n = a.get("p_days", 14)
+        return [{"day": str(t - _d.timedelta(days=n - 1 - i)), "visitors": i % 4 + 1, "ai_calls": max(0, 12 - i // 2), "bank_serves": i * 2,
+                 "new_questions": max(1, 10 - i), "answers": 8 + i} for i in range(n)]
     if name == "bank_buckets":
         from collections import Counter
         c = Counter((q["sub"], q["difficulty"], q["qtype"], q["status"]) for q in T["questions"])
@@ -100,12 +101,25 @@ def rpc(name, a=None):
     raise Exception(name)
 db.rpc = rpc
 calls = {"n": 0}
-def ask_json(sys_, prompt, schema=None):
+def ask_json(sys_, prompt, schema=None, temperature=0.7):
     calls["n"] += 1
     if "Write exactly ONE question" in sys_:
         n = calls["n"]
         return {"question": f"Q{n}: Which protocol {n}?", "choices": ["a", "b", "c", "d"], "answer": "B",
                 "explanation": "B because.", "option_notes": ["A no", "B yes", "C no", "D no"], "key_concept": "kc"}, "fake"
+    if "TRACER web admin page" in sys_:  # 관리자 명령창: 낱말로 대충 고른다(가짜)
+        t = prompt
+        days = 365 if "1년" in t or "일년" in t else 90 if "3달" in t or "90" in t else 30 if "30" in t or "한 달" in t else 1 if "오늘" in t else 7
+        if "접속" in t and ("안 한" in t or "않은" in t or "안한" in t):
+            if any(w in t for w in ("지워", "삭제")): return {"command": "mark_delete_inactive", "args": {"inactive_days": days}, "confidence": 0.9, "reply": f"{days}일 넘게 접속하지 않은 사용자를 삭제 예정으로 표시할게요."}, "fake"
+            return {"command": "show_users", "args": {"inactive_days": days}, "reply": f"{days}일 넘게 접속하지 않은 사용자를 보여 드릴게요."}, "fake"
+        if "삭제 예정" in t and "취소" in t: return {"command": "unmark_delete_all", "args": {}, "reply": "삭제 예정을 모두 취소할게요."}, "fake"
+        if "승인" in t: return {"command": "approve_all_pending", "args": {}, "reply": "승인 대기 사용자를 모두 승인할게요."}, "fake"
+        if "신고" in t and "처리" in t: return {"command": "resolve_app_reports", "args": {"days": days}, "reply": "미처리 신고를 처리 완료로 바꿀게요."}, "fake"
+        if "신고" in t: return {"command": "show_app_reports", "args": {"open": "0", "days": days}, "reply": f"최근 {days}일 앱 신고를 보여 드릴게요."}, "fake"
+        if "사용자 수" in t or "접속자" in t: return {"command": "show_dashboard", "args": {"days": days}, "reply": f"최근 {days}일 접속자를 보여 드릴게요."}, "fake"
+        if "오래" in t: return {"command": "show_users", "args": {"inactive_days": 180}, "confidence": 0.5, "reply": "오래 접속하지 않은 사용자를 보려는 것 같아요."}, "fake"
+        return {"command": "none", "args": {}, "confidence": 0.9, "reply": "그 명령은 이 화면에서 할 수 없어요."}, "fake"
     return {"verdict": "partial", "correct_answer": "x", "explanation": "e", "key_concept": "k"}, "fake"
 gc.ask_json = ask_json
 users = {"o": {"id": "u-owner", "email": "owner@example.com", "user_metadata": {"full_name": "O"}},

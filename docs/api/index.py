@@ -93,7 +93,7 @@ class handler(BaseHTTPRequestHandler):
             if route == "wrong":
                 return core.wrong_summary(p)
             if route == "admin/summary":
-                return core.admin_summary(p)
+                return core.admin_summary(p, qs)
             if route == "admin/users":
                 return core.admin_users(p)
             if route == "admin/activity":
@@ -118,6 +118,8 @@ class handler(BaseHTTPRequestHandler):
             return self._json(400, {"error": "요청을 읽지 못했어요."})
 
         def go():
+            if route == "demo/ask":  # 모의 관리자 화면: 로그인 없이 명령 해석만(하루 횟수 제한)
+                return core.demo_ask(body)
             p = self._user()
             if route == "question" and body.get("retry"):
                 return core.retry_question(p, [str(x) for x in (body.get("exclude") or [])][:100])
@@ -147,6 +149,10 @@ class handler(BaseHTTPRequestHandler):
                 return core.admin_update_question(p, body)
             if route == "admin/app-report":
                 return core.admin_update_app_report(p, body)
+            if route == "admin/users-bulk":
+                return core.admin_users_bulk(p, body)
+            if route == "admin/ask":
+                return core.admin_ask(p, body)
             raise core.ApiError(404, "없는 주소")
 
         self._run(go)

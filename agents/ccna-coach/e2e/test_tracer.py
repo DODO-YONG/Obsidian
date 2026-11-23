@@ -652,3 +652,90 @@ def test_question_single_line_with_show_command_has_no_cli(logged_in, errors, ba
     _serve_question(logged_in, base_url, "show crypto isakmp sa shows QM_IDLE. What does that indicate?")
     expect(logged_in.locator("#qCard .q-text")).to_contain_text("QM_IDLE")
     expect(logged_in.locator("#qCard .q-text .cli")).to_have_count(0)
+
+
+# ---------- 관리자: 모의 화면(?demo=1)·명령창 ----------
+IDLE4 = ["배수아", "Taylor Moon", "문가온", "권예린"]
+
+
+def _demo(page, base_url):
+    page.goto(base_url + "/ccna/admin.html?demo=1")
+    expect(page.locator("#demoBar")).to_be_visible()
+    expect(page.locator("#cmd")).to_be_visible()
+
+
+def _cmd(page, text):
+    page.locator("#cmdIn").fill(text)
+    page.locator("#cmdGo").click()
+    return page.locator("#cmdLog li").first
+
+
+def test_admin_demo_rule_filter_and_answer(page, errors, base_url):
+    _demo(page, base_url)
+    li = _cmd(page, "1년 동안 접속 안 한 유저 찾아줘")
+    expect(li.locator(".st")).to_contain_text("화면 바꿈")
+    expect(page.locator("#uIdle")).to_have_value("365")
+    expect(page.locator("#uCount")).to_contain_text("4명")
+    page.locator("#tabs [data-tab=appr]").click()
+    li = _cmd(page, "미처리 신고 몇 건이야?")
+    expect(li.locator(".st")).to_contain_text("답변")
+    expect(li).to_contain_text("5건")
+    expect(page.locator("#tabs [data-tab=appr]")).to_have_attribute("aria-selected", "true")
+
+
+def test_admin_demo_delete_confirm_yes_and_no(page, errors, base_url):
+    _demo(page, base_url)
+    _cmd(page, "1년 동안 접속 안 한 유저 지워줘")
+    expect(page.locator("dialog#ask")).to_be_visible()
+    expect(page.locator("#askL li")).to_have_count(4)
+    page.locator("#askNo").click()
+    expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("취소")
+    expect(page.locator("#uRows .pill.del")).to_have_count(0)
+    _cmd(page, "1년 동안 접속 안 한 유저 지워줘")
+    page.locator("#askYes").click()
+    expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("실행함")
+    for n in IDLE4:
+        expect(page.locator("#uRows tr", has_text=n).locator(".pill.del")).to_be_visible()
+    expect(page.locator("#uRows .pill.del")).to_have_count(4)
+
+
+def test_admin_demo_approve_all_pending(page, errors, base_url):
+    _demo(page, base_url)
+    _cmd(page, "승인 대기 모두 승인해줘")
+    page.locator("#askYes").click()
+    expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("실행함")
+    page.locator("#tabs [data-tab=users]").click()
+    page.locator("#uStatus").select_option("pending")
+    expect(page.locator("#uRows tr[data-id]")).to_have_count(0)
+
+
+def test_admin_demo_ai_fallback_low_confidence_and_refusal(page, errors, base_url):
+    _demo(page, base_url)
+    li = _cmd(page, "오래된 사람들")
+    expect(li.locator(".st")).to_contain_text("확인 필요")
+    expect(page.locator("#v-users")).to_be_hidden()
+    li.get_by_role("button", name=re.compile("맞아요, 실행")).click()
+    expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("화면 바꿈")
+    expect(page.locator("#v-users")).to_be_visible()
+    li = _cmd(page, "오늘 날씨 어때")
+    expect(li.locator(".st")).to_contain_text("못 함")
+
+
+def test_admin_real_has_command_bar_and_new_filters(logged_in, errors, base_url):
+    page = logged_in
+    page.goto(base_url + "/ccna/admin.html")
+    expect(page.locator("#cmd")).to_be_visible()
+    expect(page.locator("#demoBar")).to_be_hidden()
+    page.locator("#dDays").select_option("7")
+    expect(page.locator("#days .day")).to_have_count(7)
+    page.locator("#dDays").select_option("30")
+    expect(page.locator("#days .day")).to_have_count(30)
+    page.locator("#tabs [data-tab=users]").click()
+    expect(page.locator("#uIdle")).to_be_visible()
+    expect(page.locator("#uStatus option[value=delete]")).to_have_count(1)
+    expect(page.locator("#uRows [data-del]").first).to_be_visible()
+    page.locator("#uRows [data-del]").first.click()
+    expect(page.locator("dialog#ask")).to_be_visible()
+    page.locator("#askNo").click()
+    page.locator("#tabs [data-tab=appr]").click()
+    expect(page.locator("#arDays")).to_be_visible()

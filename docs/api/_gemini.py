@@ -51,7 +51,7 @@ def _parse_json(text: str) -> dict:
     return json.loads(m.group(0))
 
 
-def ask_json(system: str, prompt: str, schema: dict | None = None) -> tuple[dict, str]:
+def ask_json(system: str, prompt: str, schema: dict | None = None, temperature: float = 0.7) -> tuple[dict, str]:
     """(결과 dict, 사용한 모델) 을 돌려준다."""
     key = _env("GOOGLE_API_KEY")
     if not key:
@@ -59,7 +59,7 @@ def ask_json(system: str, prompt: str, schema: dict | None = None) -> tuple[dict
     base = {
         "systemInstruction": {"parts": [{"text": system}]},
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-        "generationConfig": {"responseMimeType": "application/json", "temperature": 0.7},
+        "generationConfig": {"responseMimeType": "application/json", "temperature": temperature},
     }
     # 최근에 한도 초과·무응답이던 모델은 맨 뒤로 보낸다(매번 기다리지 않게). 모두 바쁘면 2초 쉬고 한 번 더.
     t0 = time.time()
