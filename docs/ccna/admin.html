@@ -200,6 +200,17 @@
   .det h4 { margin: 0 0 6px; font-size: 13.5px; }
   .det .weak span { display: inline-block; margin: 0 6px 6px 0; }
   .det table { font-size: 12.5px; } .det td { padding: 5px 8px; }
+  /* 3단계(모의 전용): 기간 비교·범위별 정답률 */
+  .cmp { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .cmp div { background: var(--sunk); border-radius: 10px; padding: 10px 12px; font-size: 12.5px; color: var(--ink-3); }
+  .cmp b { display: block; font-family: var(--mono); font-size: 20px; color: var(--ink); }
+  .cmp .up { color: var(--ok); } .cmp .down { color: var(--bad); } .cmp .flat { color: var(--ink-3); }
+  .subs { display: grid; gap: 4px; }
+  .subs button { display: grid; grid-template-columns: 170px 1fr 120px; gap: 10px; align-items: center; background: none; border: 0; padding: 3px 4px; border-radius: 8px; cursor: pointer; text-align: left; font: inherit; color: inherit; font-size: 13px; }
+  .subs button:hover { background: var(--sunk); }
+  .subs .bar { height: 10px; border-radius: 4px; background: var(--sunk); overflow: hidden; } .subs .bar i { display: block; height: 100%; background: var(--accent); }
+  .subs .bar i.low { background: var(--bad); } .subs .n { font-family: var(--mono); font-size: 12px; color: var(--ink-2); text-align: right; }
+  @media (max-width: 760px) { .subs button { grid-template-columns: 1fr 90px; } .subs .bar { grid-column: 1 / -1; } }
   .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px; z-index: 20; max-width: calc(100vw - 32px); }
   @media (max-width: 760px) {
     .bar { height: auto; flex-wrap: wrap; padding: 8px 16px; gap: 8px; }
@@ -217,6 +228,7 @@
     <nav class="tabs" role="tablist" aria-label="관리 메뉴" id="tabs" hidden>
       <button role="tab" aria-selected="false" data-tab="todo" data-lab hidden>오늘 할 일</button>
       <button role="tab" aria-selected="true" data-tab="dash">대시보드</button>
+      <button role="tab" aria-selected="false" data-tab="trace" data-lab hidden>명령 기록</button>
       <button role="tab" aria-selected="false" data-tab="users">사용자</button>
       <button role="tab" aria-selected="false" data-tab="activity">활동 기록</button>
       <button role="tab" aria-selected="false" data-tab="bank">문제은행</button>
@@ -248,6 +260,7 @@
       <button type="button">미처리 신고 몇 건이야?</button><button type="button">승인 대기 모두 승인해줘</button>
       <button type="button" data-lab hidden>오늘 할 일 보여줘</button><button type="button" data-lab hidden>AI 제일 많이 쓴 사람 보여줘</button>
       <button type="button" data-lab hidden>어려운 OSPF 문제 보여줘</button><button type="button" data-lab hidden>출제 중지 문제 모두 숨겨줘</button><button type="button" data-lab hidden>방금 거 되돌려줘</button>
+      <button type="button" data-lab hidden>지난주랑 비교해줘</button><button type="button" data-lab hidden>약한 범위 보여줘</button><button type="button" data-lab hidden>사용자 목록 CSV로 받아줘</button>
     </div>
     <div class="out" id="cmdOut" role="status"></div>
     <ul class="log" id="cmdLog" aria-label="최근 명령 결과"></ul>
@@ -259,13 +272,34 @@
     <div class="todo" id="todo"></div>
   </section>
 
+  <section id="v-trace" hidden>
+    <p class="muted" style="margin:0 0 10px;font-size:13px">명령창에 입력한 명령이 어떤 단계를 거쳤는지 보여요: 입력 → 해석(규칙 / AI·확신) → 해석된 명령 → 확인창 → 결과. 이 기록은 <b>이 브라우저에만</b> 저장되고 어디로도 보내지 않아요(최근 300건).</p>
+    <div class="tools">
+      <select id="tSt" aria-label="결과"><option value="">모든 결과</option><option value="fail">못 함</option><option value="wait">확인 필요</option><option value="cancel">취소</option><option value="done">실행함</option><option value="answer">답변</option><option value="show">화면 바꿈</option></select>
+      <select id="tPath" aria-label="해석 경로"><option value="">모든 경로</option><option value="rules">규칙</option><option value="ai">AI</option></select>
+      <span class="muted" id="tCount"></span><span class="spacer"></span>
+      <button class="btn sm" type="button" id="tCopy">못 알아들은 문장 복사</button>
+      <button class="btn sm" type="button" data-csv="trace">CSV로 받기</button>
+      <button class="btn sm danger" type="button" id="tClear">기록 지우기</button>
+    </div>
+    <div class="tablewrap"><table class="act">
+      <thead><tr><th>시각</th><th>입력 문장</th><th>해석</th><th>해석된 명령</th><th>단계</th><th>결과</th><th>시간</th></tr></thead>
+      <tbody id="tRows"></tbody>
+    </table></div>
+    <div class="pager" id="tPager" hidden></div>
+  </section>
+
   <section id="v-dash" hidden>
     <div class="tiles" id="tiles"></div>
+    <div class="panel" id="cmpPanel" data-lab hidden style="margin-bottom:14px"><h2 id="cmpT">지난 기간과 비교</h2><div class="cmp" id="cmp"></div></div>
     <div class="panel">
       <h2>최근 <select id="dDays" aria-label="기간"><option value="7">7일</option><option value="14" selected>14일</option><option value="30">30일</option><option value="90">90일</option></select></h2>
       <div class="legend"><span style="--c: var(--bank)">문제은행 출제(AI 0번)</span><span style="--c: var(--part)">새로 만든 문제(AI 1번)</span></div>
       <div class="days" id="days"></div>
     </div>
+    <div class="panel" id="subPanel" data-lab hidden style="margin-top:14px"><h2 id="subT">범위별 정답률</h2>
+      <p class="muted" style="margin:0 0 8px;font-size:12.5px">정답률 낮은 범위부터. 누르면 그 범위 문제은행을 정답률 낮은 순으로 열어요.</p>
+      <div class="subs" id="subs"></div><button class="btn sm" type="button" id="subMore" style="margin-top:8px">모두 보기</button></div>
   </section>
 
   <section id="v-users" hidden>
@@ -277,6 +311,7 @@
       <select id="uJoined" aria-label="가입 기간" data-lab hidden><option value="0">가입 기간 전체</option><option value="1">오늘·어제 가입</option><option value="7">최근 7일 가입</option><option value="30">최근 30일 가입</option><option value="90">최근 90일 가입</option></select>
       <select id="uSort" aria-label="정렬" data-lab hidden><option value="last_desc">마지막 접속 최근순</option><option value="last_asc">마지막 접속 오래된순</option><option value="created_desc">가입 최근순</option><option value="created_asc">가입 오래된순</option><option value="attempts_desc">푼 문제 많은순</option><option value="ai_desc">오늘 AI 많은순</option><option value="name_asc">이름순</option></select>
       <span class="spacer"></span>
+      <button class="btn sm" type="button" data-csv="users" data-lab hidden>CSV로 받기</button>
       <button class="btn sm primary" type="button" id="uBulkApprove" hidden></button>
       <button class="btn sm danger" type="button" id="uBulkDelete" hidden></button>
       <button class="btn sm" type="button" id="uBulkUndelete" hidden></button>
@@ -299,6 +334,7 @@
       </select>
       <select id="aDays" aria-label="기간"><option value="1">오늘·어제</option><option value="7" selected>7일</option><option value="30">30일</option><option value="90">90일</option></select>
       <span class="muted" id="aCount"></span>
+      <button class="btn sm" type="button" data-csv="activity" data-lab hidden>CSV로 받기</button>
     </div>
     <div class="tablewrap"><table class="act">
       <thead><tr><th>시각</th><th>사용자</th><th>행동</th><th>내용</th><th>기기</th></tr></thead>
@@ -309,7 +345,7 @@
 
   <section id="v-bank" hidden>
     <div class="panel" style="margin-bottom:14px">
-      <h2>묶음별 문제 수 <span class="muted" id="bkNote" style="font-weight:400;font-size:12.5px"></span></h2>
+      <h2>묶음별 문제 수 <span class="muted" id="bkNote" style="font-weight:400;font-size:12.5px"></span> <button class="btn sm" type="button" id="bkToggle" data-lab hidden>펼치기</button></h2>
       <div class="buckets" id="buckets"></div>
     </div>
     <div class="tools">
@@ -321,6 +357,7 @@
       <select id="qSort" aria-label="정렬" data-lab hidden><option value="reports_desc">신고 많은순</option><option value="rate_asc">정답률 낮은순</option><option value="served_desc">출제 많은순</option><option value="created_desc">최근 만든순</option></select>
       <label class="muted" style="font-size:13px" data-lab hidden><input type="checkbox" id="qAll"> 이 페이지 모두 선택</label>
       <span class="muted" id="qCount"></span>
+      <button class="btn sm" type="button" data-csv="bank" data-lab hidden>CSV로 받기</button>
     </div>
     <div class="selbar" id="qSel" hidden></div>
     <div class="qlist" id="qList"></div>
@@ -336,6 +373,7 @@
       <select id="arSort" aria-label="정렬" data-lab hidden><option value="at_desc">최근순</option><option value="at_asc">오래된순</option><option value="same_desc">같은 문제 신고 많은순</option></select>
       <label class="muted" style="font-size:13px" data-lab hidden><input type="checkbox" id="arAll"> 이 페이지 모두 선택</label>
       <span class="muted" id="arCount"></span>
+      <button class="btn sm" type="button" data-csv="appr" data-lab hidden>CSV로 받기</button>
       <span class="spacer"></span>
       <button class="btn sm primary" type="button" id="arBulkDone" hidden></button>
     </div>
@@ -389,7 +427,7 @@
 
   // ---- 모의 전용(LAB) 공통: 정렬·페이지·선택·되돌리기·주소 저장. 실제 관리자 화면에서는 꺼져 있다.
   var LAB = DEMO, PAGE = 50;
-  var pg = { todo: 1, dash: 1, users: 1, activity: 1, bank: 1, appr: 1 }, sel = { users: new Set(), bank: new Set(), appr: new Set() };
+  var pg = { trace: 1, todo: 1, dash: 1, users: 1, activity: 1, bank: 1, appr: 1 }, sel = { users: new Set(), bank: new Set(), appr: new Set() };
   function pagerHtml(el, total, key, size, render) {
     var n = Math.max(1, Math.ceil(total / size)), p = Math.min(pg[key], n); pg[key] = p;
     el.hidden = !LAB || total <= size;
@@ -420,7 +458,7 @@
   }
   // 필터·정렬·페이지를 주소(#탭?…)에 저장 → 새로고침·뒤로 가기에도 유지
   var HASH = {
-    todo: {}, dash: { days: '#dDays' }, users: { q: '#uSearch', st: '#uStatus', idle: '#uIdle', join: '#uJoined', sort: '#uSort' },
+    trace: { st: '#tSt', path: '#tPath' }, todo: {}, dash: { days: '#dDays' }, users: { q: '#uSearch', st: '#uStatus', idle: '#uIdle', join: '#uJoined', sort: '#uSort' },
     activity: { user: '#aUser', act: '#aAction', days: '#aDays' }, bank: { st: '#qStatus', sub: '#qSub', low: '#qLow', q: '#qSearch', diff: '#qDiff', sort: '#qSort' },
     appr: { open: '#arOpen', days: '#arDays', reason: '#arReason', q: '#arSearch', sort: '#arSort' }
   };
@@ -443,20 +481,21 @@
   var loaded = {};
   function show(tab) {
     document.querySelectorAll('#tabs [role=tab]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.tab === tab ? 'true' : 'false'); });
-    ['todo', 'dash', 'users', 'activity', 'bank', 'appr'].forEach(function (t) { $('#v-' + t).hidden = t !== tab; });
+    ['trace', 'todo', 'dash', 'users', 'activity', 'bank', 'appr'].forEach(function (t) { $('#v-' + t).hidden = t !== tab; });
     curTab = tab;
     if (LAB) saveHash(); else try { history.replaceState(null, '', location.search + '#' + tab); } catch (e) {}
-    return ({ todo: loadTodo, dash: loadDash, users: loadUsers, activity: loadActivity, bank: loadBank, appr: loadAppReports })[tab]();
+    return ({ trace: loadTrace, todo: loadTodo, dash: loadDash, users: loadUsers, activity: loadActivity, bank: loadBank, appr: loadAppReports })[tab]();
   }
 
   // 위험한 작업은 대상을 보여 주고 한 번 더 묻는다
   function askConfirm(title, msg, items, yes) {
-    var d = $('#ask');
+    var d = $('#ask'), rec = TR.cur;
+    if (rec) TR.step(rec, '확인창: ' + title + ' (대상 ' + items.length + ')');
     $('#askT').textContent = title; $('#askP').textContent = msg; $('#askYes').textContent = yes || '실행';
     $('#askL').innerHTML = items.slice(0, 100).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + (items.length > 100 ? '<li>…외 ' + (items.length - 100) + '개</li>' : '');
     $('#askL').hidden = !items.length;
     return new Promise(function (res) {
-      function done(v) { $('#askYes').onclick = $('#askNo').onclick = d.oncancel = null; if (d.open) d.close(); res(v); }
+      function done(v) { $('#askYes').onclick = $('#askNo').onclick = d.oncancel = null; if (d.open) d.close(); if (rec) TR.step(rec, v ? '관리자: 실행' : '관리자: 취소'); res(v); }
       $('#askYes').onclick = function () { done(true); }; $('#askNo').onclick = function () { done(false); };
       d.oncancel = function (e) { e.preventDefault(); done(false); };
       d.showModal(); $('#askNo').focus();
@@ -485,12 +524,62 @@
         var b = d.bank_serves / max * 100, n = d.new_questions / max * 100;
         return '<div class="day"><span class="mono">' + esc(String(d.day).slice(5).replace('-', '/')) + '</span>' +
           '<span class="bars" title="문제은행 ' + d.bank_serves + ' · 새 문제 ' + d.new_questions + '"><i class="b" style="width:' + b + '%"></i><i class="n" style="width:' + n + '%"></i></span>' +
-          '<span class="nums">접속 ' + d.visitors + '명 · AI ' + d.ai_calls + ' · 채점 ' + d.answers + '</span></div>';
+          '<span class="nums">접속 ' + d.visitors + '명 · AI ' + d.ai_calls + ' · 채점 ' + d.answers + (d.signups != null ? ' · 가입 ' + d.signups : '') + '</span></div>';
       }).join('');
+      lastSummary = s;
+      if (LAB && s.period) {
+        var n = s.days || s.daily.length, P = s.period, Q = s.prev;
+        $('#cmpT').textContent = '최근 ' + n + '일 vs 그 전 ' + n + '일';
+        $('#cmp').innerHTML = [['고유 접속자', 'visitors', '명'], ['채점', 'answers', '번'], ['정답률', 'rate', '%'], ['AI 호출', 'ai_calls', '번'], ['새 가입', 'signups', '명']].map(function (m) {
+          var c = P[m[1]], b = Q[m[1]], dl = deltaTxt(c, b, m[1] === 'rate');
+          return '<div>' + m[0] + '<b>' + (c == null ? '–' : c.toLocaleString()) + m[2] + '</b><span class="' + dl[1] + '">' + dl[0] + '</span> <span class="muted">(전 ' + (b == null ? '–' : b.toLocaleString()) + ')</span></div>';
+        }).join('');
+        return loadSubs(n);
+      }
     }).catch(function (e) { toast(e.message); });
   }
 
   $('#dDays').addEventListener('change', function () { saveHash(); loadDash(); });
+  var lastSummary = null, subRows = [], subAll = false;
+  function deltaTxt(c, b, pts) {
+    if (c == null || b == null) return ['–', 'flat'];
+    if (pts) { var d = Math.round((c - b) * 10) / 10; return [(d > 0 ? '▲ ' : d < 0 ? '▼ ' : '') + Math.abs(d) + '%p', d > 0 ? 'up' : d < 0 ? 'down' : 'flat']; }
+    if (!b) return [c ? '▲ 새로' : '변화 없음', c ? 'up' : 'flat'];
+    var r = Math.round((c - b) / b * 100); return [(r > 0 ? '▲ ' : r < 0 ? '▼ ' : '') + Math.abs(r) + '%', r > 0 ? 'up' : r < 0 ? 'down' : 'flat'];
+  }
+  function loadSubs(n) {
+    return api('/api/admin/sub-stats?days=' + n).then(function (r) { subRows = r.subs; $('#subT').textContent = '범위별 정답률 (최근 ' + n + '일 · 낮은 순)'; renderSubs(); });
+  }
+  function renderSubs() {
+    var rows = subAll ? subRows : subRows.slice(0, 10);
+    $('#subs').innerHTML = rows.map(function (x) {
+      return '<button type="button" data-sub="' + esc(x.sub) + '"><span><b class="mono">' + esc(x.sub) + '</b> ' + esc(x.name) + '</span><span class="bar"><i class="' + (x.rate < 55 ? 'low' : '') + '" style="width:' + x.rate + '%"></i></span><span class="n">' + x.rate + '% · ' + x.graded + '문제</span></button>';
+    }).join('') || '<span class="muted">이 기간에 채점 기록이 없어요.</span>';
+    $('#subMore').hidden = subRows.length <= 10; $('#subMore').textContent = subAll ? '낮은 10개만' : '모두 보기 (' + subRows.length + '개)';
+  }
+  $('#subMore').addEventListener('click', function () { subAll = !subAll; renderSubs(); });
+  $('#subs').addEventListener('click', function (e) { var b = e.target.closest('[data-sub]'); if (b) goTo('bank', { '#qStatus': '', '#qSub': b.dataset.sub, '#qLow': false, '#qSearch': '', '#qDiff': '', '#qSort': 'rate_asc' }); });
+
+  // ---- CSV 내보내기(모의 전용): 지금 필터 결과 전체(모든 페이지). 엑셀 한글 깨짐 방지로 BOM
+  function csvCell(v) { v = v == null ? '' : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+  function exportCsv(target) {
+    var C = {
+      users: [lastUserRows, ['이름', '이메일', '역할', '상태', '삭제 예정', '가입', '마지막 접속', '오늘 AI', '하루 한도', '푼 문제', '메모'], function (u) { return [u.name, u.email, ROLE[u.role], STATUS[u.status], u.delete_at ? 'Y' : '', u.created_at, u.last_seen, u.today_ai, u.daily_limit, u.total_attempts, u.note]; }],
+      activity: [acts, ['시각', '사용자', '이메일', '행동', '내용', 'AI', '기기'], function (a) { var u = a.profiles || {}; return [a.at, u.name, u.email, ACT[a.action] || a.action, detailText(a), a.ai ? 'Y' : '', a.device]; }],
+      bank: [qs, ['범위', '난이도', '상태', '문제', '정답', '출제', '채점', '정답률', '신고'], function (q) { return [q.sub, q.difficulty, QST[q.status], q.question, q.answer, q.served, q.graded, q.graded ? Math.round(q.correct / q.graded * 100) + '%' : '', q.reports]; }],
+      trace: [traceRows(), ['시각', '입력 문장', '해석 경로', '확신', '명령', '해석된 명령', '단계', '결과', '메시지', '걸린 시간(ms)'], function (r) { return [r.at, r.text, r.path === 'rules' ? '규칙' : r.path === 'ai' ? 'AI' : '', r.conf == null ? '' : Math.round(r.conf * 100) + '%', r.command, r.desc, r.steps.join(' → '), ST[r.st] || '', r.msg, r.ms]; }],
+      appr: [ars, ['시각', '처리', '이유', '범위', '앱 문제 ID', '문제', '메모', '앱 버전', '언어'], function (x) { return [x.at, x.resolved ? '처리됨' : '미처리', AR_REASON[x.reason] || x.reason, x.sub, x.app_qid, x.question, x.note, x.app_version, x.lang]; }]
+    }[target];
+    if (!C || !C[0].length) return { st: 'fail', msg: '내보낼 목록이 비어 있어요.' };
+    var text = '\ufeff' + [C[1]].concat(C[0].map(C[2])).map(function (r) { return r.map(csvCell).join(','); }).join('\r\n');
+    var a = document.createElement('a'), d = new Date();
+    a.href = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }));
+    a.download = 'tracer-demo-' + target + '-' + d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0') + '.csv';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+    exportCsv.last = { target: target, rows: C[0].length, name: a.download };
+    var m = C[0].length.toLocaleString() + '줄을 CSV로 받았어요(' + a.download + ').'; toast(m); return { st: 'done', msg: m };
+  }
+  document.addEventListener('click', function (e) { var b = e.target.closest('[data-csv]'); if (b) exportCsv(b.dataset.csv); });
   $('#tiles').addEventListener('click', function (e) { var t = e.target.closest('[data-go]'); if (t) { var g = JSON.parse(t.dataset.go); goTo(g[0], g[1]); } });
   // 다른 탭으로 필터를 건 채 이동(오늘 할 일 카드·타일·명령창이 함께 씀)
   function goTo(tab, sets) {
@@ -536,7 +625,7 @@
     return api('/api/admin/users').then(function (rows) { users = rows; renderUsers(); fillUserSelect(); }).catch(function (e) { toast(e.message); });
   }
   function canEdit(u) { return u.role !== 'owner' && (me.role === 'owner' || u.role === 'user') && u.id !== me.id; }
-  var bulk = { del: [], undel: [], approve: [] }, lastUserIds = [];
+  var bulk = { del: [], undel: [], approve: [] }, lastUserIds = [], lastUserRows = [];
   function idleDays(u) { var t = u.last_seen || u.created_at; return t ? (Date.now() - new Date(t)) / 864e5 : 1e9; }
   function uname(u) { return (u.name || '(이름 없음)') + ' · ' + u.email + ' · 마지막 접속 ' + when(u.last_seen); }
   function renderUsers() {
@@ -553,7 +642,7 @@
         ai: function (u) { return u.today_ai; }, name: function (u) { return (u.name || '').toLowerCase(); } }[so[0]];
       sortBy(rows, so[0], dir, G);
     }
-    var allIds = rows.filter(canEdit).map(function (u) { return u.id; }); lastUserIds = allIds;
+    var allIds = rows.filter(canEdit).map(function (u) { return u.id; }); lastUserIds = allIds; lastUserRows = rows;
     var cut = pagerHtml($('#uPager'), rows.length, 'users', PAGE, renderUsers), pageRows = rows.slice(cut[0], cut[1]);
     selbarHtml($('#uSel'), 'users', '명', allIds, [
       ['승인', 'primary', function () { selUsers('approve'); }], ['차단', 'danger', function () { selUsers('block'); }], ['차단 해제', '', function () { selUsers('unblock'); }],
@@ -743,6 +832,7 @@
     qs = qsAll.filter(function (q) { return (!t || (q.question + ' ' + q.sub).toLowerCase().indexOf(t) >= 0) && (!df || q.difficulty === df); });
     if (LAB) sortQs(); renderQs();
   }
+  $('#bkToggle').addEventListener('click', function () { var b = $('#buckets'); b.hidden = !b.hidden; this.textContent = b.hidden ? '펼치기' : '접기'; });
   $('#qSearch').addEventListener('input', function () { pg.bank = 1; sel.bank.clear(); saveHash(); applyQ(); });
   function sortQs() {
     var so = $('#qSort').value, rate = function (q) { return q.graded ? q.correct / q.graded : 2; };
@@ -925,6 +1015,10 @@
     var c = function (command, args) { return { command: command, args: args || {}, source: 'rules', confidence: 1 }; };
     if (/되돌려|되돌리|실행\s*취소|방금\s*(거|것)\s*취소/.test(t)) return c('undo_last');
     if (/오늘\s*할\s*일|확인할\s*(거|것)|처리할\s*(거|것)|할\s*일\s*(보여|뭐)/.test(t)) return c('show_todo');
+    if (/명령\s*(기록|로그|이력)|못\s*알아들은/.test(t)) return c('show_trace', { only_bad: /못\s*알아들은|실패|못\s*한/.test(t) });
+    if (/CSV|csv|엑셀|내보내|다운로드|파일로\s*(받|줘)/.test(t)) return c('export_csv', { target: /신고/.test(t) ? 'appr' : /활동|기록/.test(t) ? 'activity' : /문제/.test(t) ? 'bank' : /사용자|유저|회원/.test(t) ? 'users' : 'current' });
+    if (/약한\s*범위|범위별\s*정답률|어려워하는\s*범위|취약\s*범위/.test(t)) return c('show_weak_topics', { days: snap(d || 30, [7, 14, 30, 90, 180, 365]) });
+    if (/비교|지난\s*(주|달|기간)|저번\s*(주|달)|전\s*(주|달)\s*(대비|보다)|늘었|줄었/.test(t)) return c('compare_period', { days: snap(d || (/달|월/.test(t) ? 30 : 7), [7, 14, 30, 90, 180, 365]) });
     if (/삭제\s*예정/.test(t) && /취소|풀어/.test(t)) return c('unmark_delete_all');
     if (/차단/.test(t) && /해제|풀어/.test(t) && /모두|전부|다\b|다\s/.test(t)) return c('select_users', { op: 'unblock', status: 'blocked', inactive_days: 0, joined_days: 0 });
     var flagged = /출제\s*중지|멈춘|중지된/.test(t), lowq = /정답률\s*(낮|이상)/.test(t);
@@ -979,6 +1073,17 @@
   };
   var SHOW = {
     show_dashboard: function (a) { setv('#dDays', a.days); return show('dash').then(function () { return '대시보드를 최근 ' + DAYS(a.days) + '로 열었어요.'; }); },
+    compare_period: function (a) { setv('#dDays', a.days); return show('dash').then(function () {
+      var s0 = lastSummary; if (!s0 || !s0.period) return '대시보드를 최근 ' + DAYS(a.days) + '로 열었어요.';
+      var P = s0.period, Q = s0.prev, f = function (k, lab, pts) { return lab + ' ' + (P[k] == null ? '–' : P[k].toLocaleString()) + '(' + deltaTxt(P[k], Q[k], pts)[0] + ')'; };
+      setTimeout(function () { $('#cmpPanel').scrollIntoView({ block: 'center' }); }, 50);
+      return '최근 ' + DAYS(a.days) + ' vs 그 전: ' + [f('visitors', '접속자', 0), f('answers', '채점', 0), f('rate', '정답률', 1), f('signups', '가입', 0)].join(' · ');
+    }); },
+    show_weak_topics: function (a) { setv('#dDays', [7, 14, 30, 90, 180, 365].indexOf(a.days) >= 0 ? a.days : 30); return show('dash').then(function () {
+      setTimeout(function () { $('#subPanel').scrollIntoView({ block: 'start' }); }, 50);
+      return '최근 ' + DAYS(a.days) + ' 약한 범위: ' + (subRows.slice(0, 3).map(function (x) { return x.sub + ' ' + x.name + ' ' + x.rate + '%'; }).join(', ') || '채점 기록 없음');
+    }); },
+    show_trace: function (a) { if (!LAB) return Promise.resolve('명령 기록은 모의 화면에서만 볼 수 있어요.'); setv('#tSt', a.only_bad ? 'fail' : ''); setv('#tPath', ''); pg.trace = 1; return show('trace').then(function () { return '명령 기록을 열었어요 → ' + $('#tCount').textContent; }); },
     show_todo: function () { return show('todo').then(function () { return '오늘 할 일을 열었어요.'; }); },
     show_users: function (a) { $('#uSearch').value = ''; setv('#uStatus', a.status || ''); setv('#uIdle', a.inactive_days || 0); if (LAB) { setv('#uJoined', a.joined_days || 0); setv('#uSort', a.sort || 'last_desc'); } pg.users = 1; sel.users.clear(); return show('users').then(function () { return '사용자 탭 · ' + $('#uStatus').selectedOptions[0].text + (a.inactive_days ? ' · ' + DAYS(a.inactive_days) + ' 넘게 미접속' : '') + ' → ' + $('#uCount').textContent; }); },
     show_activity: function (a) { setv('#aUser', ''); setv('#aDays', a.days); setv('#aAction', a.action); return show('activity').then(function () { return '활동 기록 · ' + $('#aDays').selectedOptions[0].text + ' · ' + $('#aAction').selectedOptions[0].text + ' → ' + $('#aCount').textContent; }); },
@@ -1006,6 +1111,12 @@
         list.forEach(function (q) { sel.bank.add(q.id); }); renderQs(); return selQs(a.op);
       });
     },
+    export_csv: function (a) {
+      var tg = a.target === 'current' ? curTab : a.target;
+      if (['users', 'activity', 'bank', 'appr'].indexOf(tg) < 0) return Promise.resolve({ st: 'fail', msg: '내보낼 목록을 정해 주세요(사용자·활동 기록·문제은행·앱 신고 탭에서 말하거나 "사용자 CSV"처럼).' });
+      var ready = tg === curTab ? Promise.resolve() : show(tg);
+      return ready.then(function () { return exportCsv(tg); });
+    },
     undo_last: function () {
       if ($('#undo').hidden) return Promise.resolve({ st: 'fail', msg: '되돌릴 작업이 없어요(작업 뒤 10초 안에만 되돌릴 수 있어요).' });
       $('#undoBtn').click(); return Promise.resolve({ st: 'done', msg: '방금 작업을 되돌렸어요.' });
@@ -1018,13 +1129,61 @@
       show_activity: '활동 기록(' + DAYS(a.days) + ') 보기', show_bank: '문제은행 보기' + (a.low ? '(정답률 낮은 문제)' : '') + (a.q ? ' · "' + a.q + '"' : '') + (a.diff ? ' · ' + a.diff : ''), show_app_reports: '앱 신고 보기(' + (a.open === '1' ? '미처리' : '전체') + (a.days ? ' · 최근 ' + DAYS(a.days) : '') + (a.reason ? ' · ' + ({ answer: '정답이 틀림', both: '정답이 둘', explanation: '해설', typo: '오타', other: '기타' })[a.reason] : '') + (a.sort === 'same_desc' ? ' · 같은 문제 많은 순' : '') + ')',
       answer: '숫자로 답하기', mark_delete_inactive: DAYS(a.inactive_days) + ' 넘게 미접속한 사용자 삭제 예정 표시', unmark_delete_all: '삭제 예정 모두 취소',
       approve_all_pending: '승인 대기 모두 승인', resolve_app_reports: '미처리 신고 처리 완료' + (a.reason ? '(' + ({ answer: '정답이 틀림', both: '정답이 둘', explanation: '해설', typo: '오타' })[a.reason] + ')' : ''),
-      show_todo: '오늘 할 일 보기', undo_last: '방금 작업 되돌리기',
+      show_todo: '오늘 할 일 보기', show_trace: '명령 기록 보기', undo_last: '방금 작업 되돌리기', compare_period: '최근 ' + DAYS(a.days) + ' vs 그 전 기간 비교',
+      show_weak_topics: '범위별 정답률(약한 범위) 보기', export_csv: ({ current: '지금 목록', users: '사용자', activity: '활동 기록', bank: '문제은행', appr: '앱 신고' })[a.target] + ' CSV 내보내기',
       select_users: '조건에 맞는 사용자 모두 ' + ({ approve: '승인', block: '차단', unblock: '차단 해제', mark_delete: '삭제 예정', unmark_delete: '삭제 예정 취소' })[a.op],
       select_questions: ({ flagged: '출제 중지', low: '정답률 낮은', hidden: '숨긴', active: '출제 중' })[a.target] + ' 문제 모두 ' + ({ hide: '숨기기', flag: '출제 중지', resolve: '다시 출제' })[a.op]
     })[c] || '해당하는 명령 없음';
   }
+  // ---- 명령 기록(모의 전용): 명령 하나가 거친 단계를 이 브라우저에만 저장
+  var TR = {
+    KEY: 'tracer-admin-demo-trace', cur: null, list: [],
+    load: function () { try { TR.list = JSON.parse(localStorage.getItem(TR.KEY) || '[]'); } catch (e) { TR.list = []; } },
+    save: function () { try { localStorage.setItem(TR.KEY, JSON.stringify(TR.list.slice(0, 300))); } catch (e) {} },
+    start: function (text) {
+      if (!LAB) return null;
+      var r = { id: Date.now() + '-' + Math.random().toString(36).slice(2, 6), at: new Date().toISOString(), text: text, path: '', conf: null, command: '', desc: '', steps: ['입력'], st: '', msg: '', ms: 0, _t0: performance.now() };
+      TR.list.unshift(r); TR.cur = r; return r;
+    },
+    step: function (r, t) { if (r) r.steps.push(t); },
+    end: function (r, st, msg) {
+      if (!r) return; r.st = st; r.msg = msg; r.ms = Math.round(performance.now() - r._t0); TR.save();
+      if (curTab === 'trace') renderTrace();
+    }
+  };
+  function loadTrace() { TR.load(); renderTrace(); return Promise.resolve(); }
+  function traceRows() {
+    var st = $('#tSt').value, pa = $('#tPath').value;
+    return TR.list.filter(function (r) { return (!st || r.st === st) && (!pa || r.path === pa); });
+  }
+  function renderTrace() {
+    var rows = traceRows(), all = TR.list, n = all.length;
+    var ai = all.filter(function (r) { return r.path === 'ai'; }).length, bad = all.filter(function (r) { return r.st === 'fail' || r.st === 'wait'; }).length;
+    $('#tCount').textContent = rows.length + '건' + (n ? ' · 전체 ' + n + '건 중 AI 해석 ' + Math.round(ai / n * 100) + '% · 못 함·확인 필요 ' + bad + '건' : '');
+    var cut = pagerHtml($('#tPager'), rows.length, 'trace', PAGE, renderTrace);
+    $('#tRows').innerHTML = rows.slice(cut[0], cut[1]).map(function (r) {
+      return '<tr><td class="mono" style="font-size:12.5px">' + stamp(r.at) + '</td><td class="d" style="color:var(--ink)">' + esc(r.text) + '</td>' +
+        '<td>' + (r.path === 'rules' ? '<span class="pill">규칙</span>' : r.path === 'ai' ? '<span class="pill ai">AI' + (r.conf != null ? ' ' + Math.round(r.conf * 100) + '%' : '') + '</span>' : '–') + '</td>' +
+        '<td class="d">' + (r.command === 'none' ? '<span class="muted">해당 명령 없음</span>' : esc(r.desc || r.command || '–') + (r.command ? '<br><span class="em mono">' + esc(r.command) + '</span>' : '')) + '</td>' +
+        '<td class="d">' + r.steps.map(esc).join(' → ') + '</td>' +
+        '<td class="d">' + (r.st ? '<span class="st ' + r.st + '">' + ST[r.st] + '</span> ' : '') + esc(r.msg) + '</td><td class="mono em">' + (r.ms ? r.ms + 'ms' : '') + '</td></tr>';
+    }).join('') || '<tr><td colspan="7" class="muted">아직 기록이 없어요. 명령창에 명령을 입력해 보세요.</td></tr>';
+  }
+  ['#tSt', '#tPath'].forEach(function (x) { $(x).addEventListener('change', function () { pg.trace = 1; saveHash(); renderTrace(); }); });
+  $('#tClear').addEventListener('click', function () {
+    askConfirm('명령 기록 ' + TR.list.length + '건을 지울까요?', '이 브라우저에 저장된 기록만 지워요. 되돌릴 수 없어요.', [], '지우기').then(function (ok) { if (ok) { TR.list = []; TR.save(); renderTrace(); toast('기록을 지웠어요.'); } });
+  });
+  $('#tCopy').addEventListener('click', function () {
+    var bad = TR.list.filter(function (r) { return r.st === 'fail' || r.st === 'wait' || (r.st === 'cancel' && r.path === 'ai'); });
+    var seen = {}, lines = bad.map(function (r) { return r.text; }).filter(function (t) { return !seen[t] && (seen[t] = 1); });
+    if (!lines.length) return toast('못 알아들은 문장이 없어요.');
+    var txt = lines.join('\n');
+    (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function () { toast(lines.length + '문장을 복사했어요. 그대로 붙여서 알려 주세요.'); })
+      .catch(function () { window.prompt('아래 문장을 복사하세요', txt); });
+  });
   var ST = { show: '화면 바꿈', answer: '답변', done: '실행함', wait: '확인 필요', cancel: '취소', fail: '못 함' };
   function logResult(text, st, msg, via, extra) {
+    TR.end(TR.cur, st, msg); if (st !== 'wait') TR.cur = null;
     var li = document.createElement('li');
     li.innerHTML = '<span class="st ' + st + '">' + ST[st] + '</span><span class="q">"' + esc(text) + '"</span><span class="r">' + esc(msg) + '</span>' + (via ? '<span class="via">' + esc(via) + '</span>' : '');
     if (extra) li.appendChild(extra);
@@ -1034,6 +1193,7 @@
   }
   function btn(label, fn, cls) { var b = document.createElement('button'); b.type = 'button'; b.className = 'btn sm' + (cls ? ' ' + cls : ''); b.textContent = label; b.addEventListener('click', fn); return b; }
   function execute(text, r) {
+    if (TR.cur) TR.step(TR.cur, r.command === 'answer' ? '숫자 계산(화면 안)' : SHOW[r.command] ? '화면 필터·탭 바꿈' : ACTS[r.command] ? '화면 버튼 실행' : '실행 안 함');
     var via = (r.source === 'rules' ? '규칙으로 해석' : 'AI가 해석') + ' · ' + describe(r.command, r.args);
     if (r.command === 'answer') {
       var f = ANSWER[r.args.what];
@@ -1049,18 +1209,24 @@
   }
   function runCommand(text) {
     text = String(text || '').trim(); if (!text) return;
-    var rule = ruleCommand(text.replace(/\s+/g, ' '));
+    var rule = ruleCommand(text.replace(/\s+/g, ' ')), rec = TR.start(text);
     $('#cmdGo').disabled = true; $('#cmdOut').textContent = rule ? '' : 'AI가 명령을 해석하는 중…';
+    if (rec && !rule) TR.step(rec, '규칙에 없음 → AI에 해석 요청');
     (rule ? Promise.resolve(rule) : api('/api/admin/ask', { prompt: text })).then(function (r) {
+      if (rec) {
+        rec.path = r.source === 'rules' ? 'rules' : 'ai'; rec.conf = r.source === 'rules' ? null : (r.confidence == null ? null : r.confidence);
+        rec.command = r.command; rec.desc = r.command === 'none' ? '' : describe(r.command, r.args);
+        TR.step(rec, (rec.path === 'rules' ? '규칙으로 해석' : 'AI 해석' + (rec.conf != null ? '(확신 ' + Math.round(rec.conf * 100) + '%)' : '')) + ' → ' + (r.command === 'none' ? '해당 명령 없음' : r.command));
+      }
       if (r.command !== 'none' && r.unsure) {  // AI가 확신이 없으면 바로 실행하지 않고 확인
         var box = document.createElement('span');
         var li = logResult(text, 'wait', '이렇게 이해했어요: ' + describe(r.command, r.args) + '. 맞나요?', 'AI가 해석 · 확신 ' + Math.round((r.confidence || 0) * 100) + '%', box);
-        box.appendChild(btn('맞아요, 실행', function () { li.remove(); execute(text, Object.assign({}, r, { unsure: false })); }, 'primary'));
-        box.appendChild(btn('아니에요', function () { li.remove(); logResult(text, 'cancel', '실행하지 않았어요. 아래 예시처럼 기간·대상을 넣어 다시 말해 주세요.', ''); }));
+        box.appendChild(btn('맞아요, 실행', function () { li.remove(); TR.cur = rec; TR.step(rec, '관리자: 해석 맞음'); execute(text, Object.assign({}, r, { unsure: false })); }, 'primary'));
+        box.appendChild(btn('아니에요', function () { li.remove(); TR.cur = rec; TR.step(rec, '관리자: 해석 틀림'); logResult(text, 'cancel', '실행하지 않았어요. 아래 예시처럼 기간·대상을 넣어 다시 말해 주세요.', ''); }));
         return;
       }
       return execute(text, r);
-    }).catch(function (e) { logResult(text, 'fail', e.message, ''); })
+    }).catch(function (e) { if (rec) TR.step(rec, '오류'); logResult(text, 'fail', e.message, ''); })
       .then(function () { $('#cmdGo').disabled = false; $('#cmdOut').textContent = ''; });
   }
   $('#cmd').addEventListener('submit', function (e) { e.preventDefault(); runCommand($('#cmdIn').value); });
@@ -1074,9 +1240,11 @@
       AI_ON = DEMO || !!m.admin_ai;
       $('#gate').hidden = true; $('#tabs').hidden = false; $('#cmd').hidden = !AI_ON; $('#who').textContent = (m.name || m.email) + ' · ' + ROLE[m.role] + ' · 로그인됨';
       var hs = (location.hash || '').slice(1).split('?'), t = hs[0];
-      t = ['dash', 'users', 'activity', 'bank', 'appr'].concat(LAB ? ['todo'] : []).indexOf(t) >= 0 ? t : 'dash';
+      t = ['dash', 'users', 'activity', 'bank', 'appr'].concat(LAB ? ['todo', 'trace'] : []).indexOf(t) >= 0 ? t : 'dash';
       if (LAB) {
         document.querySelectorAll('[data-lab]').forEach(function (el) { el.hidden = false; });
+        $('#buckets').hidden = true;  // 모의 데이터는 묶음이 많아 접어 둔다
+        TR.load();
         $('#dDays').insertAdjacentHTML('beforeend', '<option value="180">180일</option><option value="365">1년</option>');
         $('#aDays').insertAdjacentHTML('beforeend', '<option value="180">180일</option><option value="365">1년</option>');
         loadHash(t, hs[1]);

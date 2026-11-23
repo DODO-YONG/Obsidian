@@ -130,14 +130,28 @@
   function dayKey(t) { var d = new Date(t); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
   function daily(n) {  // 활동 기록에서 그대로 계산(숫자가 서로 맞게)
     var out = {}, keys = [];
-    for (var k = n - 1; k >= 0; k--) { var key = dayKey(today0.getTime() - k * DAY); keys.push(key); out[key] = { day: key, v: {}, visitors: 0, ai_calls: 0, bank_serves: 0, new_questions: 0, answers: 0 }; }
+    for (var k = n - 1; k >= 0; k--) { var key = dayKey(today0.getTime() - k * DAY); keys.push(key); out[key] = { day: key, v: {}, visitors: 0, ai_calls: 0, bank_serves: 0, new_questions: 0, answers: 0, signups: 0 }; }
     activity.forEach(function (a) {
       var o = out[dayKey(a.at)]; if (!o) return;
       o.v[a.user_id] = 1; if (a.ai) o.ai_calls++;
       if (a.action === 'question') a.detail.source === 'bank' ? o.bank_serves++ : o.new_questions++;
       if (a.action === 'grade' || a.action === 'subnet') o.answers++;
     });
+    users.forEach(function (u) { var o = out[dayKey(u.created_at)]; if (o) o.signups++; });
     return keys.map(function (k) { var o = out[k]; o.visitors = Object.keys(o.v).length; delete o.v; return o; });
+  }
+  // 기간 합계: [from, to) 사이(고유 접속자·채점·AI·가입·정답률)
+  function period(from, to) {
+    var v = {}, o = { visitors: 0, answers: 0, ai_calls: 0, signups: 0, correct: 0, graded: 0 };
+    activity.forEach(function (a) {
+      var t = new Date(a.at).getTime(); if (t < from || t >= to) return;
+      v[a.user_id] = 1; if (a.ai) o.ai_calls++;
+      if (a.action === 'grade' || a.action === 'subnet') o.answers++;
+      if (a.action === 'grade') { o.graded++; if (a.detail.verdict === '정답') o.correct++; }
+    });
+    users.forEach(function (u) { var t = new Date(u.created_at).getTime(); if (t >= from && t < to) o.signups++; });
+    o.visitors = Object.keys(v).length; o.rate = o.graded ? Math.round(o.correct / o.graded * 1000) / 10 : null;
+    return o;
   }
   function attach(r) {
     var m = qs.find(function (q) { return q.question === r.question; });
@@ -153,7 +167,19 @@
         pending: users.filter(function (u) { return u.status === 'pending'; }).length, today_ai: todayAi, today_counted: todayAi, global_daily_ai: 400,
         bank_active: qs.filter(function (q) { return q.status === 'active'; }).length, bank_flagged: qs.filter(function (q) { return q.status === 'flagged'; }).length,
         open_reports: qs.reduce(function (a, q) { return a + q.reports; }, 0), open_app_reports: reports.filter(function (r) { return !r.resolved; }).length,
-        bank_min: 30, bank_ratio: 0.7, daily: daily(n) };
+        bank_min: 30, bank_ratio: 0.7, daily: daily(n),
+        period: period(now - n * DAY, now), prev: period(now - 2 * n * DAY, now - n * DAY) };
+    },
+    'admin/sub-stats': function (p) {  // 범위별 정답률(기간 안 채점 기록)
+      var n = +p.get('days') || 30, from = now - n * DAY, by = {};
+      activity.forEach(function (a) {
+        if (a.action !== 'grade' || new Date(a.at).getTime() < from) return;
+        var k = a.detail.sub; by[k] = by[k] || { sub: k, graded: 0, correct: 0, users: {} };
+        by[k].graded++; if (a.detail.verdict === '정답') by[k].correct++; by[k].users[a.user_id] = 1;
+      });
+      var names = {}; SUBS.forEach(function (x) { names[x[0]] = x[1]; });
+      return { days: n, subs: Object.keys(by).map(function (k) { var o = by[k]; return { sub: k, name: names[k] || '', graded: o.graded, correct: o.correct, users: Object.keys(o.users).length, rate: Math.round(o.correct / o.graded * 1000) / 10 }; })
+        .sort(function (a, b) { return a.rate - b.rate; }) };
     },
     'admin/users': function () { return clone(users).sort(function (a, b) { return String(b.last_seen || '').localeCompare(String(a.last_seen || '')); }); },
     'admin/activity': function (p) {

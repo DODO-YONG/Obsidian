@@ -245,6 +245,12 @@
   .vb.ok { background: var(--ok-soft); color: var(--ok); } .vb.bad { background: var(--bad-soft); color: var(--bad); } .vb.part { background: var(--part-soft); color: var(--part); }
   .vd { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; }
 
+  /* 마이페이지: 모의 관리자 체험 카드 */
+  .demo-adm { display: flex; gap: 14px; align-items: center; text-decoration: none; color: var(--ink); margin-bottom: 14px; border-color: color-mix(in srgb, var(--part) 55%, var(--rule)); }
+  .demo-adm:hover { border-color: var(--part); }
+  .demo-adm .ic { font-size: 22px; color: var(--part); flex: none; }
+  .demo-adm .muted { font-size: 13px; }
+  .demo-adm .go { margin-left: auto; color: var(--part); font-weight: 600; white-space: nowrap; flex: none; }
   /* 마이페이지 */
   .my-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
   .my-card { padding: 16px; }
@@ -282,7 +288,7 @@
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261123102125';
+  var SITE_V = '20261123103230';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -292,7 +298,7 @@
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
-<script src="tracer-auth.js?v=20261123102125"></script>
+<script src="tracer-auth.js?v=20261123103230"></script>
 </head>
 <body>
 <header>
@@ -381,6 +387,11 @@
 
     <!-- 마이페이지 -->
     <section id="view-mypage" hidden aria-labelledby="tab-mypage">
+      <a class="panel demo-adm" href="admin.html?demo=1" id="demoAdmin">
+          <span class="ic" aria-hidden="true">⚙</span>
+          <span><b>관리자 화면 체험해 보기</b><br><span class="muted">가상 사용자 500명·1년치 기록으로 만든 모의 관리자 화면이에요. "1년 동안 접속 안 한 유저 찾아줘"처럼 말로 명령해 보세요. 로그인 없이 누구나 써 볼 수 있고, 실제 데이터는 바뀌지 않아요.</span></span>
+          <span class="go">열기 →</span>
+        </a>
       <div class="panel my-login" id="myLogin" hidden>
         <h3 style="margin:0 0 6px">로그인하면 내 풀이 기록을 볼 수 있어요</h3>
         <p class="muted" style="margin:0 0 14px">풀이 기록은 내 계정에만 저장되고 다른 사용자에게 보이지 않아요.</p>

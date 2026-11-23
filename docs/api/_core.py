@@ -785,9 +785,14 @@ ADMIN_COMMANDS = {
                              "status": ["", "active", "pending", "blocked", "delete"], "inactive_days": [0, 30, 90, 180, 365], "joined_days": [0, 1, 7, 30, 90]},
     "select_questions":     {"op": ["hide", "flag", "resolve"], "target": ["flagged", "low", "hidden", "active"]},
     "undo_last":            {},
+    "compare_period":       {"days": [7, 14, 30, 90, 180, 365]},
+    "show_weak_topics":     {"days": [30, 7, 14, 90, 180, 365]},
+    "export_csv":           {"target": ["current", "users", "activity", "bank", "appr"]},
+    "show_trace":           {"only_bad": [False, True]},
 }
 COMMAND_KIND = {"answer": "answer", "mark_delete_inactive": "act", "unmark_delete_all": "act", "approve_all_pending": "act",
-                "resolve_app_reports": "act", "select_users": "act", "select_questions": "act", "undo_last": "act"}
+                "resolve_app_reports": "act", "select_users": "act", "select_questions": "act", "undo_last": "act",
+                "export_csv": "act"}
 ADMIN_ASK_SYS = """You turn a Korean admin's request for the TRACER web admin page into exactly ONE command from this fixed list.
 You cannot do anything outside this list. Never invent commands or values. Snap numbers to the closest allowed value
 ("오늘"=1, "며칠/일주일"=7, "2주"=14, "한 달"=30, "3달"=90, "반년"=180, "1년/일년"=365).
@@ -817,6 +822,10 @@ C) Change data (the page shows the targets and asks the admin to confirm first):
 - select_questions {op: hide|flag|resolve, target: flagged|low|hidden|active} — e.g. "출제 중지 문제 다 숨겨" -> {op:"hide", target:"flagged"},
   "정답률 낮은 문제 출제 중지" -> {op:"flag", target:"low"}.
 - undo_last {} — undo the last change ("방금 거 되돌려").
+- compare_period {days} — compare the last `days` with the period before ("지난주랑 비교", "저번 달보다 늘었어?").
+- show_weak_topics {days} — accuracy by exam topic, weakest first ("약한 범위", "범위별 정답률").
+- show_trace {only_bad: bool} — the command log of this page ("명령 기록", "못 알아들은 명령").
+- export_csv {target: current|users|activity|bank|appr} — download the current filtered list as CSV ("엑셀로 받아줘").
 D) none — anything else: a specific person, editing or deleting questions, settings, the Android app, general chat.
 
 Examples:
