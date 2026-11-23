@@ -6,7 +6,7 @@ AI가 매번 브라우저를 눌러 보는 대신, **한 번 써 둔 시험을 G
 - 자동 실행: `.github/workflows/tracer-test.yml` — `docs/ccna/`·`docs/api/`·`agents/ccna-coach/`가 바뀐 푸시·PR
 - 결과: GitHub 저장소 **Actions → tracer-test** (초록 ✓ / 빨강 ✗). 실패하면 아래 `tracer-test-failures`에 스크린샷·trace(https://trace.playwright.dev 에 끌어다 놓으면 재생)
 
-## 지금 확인하는 것 (83개)
+## 지금 확인하는 것 (84개)
 | 영역 | 내용 |
 |---|---|
 | 공개 페이지 | 선택 화면·소개·개인정보 방침이 열림, 소개/이용 링크, 로그아웃 상태 "Google로 로그인" |

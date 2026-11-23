@@ -1237,3 +1237,21 @@ def test_admin_demo_sql_result_rows_block_and_undo(page, errors, base_url):
     li = _cmd(page, "방금 거 되돌려줘")
     expect(li.locator(".st")).to_contain_text("실행")
     page.wait_for_function("(ids) => ids.every(i => window.TracerAdminDemo.db.users.find(u => u.id === i).status !== 'blocked')", arg=ids)
+
+
+def test_admin_demo_trace_rerun_button_and_command(page, errors, base_url):
+    _demo_fresh(page, base_url, "rules")
+    _cmd(page, "미처리 신고 몇 건이야?")
+    expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("답변")
+    _cmd(page, "승인 대기 모두 승인해줘")
+    expect(page.locator("dialog#ask")).to_be_visible()
+    page.locator("#askNo").click()
+    expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("취소")
+    page.locator("#tabs [data-tab=trace]").click()
+    page.locator('[data-rerun="2"]').click()
+    expect(page.locator("dialog#ask")).to_be_visible()
+    page.locator("#askYes").click()
+    page.wait_for_function("() => window.TracerAdminDemo.db.users.filter(u => u.status === 'pending').length === 0")
+    _cmd(page, "1번 다시 실행해줘")
+    expect(page.locator("#cmdLog li").filter(has=page.locator(".st", has_text="실행함")).first).to_be_visible()
+    expect(page.locator("#cmdLog li").filter(has=page.locator(".st", has_text="답변"))).to_have_count(2)
