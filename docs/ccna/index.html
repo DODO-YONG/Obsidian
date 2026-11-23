@@ -15,7 +15,7 @@
 if (/^#(intro|how)$/.test(location.hash)) location.replace('about.html?lang=ko' + (location.hash === '#how' ? '#how' : ''));
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 (function () {
-  var SITE_V = '20261123110826';
+  var SITE_V = '20261123111309';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -24,7 +24,7 @@ if (/^#(intro|how)$/.test(location.hash)) location.replace('about.html?lang=ko' 
   }).catch(function () {});
 })();
 </script>
-<link rel="stylesheet" href="tracer-site.css?v=20261123110826">
+<link rel="stylesheet" href="tracer-site.css?v=20261123111309">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -63,7 +63,7 @@ if (/^#(intro|how)$/.test(location.hash)) location.replace('about.html?lang=ko' 
   </section>
 </main>
 
-<script src="tracer-auth.js?v=20261123110826"></script>
+<script src="tracer-auth.js?v=20261123111309"></script>
 <script>
 document.getElementById('themeBtn').addEventListener('click', function () {
   var r = document.documentElement, light = r.getAttribute('data-theme') === 'light';
