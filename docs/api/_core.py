@@ -790,11 +790,12 @@ ADMIN_COMMANDS = {
     "show_weak_topics":     {"days": ("int", 1, 365, 30)},
     "export_csv":           {"target": ["current", "users", "activity", "bank", "appr"]},
     "show_trace":           {"only_bad": [False, True]},
+    "rerun":                {"no": "int"},
     "sql_query":            {"sql": "sql", "title": "title", "target": ["other", "users", "questions", "app_reports", "activity"]},  # 모의 화면 전용
 }
 COMMAND_KIND = {"answer": "answer", "mark_delete_inactive": "act", "unmark_delete_all": "act", "approve_all_pending": "act",
                 "resolve_app_reports": "act", "select_users": "act", "select_questions": "act", "undo_last": "act",
-                "export_csv": "act", "demo_add_users": "act"}
+                "export_csv": "act", "demo_add_users": "act", "rerun": "act"}
 ADMIN_ASK_SYS = """You turn a Korean admin's request for the TRACER web admin page into exactly ONE command from this fixed list.
 You cannot do anything outside this list. Never invent commands or values. Day counts can be any number in range;
 convert words to days ("오늘"=1, "며칠/일주일"=7, "열흘"=10, "2주"=14, "한 달"=30, "3달"=90, "반년"=180, "1년/일년"=365).
@@ -828,6 +829,7 @@ C) Change data (the page shows the targets and asks the admin to confirm first):
 - demo_add_users {status: pending|active|blocked, n} — mock page only: create fake users ("승인 대기 더미 10명 넣어줘").
 - compare_period {days} — compare the last `days` with the period before ("지난주랑 비교", "저번 달보다 늘었어?").
 - show_weak_topics {days} — accuracy by exam topic, weakest first ("약한 범위", "범위별 정답률").
+- rerun {no} — run command-log entry number `no` again ("3번 다시 실행해줘").
 - show_trace {only_bad: bool} — the command log of this page ("명령 기록", "못 알아들은 명령").
 - export_csv {target: current|users|activity|bank|appr} — download the current filtered list as CSV ("엑셀로 받아줘").
 D) none — anything else: a specific person, editing or deleting questions, settings, the Android app, general chat.
