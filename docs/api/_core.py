@@ -946,7 +946,9 @@ DEMO_ASK_SYS = ADMIN_ASK_SYS.replace("D) none —", DEMO_SQL_SECTION + "D) none 
     '"지난달 가입했는데 문제 안 푼 사람" -> sql_query {sql:"SELECT id, name, email, created_at FROM users WHERE created_at >= datetime(\'now\',\'-30 days\') AND total_attempts = 0", ...}\n'
     '"김철수 차단해줘" -> none')
 DEMO_ASK_SCHEMA = json.loads(json.dumps(ADMIN_ASK_SCHEMA))
-DEMO_ASK_SCHEMA["properties"]["args"]["properties"].update({"sql": {"type": "string"}, "title": {"type": "string"}, "target": {"type": "string"}})
+DEMO_ASK_SCHEMA["properties"]["args"]["properties"].update({"sql": {"type": "string"}, "title": {"type": "string"}, "target": {"type": "string"},
+                                                            "download": {"type": "boolean"}})
+DEMO_ONLY = {"sql_query": "SQL 조회는 모의 화면에서만 돼요.", "show_report": "보고서는 모의 화면에서만 볼 수 있어요."}
 
 
 def _interpret(text: str, demo: bool = False) -> dict:
@@ -955,8 +957,8 @@ def _interpret(text: str, demo: bool = False) -> dict:
         raise ApiError(400, "명령을 입력해 주세요.")
     out, _model = gc.ask_json(DEMO_ASK_SYS if demo else ADMIN_ASK_SYS, text, DEMO_ASK_SCHEMA if demo else ADMIN_ASK_SCHEMA, temperature=0.1)
     res = clean_command(out if isinstance(out, dict) else {})
-    if res["command"] == "sql_query" and not demo:  # 실제 화면은 SQL 조회를 쓰지 않는다
-        res = {"command": "none", "kind": "none", "args": {}, "reply": "SQL 조회는 모의 화면에서만 돼요.", "confidence": res["confidence"], "unsure": False}
+    if res["command"] in DEMO_ONLY and not demo:  # 실제 화면은 SQL 조회·보고서를 쓰지 않는다
+        res = {"command": "none", "kind": "none", "args": {}, "reply": DEMO_ONLY[res["command"]], "confidence": res["confidence"], "unsure": False}
     return {**res, "source": "ai"}
 
 

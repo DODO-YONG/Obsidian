@@ -1322,7 +1322,7 @@ def test_admin_demo_report_days_change_updates_info_and_hash(page, errors, base_
     n30 = n()
     page.locator("#rDays").select_option("7")
     page.wait_for_function("() => /days=7/.test(location.hash)")
-    page.wait_for_function("t => document.querySelector('#rInfo').textContent !== t", arg=t30)
+    page.wait_for_function("t => { const x = document.querySelector('#rInfo').textContent; return x.includes('활동') && x !== t; }", arg=t30)
     assert n() < n30
 
 
@@ -1356,6 +1356,7 @@ def test_admin_demo_report_counts_commands_and_unrecognized(page, errors, base_u
     _cmd(page, "최근 30일 보고서 보여줘")
     expect(page.locator("#v-report")).to_be_visible()
     expect(page.locator("#rDays")).to_have_value("30")
+    expect(page.locator("#rInfo")).to_contain_text("명령")  # 30일 보고서가 다 그려진 뒤에 기간을 바꾼다
     # 보고서 명령 자체도 기록에 남는다(명령이 끝난 뒤 저장되므로 기간을 바꿔 다시 만들면 3건)
     page.locator("#rDays").select_option("90")
     expect(page.locator("#rInfo")).to_contain_text("명령 3건")

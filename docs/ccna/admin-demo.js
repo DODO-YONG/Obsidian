@@ -171,7 +171,10 @@
         period: period(now - n * DAY, now), prev: period(now - 2 * n * DAY, now - n * DAY) };
     },
     'admin/report': function (p) {  // 보고서: 활동 기록을 기간으로 묶어 센다(이번 기간 + 바로 전 같은 길이)
-      var n = Math.max(1, Math.min(365, parseInt(p.get('days'), 10) || 30)), end = Date.now() + 1, from = end - n * DAY, pfrom = from - n * DAY;
+      // 기간 = 오늘을 포함한 달력 n일(로컬 0시 기준, 서머타임에도 날짜 단위로). 그 전 n일과 비교
+      var n = Math.max(1, Math.min(365, parseInt(p.get('days'), 10) || 30)), end = Date.now() + 1;
+      var dayStart = function (back) { var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - back); return d.getTime(); };
+      var from = dayStart(n - 1), pfrom = dayStart(2 * n - 1);
       function agg(a0, a1) {
         var o = { total: 0, ai: 0, active_users: 0, signups: 0, graded: 0, correct: 0, rate: null, by_action: {}, by_device: {}, by_hour: [], _u: {}, _pu: {} };
         for (var h = 0; h < 24; h++) o.by_hour.push(0);
@@ -193,9 +196,10 @@
         .sort(function (a, b) { return b.n - a.n; }).slice(0, 5);
       [cur, prev].forEach(function (o) { delete o._u; delete o._pu; });
       var days = {}, keys = [];
-      for (var k = n - 1; k >= 0; k--) { var key = dayKey(Date.now() - k * DAY); keys.push(key); days[key] = { day: key, total: 0, _u: {} }; }
-      activity.forEach(function (a) { var t = new Date(a.at).getTime(); if (t < from) return; var o = days[dayKey(t)]; if (o) { o.total++; o._u[a.user_id] = 1; } });
-      return { days: n, cur: cur, prev: prev, top_users: top,
+      for (var k = n - 1; k >= 0; k--) { var key = dayKey(dayStart(k)); keys.push(key); days[key] = { day: key, total: 0, _u: {} }; }
+      activity.forEach(function (a) { var t = new Date(a.at).getTime(); if (t < from || t >= end) return; var o = days[dayKey(t)]; if (o) { o.total++; o._u[a.user_id] = 1; } });
+      // 모의 활동은 최근 SPAN일치만 있다 → 지난 기간이 그보다 앞이면 비교하지 않는다(가입은 더 오래 있음)
+      return { days: n, cur: cur, prev: prev, prev_partial: pfrom < now - SPAN * DAY, top_users: top,
         daily: keys.map(function (k) { var o = days[k]; return { day: k, total: o.total, users: Object.keys(o._u).length }; }) };
     },
     'admin/sub-stats': function (p) {  // 범위별 정답률(기간 안 채점 기록)

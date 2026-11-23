@@ -11,7 +11,7 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
-<script src="tracer-wait.js?v=20261123165602"></script>
+<script src="tracer-wait.js?v=20261123170915"></script>
 <style>
   /* 관리자 화면: TRACER와 같은 색. 기본은 어두운 화면. */
   :root {
@@ -1153,7 +1153,7 @@
       return c('demo_add_users', { status: /차단/.test(t) ? 'blocked' : /사용\s*중|활동/.test(t) ? 'active' : 'pending', n: nn ? Math.min(50, +nn) : 10 });
     }
     if (/오늘\s*할\s*일|확인할\s*(거|것)|처리할\s*(거|것)|할\s*일\s*(보여|뭐)/.test(t)) return c('show_todo');
-    if (/보고서|리포트|레포트|요약\s*보고|활동\s*요약|사용\s*현황\s*요약/.test(t)) return c('show_report', { days: snap(d || 30, [7, 14, 30, 90, 180, 365]), download: /받아|내려|다운|파일|저장/.test(t) });
+    if (LAB && /보고서|리포트|레포트|요약\s*보고|활동\s*요약|사용\s*현황\s*요약/.test(t)) return c('show_report', { days: snap(d || 30, [7, 14, 30, 90, 180, 365]), download: /받아|내려|다운|파일|저장/.test(t) });
     if (/명령\s*(기록|로그|이력)|못\s*알아들은/.test(t)) return c('show_trace', { only_bad: /못\s*알아들은|실패|못\s*한/.test(t) });
     if (/CSV|csv|엑셀|내보내|다운로드|파일로\s*(받|줘)/.test(t)) return c('export_csv', { target: /신고/.test(t) ? 'appr' : /활동|기록/.test(t) ? 'activity' : /문제/.test(t) ? 'bank' : /사용자|유저|회원/.test(t) ? 'users' : 'current' });
     if (/약한\s*범위|범위별\s*정답률|어려워하는\s*범위|취약\s*범위/.test(t)) return c('show_weak_topics', { days: snap(d || 30, [7, 14, 30, 90, 180, 365]) });
@@ -1442,9 +1442,11 @@
   // ---- 보고서(모의 전용): 활동 기록(사용자) + 명령 기록(관리자)을 기간으로 묶어 요약. 파일로 받을 수 있다.
   var RP = null;
   var RP_OK = { show: 1, answer: 1, done: 1 };
+  function rpDay(back) { var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - back); return d.getTime(); }
+  function rpKey(t) { var d = new Date(t); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
   function pctOf(a, b) { return b ? Math.round(a / b * 1000) / 10 : null; }
   function cmdStats(days) {  // 명령 기록은 이 브라우저에만 있으므로 화면에서 센다
-    var from = Date.now() - days * 864e5, pfrom = from - days * 864e5;
+    var from = rpDay(days - 1), pfrom = rpDay(2 * days - 1);  // 오늘 포함 달력 n일(보고서 활동 기록과 같은 기준)
     var all = TR.list.filter(function (r) { return r.st; });
     function agg(rows) {
       var o = { n: rows.length, ok: 0, fail: 0, wait: 0, cancel: 0, ai: 0, rules: 0, manual: 0, sql: 0, undone: 0, ms: 0, msn: 0, by_cmd: {}, by_st: {}, bad: [] };
@@ -1453,7 +1455,7 @@
         o.by_st[r.st] = (o.by_st[r.st] || 0) + 1;
         if (r.path in o) o[r.path]++;
         if (r.undone) o.undone++;
-        if (r.ms && r.path !== 'manual') { o.ms += r.ms; o.msn++; }
+        if (r.ms != null && r.path !== 'manual') { o.ms += r.ms; o.msn++; }
         var k = r.command === 'none' || !r.command ? '해당 명령 없음' : (r.desc || r.command);
         var c = o.by_cmd[k] = o.by_cmd[k] || { k: k, n: 0, bad: 0 }; c.n++; if (!RP_OK[r.st] && r.st !== 'cancel') c.bad++;
         if ((r.st === 'fail' || r.command === 'none') && r.text && o.bad.indexOf(r.text) < 0) o.bad.push(r.text);
@@ -1465,18 +1467,21 @@
     var prev = all.filter(function (r) { var t = new Date(r.at).getTime(); return t >= pfrom && t < from; });
     var c = agg(cur), daily = {};
     cur.forEach(function (r) { var d = new Date(r.at); var k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); daily[k] = (daily[k] || 0) + 1; });
-    c.daily = daily; c.total_kept = TR.list.length;
+    c.daily = daily; c.total_kept = all.length;
     return { cur: c, prev: agg(prev) };
   }
   function loadReport() {
-    var n = +$('#rDays').value || 30;  // TR.load()는 하지 않는다: 실행 중인 명령 기록(TR.cur)이 지워진다
+    // TR.load()는 하지 않는다: 실행 중인 명령 기록(TR.cur)이 지워진다
+    var n = Math.max(1, Math.min(365, parseInt($('#rDays').value, 10) || 30)), my = loadReport.seq = (loadReport.seq || 0) + 1;
+    RP = null; $('#rInfo').textContent = '';
     $('#rBody').innerHTML = '<p class="muted">보고서를 만드는 중…</p>';
     return api('/api/admin/report?days=' + n).then(function (a) {
-      RP = { days: n, at: new Date(), act: a, cmd: cmdStats(n) };
+      if (my !== loadReport.seq) return;  // 그 사이 기간을 또 바꿨으면 옛 응답은 버린다
+      RP = { days: a.days || n, at: new Date(), act: a, cmd: cmdStats(a.days || n) };
       renderReport();
-    }).catch(function (e) { $('#rBody').innerHTML = '<p class="rp-empty">보고서를 만들지 못했어요: ' + esc(e.message) + '</p>'; });
+    }).catch(function (e) { if (my === loadReport.seq) $('#rBody').innerHTML = '<p class="rp-empty">보고서를 만들지 못했어요: ' + esc(e.message) + '</p>'; });
   }
-  function rpTile(k, v, sub, d) { return '<div class="tile"><div class="k">' + k + '</div><div class="v">' + v + '</div><div class="s">' + sub + '</div>' + (d ? '<div class="d ' + d[1] + '">' + d[0] + ' <span class="muted">지난 기간 대비</span></div>' : '') + '</div>'; }
+  function rpTile(k, v, sub, d) { return '<div class="tile"><div class="k">' + k + '</div><div class="v">' + v + '</div><div class="s">' + sub + '</div>' + (d && d[0] !== '–' ? '<div class="d ' + d[1] + '">' + d[0] + ' <span class="muted">지난 기간 대비</span></div>' : '') + '</div>'; }
   function rpBars(pairs, color, unit) {
     var max = Math.max.apply(null, pairs.map(function (p) { return p[1]; }).concat([1])), tot = pairs.reduce(function (a, p) { return a + p[1]; }, 0);
     return '<ul class="rbars">' + pairs.map(function (p) {
@@ -1490,12 +1495,12 @@
   }
   function renderReport() {
     if (!RP) return;
-    var A = RP.act, C = A.cur, P = A.prev, M = RP.cmd.cur, MP = RP.cmd.prev, n = RP.days, nm = n === 365 ? '1년' : n + '일';
+    var A = RP.act, C = A.cur, P = A.prev_partial ? { total: null, active_users: null, signups: A.prev.signups, ai: null, rate: null } : A.prev, M = RP.cmd.cur, MP = RP.cmd.prev, n = RP.days, nm = n === 365 ? '1년' : n + '일';
     var top = Object.keys(C.by_action).map(function (k) { return [ACT[k] || k, C.by_action[k]]; }).sort(function (x, y) { return y[1] - x[1]; });
     var fmt = function (v, u) { return v == null ? '–' : v.toLocaleString() + (u || ''); };
     var dd = A.daily.map(function (d) { return d.total; });
     // 한 줄 요약
-    var sum = '최근 <b>' + nm + '</b> 동안 사용자 <b>' + C.active_users.toLocaleString() + '명</b>이 활동 <b>' + C.total.toLocaleString() + '건</b>을 남겼어요(' + deltaTxt(C.total, P.total)[0] + '). ' +
+    var sum = '최근 <b>' + nm + '</b> 동안 사용자 <b>' + C.active_users.toLocaleString() + '명</b>이 활동 <b>' + C.total.toLocaleString() + '건</b>을 남겼어요' + (P.total == null ? '' : '(' + deltaTxt(C.total, P.total)[0] + ')') + '. ' +
       (top[0] ? '가장 많은 행동은 <b>' + esc(top[0][0]) + '</b>(' + Math.round(top[0][1] / Math.max(1, C.total) * 100) + '%)이고, ' : '') +
       '채점 정답률은 <b>' + fmt(C.rate, '%') + '</b>, 새 가입은 <b>' + C.signups + '명</b>이에요. ';
     sum += M.n ? '관리자 명령은 <b>' + M.n + '번</b> 실행했고 성공률 <b>' + fmt(M.rate, '%') + '</b>' + (M.bad.length ? ', 못 알아들은 문장 <b>' + M.bad.length + '개</b>' : '') + (M.undone ? ', 되돌린 작업 ' + M.undone + '번' : '') + '이에요.'
@@ -1520,7 +1525,7 @@
     if (!M.n) h += '<p class="rp-empty">이 기간에 명령 기록이 없어요. 명령창에 명령을 실행하거나 화면에서 일괄 작업을 하면 여기에 쌓여요.' + (C.by_action.admin ? ' (활동 기록에는 관리자 작업 ' + C.by_action.admin + '건이 있어요.)' : '') + '</p>';
     else {
       var keys = Object.keys(M.daily).sort(), dl = [], dv = [];
-      for (var k = n - 1; k >= 0; k--) { var d = new Date(Date.now() - k * 864e5), key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); dl.push(key); dv.push(M.daily[key] || 0); }
+      for (var k = n - 1; k >= 0; k--) { var key = rpKey(rpDay(k)); dl.push(key); dv.push(M.daily[key] || 0); }
       h += '<div class="tiles">' +
         rpTile('명령 수', M.n + '번', '명령창·SQL·직접 일괄 작업', MP.n ? deltaTxt(M.n, MP.n) : null) +
         rpTile('성공률', fmt(M.rate, '%'), '화면 바꿈·답변·실행함', MP.n ? deltaTxt(M.rate, MP.rate, true) : null) +
@@ -1538,12 +1543,13 @@
     $('#rInfo').textContent = '활동 ' + C.total.toLocaleString() + '건 · 명령 ' + M.n + '건';
   }
   function downloadReport() {
-    if (!RP) return { st: 'fail', msg: '보고서를 먼저 열어 주세요.' };
+    if (!RP) { toast('보고서를 아직 만드는 중이에요. 잠시 뒤 다시 눌러 주세요.'); return { st: 'fail', msg: '보고서가 아직 준비되지 않았어요.' }; }
     var css = Array.prototype.map.call(document.querySelectorAll('style'), function (x) { return x.textContent; }).join('\n');
     var d = RP.at, ymd = d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
     var title = 'TRACER 관리자 보고서(모의) · 최근 ' + (RP.days === 365 ? '1년' : RP.days + '일');
     var html = '<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc(title) + '</title><style>' + css +
-      '\nbody{padding:24px 16px} main{max-width:1100px;margin:0 auto} @media print{.rcols i{print-color-adjust:exact;-webkit-print-color-adjust:exact}}</style></head><body><main><h1 style="font-size:20px;margin:0 0 4px">' + esc(title) + '</h1>' +
+      '\nbody{padding:24px 16px} main{max-width:1100px;margin:0 auto} @media print{:root{--bg:#fff;--panel:#fff;--sunk:#ECEFEE;--ink:#121A18;--ink-2:#4B5856;--ink-3:#6B7876;--rule:#D8DFDC;--accent:#146C63;--ok:#1F7A45;--bad:#B4402C;--part:#A0660F;--bank:#2F5FB3;color-scheme:light}' +
+      '*{print-color-adjust:exact;-webkit-print-color-adjust:exact} .panel,.tile{break-inside:avoid}}</style></head><body><main><h1 style="font-size:20px;margin:0 0 4px">' + esc(title) + '</h1>' +
       '<p class="muted" style="margin:0 0 16px;font-size:13px">지어낸 모의 데이터와 이 브라우저의 명령 기록으로 만든 보고서예요.</p>' + $('#rBody').innerHTML + '</main></body></html>';
     var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
     a.download = 'tracer-demo-report-' + RP.days + 'd-' + ymd + '.html';
