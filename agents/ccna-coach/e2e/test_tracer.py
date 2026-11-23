@@ -671,7 +671,9 @@ def _stats(page):
     return page.evaluate(_JS_STATS)
 
 
-def _demo(page, base_url):
+def _demo(page, base_url, mode=None):
+    if mode:  # 해석 방식 저장값(ai|rules). 규칙 동작을 보는 시험은 rules
+        page.add_init_script(f"localStorage.setItem('tracer-admin-demo-mode', '{mode}')")
     page.goto(base_url + "/ccna/admin.html?demo=1")
     expect(page.locator("#demoBar")).to_be_visible()
     expect(page.locator("#cmd")).to_be_visible()
@@ -695,7 +697,7 @@ def test_admin_demo_mode_labels_and_size(page, errors, base_url):
 
 
 def test_admin_demo_rule_filter_and_answer(page, errors, base_url):
-    _demo(page, base_url)
+    _demo(page, base_url, "rules")
     st = _stats(page)
     li = _cmd(page, "1년 동안 접속 안 한 유저 찾아줘")
     expect(li.locator(".st")).to_contain_text("화면 바꿈")
@@ -923,7 +925,7 @@ def test_admin_demo_new_filters(page, errors, base_url):
 
 
 def test_admin_demo_command_rules_show_screens(page, errors, base_url):
-    _demo(page, base_url)
+    _demo(page, base_url, "rules")
     li = _cmd(page, "오늘 할 일 보여줘")
     expect(li.locator(".st")).to_contain_text("화면 바꿈")
     expect(page.locator("#v-todo")).to_be_visible()
@@ -1092,13 +1094,13 @@ def test_app_mypage_demo_admin_card(page, errors, base_url, login):
 
 
 # ---------- 관리자 모의: 명령 기록 탭 ----------
-def _demo_fresh(page, base_url):
+def _demo_fresh(page, base_url, mode=None):
     page.add_init_script("if (!sessionStorage.getItem('t-cleared')) { localStorage.removeItem('tracer-admin-demo-trace'); sessionStorage.setItem('t-cleared', '1'); }")
-    _demo(page, base_url)
+    _demo(page, base_url, mode)
 
 
 def test_admin_demo_trace_records_steps_and_persists(page, errors, base_url):
-    _demo_fresh(page, base_url)
+    _demo_fresh(page, base_url, "rules")
     _cmd(page, "미처리 신고 몇 건이야?")
     expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("답변")
     _cmd(page, "승인 대기 모두 승인해줘")
@@ -1134,7 +1136,7 @@ def test_admin_demo_trace_records_steps_and_persists(page, errors, base_url):
 
 
 def test_admin_demo_trace_csv_and_clear(page, errors, base_url):
-    _demo_fresh(page, base_url)
+    _demo_fresh(page, base_url, "rules")
     _cmd(page, "미처리 신고 몇 건이야?")
     expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("답변")
     page.locator("#tabs [data-tab=trace]").click()
@@ -1155,3 +1157,83 @@ def test_admin_real_has_no_trace_tab(logged_in, errors, base_url):
     page.goto(base_url + "/ccna/admin.html")
     expect(page.locator("#modeTag")).to_contain_text("실제")
     expect(page.locator("[data-tab=trace]")).to_be_hidden()
+
+
+# ---------- 관리자 모의: 해석 방식·아무 숫자 기간·SQL 조회 ----------
+def test_admin_demo_mode_default_ai_falls_back_to_rules(page, errors, base_url):
+    _demo_fresh(page, base_url)
+    expect(page.locator("#cmdMode")).to_have_value("ai")
+    li = _cmd(page, "AI 제일 많이 쓴 사람 보여줘")
+    expect(li.locator(".st")).to_contain_text("화면 바꿈")
+    expect(page.locator("#uSort")).to_have_value("ai_desc")
+    page.locator("#tabs [data-tab=trace]").click()
+    row = page.locator("#tRows tr").filter(has_text="AI 제일 많이 쓴 사람")
+    expect(row).to_contain_text("제미나이 우선 → AI에 해석 요청")
+    expect(row).to_contain_text("AI는 해당 명령 없음 → 규칙으로 대신")
+    page.locator("#cmdMode").select_option("rules")
+    assert page.evaluate("() => localStorage.getItem('tracer-admin-demo-mode')") == "rules"
+
+
+def test_admin_demo_any_number_of_days(page, errors, base_url):
+    _demo(page, base_url, "rules")
+    _cmd(page, "최근 10일 신고 내역 보여줘")
+    expect(page.locator("#arDays")).to_have_value("10")
+    expect(page.locator("#arDays option[value='10']")).to_have_text("최근 10일")
+    only_open = page.locator("#arOpen").input_value() == "1"
+    n = page.evaluate("(o) => window.TracerAdminDemo.db.app_reports.filter(r => (!o || !r.resolved) && Date.now() - new Date(r.at) <= 10 * 864e5).length", only_open)
+    expect(page.locator("#arCount")).to_contain_text(f"{n}건 표시")
+    li = _cmd(page, "45일 동안 접속 안 한 사람 찾아줘")
+    expect(li.locator(".st")).to_contain_text("화면 바꿈")
+    expect(page.locator("#uIdle")).to_have_value("45")
+    m = page.evaluate("() => window.TracerAdminDemo.db.users.filter(u => Date.now() - new Date(u.last_seen || u.created_at) > 45 * 864e5).length")
+    expect(page.locator("#uCount")).to_contain_text(f"{m}명")
+
+
+def test_admin_demo_custom_days_option(page, errors, base_url):
+    _demo(page, base_url, "rules")
+    page.evaluate("() => { window.prompt = () => '12'; }")
+    page.locator("#tabs [data-tab=appr]").click()
+    expect(page.locator("#arDays option[value='custom']")).to_have_count(1)
+    page.locator("#arDays").select_option("custom")
+    expect(page.locator("#arDays")).to_have_value("12")
+
+
+def _qr_users(page):
+    return page.evaluate("() => window.TracerAdminDemo.db.users.filter(u => u.name.startsWith('최')).length")
+
+
+def test_admin_demo_sql_query_ai_direct_and_blocked(page, errors, base_url):
+    _demo_fresh(page, base_url, "rules")
+    n = _qr_users(page)
+    assert n > 0
+    users_before = page.evaluate("() => window.TracerAdminDemo.db.users.length")
+    li = _cmd(page, "최로 시작하는 사용자 보여줘")
+    expect(li.locator(".st")).to_contain_text("화면 바꿈", timeout=30000)
+    expect(page.locator("#v-query")).to_be_visible()
+    expect(page.locator("#qrSql")).to_contain_text("LIKE '최%'")
+    expect(page.locator("#qrInfo")).to_contain_text(f"{n}행")
+    expect(page.locator("#qrRows tr")).to_have_count(n)
+    li = _cmd(page, "SELECT id, name FROM users WHERE name LIKE '최%'")
+    expect(li.locator(".st")).to_contain_text("화면 바꿈", timeout=30000)
+    expect(page.locator("#qrInfo")).to_contain_text(f"{n}행")
+    page.locator("#tabs [data-tab=trace]").click()
+    expect(page.locator("#tRows tr").filter(has_text="SQL 직접").first).to_be_visible()
+    li = _cmd(page, "SQL로 전부 지워줘")
+    expect(li.locator(".st")).to_contain_text("못 함", timeout=30000)
+    assert page.evaluate("() => window.TracerAdminDemo.db.users.length") == users_before
+
+
+def test_admin_demo_sql_result_rows_block_and_undo(page, errors, base_url):
+    _demo(page, base_url, "rules")
+    ids = page.evaluate("() => window.TracerAdminDemo.db.users.filter(u => u.name.startsWith('최')).map(u => u.id)")
+    _cmd(page, "최로 시작하는 사용자 보여줘")
+    expect(page.locator("#qrAll")).to_be_visible(timeout=30000)
+    page.locator("#qrAll").check()
+    page.locator("#qrSel").get_by_role("button", name="차단", exact=True).click()
+    expect(page.locator("dialog#ask")).to_be_visible()
+    page.locator("#askYes").click()
+    expect(page.locator("#undo")).to_be_visible()
+    page.wait_for_function("(ids) => ids.length > 0 && ids.every(i => window.TracerAdminDemo.db.users.find(u => u.id === i).status === 'blocked')", arg=ids)
+    li = _cmd(page, "방금 거 되돌려줘")
+    expect(li.locator(".st")).to_contain_text("실행")
+    page.wait_for_function("(ids) => ids.every(i => window.TracerAdminDemo.db.users.find(u => u.id === i).status !== 'blocked')", arg=ids)

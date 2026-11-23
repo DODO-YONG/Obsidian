@@ -109,6 +109,10 @@ def ask_json(sys_, prompt, schema=None, temperature=0.7):
                 "explanation": "B because.", "option_notes": ["A no", "B yes", "C no", "D no"], "key_concept": "kc"}, "fake"
     if "TRACER web admin page" in sys_:  # 관리자 명령창: 낱말로 대충 고른다(가짜)
         t = prompt
+        if "시작" in t and "최" in t:
+            return {"command": "sql_query", "args": {"sql": "SELECT id, name, email, last_seen FROM users WHERE name LIKE '최%' ORDER BY name", "title": "최로 시작하는 사용자", "target": "users"}, "confidence": 0.95, "reply": "이름이 최로 시작하는 사용자를 찾을게요."}, "fake"
+        if "SQL로" in t:
+            return {"command": "sql_query", "args": {"sql": "DELETE FROM users", "title": "x", "target": "users"}, "confidence": 1, "reply": "x"}, "fake"
         days = 365 if "1년" in t or "일년" in t else 90 if "3달" in t or "90" in t else 30 if "30" in t or "한 달" in t else 1 if "오늘" in t else 7
         if "접속" in t and ("안 한" in t or "않은" in t or "안한" in t):
             if any(w in t for w in ("지워", "삭제")): return {"command": "mark_delete_inactive", "args": {"inactive_days": days}, "confidence": 0.9, "reply": f"{days}일 넘게 접속하지 않은 사용자를 삭제 예정으로 표시할게요."}, "fake"

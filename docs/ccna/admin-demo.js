@@ -4,7 +4,7 @@
    - 문제는 지어낸 예시 문제(범위 52 × 난이도 3). 실제 문제은행(비공개)과 무관해서 고치거나 숨겨도 실제 서비스엔 영향이 없다.
    - 씨앗(seed)이 고정이라 같은 n이면 매번 같은 데이터가 만들어진다(시험이 흔들리지 않게). &seed=숫자 로 바꿀 수 있다.
    - 시험·확인용으로 window.TracerAdminDemo.db 에 표를 그대로 둔다.
-   명령 해석: 화면의 규칙이 먼저 처리하고, 안 되는 말만 /api/demo/ask(제미나이, 하루 30회 제한)로. 연결이 안 되면 '못 함'. */
+   명령 해석: 화면의 규칙이 먼저 처리하고, 안 되는 말만 /api/demo/ask(제미나이, 하루 100회 제한)로. 연결이 안 되면 '못 함'. */
 (function () {
   var qp = new URLSearchParams(location.search);
   var N = Math.max(20, Math.min(1000, parseInt(qp.get('n'), 10) || 500));
@@ -161,7 +161,7 @@
   var GET = {
     'me': function () { return Object.assign(clone(me), { admin: true, admin_ai: true }); },
     'admin/summary': function (p) {
-      var n = [7, 14, 30, 90, 180, 365].indexOf(+p.get('days')) >= 0 ? +p.get('days') : 14;
+      var n = Math.max(1, Math.min(365, parseInt(p.get('days'), 10) || 14));
       var todayAi = activity.filter(function (a) { return a.ai && new Date(a.at) >= today0; }).length;
       return { days: n, users: users.length, blocked: users.filter(function (u) { return u.status === 'blocked'; }).length,
         pending: users.filter(function (u) { return u.status === 'pending'; }).length, today_ai: todayAi, today_counted: todayAi, global_daily_ai: 400,
@@ -274,10 +274,10 @@
       activity.sort(function (a, b2) { return b2.at.localeCompare(a.at); });
       log({ bulk: 'demo add ' + st, n: n }); return { ok: true, added: n, status: st, ids: made };
     },
-    'admin/ask': function (b) {  // 규칙으로 안 된 말만 여기로 온다 → 실제 제미나이(모의 화면용, 하루 30회 제한)
+    'admin/ask': function (b) {  // 규칙으로 안 된 말만 여기로 온다 → 실제 제미나이(모의 화면용, 하루 100회 제한)
       return fetch('/api/demo/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: b.prompt }) })
         .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) throw new Error(j.error || 'AI 연결 실패'); return j; }); })
-        .catch(function (e) { return { command: 'none', kind: 'none', args: {}, source: 'ai', reply: 'AI로 해석하지 못했어요(' + e.message + '). 예시처럼 기간과 대상을 넣어 말하면 규칙으로 바로 알아들어요.' }; });
+        .catch(function (e) { return { command: 'none', kind: 'none', args: {}, source: 'ai', error: true, reply: 'AI로 해석하지 못했어요(' + e.message + ').' }; });
     }
   };
   window.TracerAdminDemo = {

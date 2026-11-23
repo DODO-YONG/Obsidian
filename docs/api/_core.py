@@ -766,37 +766,38 @@ def admin_users_bulk(p: dict, body: dict) -> dict:
 ANSWER_WHAT = ["users_total", "pending", "blocked", "delete_marked", "inactive", "visitors", "today_ai",
                "open_app_reports", "app_reports", "bank_flagged", "bank_active"]
 ADMIN_COMMANDS = {
-    "show_dashboard":       {"days": [7, 14, 30, 90]},
+    "show_dashboard":       {"days": ("int", 1, 365, 14)},
     "show_todo":            {},
-    "show_users":           {"status": ["", "active", "pending", "blocked", "delete"], "inactive_days": [0, 30, 90, 180, 365],
-                             "joined_days": [0, 1, 7, 30, 90],
+    "show_users":           {"status": ["", "active", "pending", "blocked", "delete"], "inactive_days": ("int", 0, 3650, 0),
+                             "joined_days": ("int", 0, 365, 0),
                              "sort": ["last_desc", "last_asc", "created_desc", "created_asc", "attempts_desc", "ai_desc", "name_asc"]},
-    "show_activity":        {"days": [1, 7, 30, 90], "action": ["", "visit", "signup", "question", "grade", "subnet", "explain", "report", "admin"]},
+    "show_activity":        {"days": ("int", 1, 365, 7), "action": ["", "visit", "signup", "question", "grade", "subnet", "explain", "report", "admin"]},
     "show_bank":            {"status": ["flagged", "", "active", "hidden"], "low": [False, True], "q": "text",
                              "diff": ["", "easy", "medium", "hard"], "sort": ["reports_desc", "rate_asc", "served_desc", "created_desc"]},
-    "show_app_reports":     {"open": ["1", "0"], "days": [0, 1, 7, 30, 90], "reason": ["", "answer", "both", "explanation", "typo", "other"],
+    "show_app_reports":     {"open": ["1", "0"], "days": ("int", 0, 365, 0), "reason": ["", "answer", "both", "explanation", "typo", "other"],
                              "sort": ["at_desc", "at_asc", "same_desc"]},
-    "answer":               {"what": ANSWER_WHAT, "days": [7, 1, 14, 30, 90, 180, 365]},
-    "mark_delete_inactive": {"inactive_days": [365, 30, 90, 180]},
+    "answer":               {"what": ANSWER_WHAT, "days": ("int", 1, 3650, 7)},
+    "mark_delete_inactive": {"inactive_days": ("int", 1, 3650, 365)},
     "unmark_delete_all":    {},
     "approve_all_pending":  {},
-    "resolve_app_reports":  {"days": [0, 1, 7, 30, 90], "reason": ["", "answer", "both", "explanation", "typo", "other"]},
+    "resolve_app_reports":  {"days": ("int", 0, 365, 0), "reason": ["", "answer", "both", "explanation", "typo", "other"]},
     "select_users":         {"op": ["approve", "block", "unblock", "mark_delete", "unmark_delete"],
-                             "status": ["", "active", "pending", "blocked", "delete"], "inactive_days": [0, 30, 90, 180, 365], "joined_days": [0, 1, 7, 30, 90]},
+                             "status": ["", "active", "pending", "blocked", "delete"], "inactive_days": ("int", 0, 3650, 0), "joined_days": ("int", 0, 365, 0)},
     "select_questions":     {"op": ["hide", "flag", "resolve"], "target": ["flagged", "low", "hidden", "active"]},
     "undo_last":            {"kind": ["", "approve", "block", "unblock", "mark_delete", "unmark_delete", "questions", "app_reports"], "no": "int"},
     "demo_add_users":       {"status": ["pending", "active", "blocked"], "n": [10, 5, 20, 50]},
-    "compare_period":       {"days": [7, 14, 30, 90, 180, 365]},
-    "show_weak_topics":     {"days": [30, 7, 14, 90, 180, 365]},
+    "compare_period":       {"days": ("int", 1, 365, 7)},
+    "show_weak_topics":     {"days": ("int", 1, 365, 30)},
     "export_csv":           {"target": ["current", "users", "activity", "bank", "appr"]},
     "show_trace":           {"only_bad": [False, True]},
+    "sql_query":            {"sql": "sql", "title": "title", "target": ["other", "users", "questions", "app_reports", "activity"]},  # 모의 화면 전용
 }
 COMMAND_KIND = {"answer": "answer", "mark_delete_inactive": "act", "unmark_delete_all": "act", "approve_all_pending": "act",
                 "resolve_app_reports": "act", "select_users": "act", "select_questions": "act", "undo_last": "act",
                 "export_csv": "act", "demo_add_users": "act"}
 ADMIN_ASK_SYS = """You turn a Korean admin's request for the TRACER web admin page into exactly ONE command from this fixed list.
-You cannot do anything outside this list. Never invent commands or values. Snap numbers to the closest allowed value
-("오늘"=1, "며칠/일주일"=7, "2주"=14, "한 달"=30, "3달"=90, "반년"=180, "1년/일년"=365).
+You cannot do anything outside this list. Never invent commands or values. Day counts can be any number in range;
+convert words to days ("오늘"=1, "며칠/일주일"=7, "열흘"=10, "2주"=14, "한 달"=30, "3달"=90, "반년"=180, "1년/일년"=365).
 
 A) Open a tab with filters (when they say 보여줘/찾아줘/열어줘/목록/확인):
 - show_todo {} — the "오늘 할 일" overview (things to check: pending approvals, open reports, stopped questions, deletion candidates).
@@ -879,25 +880,79 @@ def clean_command(out: dict) -> dict:
     raw = out.get("args") if isinstance(out.get("args"), dict) else {}
     args = {}
     for k, allowed in ADMIN_COMMANDS[cmd].items():
-        if allowed == "int":  # 명령 기록 번호(0 = 지정 안 함)
+        if allowed == "int" or isinstance(allowed, tuple):  # 숫자 범위(기간 등). "int" = 0~100000(명령 기록 번호)
+            lo, hi, dflt = (0, 100000, 0) if allowed == "int" else allowed[1:]
             try:
-                args[k] = max(0, min(int(raw.get(k) or 0), 100000))
+                args[k] = max(lo, min(int(raw.get(k) if raw.get(k) is not None else dflt), hi))
             except (TypeError, ValueError):
-                args[k] = 0
+                args[k] = dflt
+        elif allowed == "sql":
+            args[k] = str(raw.get(k) or "").strip()[:2000]
+        elif allowed == "title":
+            args[k] = re.sub(r"[\x00-\x1f<>]", "", str(raw.get(k) or ""))[:60].strip()
         elif allowed == "text":  # 짧은 주제어만(글자·숫자·공백·.-), 사람 이름 같은 건 화면이 거르지 않지만 30자로 제한
             args[k] = re.sub(r"[^\w .\-]", "", str(raw.get(k) or ""))[:30].strip()
         else:
             args[k] = _closest(raw.get(k, allowed[0]), allowed)
+    if cmd == "sql_query":  # 읽기 전용 SELECT 하나만. 아니면 실행하지 않는다
+        why = sql_problem(args["sql"])
+        if why:
+            return {"command": "none", "kind": "none", "args": {}, "reply": "조회 SQL을 만들지 못했어요(" + why + ").", "confidence": conf, "unsure": False}
+        return {"command": cmd, "kind": "show", "args": args, "reply": reply, "confidence": conf, "unsure": False}  # 읽기만 하므로 확인 없이
     return {"command": cmd, "kind": COMMAND_KIND.get(cmd, "show"), "args": args, "reply": reply,
             "confidence": conf, "unsure": conf < 0.7}
 
 
-def _interpret(text: str) -> dict:
+_SQL_BAD = re.compile(r"\b(insert|update|delete|drop|alter|create|attach|detach|pragma|replace|vacuum|reindex|begin|commit|rollback|savepoint|release|analyze|load_extension)\b", re.I)
+
+
+def sql_problem(sql: str) -> str:
+    """읽기 전용 SELECT(또는 WITH … SELECT) 한 문장인지 검사. 문제가 있으면 이유, 없으면 빈 문자열."""
+    q = re.sub(r"--[^\n]*|/\*.*?\*/", " ", str(sql or ""), flags=re.S).strip().rstrip(";").strip()
+    if not q:
+        return "빈 SQL"
+    if ";" in q:
+        return "여러 문장"
+    if not re.match(r"(?is)^(select|with)\b", q):
+        return "SELECT가 아님"
+    if _SQL_BAD.search(q):
+        return "읽기 전용이 아님"
+    return ""
+
+
+# 모의 화면 전용: 조회는 SQL로(브라우저 안 SQLite에서 실행). 제미나이에는 표 구조와 명령 문장만 보낸다(데이터는 안 보냄).
+DEMO_SQL_SECTION = """E) sql_query {sql, title, target} — for ANY find / list / count / "who" / "which" question (보여줘, 찾아줘, 몇 명, 누구, 어떤),
+  write ONE read-only SQLite SELECT (or WITH ... SELECT). Prefer this over show_* / answer for lookups, especially with names,
+  combinations, thresholds or joins. title = short Korean title of the result. target = the table whose rows (with an `id` column) are
+  returned: users | questions | app_reports | activity | other. Always include `id` when returning rows of users/questions/app_reports.
+  Never write INSERT/UPDATE/DELETE/DDL. Changes are done only by the commands in C).
+  Tables (mock data; timestamps are UTC text 'YYYY-MM-DD HH:MM:SS'; compare with datetime('now','-10 days'); booleans are 0/1):
+  users(id, name, email, role[owner|admin|user], status[active|pending|blocked], created_at, last_seen NULL=never,
+        delete_at NULL=not marked, daily_limit, can_practice, can_explain, today_ai, total_attempts, note)
+  questions(id, sub e.g. '3.4', difficulty[easy|medium|hard], status[active|flagged|hidden], question, answer,
+            served, graded, correct, correct_rate percent or NULL, reports, created_at)
+  app_reports(id, app_qid, sub, question, reason[answer|both|explanation|typo|other], note, app_version, lang[ko|en], resolved, at)
+  activity(id, user_id -> users.id, action[visit|signup|question|grade|subnet|explain|report|admin], at, ai, device,
+           sub, verdict['정답'|'오답'] for grade, source[bank|new] for question, difficulty)
+  Names are Korean like '최민준' or English like 'Alex Kim'. "최로 시작" -> name LIKE '최%'. Limit big lists with ORDER BY.
+"""
+DEMO_ASK_SYS = ADMIN_ASK_SYS.replace("D) none —", DEMO_SQL_SECTION + "D) none —").replace(
+    '"김철수 차단해줘" -> none', '"최로 시작하는 사용자 보여줘" -> sql_query {sql:"SELECT id, name, email, last_seen FROM users WHERE name LIKE \'최%\' ORDER BY name", title:"최로 시작하는 사용자", target:"users"}\n'
+    '"지난달 가입했는데 문제 안 푼 사람" -> sql_query {sql:"SELECT id, name, email, created_at FROM users WHERE created_at >= datetime(\'now\',\'-30 days\') AND total_attempts = 0", ...}\n'
+    '"김철수 차단해줘" -> none')
+DEMO_ASK_SCHEMA = json.loads(json.dumps(ADMIN_ASK_SCHEMA))
+DEMO_ASK_SCHEMA["properties"]["args"]["properties"].update({"sql": {"type": "string"}, "title": {"type": "string"}, "target": {"type": "string"}})
+
+
+def _interpret(text: str, demo: bool = False) -> dict:
     text = _EMAIL.sub("(이메일)", str(text).strip()[:300])  # 혹시 적은 이메일은 제미나이로 보내지 않는다
     if not text:
         raise ApiError(400, "명령을 입력해 주세요.")
-    out, _model = gc.ask_json(ADMIN_ASK_SYS, text, ADMIN_ASK_SCHEMA, temperature=0.1)
-    return {**clean_command(out if isinstance(out, dict) else {}), "source": "ai"}
+    out, _model = gc.ask_json(DEMO_ASK_SYS if demo else ADMIN_ASK_SYS, text, DEMO_ASK_SCHEMA if demo else ADMIN_ASK_SCHEMA, temperature=0.1)
+    res = clean_command(out if isinstance(out, dict) else {})
+    if res["command"] == "sql_query" and not demo:  # 실제 화면은 SQL 조회를 쓰지 않는다
+        res = {"command": "none", "kind": "none", "args": {}, "reply": "SQL 조회는 모의 화면에서만 돼요.", "confidence": res["confidence"], "unsure": False}
+    return {**res, "source": "ai"}
 
 
 def admin_ask(p: dict, body: dict) -> dict:
@@ -910,7 +965,7 @@ def admin_ask(p: dict, body: dict) -> dict:
     return res
 
 
-DEMO_DAILY_AI = int(os.environ.get("TRACER_DEMO_DAILY_AI", "30"))
+DEMO_DAILY_AI = int(os.environ.get("TRACER_DEMO_DAILY_AI", "100"))  # 모의 화면은 제미나이 우선이라 넉넉히(사이트 전체 하루)
 
 
 def demo_ask(body: dict) -> dict:
@@ -918,6 +973,6 @@ def demo_ask(body: dict) -> dict:
     used = db.count("activity_log", {"action": "eq.demo", "at": f"gte.{today_start_iso()}"})
     if used >= DEMO_DAILY_AI:
         raise ApiError(429, "오늘 모의 화면의 AI 사용 횟수를 다 썼어요.")
-    res = _interpret(body.get("prompt", ""))
+    res = _interpret(body.get("prompt", ""), demo=True)
     log_activity(None, "demo", {"ask": res["command"]}, ai=True)
     return res

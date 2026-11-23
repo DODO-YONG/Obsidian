@@ -164,8 +164,11 @@ ok(not T["profiles"][[x["id"] for x in T["profiles"]].index(uid_a)]["delete_at"]
 try: core.admin_users_bulk(o, {"op": "drop_table", "ids": [uid_a]}); ok(False, "")
 except core.ApiError as e: ok(e.code == 400, "목록 밖 작업은 거부")
 c = core.clean_command({"command": "show_users", "args": {"inactive_days": 400, "status": "hacked"}, "confidence": 0.95})
-ok(c["args"] == {"status": "", "inactive_days": 365, "joined_days": 0, "sort": "last_desc"} and c["kind"] == "show" and not c["unsure"], "AI 값은 허용 목록 안으로 맞춤")
+ok(c["args"] == {"status": "", "inactive_days": 400, "joined_days": 0, "sort": "last_desc"} and c["kind"] == "show" and not c["unsure"], "AI 값은 허용 범위 안으로 맞춤(목록 밖 상태는 기본값)")
 ok(core.clean_command({"command": "drop_all", "confidence": 1})["command"] == "none", "목록 밖 명령은 none")
+c = core.clean_command({"command": "show_app_reports", "args": {"days": 10}, "confidence": 1})
+ok(c["args"]["days"] == 10, "기간은 10일처럼 아무 숫자(범위 안)")
+ok(core.clean_command({"command": "show_app_reports", "args": {"days": 9999}, "confidence": 1})["args"]["days"] == 365, "범위 밖 기간은 끝값으로")
 ok(core.clean_command({"command": "mark_delete_inactive", "args": {}, "confidence": 0.4})["unsure"], "확신 낮으면 실행 전 확인")
 ok(core.clean_command({"command": "answer", "args": {"what": "inactive", "days": 300}, "confidence": 1})["kind"] == "answer", "질문은 답변 종류")
 c = core.clean_command({"command": "show_bank", "args": {"q": "OSPF<script>", "diff": "hard", "sort": "x"}, "confidence": 1})
@@ -184,5 +187,22 @@ core.DEMO_DAILY_AI = 1
 core.demo_ask({"prompt": "신고 보여줘"})
 try: core.demo_ask({"prompt": "신고 보여줘"}); ok(False, "")
 except core.ApiError as e: ok(e.code == 429, "모의 화면 AI는 하루 횟수 제한")
+gc.ask_json = _orig
+
+# 모의 화면 SQL 조회: 읽기 전용만
+ok(core.sql_problem("SELECT id FROM users WHERE name LIKE '최%'") == "", "SELECT는 통과")
+ok(core.sql_problem("WITH x AS (SELECT 1) SELECT * FROM x;") == "", "WITH … SELECT도 통과")
+for bad in ["DELETE FROM users", "SELECT 1; DROP TABLE users", "UPDATE users SET status='blocked'", "PRAGMA table_info(users)", "select * from users -- ok\n; delete from users"]:
+    ok(core.sql_problem(bad) != "", "막음: " + bad[:30])
+c = core.clean_command({"command": "sql_query", "args": {"sql": "DELETE FROM users", "title": "x"}, "confidence": 1})
+ok(c["command"] == "none", "쓰기 SQL은 none")
+c = core.clean_command({"command": "sql_query", "args": {"sql": "SELECT id, name FROM users", "title": "<b>사용자</b>", "target": "users"}, "confidence": 0.3})
+ok(c["command"] == "sql_query" and not c["unsure"] and c["args"]["title"] == "b사용자/b", "읽기 SQL은 확인 없이, 제목 정리")
+gc.ask_json = lambda s_, pr, sc=None, temperature=0.7: ({"command": "sql_query", "args": {"sql": "SELECT id FROM users", "title": "t", "target": "users"}, "confidence": 1, "reply": "r"}, "f")
+core.DEMO_DAILY_AI = 100
+ok(core.demo_ask({"prompt": "최로 시작하는 사용자"})["command"] == "sql_query", "모의 화면은 SQL 조회 가능")
+os.environ["TRACER_ADMIN_AI"] = "1"
+ok(core.admin_ask(o, {"prompt": "최로 시작하는 사용자"})["command"] == "none", "실제 화면은 SQL 조회 안 함")
+ok("users(id, name" in core.DEMO_ASK_SYS and "users(id, name" not in core.ADMIN_ASK_SYS, "표 구조는 모의 지시문에만")
 gc.ask_json = _orig
 print("모두 통과")
