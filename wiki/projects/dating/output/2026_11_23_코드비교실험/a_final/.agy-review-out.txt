@@ -1,0 +1,22 @@
+[migration.sql](file:///Users/mj/Obsidian/wiki/_inbox/_ab/a_final/migration.sql)을 [SPEC.md](file:///Users/mj/Obsidian/wiki/_inbox/_ab/SPEC.md) 기준으로 검토하고, [env.js](file:///Users/mj/Obsidian/wiki/_inbox/_ab/harness/env.js)(PGlite)로 직접 재현 시험한 결과를 [review_by_gemini.md](file:///Users/mj/Obsidian/wiki/_inbox/_ab/a_final/review_by_gemini.md)에 저장했습니다. (`migration.sql`은 수정하지 않았습니다.)
+
+### 주요 발견 요약 (총 14건)
+- **심각도 높음 (2건)**
+  1. `private.age_of()`에 `current_date`를 쓰면서 **`IMMUTABLE`**로 선언(Prepared Statement 캐시 오염 재현) + 세션 `TimeZone` 조작(`Pacific/Kiritimati` 등)으로 **만 19세 제한 우회 가능** 재현.
+  2. `swipe()`가 `is_blocked()` 검사 후 잠금을 잡고 `block_user()`는 잠금을 잡지 않아, 동시 실행 시 **차단된 사용자 간 활성 매칭(`ended_at is null`) 생성 가능**(TOCTOU).
+- **심각도 중간 (7건)**
+  3. `swipe()` 오류 메시지 분기(`'target not eligible'` vs `'blocked'`)로 상대의 차단 여부·`member_status` 유출(오라클).
+  4. `send_message()`가 `matches` 행 잠금(`for share`) 없이 검사해 `block_user()`와 동시 실행 시 차단 후 메시지 저장 가능.
+  5. 정지(`suspended`)된 사용자도 기존 매칭에서 `send_message()` 계속 가능(명세 외 보안 공백).
+  6. `revoke all on all ... in schema public` 일괄 회수가 실제 Supabase의 기존 테이블·확장 권한을 지울 위험.
+  7. `profiles`·`preferences` 컬럼 단위 `UPDATE` 권한에서 PK 제외로 Supabase PostgREST `.upsert()` 실패 재현.
+  8. `messages(sender_id)` 인덱스 누락으로 회원 탈퇴(`delete_my_account`) 시 `messages` 풀스캔 발생(`EXPLAIN` 확인).
+  9. `get_candidates()`에서 `is_blocked`·`age_of` 인라이닝 불가 및 필터용 인덱스 부재로 행별 함수 호출·스캔 병목(`EXPLAIN ANALYZE` 확인).
+- **심각도 낮음 (5건)**
+  - `delete_my_account()` 직접 `DELETE FROM auth.users`의 Supabase 운영 리스크(Storage FK 등), `block_user()` 미가공 FK 오류로 UUID 존재 여부 판별, 종료된 매칭 재`like` 시 종료된 매칭 ID 반환, `set_birth_date()` 비현실적 과거 날짜 및 프로필 없는 계정의 `swipe()` 가능, 기타 경미한 사항.
+
+자세한 줄 번호·재현 결과·수정 방법은 [review_by_gemini.md](file:///Users/mj/Obsidian/wiki/_inbox/_ab/a_final/review_by_gemini.md)에 정리했습니다.
+real 493.80
+user 7.57
+sys 2.70
+exit 0

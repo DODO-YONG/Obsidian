@@ -276,3 +276,14 @@
 - 작업지시서 확정(제미나이 두 차례 검토·동의). 공통 규칙 원본 = 작업지시서, 각자 몫 = `CLAUDE.md`·`GEMINI.md`.
 - Gemini CLI가 Pro 계정 지원을 끝내 Antigravity CLI(`agy` 1.5.14)로 연결. `scripts/gemini.sh` + `scripts/agy-settings.json`(비공개 폴더·키 파일 읽기 거부, 셸 명령 거부, 쓰기는 `wiki/_inbox/`만). 미끼 파일로 직접 읽기·셸·검색 우회 모두 막힘 확인.
 - `wiki/_inbox/`는 git 제외(검토 전 초안 비공개). `docs/map.html` 자동 장치에 추가.
+- agy Telemetry 끔(사용자 확인) — 협업 작업지시서에 기록.
+
+## [2026-11-23] lint | 제미나이(agy)에게 Claude와 같은 권한
+- 사용자 결정(Telemetry 끈 것 확인): agy가 볼트 전체·`private/`·셸·git 커밋·푸시 가능. 막는 것은 `.env` 읽기·`raw/` 쓰기·강제 푸시·`--no-verify`뿐. 미끼 파일로 시험해 통과.
+- `scripts/agy-settings.json`·`scripts/gemini.sh`(작업 폴더 = 볼트 루트)·`GEMINI.md`(CLAUDE.md를 따름)·협업 작업지시서·CLAUDE.md 외부 AI 기준(회사 → 학습 여부) 개정. 제미나이 API 무료 키는 계속 개인정보 금지.
+- 사용자 확인: 개인정보는 agy가 읽어도 됨, 키 파일만 제외. 셸로 `.env`를 읽는 길도 OS 샌드박스로 막음(시험 통과). 샌드박스라 agy는 커밋만, 푸시는 Obsidian 자동 백업.
+- agy 추가 요금 차단: useG1Credits=false(한도 초과 시 유료 크레딧 안 씀), gemini.sh가 크레딧 켜짐·비제미나이 모델이면 멈춤.
+
+## [2026-11-23] output | Claude·agy 코드 작업 비교 실험
+- 소개팅 앱 1단계(DB·RLS·함수)로 A(Claude 작성→agy 검토→Claude 수정) vs B(agy 작성→Claude 검토·수정) + agy xhigh·argon 비교. 전부 시험 37/37, Claude 사용량 A 약 95k ≈ B 97k, agy 검토가 진짜 문제 8건 → 작업지시서에 '코드는 Claude가 짜고 agy가 검토' 기본으로.
+- 실험 파일을 공개 위키로 옮김: wiki/projects/dating/output/2026_11_23_코드비교실험/ (채점 시험·참고 답안 포함, node_modules 제외).

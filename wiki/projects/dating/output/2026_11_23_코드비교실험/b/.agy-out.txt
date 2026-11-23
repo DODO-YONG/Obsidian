@@ -1,0 +1,8 @@
+- [migration.sql](file:///Users/mj/Obsidian/wiki/_inbox/_ab/b/migration.sql)에 `private` 스키마와 명세된 9개 테이블(제약 조건·연쇄 삭제·인덱스 포함), `profiles` insert 시 `member_status` 자동 생성 트리거를 작성했습니다.
+- 모든 테이블에 RLS를 활성화하고 `PUBLIC`/`anon`/`authenticated` 기본 권한을 회수한 뒤 `authenticated`에만 최소 권한(`profiles`·`preferences`는 본인 SELECT/INSERT/UPDATE, 나머지는 지정된 SELECT)을 부여했습니다.
+- 7개 핵심 함수(`set_birth_date`, `admin_set_status`, `get_candidates`, `swipe`, `send_message`, `block_user`, `delete_my_account`)를 명세된 시그니처와 `security definer` + `set search_path = ''` + `auth.uid()` 검증으로 구현하고 `authenticated`에만 실행 권한을 부여했습니다.
+- [selftest-example.js](file:///Users/mj/Obsidian/wiki/_inbox/_ab/harness/selftest-example.js) 및 자체 테스트([selftest.js](file:///Users/mj/Obsidian/wiki/_inbox/_ab/b/selftest.js))를 PGlite에서 실행해 트리거·제약 조건·`anon`/타인 격리·후보 필터링(상호 선호·30일 pass·차단·매칭 제외)·중복 매칭 방지·메시지·차단·계정 연쇄 삭제·권한 메타데이터 8개 항목 전체 통과를 확인했습니다.
+real 333.05
+user 8.33
+sys 2.38
+exit 0

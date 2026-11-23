@@ -1,0 +1,8 @@
+- [SPEC.md](file:///Users/mj/Obsidian/wiki/_inbox/_ab/SPEC.md) 명세에 맞춰 9개 테이블(`public` 7개·`private` 2개), `profiles` 삽입 시 `member_status` 자동 생성 트리거, 핵심 함수 7개를 [migration.sql](file:///Users/mj/Obsidian/wiki/_inbox/_ab/b2/migration.sql)에 작성했습니다.
+- 모든 테이블·함수·스키마의 기본 권한을 `public`/`anon`/`authenticated`에서 회수한 뒤 `authenticated`에 최소 권한만 부여하고, 전체 테이블에 RLS 및 `security definer` + `set search_path = ''` + `auth.uid()` 검증을 적용했습니다.
+- [selftest-example.js](file:///Users/mj/Obsidian/wiki/_inbox/_ab/harness/selftest-example.js)와 자체 검증 스크립트 [selftest.js](file:///Users/mj/Obsidian/wiki/_inbox/_ab/b2/selftest.js)를 PGlite로 실행해 10개 항목(메타데이터·권한/RLS·제약조건·만 19세 경계·`pg_temp` 하이재킹 차단·후보 필터링·중복 매칭 방지·차단/메시지·계정 연쇄 삭제) 모두 통과를 확인했습니다.
+- 커밋은 하지 않고 [migration.sql](file:///Users/mj/Obsidian/wiki/_inbox/_ab/b2/migration.sql)을 완성된 상태로 두었습니다.
+real 534.33
+user 5.42
+sys 2.74
+exit 0
