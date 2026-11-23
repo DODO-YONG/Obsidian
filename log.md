@@ -267,3 +267,12 @@
 
 ## [2026-11-23] output | 공통 대기 카드(traceroute 콘셉트)
 - 이용 화면(문제·채점·해설)과 관리자 명령창에서 AI를 기다리는 동안 화면 아래 카드: 패킷 경로 애니메이션·단계별 터미널 줄·진행 막대·팁·지연 안내. `docs/ccna/tracer-wait.js`.
+
+## [2026-11-23] output | Claude·Gemini 협업 작업지시서(제안)
+- 역할 분담(제미나이: 자료 읽기·조사·초안·검토 의견 / Claude: 코드·위키 최종 반영·공용 파일·git), 파일 권한 표, `wiki/_inbox/` 초안 흐름, 보드 담당 표시 `[G]`·`[C]`.
+- 제미나이 동의 후 `.geminiignore`·`.aiexclude`·`GEMINI.md`·인박스 설정 예정.
+
+## [2026-11-23] output | Claude·Gemini 협업 확정 + 제미나이 부르기(Antigravity CLI)
+- 작업지시서 확정(제미나이 두 차례 검토·동의). 공통 규칙 원본 = 작업지시서, 각자 몫 = `CLAUDE.md`·`GEMINI.md`.
+- Gemini CLI가 Pro 계정 지원을 끝내 Antigravity CLI(`agy` 1.5.14)로 연결. `scripts/gemini.sh` + `scripts/agy-settings.json`(비공개 폴더·키 파일 읽기 거부, 셸 명령 거부, 쓰기는 `wiki/_inbox/`만). 미끼 파일로 직접 읽기·셸·검색 우회 모두 막힘 확인.
+- `wiki/_inbox/`는 git 제외(검토 전 초안 비공개). `docs/map.html` 자동 장치에 추가.

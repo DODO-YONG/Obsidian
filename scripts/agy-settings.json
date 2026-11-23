@@ -1,0 +1,29 @@
+{
+  "agentMode": "",
+  "toolPermission": "request-review",
+  "allowNonWorkspaceAccess": true,
+  "enableTerminalSandbox": true,
+  "modelProvider": "",
+  "permissions": {
+    "allow": [
+      "read_file(/Users/mj/Obsidian/raw)",
+      "read_file(/Users/mj/Obsidian/wiki)",
+      "read_file(/Users/mj/Obsidian/docs)",
+      "read_file(/Users/mj/Obsidian/agents)",
+      "read_file(/Users/mj/Obsidian/GEMINI.md)",
+      "read_file(/Users/mj/Obsidian/CLAUDE.md)",
+      "read_file(/Users/mj/Obsidian/index.md)",
+      "read_file(/Users/mj/Obsidian/log.md)",
+      "read_file(/Users/mj/Obsidian/README.md)",
+      "write_file(/Users/mj/Obsidian/wiki/_inbox)"
+    ],
+    "deny": [
+      "read_file(/Users/mj/Obsidian/private)",
+      "read_file(/Users/mj/Obsidian/.env)",
+      "read_file(/Users/mj/Obsidian/agents/heartline/server/.env)",
+      "read_file(/Users/mj/Obsidian/reports)",
+      "read_file(/Users/mj/Obsidian/.git)",
+      "command(*)"
+    ]
+  }
+}

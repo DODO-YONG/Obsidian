@@ -62,3 +62,4 @@
 - [[위키 효과 측정]] — 위키 A/B 테스트: 같은 질문을 위키로·위키 없이 답하게 해 토큰·시간 비교(`tools/wiki_ab_test.py`, 결과는 이 페이지에 누적)
 - [[작업 규칙]] — ingest·질문·lint·첫 세션·파일 형식별 처리 상세 규칙(`CLAUDE.md`에서 분리, 해당 작업 때만 읽음)
 - [[페이지 작성 규칙]] — 폴더 구조·산출물 위치·파일명·frontmatter·링크 규칙(`CLAUDE.md`에서 분리)
+- [[Claude·Gemini 협업 작업지시서]] — Claude·Gemini 공통 규칙 원본: 역할·파일 권한·인박스 흐름·`scripts/gemini.sh`로 제미나이 부르기(확정)
