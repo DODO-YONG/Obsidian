@@ -1255,3 +1255,38 @@ def test_admin_demo_trace_rerun_button_and_command(page, errors, base_url):
     _cmd(page, "1번 다시 실행해줘")
     expect(page.locator("#cmdLog li").filter(has=page.locator(".st", has_text="실행함")).first).to_be_visible()
     expect(page.locator("#cmdLog li").filter(has=page.locator(".st", has_text="답변"))).to_have_count(2)
+
+
+# ---------- 공통 대기 카드(tracer-wait.js) ----------
+def test_tracer_wait_card_shows_and_hides(page, errors, base_url):
+    page.goto(base_url + "/ccna/app.html")
+    page.wait_for_function("() => window.TracerWait")
+    page.evaluate("() => { window.__w = window.TracerWait.start('explain'); }")
+    expect(page.locator(".tw")).to_be_visible()
+    expect(page.locator(".tw .t")).to_contain_text("해설")
+    expect(page.locator(".tw .tip")).not_to_be_empty()
+    page.evaluate("() => window.__w.done()")
+    expect(page.locator(".tw")).to_have_count(0)
+
+
+def test_tracer_wait_card_skipped_when_fast(page, errors, base_url):
+    page.goto(base_url + "/ccna/app.html")
+    page.wait_for_function("() => window.TracerWait")
+    shown = page.evaluate("""() => new Promise(res => {
+      let seen = false;
+      const mo = new MutationObserver(() => { if (document.querySelector('.tw')) seen = true; });
+      mo.observe(document.body, {childList: true, subtree: true});
+      const w = window.TracerWait.start('grade');
+      setTimeout(() => { w.done(); setTimeout(() => { mo.disconnect(); res(seen || !!document.querySelector('.tw')); }, 1200); }, 100);
+    })""")
+    assert shown is False
+
+
+def test_admin_demo_wait_card_step_shows_ms(page, errors, base_url):
+    _demo(page, base_url)
+    page.evaluate("() => { window.__w = window.TracerWait.start('admin'); }")
+    expect(page.locator(".tw")).to_be_visible()
+    page.evaluate("() => window.__w.step(3)")
+    expect(page.locator(".tw .term")).to_contain_text("ms")
+    page.evaluate("() => window.__w.done()")
+    expect(page.locator(".tw")).to_have_count(0)

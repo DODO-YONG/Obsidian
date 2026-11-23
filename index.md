@@ -25,7 +25,7 @@
 - [[ccna-coach]] — 허브: CCNA 200-301 문제·해설 사이트. 화면은 GitHub Pages, 답변은 개인 서버(내 Mac)가 제미나이로(키는 로컬에만). 작동 방식 그림은 공용 `docs/tracer-how.*`
   - [[TRACER 고도화 계획]] — 구글 로그인·Supabase DB·Vercel 상시 운영(무료 등급만)·관리자 페이지·문제은행(객관식 해설 미리 저장, AI 호출 절약). 2026-11-20 배포·상시 운영(tracer-eosin.vercel.app)
   - [[관리자 명령창]] — 웹 관리자 페이지에서 말로 명령(보기·숫자 답변·일괄 작업). 규칙 우선 + 제미나이(정해진 명령만), 위험한 작업은 확인창, 결과 5종 구분. 모의 화면 `admin.html?demo=1`(가상 사용자 500명·1년치, 마이페이지 카드로 누구나 체험)에만 새 관리 기능(오늘 할 일·상세 창·선택·일괄·되돌리기·기간 비교·범위별 정답률·CSV·명령 기록·제미나이 우선·AI 조회(SQL, 브라우저 안 SQLite)), 실제 화면은 그대로
-  - 자동 화면 시험: Playwright 84개를 푸시마다 GitHub Actions가 실행(가짜 로그인·DB, 토큰 0) — `agents/ccna-coach/e2e/`
+  - 자동 화면 시험: Playwright 87개를 푸시마다 GitHub Actions가 실행(가짜 로그인·DB, 토큰 0) — `agents/ccna-coach/e2e/`
 
 # 📁 프로젝트: ccna
 
