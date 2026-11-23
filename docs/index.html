@@ -15,12 +15,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=20261123205738">
-<link rel="stylesheet" href="tracer-how.css?v=20261123205738">
+<link rel="stylesheet" href="style.css?v=20261123213529">
+<link rel="stylesheet" href="tracer-how.css?v=20261123213529">
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261123205738';
+  var SITE_V = '20261123213529';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -91,14 +91,14 @@
           <li><span class="h">6b2ad2e</span><span class="t">01:37</span><span class="m">TRACER: 틀린 문제 다시 풀기, 주관식 잠시 멈춤, 출시 체크리스트</span></li>
           <li><span class="h">16aca6a</span><span class="t">06:42</span><span class="m">DY-004 TWIN·DY-005 PRIMER 정리, SHADOW 출시 계획, Tracer Route 앱…</span></li>
           <li class="more">… 외 12개 (잡음·작은 수정 포함)</li>
-          <li class="day"># 7일차 · 11-23 · 26 commits</li>
+          <li class="day"># 7일차 · 11-23 · 28 commits</li>
           <li><span class="h">599c36e</span><span class="t">09:55</span><span class="m">웹 관리자 명령창 + 모의 관리자 화면(admin.html?demo=1)</span></li>
           <li><span class="h">3d8d347</span><span class="t">09:57</span><span class="m">앱 신고 표 service_role 권한 추가(관리자 앱 신고 탭 권한 오류 수정), 보드·로그 갱신</span></li>
           <li><span class="h">14f7109</span><span class="t">10:21</span><span class="m">모의 관리자 1·2단계 + 명령창 확장, 모의 데이터 1년치·500명</span></li>
           <li><span class="h">2bb45a3</span><span class="t">10:32</span><span class="m">모의 관리자 3단계(기간 비교·범위별 정답률·CSV) + 명령 기록 탭 + 마이페이지 체험 카드</span></li>
-          <li class="more">… 외 22개 (잡음·작은 수정 포함)</li>
+          <li class="more">… 외 24개 (잡음·작은 수정 포함)</li>
         </ol>
-        <div class="tail">146 commits · 6 days<span class="cursor" aria-hidden="true"></span></div>
+        <div class="tail">148 commits · 6 days<span class="cursor" aria-hidden="true"></span></div>
         <!-- gitlog:end -->
       </div>
     </figure>
@@ -564,6 +564,6 @@
   }
 })();
 </script>
-<script src="tracer-how.js?v=20261123205738" defer></script>
+<script src="tracer-how.js?v=20261123213529" defer></script>
 </body>
 </html>

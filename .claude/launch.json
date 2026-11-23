@@ -72,6 +72,18 @@
         "../Tracer-Route/app/www"
       ],
       "port": 8812
+    },
+    {
+      "name": "dating-web",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8813",
+        "--directory",
+        "../dating/web"
+      ],
+      "port": 8813
     }
   ]
 }

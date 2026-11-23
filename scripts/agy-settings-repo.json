@@ -1,0 +1,29 @@
+{
+  "agentMode": "",
+  "toolPermission": "request-review",
+  "allowNonWorkspaceAccess": false,
+  "enableTerminalSandbox": true,
+  "modelProvider": "",
+  "permissions": {
+    "allow": [
+      "read_file(__DIR__)",
+      "write_file(__DIR__)",
+      "command(*)"
+    ],
+    "deny": [
+      "read_file(__DIR__/.env)",
+      "read_file(__DIR__/.env.local)",
+      "read_file(__DIR__/.env.production)",
+      "command(git push)",
+      "command(git push --force)",
+      "command(git push -f)",
+      "command(git commit --no-verify)",
+      "command(git commit -n)",
+      "read_file(/Users/mj/Obsidian)",
+      "write_file(/Users/mj/Obsidian)",
+      "read_file(/Users/mj/Tracer-Route)",
+      "write_file(/Users/mj/Tracer-Route)"
+    ]
+  },
+  "useG1Credits": false
+}

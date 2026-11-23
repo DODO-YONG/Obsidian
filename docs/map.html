@@ -13,13 +13,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=20261123205738">
+<link rel="stylesheet" href="style.css?v=20261123213529">
 <script>
 /* 기본은 어두운 화면. 직접 고른 값이 있으면 그것을 따른다. */
 try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
 /* 새 버전 자동 확인 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261123205738';
+  var SITE_V = '20261123213529';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -252,8 +252,8 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
           </article>
           <article class="item">
             <div class="top"><h4>제미나이 부르기</h4><span class="cost zero">Claude 토큰 0</span></div>
-            <span class="path">scripts/gemini.sh · agy-settings.json</span>
-            <p>긴 자료 읽기·검색 조사·검토 의견을 제미나이(Antigravity CLI, Pro 구독 로그인)에게 맡깁니다. Claude와 같은 권한으로 위키·코드에 바로 반영하고 커밋까지 합니다. 키 파일 읽기, 원본 자료 수정, 강제 푸시만 막습니다.</p>
+            <span class="path">scripts/gemini.sh · agy-settings.json · agy-settings-repo.json</span>
+            <p>긴 자료 읽기·검색 조사·검토 의견을 제미나이(Antigravity CLI, Pro 구독 로그인)에게 맡깁니다. Claude와 같은 권한으로 위키·코드에 바로 반영하고 커밋까지 합니다. 키 파일 읽기, 원본 자료 수정, 강제 푸시만 막습니다. <code>-d</code>로 허락된 비공개 저장소 한 곳에서만 일하게 할 수도 있습니다.</p>
             <dl><dt>언제</dt><dd>Claude가 많이 읽어야 하는 일을 맡길 때</dd></dl>
           </article>
         </div>

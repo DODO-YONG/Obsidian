@@ -11,16 +11,23 @@
 #     셸은 OS 샌드박스(네트워크 없음 → 푸시는 Obsidian 자동 백업).
 #     막는 것은 .env(키) 읽기(도구·셸 모두), raw/ 쓰기, 훅 건너뛰기뿐
 #   - 작업 폴더 = 볼트 루트(GEMINI.md·CLAUDE.md 규칙을 따름)
+#   - -d <폴더>: 볼트 밖 비공개 저장소에서 일하게 할 때. 아래 REPOS 목록에 있는 폴더만.
+#     그 폴더만 읽기·쓰기(scripts/agy-settings-repo.json), .env 읽기·푸시 금지
+#     예: scripts/gemini.sh -d ~/dating "db/test/ 에 권한 시험 써 줘"
 set -e
 VAULT="$(cd "$(dirname "$0")/.." && pwd)"
 AGY="${AGY:-$HOME/.local/bin/agy}"
 MODEL="gemini-4-neon-high"
 EFFORT=""
-while getopts "m:e:" opt; do
+DIR=""
+# 볼트 밖에서 agy가 일해도 되는 비공개 저장소(사용자가 허락한 것만 추가)
+REPOS="$HOME/dating"
+while getopts "m:e:d:" opt; do
   case "$opt" in
     m) MODEL="$OPTARG" ;;
     e) EFFORT="$OPTARG" ;;
-    *) echo "사용: scripts/gemini.sh [-m 모델] [-e low|medium|high] \"할 일\"" >&2; exit 2 ;;
+    d) DIR="$OPTARG" ;;
+    *) echo "사용: scripts/gemini.sh [-m 모델] [-e low|medium|high] [-d 저장소] \"할 일\"" >&2; exit 2 ;;
   esac
 done
 shift $((OPTIND - 1))
@@ -42,8 +49,18 @@ fi
 # 제미나이 모델만 쓴다(목록의 Claude 등 다른 회사 모델은 크레딧 차감 가능성)
 case "$MODEL" in gemini-*) ;; *) echo "⛔ 제미나이 모델만 씁니다: $MODEL" >&2; exit 1 ;; esac
 
-mkdir -p "$VAULT/wiki/_inbox"
-cd "$VAULT"
-set -- -p "$1" --model "$MODEL" --settings "$VAULT/scripts/agy-settings.json" --print-timeout 20m
+if [ -n "$DIR" ]; then
+  DIR="$(cd "$DIR" 2>/dev/null && pwd)" || { echo "⛔ 폴더가 없습니다." >&2; exit 1; }
+  ok=""; for r in $REPOS; do [ "$DIR" = "$r" ] && ok=1; done
+  [ -n "$ok" ] || { echo "⛔ 허락된 저장소가 아닙니다: $DIR (gemini.sh의 REPOS)" >&2; exit 1; }
+  SETTINGS="$(mktemp -t agy-settings).json"
+  sed "s#__DIR__#$DIR#g" "$VAULT/scripts/agy-settings-repo.json" > "$SETTINGS"
+  cd "$DIR"
+else
+  SETTINGS="$VAULT/scripts/agy-settings.json"
+  mkdir -p "$VAULT/wiki/_inbox"
+  cd "$VAULT"
+fi
+set -- -p "$1" --model "$MODEL" --settings "$SETTINGS" --print-timeout 20m
 [ -n "$EFFORT" ] && set -- "$@" --effort "$EFFORT"
 exec "$AGY" "$@"
