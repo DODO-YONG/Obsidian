@@ -773,3 +773,213 @@ def test_admin_real_has_command_bar_and_new_filters(logged_in, errors, base_url)
     for path in ("/api/admin/ask", "/api/admin/users-bulk"):
         r = page.request.post(base_url + path, data={}, headers={"Authorization": "Bearer a"})
         assert r.status == 403
+
+
+# ---------- 관리자 모의 화면 1단계: 정렬·페이지·일괄 선택·되돌리기·주소 저장 ----------
+def test_admin_demo_users_sort_and_pager(page, errors, base_url):
+    _demo(page, base_url)
+    total = page.evaluate("() => window.TracerAdminDemo.db.users.length")
+    page.locator("#tabs [data-tab=users]").click()
+    expect(page.locator("#uPager")).to_contain_text(f"1–50 / {total}")
+    expect(page.locator("#uRows tr[data-id]")).to_have_count(50)
+    page.locator("#uPager").get_by_role("button", name="다음").click()
+    expect(page.locator("#uPager")).to_contain_text(f"51–100 / {total}")
+    page.locator("#uPager").get_by_role("button", name="처음").click()
+    expect(page.locator("#uPager")).to_contain_text(f"1–50 / {total}")
+    page.locator("#uSort").select_option("last_asc")
+    expect(page.locator("#uPager")).to_contain_text(f"1–50 / {total}")
+
+
+def test_admin_demo_users_bulk_block_and_undo(page, errors, base_url):
+    _demo(page, base_url)
+    page.locator("#tabs [data-tab=users]").click()
+    expect(page.locator("#uRows [data-ck]").first).to_be_visible()
+    page.locator("#uAll").check()
+    n = page.locator("#uRows [data-ck]").count()
+    assert n > 0
+    expect(page.locator("#uSel")).to_contain_text(f"{n}명 선택")
+    before = page.evaluate("() => window.TracerAdminDemo.db.users.filter(u => u.status === 'blocked').length")
+    page.locator("#uSel").get_by_role("button", name="차단", exact=True).click()
+    expect(page.locator("dialog#ask")).to_be_visible()
+    page.locator("#askYes").click()
+    expect(page.locator("#undo")).to_be_visible()
+    mid = page.evaluate("() => window.TracerAdminDemo.db.users.filter(u => u.status === 'blocked').length")
+    assert mid > before
+    page.locator("#undoBtn").click()
+    page.wait_for_function("(b) => window.TracerAdminDemo.db.users.filter(u => u.status === 'blocked').length === b", arg=before)
+
+
+def test_admin_demo_bank_and_reports_paging(page, errors, base_url):
+    _demo(page, base_url)
+    d = page.evaluate("() => ({q: window.TracerAdminDemo.db.questions.length, r: window.TracerAdminDemo.db.app_reports.length})")
+    page.locator("#tabs [data-tab=bank]").click()
+    page.locator("#qStatus").select_option("")
+    expect(page.locator("#qCount")).to_contain_text(f"{d['q']}문제")
+    expect(page.locator("#qList [data-ck]")).to_have_count(20)
+    page.locator("#qSort").select_option("rate_asc")
+    page.locator("#qAll").check()
+    expect(page.locator("#qSel")).to_contain_text("20")
+    page.locator("#qSel [data-clr]").click()
+    expect(page.locator("#qSel")).to_be_hidden()
+    page.locator("#tabs [data-tab=appr]").click()
+    expect(page.locator("#arList [data-ck]")).to_have_count(20)
+    expect(page.locator("#arBulkDone")).to_be_hidden()
+    page.locator("#arSort").select_option("same_desc")
+    page.locator("#arAll").check()
+    expect(page.locator("#arSel")).to_contain_text("20")
+    page.locator("#aPager").count()
+
+
+def test_admin_demo_url_hash_saved_and_restored(page, errors, base_url):
+    _demo(page, base_url)
+    page.locator("#tabs [data-tab=users]").click()
+    page.locator("#uSort").select_option("last_asc")
+    page.locator("#uPager").get_by_role("button", name="다음").click()
+    page.wait_for_function("() => /sort=last_asc/.test(location.hash) && /p=2/.test(location.hash)")
+    h = page.evaluate("() => location.hash")
+    assert h.startswith("#users")
+    page.goto(base_url + "/ccna/admin.html?demo=1" + h)
+    page.reload()
+    expect(page.locator("#uSort")).to_have_value("last_asc")
+    expect(page.locator("#uPager")).to_contain_text("51–")
+
+
+def test_admin_real_has_no_demo_lab_elements(logged_in, errors, base_url):
+    page = logged_in
+    page.goto(base_url + "/ccna/admin.html")
+    expect(page.locator("#modeTag")).to_contain_text("실제")
+    expect(page.locator("#dDays option")).to_have_count(4)
+    page.locator("#tabs [data-tab=users]").click()
+    expect(page.locator("#uRows [data-ck]")).to_have_count(0)
+    for i in ("#uAll", "#uSel", "#uPager", "#uSort"):
+        expect(page.locator(i)).to_be_hidden()
+
+
+# ---------- 관리자 모의 화면 2단계: 오늘 할 일·사용자 상세·필터·명령창 확장 ----------
+def test_admin_demo_todo_cards_open_filtered_users(page, errors, base_url):
+    _demo(page, base_url)
+    st = _stats(page)
+    page.locator("[data-tab=todo]").click()
+    cards = page.locator("#todo .card")
+    expect(cards).to_have_count(9)
+    expect(cards.nth(0).locator(".v")).to_have_text(str(st["pending"]))
+    expect(cards.nth(5).locator(".v")).to_have_text(str(st["idle"]))
+    for i in (0, 5):
+        page.locator("[data-tab=todo]").click()
+        n = page.locator("#todo .card").nth(i).locator(".v").inner_text().strip()
+        page.locator("#todo .card").nth(i).click()
+        expect(page.locator("#v-users")).to_be_visible()
+        expect(page.locator("#uCount")).to_contain_text(f"{n}명")
+    page.locator("[data-tab=todo]").click()
+    page.locator("#todo .card").nth(1).click()
+    expect(page.locator("#v-appr")).to_be_visible()
+    page.locator("[data-tab=dash]").click()
+    page.locator("#tiles [data-go]").first.click()
+    expect(page.locator("#v-dash")).to_be_hidden()
+
+
+def test_admin_demo_user_detail_note_save(page, errors, base_url):
+    _demo(page, base_url)
+    page.locator("#tabs [data-tab=users]").click()
+    btn = page.locator("#uRows button.nm[data-detail]").first
+    uid = btn.get_attribute("data-detail")
+    btn.click()
+    expect(page.locator("dialog#uDetail")).to_be_visible()
+    expect(page.locator("#udBody")).to_contain_text("마지막 접속")
+    if page.locator("#udSave").count():
+        page.locator("#udNote").fill("시험 메모")
+        page.locator("#udSave").click()
+        page.wait_for_function(
+            "(id) => window.TracerAdminDemo.db.users.find(u => u.id === id).note === '시험 메모'", arg=uid)
+    page.locator("#udAll").click()
+    expect(page.locator("dialog#uDetail")).to_be_hidden()
+    expect(page.locator("#v-activity")).to_be_visible()
+    page.locator("#tabs [data-tab=users]").click()
+    page.locator("#uRows button.nm[data-detail]").first.click()
+    page.locator("#udClose").click()
+    expect(page.locator("dialog#uDetail")).to_be_hidden()
+
+
+def test_admin_demo_new_filters(page, errors, base_url):
+    _demo(page, base_url)
+    page.locator("#tabs [data-tab=users]").click()
+    n7 = page.evaluate("() => window.TracerAdminDemo.db.users.filter(u => Date.now() - new Date(u.created_at) < 7 * 864e5).length")
+    page.locator("#uJoined").select_option("7")
+    expect(page.locator("#uCount")).to_contain_text(f"{n7}명")
+    page.wait_for_function("() => /join=7/.test(location.hash)")
+    page.locator("#tabs [data-tab=bank]").click()
+    page.locator("#qStatus").select_option("")
+    page.locator("#qDiff").select_option("hard")
+    nh = page.evaluate("() => window.TracerAdminDemo.db.questions.filter(q => q.difficulty === 'hard').length")
+    expect(page.locator("#qCount")).to_contain_text(f"{nh}문제")
+    page.locator("#qSearch").fill("OSPF")
+    page.wait_for_function("() => /q=OSPF/i.test(location.hash) && /diff=hard/.test(location.hash)")
+    page.locator("#tabs [data-tab=appr]").click()
+    page.locator("#arOpen").select_option("0")
+    page.locator("#arReason").select_option("typo")
+    page.wait_for_function("() => /reason=typo/.test(location.hash)")
+    nt = page.evaluate("() => window.TracerAdminDemo.db.app_reports.filter(r => r.reason === 'typo').length")
+    expect(page.locator("#arCount")).to_contain_text(str(nt))
+
+
+def test_admin_demo_command_rules_show_screens(page, errors, base_url):
+    _demo(page, base_url)
+    li = _cmd(page, "오늘 할 일 보여줘")
+    expect(li.locator(".st")).to_contain_text("화면 바꿈")
+    expect(page.locator("#v-todo")).to_be_visible()
+    li = _cmd(page, "AI 제일 많이 쓴 사람 보여줘")
+    expect(li.locator(".st")).to_contain_text("화면 바꿈")
+    expect(page.locator("#uSort")).to_have_value("ai_desc")
+    li = _cmd(page, "최근 7일 가입자 보여줘")
+    expect(li.locator(".st")).to_contain_text("화면 바꿈")
+    expect(page.locator("#uJoined")).to_have_value("7")
+    expect(page.locator("#uSort")).to_have_value("created_desc")
+    li = _cmd(page, "어려운 OSPF 문제 보여줘")
+    expect(li.locator(".st")).to_contain_text("화면 바꿈")
+    expect(page.locator("#qSearch")).to_have_value("OSPF")
+    expect(page.locator("#qDiff")).to_have_value("hard")
+    li = _cmd(page, "오타 신고 보여줘")
+    expect(li.locator(".st")).to_contain_text("화면 바꿈")
+    expect(page.locator("#arReason")).to_have_value("typo")
+
+
+_JS_FLAGGED = "() => window.TracerAdminDemo.db.questions.filter(q => q.status === 'flagged').length"
+_JS_HIDDEN = "() => window.TracerAdminDemo.db.questions.filter(q => q.status === 'hidden').length"
+_JS_BLOCKED = "() => window.TracerAdminDemo.db.users.filter(u => u.status === 'blocked').length"
+
+
+def test_admin_demo_command_hide_undo_and_cancel(page, errors, base_url):
+    _demo(page, base_url)
+    li = _cmd(page, "방금 거 되돌려줘")
+    expect(li.locator(".st")).to_contain_text("못 함")
+    fl, hd = page.evaluate(_JS_FLAGGED), page.evaluate(_JS_HIDDEN)
+    assert fl > 0
+    _cmd(page, "출제 중지 문제 모두 숨겨줘")
+    expect(page.locator("dialog#ask")).to_be_visible()
+    expect(page.locator("dialog#ask")).to_contain_text(str(fl))
+    page.locator("#askYes").click()
+    expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("실행함")
+    assert page.evaluate(_JS_FLAGGED) == 0 and page.evaluate(_JS_HIDDEN) == hd + fl
+    li = _cmd(page, "방금 거 되돌려줘")
+    expect(li.locator(".st")).to_contain_text("실행함")
+    page.wait_for_function("(n) => window.TracerAdminDemo.db.questions.filter(q => q.status === 'flagged').length === n", arg=fl)
+    assert page.evaluate(_JS_HIDDEN) == hd
+    bl = page.evaluate(_JS_BLOCKED)
+    assert bl > 0
+    _cmd(page, "차단된 사람 모두 해제해줘")
+    expect(page.locator("dialog#ask")).to_be_visible()
+    page.locator("#askNo").click()
+    expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("취소")
+    assert page.evaluate(_JS_BLOCKED) == bl
+
+
+def test_admin_real_has_no_todo_tab_or_user_detail(logged_in, errors, base_url):
+    page = logged_in
+    page.goto(base_url + "/ccna/admin.html")
+    expect(page.locator("#modeTag")).to_contain_text("실제")
+    expect(page.locator("[data-tab=todo]")).to_be_hidden()
+    page.locator("#tabs [data-tab=users]").click()
+    expect(page.locator("#uRows tr[data-id]").first).to_be_visible()
+    expect(page.locator("#uRows [data-detail]")).to_have_count(0)
+    page.locator("#uRows tr[data-id] b").first.click()
+    expect(page.locator("dialog#uDetail")).not_to_be_visible()

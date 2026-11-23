@@ -1,12 +1,14 @@
 /* TRACER 모의 관리자(admin.html?demo=1) — 브라우저 안의 가짜 DB(생성기).
    실제 Supabase·실제 사용자와 연결되지 않는다. 이름·이메일은 모두 지어낸 것(example.com). 새로고침하면 처음 상태로.
-   - 크기: 기본 사용자 300명. 주소에 &n=1000 처럼 주면 바꿀 수 있다(20~3000).
+   - 크기: 기본 사용자 500명, 활동은 최근 1년치. 주소에 &n=1000 처럼 주면 바꿀 수 있다(20~1000).
+   - 문제는 지어낸 예시 문제(범위 52 × 난이도 3). 실제 문제은행(비공개)과 무관해서 고치거나 숨겨도 실제 서비스엔 영향이 없다.
    - 씨앗(seed)이 고정이라 같은 n이면 매번 같은 데이터가 만들어진다(시험이 흔들리지 않게). &seed=숫자 로 바꿀 수 있다.
    - 시험·확인용으로 window.TracerAdminDemo.db 에 표를 그대로 둔다.
    명령 해석: 화면의 규칙이 먼저 처리하고, 안 되는 말만 /api/demo/ask(제미나이, 하루 30회 제한)로. 연결이 안 되면 '못 함'. */
 (function () {
   var qp = new URLSearchParams(location.search);
-  var N = Math.max(20, Math.min(3000, parseInt(qp.get('n'), 10) || 300));
+  var N = Math.max(20, Math.min(1000, parseInt(qp.get('n'), 10) || 500));
+  var SPAN = 365;  // 활동 기록 기간(일)
   var SEED = parseInt(qp.get('seed'), 10) || 20261123;
   var DAY = 864e5, now = Date.now();
   // 같은 씨앗 → 같은 난수(mulberry32)
@@ -51,6 +53,7 @@
     var band = weighted(LAST), name = rnd() < 0.55 ? pick(SUR) + pick(GIV) : pick(EN) + ' ' + pick(ENL);
     var lastD = band ? between(band[0], band[1]) : null;
     var createdD = lastD == null ? between(5, 900) : lastD + (rnd() < 0.15 ? between(0, 2) : between(2, 600));
+    if (lastD != null && lastD < 0.3 && rnd() < 0.2) createdD = lastD + between(0, 0.2);  // 오늘 가입한 사람도 몇 명
     var status = createdD < 4 && rnd() < 0.6 ? 'pending' : rnd() < 0.03 ? 'blocked' : 'active';
     var u = addUser(name, 'user', lastD, createdD, status);
     if (lastD != null && lastD > 365 && rnd() < 0.25) u.delete_at = iso(now - between(1, 20) * DAY);  // 이미 삭제 예정인 사람도 몇 명
@@ -59,25 +62,25 @@
   // ── 문제은행: 범위마다 2~4문제(상태·신고·정답률을 섞어서)
   var REASONS = ['정답이 틀린 것 같아요', '정답이 둘이에요', '해설이 문제와 안 맞아요', '보기에 오타', '문제가 애매해요', 'Answer key looks wrong'];
   var qs = [];
-  SUBS.forEach(function (sb) {
+  SUBS.forEach(function (sb) { DIFFS.forEach(function (df) {
     for (var k = int(2, 4); k > 0; k--) {
       var i = qs.length, st = weighted([['active', 0.8], ['flagged', 0.12], ['hidden', 0.08]]), graded = int(0, 120), low = rnd() < 0.08;
       var nrep = st === 'flagged' ? int(3, 6) : rnd() < 0.1 ? int(1, 2) : 0;
-      qs.push({ id: 'demo-q' + String(i).padStart(3, '0'), sub: sb[0], difficulty: pick(DIFFS), qtype: 'mcq',
+      qs.push({ id: 'demo-q' + String(i).padStart(4, '0'), sub: sb[0], difficulty: df, qtype: 'mcq',
         question: '[' + sb[0] + ' ' + sb[1] + '] 모의 문제 ' + (i + 1) + ': 다음 중 ' + sb[1] + '에 대한 설명으로 옳은 것은?',
         choices: ['보기 A (모의)', '보기 B (모의)', '보기 C (모의)', '보기 D (모의)'], answer: pick(['A', 'B', 'C', 'D']),
         explanation: '모의 화면용 예시 해설이에요.', option_notes: ['', '', '', ''], key_concept: '', cli_example: '', tip: '', model: 'demo',
         status: st, served: graded + int(0, 30), graded: graded, correct: Math.round(graded * (low ? between(0.05, 0.25) : between(0.45, 0.92))),
-        reports: nrep, report_reasons: Array.from({ length: nrep }, function () { return pick(REASONS); }), created_at: iso(now - between(5, 200) * DAY) });
+        reports: nrep, report_reasons: Array.from({ length: nrep }, function () { return pick(REASONS); }), created_at: iso(now - between(5, 360) * DAY) });
     }
-  });
+  }); });
 
-  // ── 앱 신고(익명): 최근 180일, 최근 것일수록 미처리가 많게. 일부는 같은 문제에 여러 건, 일부는 웹 문제은행과 같은 문제
+  // ── 앱 신고(익명): 최근 1년, 최근 것일수록 미처리가 많게. 일부는 같은 문제에 여러 건, 일부는 웹 문제은행과 같은 문제
   var AR_REASON = ['answer', 'both', 'explanation', 'typo', 'other'], NOTES = [null, null, '정답이 C 같아요', 'B and D both look right', '해설이 다른 문제 내용이에요', 'Typo in choice B', '띄어쓰기', '20 아닌가요?'];
   var APP_ONLY = ['Which DNS record maps a hostname to an IPv6 address?', 'What does DHCP option 150 provide?', 'Which STP port state learns MACs but does not forward?', 'What is the administrative distance of eBGP?', 'Which command shows the OSPF neighbor table?', 'How many bits are in an IPv6 address?'];
   var reports = [], NR = Math.max(12, Math.round(N * 0.5));
   for (var r = 0; r < NR; r++) {
-    var dAgo = Math.pow(rnd(), 1.6) * 180, linked = rnd() < 0.4, q = linked ? pick(qs) : null;
+    var dAgo = Math.pow(rnd(), 1.6) * SPAN, linked = rnd() < 0.4, q = linked ? pick(qs) : null;
     var text = q ? q.question : pick(APP_ONLY) + (rnd() < 0.5 ? '' : ' (#' + int(1, 40) + ')');
     var dup = reports.length && rnd() < 0.2 ? pick(reports) : null;  // 같은 문제에 신고가 또
     if (dup) text = dup.question;
@@ -86,23 +89,23 @@
       resolved: rnd() < Math.min(0.95, dAgo / 30), at: iso(now - dAgo * DAY) });
   }
 
-  // ── 활동 기록: 최근 90일. 사람마다 접속 횟수를 다르게, 마지막 접속 시각이 그 사람의 마지막 기록이 되게
+  // ── 활동 기록: 최근 1년. 사람마다 접속 횟수를 다르게, 마지막 접속 시각이 그 사람의 마지막 기록이 되게
   var DEV = ['Mac · Chrome', 'Windows · Chrome', 'Windows · Edge', 'iPhone · Safari', 'Android · Chrome', 'iPad · Safari'];
   var activity = [], aid = 1;
   function act(u, at, action, detail, ai) { activity.push({ id: aid++, action: action, detail: detail || {}, ai: !!ai, device: u._dev, at: iso(at), user_id: u.id }); }
   users.forEach(function (u) {
     u._dev = pick(DEV);
     var created = new Date(u.created_at).getTime();
-    if (created > now - 90 * DAY) act(u, created, 'signup', {});
+    if (created > now - SPAN * DAY) act(u, created, 'signup', {});
     if (!u.last_seen) return;
-    var last = new Date(u.last_seen).getTime(), start = Math.max(created, now - 90 * DAY);
-    if (last < now - 90 * DAY) return;
-    var heavy = weighted([[1, 0.4], [3, 0.35], [8, 0.2], [20, 0.05]]), sessions = Math.max(1, Math.round(heavy * (last - start) / (14 * DAY)) + 1);
+    var last = new Date(u.last_seen).getTime(), start = Math.max(created, now - SPAN * DAY);
+    if (last < now - SPAN * DAY) return;
+    var heavy = weighted([[1, 0.4], [3, 0.35], [8, 0.2], [20, 0.05]]), sessions = Math.max(1, Math.round(heavy * (last - start) / (21 * DAY)) + 1);
     for (var k = 0; k < sessions; k++) {
       var t = k === sessions - 1 ? last : between(start, last);
       act(u, t, 'visit', {});
       if (u.status !== 'active') continue;
-      for (var n = int(0, heavy > 3 ? 12 : 5); n > 0; n--) {
+      for (var n = int(0, heavy > 3 ? 8 : 4); n > 0; n--) {
         var sb = pick(SUBS)[0], src = rnd() < 0.75 ? 'bank' : 'new', tt = t + n * 40000;
         act(u, tt, 'question', { sub: sb, difficulty: pick(DIFFS), qtype: 'mcq', source: src }, src === 'new');
         if (rnd() < 0.85) { act(u, tt + 20000, 'grade', { sub: sb, qtype: 'mcq', verdict: rnd() < 0.68 ? '정답' : '오답' }); u.total_attempts++; }
@@ -144,7 +147,7 @@
   var GET = {
     'me': function () { return Object.assign(clone(me), { admin: true, admin_ai: true }); },
     'admin/summary': function (p) {
-      var n = [7, 14, 30, 90].indexOf(+p.get('days')) >= 0 ? +p.get('days') : 14;
+      var n = [7, 14, 30, 90, 180, 365].indexOf(+p.get('days')) >= 0 ? +p.get('days') : 14;
       var todayAi = activity.filter(function (a) { return a.ai && new Date(a.at) >= today0; }).length;
       return { days: n, users: users.length, blocked: users.filter(function (u) { return u.status === 'blocked'; }).length,
         pending: users.filter(function (u) { return u.status === 'pending'; }).length, today_ai: todayAi, today_counted: todayAi, global_daily_ai: 400,
@@ -154,7 +157,7 @@
     },
     'admin/users': function () { return clone(users).sort(function (a, b) { return String(b.last_seen || '').localeCompare(String(a.last_seen || '')); }); },
     'admin/activity': function (p) {
-      var since = now - (+p.get('days') || 7) * DAY, lim = Math.min(1000, +p.get('limit') || 300);
+      var since = now - (+p.get('days') || 7) * DAY, lim = Math.min(5000, +p.get('limit') || 300);
       var out = [];
       for (var i = 0; i < activity.length && out.length < lim; i++) {
         var a = activity[i]; if (new Date(a.at) < since) break;
@@ -169,12 +172,12 @@
       if (p.get('low') === '1') rows = rows.filter(function (q) { return q.graded >= 5; }).sort(function (a, b) { return a.correct / a.graded - b.correct / b.graded; });
       else rows.sort(function (a, b) { return b.reports - a.reports; });
       var bk = {}; qs.forEach(function (q) { var k = q.sub + '|' + q.difficulty; bk[k] = bk[k] || { sub: q.sub, difficulty: q.difficulty, qtype: 'mcq', active: 0, flagged: 0, hidden: 0 }; bk[k][q.status]++; });
-      return { questions: clone(rows.slice(0, 100)), buckets: Object.keys(bk).sort().map(function (k) { return bk[k]; }), bank_min: 30 };
+      return { questions: clone(rows), buckets: Object.keys(bk).sort().map(function (k) { return bk[k]; }), bank_min: 30 };
     },
     'admin/app-reports': function (p) {
       var days = +p.get('days') || 0;
       var rows = reports.filter(function (r) { return (p.get('open') === '0' || !r.resolved) && (!days || (now - new Date(r.at)) / DAY <= days); })
-        .sort(function (a, b) { return b.at.localeCompare(a.at); }).slice(0, 200);
+        .sort(function (a, b) { return b.at.localeCompare(a.at); });
       return { reports: rows.map(attach), open: reports.filter(function (r) { return !r.resolved; }).length };
     }
   };
@@ -186,14 +189,42 @@
       log({ email: t.email, set: b }); return clone(t);
     },
     'admin/users-bulk': function (b) {
-      var done = [], skipped = 0;
+      var done = [], skipped = 0, byId = {};
+      users.forEach(function (u) { byId[u.id] = u; });
+      if (b.op === 'restore') {  // 되돌리기: 작업 전 값으로
+        (b.items || []).forEach(function (x) { var t = byId[x.id]; if (t && canTouch(t)) { t.status = x.status; t.delete_at = x.delete_at; done.push(x.id); } });
+        log({ bulk: 'restore', n: done.length }); return { ok: true, op: 'restore', updated: done.length, skipped: 0, ids: done };
+      }
       (b.ids || []).forEach(function (id) {
-        var t = users.find(function (u) { return u.id === id; });
-        if (!t || !canTouch(t) || (b.op === 'approve' && t.status !== 'pending')) { skipped++; return; }
-        if (b.op === 'approve') t.status = 'active'; else t.delete_at = b.op === 'mark_delete' ? new Date().toISOString() : null;
+        var t = byId[id];
+        var bad = !t || !canTouch(t) || (b.op === 'approve' && t.status !== 'pending') || (b.op === 'unblock' && t.status !== 'blocked') || (b.op === 'block' && t.status === 'blocked')
+          || (b.op === 'mark_delete' && t.delete_at) || (b.op === 'unmark_delete' && !t.delete_at);
+        if (bad) { skipped++; return; }
+        if (b.op === 'approve' || b.op === 'unblock') t.status = 'active';
+        else if (b.op === 'block') t.status = 'blocked';
+        else t.delete_at = b.op === 'mark_delete' ? new Date().toISOString() : null;
         done.push(id);
       });
       log({ bulk: b.op, n: done.length }); return { ok: true, op: b.op, updated: done.length, skipped: skipped, ids: done };
+    },
+    'admin/questions-bulk': function (b) {
+      var done = [], byId = {};
+      qs.forEach(function (q) { byId[q.id] = q; });
+      if (b.op === 'restore') (b.items || []).forEach(function (x) { var q = byId[x.id]; if (q) { q.status = x.status; q.reports = x.reports; q.report_reasons = x.report_reasons; done.push(x.id); } });
+      else (b.ids || []).forEach(function (id) {
+        var q = byId[id]; if (!q) return;
+        if (b.op === 'hide') q.status = 'hidden'; else if (b.op === 'flag') q.status = 'flagged';
+        else if (b.op === 'resolve') { q.status = 'active'; q.reports = 0; q.report_reasons = []; } else return;
+        done.push(id);
+      });
+      log({ bulk: 'questions ' + b.op, n: done.length }); return { ok: true, updated: done.length, ids: done };
+    },
+    'admin/app-reports-bulk': function (b) {
+      var done = [], byId = {};
+      reports.forEach(function (r) { byId[r.id] = r; });
+      if (b.op === 'restore') (b.items || []).forEach(function (x) { var r = byId[x.id]; if (r) { r.resolved = x.resolved; done.push(x.id); } });
+      else (b.ids || []).forEach(function (id) { var r = byId[id]; if (r && r.resolved !== !!b.resolved) { r.resolved = !!b.resolved; done.push(id); } });
+      log({ bulk: 'app_reports ' + (b.op || (b.resolved ? 'done' : 'reopen')), n: done.length }); return { ok: true, updated: done.length, ids: done };
     },
     'admin/question': function (b) {
       var q = qs.find(function (x) { return x.id === b.id; }); if (!q) err(404, '문제를 찾을 수 없어요.');

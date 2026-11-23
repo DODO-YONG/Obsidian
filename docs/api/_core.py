@@ -767,28 +767,42 @@ ANSWER_WHAT = ["users_total", "pending", "blocked", "delete_marked", "inactive",
                "open_app_reports", "app_reports", "bank_flagged", "bank_active"]
 ADMIN_COMMANDS = {
     "show_dashboard":       {"days": [7, 14, 30, 90]},
-    "show_users":           {"status": ["", "active", "pending", "blocked", "delete"], "inactive_days": [0, 30, 90, 180, 365]},
+    "show_todo":            {},
+    "show_users":           {"status": ["", "active", "pending", "blocked", "delete"], "inactive_days": [0, 30, 90, 180, 365],
+                             "joined_days": [0, 1, 7, 30, 90],
+                             "sort": ["last_desc", "last_asc", "created_desc", "created_asc", "attempts_desc", "ai_desc", "name_asc"]},
     "show_activity":        {"days": [1, 7, 30, 90], "action": ["", "visit", "signup", "question", "grade", "subnet", "explain", "report", "admin"]},
-    "show_bank":            {"status": ["flagged", "", "active", "hidden"], "low": [False, True]},
-    "show_app_reports":     {"open": ["1", "0"], "days": [0, 1, 7, 30, 90]},
+    "show_bank":            {"status": ["flagged", "", "active", "hidden"], "low": [False, True], "q": "text",
+                             "diff": ["", "easy", "medium", "hard"], "sort": ["reports_desc", "rate_asc", "served_desc", "created_desc"]},
+    "show_app_reports":     {"open": ["1", "0"], "days": [0, 1, 7, 30, 90], "reason": ["", "answer", "both", "explanation", "typo", "other"],
+                             "sort": ["at_desc", "at_asc", "same_desc"]},
     "answer":               {"what": ANSWER_WHAT, "days": [7, 1, 14, 30, 90, 180, 365]},
     "mark_delete_inactive": {"inactive_days": [365, 30, 90, 180]},
     "unmark_delete_all":    {},
     "approve_all_pending":  {},
-    "resolve_app_reports":  {"days": [0, 1, 7, 30, 90]},
+    "resolve_app_reports":  {"days": [0, 1, 7, 30, 90], "reason": ["", "answer", "both", "explanation", "typo", "other"]},
+    "select_users":         {"op": ["approve", "block", "unblock", "mark_delete", "unmark_delete"],
+                             "status": ["", "active", "pending", "blocked", "delete"], "inactive_days": [0, 30, 90, 180, 365], "joined_days": [0, 1, 7, 30, 90]},
+    "select_questions":     {"op": ["hide", "flag", "resolve"], "target": ["flagged", "low", "hidden", "active"]},
+    "undo_last":            {},
 }
-COMMAND_KIND = {"answer": "answer", "mark_delete_inactive": "act", "unmark_delete_all": "act",
-                "approve_all_pending": "act", "resolve_app_reports": "act"}
+COMMAND_KIND = {"answer": "answer", "mark_delete_inactive": "act", "unmark_delete_all": "act", "approve_all_pending": "act",
+                "resolve_app_reports": "act", "select_users": "act", "select_questions": "act", "undo_last": "act"}
 ADMIN_ASK_SYS = """You turn a Korean admin's request for the TRACER web admin page into exactly ONE command from this fixed list.
 You cannot do anything outside this list. Never invent commands or values. Snap numbers to the closest allowed value
 ("오늘"=1, "며칠/일주일"=7, "2주"=14, "한 달"=30, "3달"=90, "반년"=180, "1년/일년"=365).
 
 A) Open a tab with filters (when they say 보여줘/찾아줘/열어줘/목록/확인):
+- show_todo {} — the "오늘 할 일" overview (things to check: pending approvals, open reports, stopped questions, deletion candidates).
 - show_dashboard {days: 7|14|30|90} — daily visitors (사용자 수·접속자), AI calls, answers.
-- show_users {status: ""|active|pending|blocked|delete, inactive_days: 0|30|90|180|365} — user list. "delete" = users marked 삭제 예정. inactive_days = not visited for more than that many days.
+- show_users {status: ""|active|pending|blocked|delete, inactive_days: 0|30|90|180|365, joined_days: 0|1|7|30|90,
+  sort: last_desc|last_asc|created_desc|created_asc|attempts_desc|ai_desc|name_asc} — user list. "delete" = users marked 삭제 예정.
+  inactive_days = not visited for more than that many days. joined_days = signed up within that many days. ai_desc = most Gemini use today.
 - show_activity {days: 1|7|30|90, action: ""|visit|signup|question|grade|subnet|explain|report|admin} — activity log.
-- show_bank {status: flagged|""|active|hidden, low: bool} — web question bank. flagged = stopped by reports. low = suspiciously low correct rate.
-- show_app_reports {open: "1"|"0", days: 0|1|7|30|90} — anonymous error reports (신고). open "1" = unresolved only, "0" = all. days 0 = any time.
+- show_bank {status: flagged|""|active|hidden, low: bool, q: short topic keyword like "OSPF" or "", diff: ""|easy|medium|hard,
+  sort: reports_desc|rate_asc|served_desc|created_desc} — question bank. flagged = stopped by reports. low = suspiciously low correct rate.
+- show_app_reports {open: "1"|"0", days: 0|1|7|30|90, reason: ""|answer|both|explanation|typo|other, sort: at_desc|at_asc|same_desc}
+  — anonymous error reports (신고). open "1" = unresolved only. same_desc = questions with many reports first.
 B) Answer a question with a number only, without changing the screen (몇 명/몇 건/얼마나/있어?):
 - answer {what, days} — what: users_total | pending | blocked | delete_marked | inactive (not visited for more than `days`) |
   visitors (visitors over the last `days`) | today_ai (Gemini calls today) | open_app_reports | app_reports (reports in last `days`) |
@@ -797,7 +811,12 @@ C) Change data (the page shows the targets and asks the admin to confirm first):
 - mark_delete_inactive {inactive_days: 30|90|180|365} — "지워줘/삭제/정리" for users who haven't visited. Only marks them 삭제 예정.
 - unmark_delete_all {} — cancel all 삭제 예정 marks.
 - approve_all_pending {} — approve every user waiting for approval.
-- resolve_app_reports {days} — mark unresolved reports as handled.
+- resolve_app_reports {days, reason} — mark unresolved reports as handled.
+- select_users {op: approve|block|unblock|mark_delete|unmark_delete, status, inactive_days, joined_days} — select every user matching
+  the filter and apply op (e.g. "차단된 사람 모두 해제" -> {op:"unblock", status:"blocked"}).
+- select_questions {op: hide|flag|resolve, target: flagged|low|hidden|active} — e.g. "출제 중지 문제 다 숨겨" -> {op:"hide", target:"flagged"},
+  "정답률 낮은 문제 출제 중지" -> {op:"flag", target:"low"}.
+- undo_last {} — undo the last change ("방금 거 되돌려").
 D) none — anything else: a specific person, editing or deleting questions, settings, the Android app, general chat.
 
 Examples:
@@ -846,7 +865,12 @@ def clean_command(out: dict) -> dict:
         return {"command": "none", "kind": "none", "args": {}, "reply": reply or "이 화면에서 할 수 없는 일이에요.",
                 "confidence": conf, "unsure": False}
     raw = out.get("args") if isinstance(out.get("args"), dict) else {}
-    args = {k: _closest(raw.get(k, allowed[0]), allowed) for k, allowed in ADMIN_COMMANDS[cmd].items()}
+    args = {}
+    for k, allowed in ADMIN_COMMANDS[cmd].items():
+        if allowed == "text":  # 짧은 주제어만(글자·숫자·공백·.-), 사람 이름 같은 건 화면이 거르지 않지만 30자로 제한
+            args[k] = re.sub(r"[^\w .\-]", "", str(raw.get(k) or ""))[:30].strip()
+        else:
+            args[k] = _closest(raw.get(k, allowed[0]), allowed)
     return {"command": cmd, "kind": COMMAND_KIND.get(cmd, "show"), "args": args, "reply": reply,
             "confidence": conf, "unsure": conf < 0.7}
 

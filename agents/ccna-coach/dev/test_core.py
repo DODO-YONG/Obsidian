@@ -164,10 +164,14 @@ ok(not T["profiles"][[x["id"] for x in T["profiles"]].index(uid_a)]["delete_at"]
 try: core.admin_users_bulk(o, {"op": "drop_table", "ids": [uid_a]}); ok(False, "")
 except core.ApiError as e: ok(e.code == 400, "목록 밖 작업은 거부")
 c = core.clean_command({"command": "show_users", "args": {"inactive_days": 400, "status": "hacked"}, "confidence": 0.95})
-ok(c["args"] == {"status": "", "inactive_days": 365} and c["kind"] == "show" and not c["unsure"], "AI 값은 허용 목록 안으로 맞춤")
+ok(c["args"] == {"status": "", "inactive_days": 365, "joined_days": 0, "sort": "last_desc"} and c["kind"] == "show" and not c["unsure"], "AI 값은 허용 목록 안으로 맞춤")
 ok(core.clean_command({"command": "drop_all", "confidence": 1})["command"] == "none", "목록 밖 명령은 none")
 ok(core.clean_command({"command": "mark_delete_inactive", "args": {}, "confidence": 0.4})["unsure"], "확신 낮으면 실행 전 확인")
 ok(core.clean_command({"command": "answer", "args": {"what": "inactive", "days": 300}, "confidence": 1})["kind"] == "answer", "질문은 답변 종류")
+c = core.clean_command({"command": "show_bank", "args": {"q": "OSPF<script>", "diff": "hard", "sort": "x"}, "confidence": 1})
+ok(c["args"]["q"] == "OSPFscript" and c["args"]["diff"] == "hard" and c["args"]["sort"] == "reports_desc", "주제어는 글자만, 목록 밖 정렬은 기본값")
+c = core.clean_command({"command": "select_questions", "args": {"op": "delete", "target": "low"}, "confidence": 1})
+ok(c["kind"] == "act" and c["args"]["op"] == "hide", "문제 일괄 작업도 목록 안 작업만")
 seen = {}
 _orig = gc.ask_json
 gc.ask_json = lambda s_, pr, sc=None, temperature=0.7: (seen.update(p=pr, t=temperature) or {"command": "none", "confidence": 1, "reply": "x"}, "f")

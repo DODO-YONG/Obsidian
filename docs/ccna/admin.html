@@ -168,6 +168,38 @@
   dialog.ask p { margin: 0 0 10px; color: var(--ink-2); font-size: 13.5px; }
   dialog.ask ul { margin: 0 0 14px; padding: 8px 12px 8px 28px; max-height: 220px; overflow: auto; background: var(--sunk); border-radius: 9px; font-size: 13px; }
   dialog.ask .acts { display: flex; gap: 8px; justify-content: flex-end; }
+  /* 모의 전용 기능: 정렬·페이지·선택·일괄 줄·되돌리기 */
+  .pager { display: flex; gap: 6px; align-items: center; justify-content: flex-end; margin: 10px 0; font-size: 13px; color: var(--ink-2); flex-wrap: wrap; }
+  .pager .btn { padding: 2px 10px; }
+  .selbar { position: sticky; top: 64px; z-index: 4; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; padding: 8px 12px; margin-bottom: 10px;
+    background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 12px; font-size: 13px; }
+  .selbar b { color: var(--accent); }
+  .selbar .lnk { background: none; border: 0; color: var(--accent); text-decoration: underline; cursor: pointer; padding: 0 4px; font-size: 13px; }
+  td.ck, th.ck { width: 34px; padding-right: 0; }
+  .qc .ckl { margin-right: 4px; }
+  .undo { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 21; display: flex; gap: 12px; align-items: center;
+    background: var(--ink); color: var(--bg); padding: 10px 12px 10px 16px; border-radius: 12px; font-size: 14px; max-width: calc(100vw - 32px); }
+  .undo button { background: var(--bg); color: var(--ink); border: 0; border-radius: 8px; padding: 4px 12px; font-weight: 700; cursor: pointer; }
+  /* 2단계(모의 전용): 오늘 할 일·상세 창·클릭되는 타일 */
+  .todo { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+  .todo .card { background: var(--panel); border: 1px solid var(--rule); border-radius: 14px; padding: 14px 16px; display: grid; gap: 4px; text-align: left; cursor: pointer; font: inherit; color: inherit; }
+  .todo .card:hover { border-color: var(--accent); }
+  .todo .card.warn { border-color: color-mix(in srgb, var(--part) 60%, var(--rule)); }
+  .todo .card .k { font-size: 12.5px; color: var(--ink-3); } .todo .card .v { font-family: var(--mono); font-size: 26px; font-weight: 600; }
+  .todo .card.warn .v { color: var(--part); } .todo .card .s { font-size: 12.5px; color: var(--ink-2); } .todo .card .go { font-size: 12.5px; color: var(--accent); }
+  .tile[data-go] { cursor: pointer; } .tile[data-go]:hover { border-color: var(--accent); }
+  button.nm { background: none; border: 0; padding: 0; color: var(--ink); font-weight: 700; cursor: pointer; text-align: left; }
+  button.nm:hover { color: var(--accent); text-decoration: underline; }
+  dialog.det { border: 1px solid var(--rule); border-radius: 16px; background: var(--panel); color: var(--ink); padding: 0; width: min(760px, calc(100vw - 24px)); max-height: calc(100vh - 40px); }
+  dialog.det::backdrop { background: rgba(0,0,0,.5); }
+  .det .hd { display: flex; gap: 10px; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--rule); position: sticky; top: 0; background: var(--panel); }
+  .det .bd { padding: 16px 18px; display: grid; gap: 16px; }
+  .det .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+  .det .grid div { background: var(--sunk); border-radius: 10px; padding: 8px 10px; font-size: 12.5px; color: var(--ink-3); }
+  .det .grid b { display: block; color: var(--ink); font-size: 15px; font-family: var(--mono); }
+  .det h4 { margin: 0 0 6px; font-size: 13.5px; }
+  .det .weak span { display: inline-block; margin: 0 6px 6px 0; }
+  .det table { font-size: 12.5px; } .det td { padding: 5px 8px; }
   .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px; z-index: 20; max-width: calc(100vw - 32px); }
   @media (max-width: 760px) {
     .bar { height: auto; flex-wrap: wrap; padding: 8px 16px; gap: 8px; }
@@ -183,6 +215,7 @@
     <div class="logo"><img class="mk" src="icon.svg" alt="" aria-hidden="true">TRACER <small>관리자</small> <span class="tag real" id="modeTag">실제 데이터</span></div>
     <nav class="mode" aria-label="관리자 화면 종류"><a class="real" href="admin.html" id="mReal" aria-current="page">실제 관리자</a><a class="demo" href="admin.html?demo=1" id="mDemo">모의 관리자</a></nav>
     <nav class="tabs" role="tablist" aria-label="관리 메뉴" id="tabs" hidden>
+      <button role="tab" aria-selected="false" data-tab="todo" data-lab hidden>오늘 할 일</button>
       <button role="tab" aria-selected="true" data-tab="dash">대시보드</button>
       <button role="tab" aria-selected="false" data-tab="users">사용자</button>
       <button role="tab" aria-selected="false" data-tab="activity">활동 기록</button>
@@ -203,7 +236,7 @@
   </div>
 
   <div class="demo-bar" id="demoBar" hidden><b>모의 관리자 화면</b> — 지어낸 사용자·신고·활동으로 동작하고 실제 데이터는 바뀌지 않아요. 새로고침하면 처음 상태로 돌아가요.
-    <label>데이터 양<select id="demoSize" aria-label="모의 데이터 양"><option value="100">사용자 100명</option><option value="300">사용자 300명</option><option value="1000">사용자 1,000명</option><option value="3000">사용자 3,000명</option></select></label> <span id="demoStat"></span></div>
+    <label>데이터 양<select id="demoSize" aria-label="모의 데이터 양"><option value="100">사용자 100명</option><option value="300">사용자 300명</option><option value="500">사용자 500명</option><option value="1000">사용자 1,000명</option></select></label> <span id="demoStat"></span></div>
   <form class="cmd" id="cmd" hidden autocomplete="off">
     <div class="row">
       <input type="text" id="cmdIn" maxlength="300" placeholder="예: 최근 7일 신고 내역 보여줘" aria-label="관리자 명령">
@@ -213,11 +246,18 @@
       <button type="button">최근 7일 사용자 수 보여줘</button><button type="button">최근 7일 신고 내역 보여줘</button>
       <button type="button">1년 동안 접속 안 한 유저 찾아줘</button><button type="button">1년 동안 접속 안 한 유저 지워줘</button>
       <button type="button">미처리 신고 몇 건이야?</button><button type="button">승인 대기 모두 승인해줘</button>
+      <button type="button" data-lab hidden>오늘 할 일 보여줘</button><button type="button" data-lab hidden>AI 제일 많이 쓴 사람 보여줘</button>
+      <button type="button" data-lab hidden>어려운 OSPF 문제 보여줘</button><button type="button" data-lab hidden>출제 중지 문제 모두 숨겨줘</button><button type="button" data-lab hidden>방금 거 되돌려줘</button>
     </div>
     <div class="out" id="cmdOut" role="status"></div>
     <ul class="log" id="cmdLog" aria-label="최근 명령 결과"></ul>
     <div class="hint">이 화면의 버튼으로 할 수 있는 일만 해요. 결과마다 <b>화면 바꿈 · 답변 · 실행함 · 취소 · 못 함</b>으로 표시해요. 지우기·승인 같은 작업은 대상을 보여 드리고 한 번 더 물어봐요. 자주 쓰는 말은 규칙으로 바로 알아듣고, 나머지만 AI가 해석해요. 이름·이메일은 적지 마세요(명령 문장은 제미나이로 전송돼요).</div>
   </form>
+
+  <section id="v-todo" hidden>
+    <p class="muted" style="margin:0 0 12px;font-size:13px">지금 확인하거나 처리할 것들이에요. 카드를 누르면 해당 목록이 필터가 걸린 채로 열려요.</p>
+    <div class="todo" id="todo"></div>
+  </section>
 
   <section id="v-dash" hidden>
     <div class="tiles" id="tiles"></div>
@@ -234,15 +274,19 @@
       <select id="uStatus" aria-label="상태로 거르기"><option value="">모든 상태</option><option value="active">사용 중</option><option value="pending">승인 대기</option><option value="blocked">차단</option><option value="delete">삭제 예정</option></select>
       <select id="uIdle" aria-label="접속하지 않은 기간"><option value="0">접속 기간 전체</option><option value="30">30일 넘게 미접속</option><option value="90">90일 넘게 미접속</option><option value="180">180일 넘게 미접속</option><option value="365">1년 넘게 미접속</option></select>
       <span class="muted" id="uCount"></span>
+      <select id="uJoined" aria-label="가입 기간" data-lab hidden><option value="0">가입 기간 전체</option><option value="1">오늘·어제 가입</option><option value="7">최근 7일 가입</option><option value="30">최근 30일 가입</option><option value="90">최근 90일 가입</option></select>
+      <select id="uSort" aria-label="정렬" data-lab hidden><option value="last_desc">마지막 접속 최근순</option><option value="last_asc">마지막 접속 오래된순</option><option value="created_desc">가입 최근순</option><option value="created_asc">가입 오래된순</option><option value="attempts_desc">푼 문제 많은순</option><option value="ai_desc">오늘 AI 많은순</option><option value="name_asc">이름순</option></select>
       <span class="spacer"></span>
       <button class="btn sm primary" type="button" id="uBulkApprove" hidden></button>
       <button class="btn sm danger" type="button" id="uBulkDelete" hidden></button>
       <button class="btn sm" type="button" id="uBulkUndelete" hidden></button>
     </div>
+    <div class="selbar" id="uSel" hidden></div>
     <div class="tablewrap"><table>
-      <thead><tr><th>사용자</th><th>역할</th><th>상태</th><th>마지막 접속</th><th>오늘 AI</th><th>하루 한도</th><th>AI 문제</th><th>내 문제 해설</th><th>푼 문제</th><th></th></tr></thead>
+      <thead><tr><th class="ck" data-lab hidden><input type="checkbox" id="uAll" aria-label="이 페이지 모두 선택"></th><th>사용자</th><th>역할</th><th>상태</th><th>마지막 접속</th><th>오늘 AI</th><th>하루 한도</th><th>AI 문제</th><th>내 문제 해설</th><th>푼 문제</th><th></th></tr></thead>
       <tbody id="uRows"></tbody>
     </table></div>
+    <div class="pager" id="uPager" hidden></div>
     <p class="muted" style="font-size:12.5px">권한을 끄면 그 기능의 AI 요청이 즉시 막혀요(서브넷 계산은 로그인 없이 누구나 가능). 차단하면 모든 AI 기능이 막히고, 관리자 지정은 주인만 할 수 있어요. <b>삭제 예정</b>은 표시만 하고 지우지 않아요(그 사용자가 다시 접속하면 자동으로 풀려요). 명령창·일괄 작업·삭제 예정 버튼은 지금 <b>모의 관리자 화면에서만</b> 켜져 있어요.</p>
   </section>
 
@@ -260,6 +304,7 @@
       <thead><tr><th>시각</th><th>사용자</th><th>행동</th><th>내용</th><th>기기</th></tr></thead>
       <tbody id="aRows"></tbody>
     </table></div>
+    <div class="pager" id="aPager" hidden></div>
   </section>
 
   <section id="v-bank" hidden>
@@ -271,23 +316,38 @@
       <select id="qStatus" aria-label="상태"><option value="flagged">출제 중지(신고 누적)</option><option value="">전체</option><option value="active">출제 중</option><option value="hidden">숨김</option></select>
       <select id="qSub" aria-label="범위"><option value="">모든 범위</option></select>
       <label class="muted" style="font-size:13px"><input type="checkbox" id="qLow"> 정답률 낮은 문제(정답 키 오류 의심)</label>
+      <input type="search" id="qSearch" placeholder="문제 글 검색" aria-label="문제 검색" data-lab hidden>
+      <select id="qDiff" aria-label="난이도" data-lab hidden><option value="">모든 난이도</option><option value="easy">easy</option><option value="medium">medium</option><option value="hard">hard</option></select>
+      <select id="qSort" aria-label="정렬" data-lab hidden><option value="reports_desc">신고 많은순</option><option value="rate_asc">정답률 낮은순</option><option value="served_desc">출제 많은순</option><option value="created_desc">최근 만든순</option></select>
+      <label class="muted" style="font-size:13px" data-lab hidden><input type="checkbox" id="qAll"> 이 페이지 모두 선택</label>
+      <span class="muted" id="qCount"></span>
     </div>
+    <div class="selbar" id="qSel" hidden></div>
     <div class="qlist" id="qList"></div>
+    <div class="pager" id="qPager" hidden></div>
   </section>
 
   <section id="v-appr" hidden>
     <div class="tools">
       <select id="arOpen" aria-label="처리 상태"><option value="1">미처리만</option><option value="0">전체</option></select>
       <select id="arDays" aria-label="기간"><option value="0">기간 전체</option><option value="1">오늘·어제</option><option value="7">최근 7일</option><option value="30">최근 30일</option><option value="90">최근 90일</option></select>
+      <select id="arReason" aria-label="신고 이유" data-lab hidden><option value="">모든 이유</option><option value="answer">정답이 틀림</option><option value="both">정답이 둘 이상</option><option value="explanation">해설이 틀림</option><option value="typo">오타·표현</option><option value="other">기타</option></select>
+      <input type="search" id="arSearch" placeholder="문제 글·메모 검색" aria-label="신고 검색" data-lab hidden>
+      <select id="arSort" aria-label="정렬" data-lab hidden><option value="at_desc">최근순</option><option value="at_asc">오래된순</option><option value="same_desc">같은 문제 신고 많은순</option></select>
+      <label class="muted" style="font-size:13px" data-lab hidden><input type="checkbox" id="arAll"> 이 페이지 모두 선택</label>
       <span class="muted" id="arCount"></span>
       <span class="spacer"></span>
       <button class="btn sm primary" type="button" id="arBulkDone" hidden></button>
     </div>
     <p class="muted" style="font-size:12.5px;margin:0 0 12px">안드로이드 앱 Tracer Route에서 온 <b>익명</b> 신고예요(누가 보냈는지 저장하지 않음). 앱 문제는 앱 업데이트로 고치고(비공개 저장소 Tracer-Route), 웹 문제은행에도 같은 문제가 있으면 여기서 웹 출제를 멈출 수 있어요.</p>
+    <div class="selbar" id="arSel" hidden></div>
     <div class="qlist" id="arList"></div>
+    <div class="pager" id="arPager" hidden></div>
   </section>
 </main>
 <div class="toast" id="toast" hidden role="status"></div>
+<dialog class="det" id="uDetail" aria-labelledby="udName"><div class="hd"><b id="udName"></b><span id="udPills"></span><span class="spacer"></span><button class="btn sm" type="button" id="udClose">닫기</button></div><div class="bd" id="udBody"></div></dialog>
+<div class="undo" id="undo" hidden role="status"><span id="undoMsg"></span><button type="button" id="undoBtn">되돌리기</button></div>
 <dialog class="ask" id="ask" aria-labelledby="askT"><h3 id="askT"></h3><p id="askP"></p><ul id="askL"></ul>
   <div class="acts"><button class="btn" type="button" id="askNo">취소</button><button class="btn primary" type="button" id="askYes">실행</button></div></dialog>
 
@@ -327,13 +387,66 @@
   }
   function gate(msg, login) { $('#gate').hidden = false; $('#gateMsg').textContent = msg; $('#loginBtn').hidden = !login; }
 
+  // ---- 모의 전용(LAB) 공통: 정렬·페이지·선택·되돌리기·주소 저장. 실제 관리자 화면에서는 꺼져 있다.
+  var LAB = DEMO, PAGE = 50;
+  var pg = { todo: 1, dash: 1, users: 1, activity: 1, bank: 1, appr: 1 }, sel = { users: new Set(), bank: new Set(), appr: new Set() };
+  function pagerHtml(el, total, key, size, render) {
+    var n = Math.max(1, Math.ceil(total / size)), p = Math.min(pg[key], n); pg[key] = p;
+    el.hidden = !LAB || total <= size;
+    el.innerHTML = '<span>' + (total ? ((p - 1) * size + 1) + '–' + Math.min(total, p * size) : 0) + ' / ' + total + '</span>' +
+      '<button class="btn" type="button" data-p="1"' + (p === 1 ? ' disabled' : '') + '>처음</button><button class="btn" type="button" data-p="' + (p - 1) + '"' + (p === 1 ? ' disabled' : '') + '>이전</button>' +
+      '<span class="mono">' + p + ' / ' + n + '</span><button class="btn" type="button" data-p="' + (p + 1) + '"' + (p === n ? ' disabled' : '') + '>다음</button><button class="btn" type="button" data-p="' + n + '"' + (p === n ? ' disabled' : '') + '>끝</button>';
+    el.onclick = function (e) { var b = e.target.closest('[data-p]'); if (!b || b.disabled) return; pg[key] = +b.dataset.p; render(); saveHash(); window.scrollTo(0, 0); };
+    return LAB ? [(p - 1) * size, p * size] : [0, total];
+  }
+  function selbarHtml(el, key, unit, allIds, acts) {
+    var n = sel[key].size; el.hidden = !LAB || !n; if (!n) { el.innerHTML = ''; return; }
+    el.innerHTML = '<b>' + n + unit + ' 선택</b>' + (allIds.length > n ? '<button class="lnk" type="button" data-sa>필터 결과 ' + allIds.length + unit + ' 모두 선택</button>' : '') +
+      acts.map(function (a, i) { return '<button class="btn sm' + (a[1] ? ' ' + a[1] : '') + '" type="button" data-act="' + i + '">' + a[0] + '</button>'; }).join('') +
+      '<button class="lnk" type="button" data-clr>선택 해제</button>';
+    el.onclick = function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      if (b.hasAttribute('data-sa')) { allIds.forEach(function (id) { sel[key].add(id); }); RENDER[key](); }
+      else if (b.hasAttribute('data-clr')) { sel[key].clear(); RENDER[key](); }
+      else acts[+b.dataset.act][2]();
+    };
+  }
+  var RENDER = {};
+  // 되돌리기: 작업 뒤 10초 동안
+  function offerUndo(msg, fn) {
+    var u = $('#undo'); $('#undoMsg').textContent = msg; u.hidden = false; $('#toast').hidden = true;
+    clearTimeout(offerUndo._t); offerUndo._t = setTimeout(function () { u.hidden = true; }, 10000);
+    $('#undoBtn').onclick = function () { u.hidden = true; clearTimeout(offerUndo._t); fn().then(function () { toast('되돌렸어요.'); }).catch(function (e) { toast(e.message); }); };
+  }
+  // 필터·정렬·페이지를 주소(#탭?…)에 저장 → 새로고침·뒤로 가기에도 유지
+  var HASH = {
+    todo: {}, dash: { days: '#dDays' }, users: { q: '#uSearch', st: '#uStatus', idle: '#uIdle', join: '#uJoined', sort: '#uSort' },
+    activity: { user: '#aUser', act: '#aAction', days: '#aDays' }, bank: { st: '#qStatus', sub: '#qSub', low: '#qLow', q: '#qSearch', diff: '#qDiff', sort: '#qSort' },
+    appr: { open: '#arOpen', days: '#arDays', reason: '#arReason', q: '#arSearch', sort: '#arSort' }
+  };
+  var curTab = 'dash';
+  function saveHash() {
+    if (!LAB) return;
+    var q = new URLSearchParams(), m = HASH[curTab];
+    Object.keys(m).forEach(function (k) { var el = $(m[k]), v = el.type === 'checkbox' ? (el.checked ? '1' : '') : el.value; if (v && v !== '0') q.set(k, v); });
+    if (pg[curTab] > 1) q.set('p', pg[curTab]);
+    try { history.replaceState(null, '', location.search + '#' + curTab + (String(q) ? '?' + q : '')); } catch (e) {}
+  }
+  function loadHash(tab, qs0) {
+    var q = new URLSearchParams(qs0 || ''), m = HASH[tab] || {};
+    Object.keys(m).forEach(function (k) { if (!q.has(k)) return; var el = $(m[k]); if (el.type === 'checkbox') el.checked = q.get(k) === '1'; else el.value = q.get(k); });
+    if (q.get('p')) pg[tab] = +q.get('p') || 1;
+  }
+  function sortBy(arr, key, dir, get) { return arr.sort(function (a, b) { var x = get(a), y = get(b); return (x < y ? -1 : x > y ? 1 : 0) * dir; }); }
+
   // 탭
   var loaded = {};
   function show(tab) {
     document.querySelectorAll('#tabs [role=tab]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.tab === tab ? 'true' : 'false'); });
-    ['dash', 'users', 'activity', 'bank', 'appr'].forEach(function (t) { $('#v-' + t).hidden = t !== tab; });
-    try { history.replaceState(null, '', location.search + '#' + tab); } catch (e) {}
-    return ({ dash: loadDash, users: loadUsers, activity: loadActivity, bank: loadBank, appr: loadAppReports })[tab]();
+    ['todo', 'dash', 'users', 'activity', 'bank', 'appr'].forEach(function (t) { $('#v-' + t).hidden = t !== tab; });
+    curTab = tab;
+    if (LAB) saveHash(); else try { history.replaceState(null, '', location.search + '#' + tab); } catch (e) {}
+    return ({ todo: loadTodo, dash: loadDash, users: loadUsers, activity: loadActivity, bank: loadBank, appr: loadAppReports })[tab]();
   }
 
   // 위험한 작업은 대상을 보여 주고 한 번 더 묻는다
@@ -365,6 +478,8 @@
         tile(s.daily.length + '일 재사용 비율', served ? Math.round(bank / served * 100) + '%' : '–', '출제 ' + served + '번 중 ' + bank + '번은 AI 없이') +
         tile('확인 필요', s.bank_flagged, '출제 중지 문제 · 미해결 신고 ' + s.open_reports, '', s.bank_flagged ? 'warn' : '') +
         tile('앱 신고', s.open_app_reports || 0, 'Tracer Route 앱 · 미처리(익명)', '', s.open_app_reports ? 'warn' : '');
+      if (LAB) [['users', { '#uStatus': '', '#uIdle': '0', '#uJoined': '0', '#uSearch': '' }], null, ['bank', { '#qStatus': 'active', '#qLow': false }], null, ['bank', { '#qStatus': 'flagged', '#qLow': false }], ['appr', { '#arOpen': '1', '#arDays': '0', '#arReason': '', '#arSearch': '' }]]
+        .forEach(function (g, i) { var t = $('#tiles').children[i]; if (g && t) { t.dataset.go = JSON.stringify(g); t.title = '눌러서 목록 보기'; } });
       var max = Math.max.apply(null, s.daily.map(function (d) { return d.bank_serves + d.new_questions; }).concat([1]));
       $('#days').innerHTML = s.daily.slice().reverse().map(function (d) {
         var b = d.bank_serves / max * 100, n = d.new_questions / max * 100;
@@ -375,7 +490,45 @@
     }).catch(function (e) { toast(e.message); });
   }
 
-  $('#dDays').addEventListener('change', loadDash);
+  $('#dDays').addEventListener('change', function () { saveHash(); loadDash(); });
+  $('#tiles').addEventListener('click', function (e) { var t = e.target.closest('[data-go]'); if (t) { var g = JSON.parse(t.dataset.go); goTo(g[0], g[1]); } });
+  // 다른 탭으로 필터를 건 채 이동(오늘 할 일 카드·타일·명령창이 함께 씀)
+  function goTo(tab, sets) {
+    Object.keys(sets || {}).forEach(function (k) { var el = $(k); if (el.type === 'checkbox') el.checked = !!sets[k]; else el.value = String(sets[k]); });
+    pg[tab] = 1; if (sel[tab]) sel[tab].clear();
+    return show(tab);
+  }
+
+  // ---- 오늘 할 일(모의 전용): 확인할 것을 한곳에
+  function loadTodo() {
+    var DAYMS = 864e5, t0 = new Date(); t0.setHours(0, 0, 0, 0);
+    return Promise.all([api('/api/admin/users'), api('/api/admin/summary?days=7'), api('/api/admin/app-reports?open=1&days=0'), api('/api/admin/questions?low=1')]).then(function (r) {
+      var us = r[0], sm = r[1], ar = r[2].reports, low = r[3].questions.filter(function (q) { return q.graded >= 5 && q.correct / q.graded < 0.3; });
+      users = us;
+      var cnt = function (f) { return us.filter(f).length; };
+      var pend = cnt(function (u) { return u.status === 'pending'; }), newToday = cnt(function (u) { return Date.now() - new Date(u.created_at) <= DAYMS; });
+      var marked = cnt(function (u) { return u.delete_at; }), idle = cnt(function (u) { return idleDays(u) > 365; }), idleNew = cnt(function (u) { return canEdit(u) && !u.delete_at && idleDays(u) > 365; });
+      var arNew = ar.filter(function (x) { return Date.now() - new Date(x.at) < 7 * DAYMS; }).length, dup = ar.filter(function (x) { return x.open_same > 1; }).length;
+      var pct = sm.global_daily_ai ? Math.round(sm.today_counted / sm.global_daily_ai * 100) : 0;
+      var C = [
+        ['승인 대기', pend, '승인해야 AI 문제를 쓸 수 있어요', 'users', { '#uStatus': 'pending', '#uIdle': '0', '#uJoined': '0', '#uSearch': '' }],
+        ['미처리 앱 신고', ar.length, '최근 7일 새 신고 ' + arNew + '건', 'appr', { '#arOpen': '1', '#arDays': '0', '#arReason': '', '#arSearch': '', '#arSort': 'at_desc' }],
+        ['같은 문제에 신고 여러 건', dup, '먼저 고치면 효과가 큰 신고', 'appr', { '#arOpen': '1', '#arDays': '0', '#arReason': '', '#arSearch': '', '#arSort': 'same_desc' }],
+        ['출제 중지 문제', sm.bank_flagged, '신고 누적으로 멈춘 문제', 'bank', { '#qStatus': 'flagged', '#qLow': false, '#qSearch': '', '#qDiff': '', '#qSort': 'reports_desc' }],
+        ['정답률 30% 미만 문제', low.length, '정답 키 오류가 의심돼요', 'bank', { '#qStatus': '', '#qLow': true, '#qSearch': '', '#qDiff': '', '#qSort': 'rate_asc' }],
+        ['1년 넘게 미접속', idle, '그중 아직 삭제 예정 아닌 사람 ' + idleNew + '명', 'users', { '#uStatus': '', '#uIdle': '365', '#uJoined': '0', '#uSearch': '' }],
+        ['삭제 예정', marked, '표시된 사람(다시 접속하면 풀림)', 'users', { '#uStatus': 'delete', '#uIdle': '0', '#uJoined': '0', '#uSearch': '' }],
+        ['새 가입(24시간)', newToday, '최근 하루 동안 가입한 사람', 'users', { '#uStatus': '', '#uIdle': '0', '#uJoined': '1', '#uSearch': '' }],
+        ['오늘 제미나이 사용', pct + '%', sm.today_counted + ' / ' + sm.global_daily_ai + '회 (전체 한도)', 'dash', { '#dDays': '7' }]
+      ];
+      $('#todo').innerHTML = C.map(function (c, i) {
+        var warn = typeof c[1] === 'number' ? c[1] > 0 && i < 7 : pct >= 80;
+        return '<button type="button" class="card' + (warn ? ' warn' : '') + '" data-i="' + i + '"><span class="k">' + c[0] + '</span><span class="v">' + c[1] + '</span><span class="s">' + c[2] + '</span><span class="go">목록 보기 →</span></button>';
+      }).join('');
+      $('#todo').onclick = function (e) { var b = e.target.closest('.card'); if (b) { var c = C[+b.dataset.i]; goTo(c[3], c[4]); } };
+      loadTodo.cards = C;
+    }).catch(function (e) { toast(e.message); });
+  }
 
   // ---- 사용자
   var ROLE = { owner: '주인', admin: '관리자', user: '사용자' }, STATUS = { active: '사용 중', pending: '승인 대기', blocked: '차단' };
@@ -383,23 +536,36 @@
     return api('/api/admin/users').then(function (rows) { users = rows; renderUsers(); fillUserSelect(); }).catch(function (e) { toast(e.message); });
   }
   function canEdit(u) { return u.role !== 'owner' && (me.role === 'owner' || u.role === 'user') && u.id !== me.id; }
-  var bulk = { del: [], undel: [], approve: [] };
+  var bulk = { del: [], undel: [], approve: [] }, lastUserIds = [];
   function idleDays(u) { var t = u.last_seen || u.created_at; return t ? (Date.now() - new Date(t)) / 864e5 : 1e9; }
   function uname(u) { return (u.name || '(이름 없음)') + ' · ' + u.email + ' · 마지막 접속 ' + when(u.last_seen); }
   function renderUsers() {
-    var q = $('#uSearch').value.trim().toLowerCase(), st = $('#uStatus').value, idle = +$('#uIdle').value;
+    var q = $('#uSearch').value.trim().toLowerCase(), st = $('#uStatus').value, idle = +$('#uIdle').value, joined = LAB ? +$('#uJoined').value : 0;
     var rows = users.filter(function (u) {
       return (!q || (u.email + ' ' + (u.name || '')).toLowerCase().indexOf(q) >= 0) &&
-        (!st || (st === 'delete' ? !!u.delete_at : u.status === st)) && (!idle || idleDays(u) > idle);
+        (!st || (st === 'delete' ? !!u.delete_at : u.status === st)) && (!idle || idleDays(u) > idle) &&
+        (!joined || (Date.now() - new Date(u.created_at)) / 864e5 <= joined);
     });
     $('#uCount').textContent = rows.length + '명';
+    if (LAB) {
+      var so = $('#uSort').value.split('_'), dir = so[1] === 'asc' ? 1 : -1;
+      var G = { last: function (u) { return u.last_seen || ''; }, created: function (u) { return u.created_at || ''; }, attempts: function (u) { return u.total_attempts; },
+        ai: function (u) { return u.today_ai; }, name: function (u) { return (u.name || '').toLowerCase(); } }[so[0]];
+      sortBy(rows, so[0], dir, G);
+    }
+    var allIds = rows.filter(canEdit).map(function (u) { return u.id; }); lastUserIds = allIds;
+    var cut = pagerHtml($('#uPager'), rows.length, 'users', PAGE, renderUsers), pageRows = rows.slice(cut[0], cut[1]);
+    selbarHtml($('#uSel'), 'users', '명', allIds, [
+      ['승인', 'primary', function () { selUsers('approve'); }], ['차단', 'danger', function () { selUsers('block'); }], ['차단 해제', '', function () { selUsers('unblock'); }],
+      ['삭제 예정', 'danger', function () { selUsers('mark_delete'); }], ['예정 취소', '', function () { selUsers('unmark_delete'); }]]);
+    if (LAB) { var pe = pageRows.filter(canEdit); $('#uAll').checked = pe.length > 0 && pe.every(function (u) { return sel.users.has(u.id); }); }
     if (!AI_ON) { bulk.del = []; bulk.undel = []; bulk.approve = []; }
     else bulk.del = idle ? rows.filter(function (u) { return canEdit(u) && !u.delete_at; }) : [];
     if (AI_ON) bulk.undel = rows.filter(function (u) { return canEdit(u) && u.delete_at; });
     if (AI_ON) bulk.approve = rows.filter(function (u) { return canEdit(u) && u.status === 'pending'; });
     var bb = function (id, list, label) { $(id).hidden = !list.length; $(id).textContent = label + ' (' + list.length + '명)'; };
     bb('#uBulkDelete', bulk.del, '보이는 사용자 삭제 예정으로'); bb('#uBulkUndelete', bulk.undel, '삭제 예정 취소'); bb('#uBulkApprove', bulk.approve, '승인 대기 모두 승인');
-    $('#uRows').innerHTML = rows.map(function (u) {
+    $('#uRows').innerHTML = pageRows.map(function (u) {
       var ed = canEdit(u), dis = ed ? '' : ' disabled';
       var sw = function (f) { return '<label class="sw"><input type="checkbox" data-f="' + f + '"' + (u[f] ? ' checked' : '') + dis + ' aria-label="' + f + '"><span></span></label>'; };
       var acts = [];
@@ -410,15 +576,16 @@
         if (AI_ON) acts.push(u.delete_at ? '<button class="btn sm" data-del="unmark_delete">예정 취소</button>' : '<button class="btn sm danger" data-del="mark_delete">삭제 예정</button>');
       }
       acts.push('<button class="btn sm" data-log="' + u.id + '">활동</button>');
-      return '<tr data-id="' + u.id + '"><td><b>' + esc(u.name || '(이름 없음)') + '</b><br><span class="em">' + esc(u.email) + '</span></td>' +
+      return '<tr data-id="' + u.id + '">' + (LAB ? '<td class="ck">' + (ed ? '<input type="checkbox" data-ck' + (sel.users.has(u.id) ? ' checked' : '') + ' aria-label="선택">' : '') + '</td>' : '') + '<td>' + (LAB ? '<button type="button" class="nm" data-detail>' + esc(u.name || '(이름 없음)') + '</button>' : '<b>' + esc(u.name || '(이름 없음)') + '</b>') + '<br><span class="em">' + esc(u.email) + '</span></td>' +
         '<td><span class="pill ' + u.role + '">' + ROLE[u.role] + '</span></td><td><span class="pill ' + u.status + '">' + STATUS[u.status] + '</span>' + (u.delete_at ? ' <span class="pill del" title="' + esc(u.delete_at) + '">삭제 예정</span>' : '') + '</td>' +
         '<td title="' + esc(u.last_seen || '') + '">' + when(u.last_seen) + '<br><span class="em">가입 ' + when(u.created_at) + '</span></td>' +
         '<td class="mono">' + u.today_ai + '</td>' +
         '<td>' + (u.role === 'owner' ? '<span class="muted">제한 없음</span>' : '<input class="lim" type="number" min="0" max="1000" value="' + u.daily_limit + '"' + dis + ' aria-label="하루 한도">') + '</td>' +
         '<td>' + sw('can_practice') + '</td><td>' + sw('can_explain') + '</td><td class="mono">' + u.total_attempts + '</td>' +
         '<td>' + acts.join(' ') + '</td></tr>';
-    }).join('') || '<tr><td colspan="10" class="muted">사용자가 없어요.</td></tr>';
+    }).join('') || '<tr><td colspan="11" class="muted">사용자가 없어요.</td></tr>';
   }
+  RENDER.users = renderUsers;
   function setUser(id, fields) {
     return api('/api/admin/user', Object.assign({ id: id }, fields)).then(function (u) {
       var i = users.findIndex(function (x) { return x.id === id; }); if (i >= 0) Object.assign(users[i], u);
@@ -427,18 +594,43 @@
   }
   $('#uRows').addEventListener('change', function (e) {
     var tr = e.target.closest('tr'); if (!tr) return;
+    if (e.target.hasAttribute('data-ck')) { e.target.checked ? sel.users.add(tr.dataset.id) : sel.users.delete(tr.dataset.id); return renderUsers(); }
     if (e.target.dataset.f) setUser(tr.dataset.id, (function (o) { o[e.target.dataset.f] = e.target.checked; return o; })({}));
     else if (e.target.classList.contains('lim')) setUser(tr.dataset.id, { daily_limit: +e.target.value || 0 });
   });
   $('#uRows').addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return; var tr = b.closest('tr');
     if (b.dataset.log) { $('#aUser').value = b.dataset.log; show('activity'); return; }
+    if (b.hasAttribute('data-detail')) return openDetail(tr.dataset.id);
     if (b.dataset.del) { var one = users.find(function (x) { return x.id === tr.dataset.id; }); return bulkUsers(b.dataset.del, [one]); }
     var kv = b.dataset.set.split(':'), u = users.find(function (x) { return x.id === tr.dataset.id; });
     if (kv[1] === 'blocked' && !confirm((u.name || u.email) + ' 계정을 차단할까요? AI 기능을 모두 쓸 수 없게 돼요.')) return;
     setUser(tr.dataset.id, (function (o) { o[kv[0]] = kv[1]; return o; })({}));
   });
-  $('#uSearch').addEventListener('input', renderUsers); $('#uStatus').addEventListener('change', renderUsers); $('#uIdle').addEventListener('change', renderUsers);
+  function usersFilterChanged() { pg.users = 1; sel.users.clear(); saveHash(); renderUsers(); }
+  $('#uSearch').addEventListener('input', usersFilterChanged); ['#uStatus', '#uIdle', '#uJoined', '#uSort'].forEach(function (x) { $(x).addEventListener('change', usersFilterChanged); });
+  $('#uAll').addEventListener('change', function () {
+    var on = this.checked; $('#uRows').querySelectorAll('tr[data-id]').forEach(function (tr) { if (tr.querySelector('[data-ck]')) on ? sel.users.add(tr.dataset.id) : sel.users.delete(tr.dataset.id); });
+    renderUsers();
+  });
+  var SELOP = { approve: ['승인', '승인 대기인 사람만 바뀌어요.'], block: ['차단', 'AI 기능을 모두 쓸 수 없게 돼요.'], unblock: ['차단 해제', '차단된 사람만 바뀌어요.'],
+    mark_delete: ['삭제 예정 표시', '지우지 않고 표시만 해요.'], unmark_delete: ['삭제 예정 취소', '표시만 풀어요.'] };
+  function selUsers(op) {  // 고른 사람들에게 일괄 작업 → 되돌리기 제공
+    var list = users.filter(function (u) { return sel.users.has(u.id); }), t = SELOP[op];
+    var before = list.map(function (u) { return { id: u.id, status: u.status, delete_at: u.delete_at || null }; });
+    return askConfirm('고른 ' + list.length + '명 ' + t[0] + '할까요?', t[1] + ' 실행 뒤 10초 안에 되돌릴 수 있어요.', list.map(uname), t[0]).then(function (ok) {
+      if (!ok) return { st: 'cancel', msg: '취소했어요. 아무것도 바뀌지 않았어요.' };
+      return api('/api/admin/users-bulk', { op: op, ids: list.map(function (u) { return u.id; }) }).then(function (r) {
+        var m = r.updated + '명 ' + t[0] + (r.skipped ? ' (해당 없음 ' + r.skipped + '명 제외)' : '');
+        var changed = before.filter(function (b) { return r.ids.indexOf(b.id) >= 0; });
+        sel.users.clear();
+        return loadUsers().then(function () {
+          offerUndo(m, function () { return api('/api/admin/users-bulk', { op: 'restore', items: changed }).then(loadUsers); });
+          return { st: r.updated ? 'done' : 'fail', msg: m };
+        });
+      });
+    }).catch(function (e) { toast(e.message); return { st: 'fail', msg: e.message }; });
+  }
   var BULK = {
     mark_delete: ['삭제 예정으로 표시할까요?', '지금 지우지는 않고 "삭제 예정"으로 표시만 해요. 그 사용자가 다시 접속하면 표시가 풀려요.', '삭제 예정으로', '명을 삭제 예정으로 표시했어요.'],
     unmark_delete: ['삭제 예정을 취소할까요?', '표시만 풀고 다른 것은 바뀌지 않아요.', '예정 취소', '명의 삭제 예정을 취소했어요.'],
@@ -458,6 +650,36 @@
   $('#uBulkDelete').addEventListener('click', function () { return bulkUsers('mark_delete', bulk.del); });
   $('#uBulkUndelete').addEventListener('click', function () { return bulkUsers('unmark_delete', bulk.undel); });
   $('#uBulkApprove').addEventListener('click', function () { return bulkUsers('approve', bulk.approve); });
+
+  // ---- 사용자 상세 창(모의 전용)
+  function openDetail(id) {
+    var u = users.find(function (x) { return x.id === id; }); if (!u) return Promise.resolve();
+    var d = $('#uDetail'), ed = canEdit(u);
+    $('#udName').textContent = (u.name || '(이름 없음)') + ' · ' + u.email;
+    $('#udPills').innerHTML = '<span class="pill ' + u.role + '">' + ROLE[u.role] + '</span> <span class="pill ' + u.status + '">' + STATUS[u.status] + '</span>' + (u.delete_at ? ' <span class="pill del">삭제 예정</span>' : '');
+    $('#udBody').innerHTML = '<p class="muted">불러오는 중…</p>'; if (!d.open) d.showModal();
+    return api('/api/admin/activity?days=365&limit=5000&user=' + encodeURIComponent(id)).then(function (rows) {
+      var gr = rows.filter(function (a) { return a.action === 'grade'; }), ok = gr.filter(function (a) { return a.detail && a.detail.verdict === '정답'; }).length;
+      var bySub = {}; gr.forEach(function (a) { var s0 = (a.detail || {}).sub; if (!s0) return; bySub[s0] = bySub[s0] || [0, 0]; bySub[s0][1]++; if (a.detail.verdict === '정답') bySub[s0][0]++; });
+      var weak = Object.keys(bySub).filter(function (k) { return bySub[k][1] >= 3; }).sort(function (a, b) { return bySub[a][0] / bySub[a][1] - bySub[b][0] / bySub[b][1]; }).slice(0, 6);
+      var dev = {}; rows.forEach(function (a) { if (a.device) dev[a.device] = (dev[a.device] || 0) + 1; });
+      var visits = rows.filter(function (a) { return a.action === 'visit'; }).length, aiN = rows.filter(function (a) { return a.ai; }).length;
+      var g = function (k, v) { return '<div>' + k + '<b>' + v + '</b></div>'; };
+      $('#udBody').innerHTML =
+        '<div class="grid">' + g('가입', when(u.created_at)) + g('마지막 접속', when(u.last_seen)) + g('1년 접속', visits + '번') + g('1년 채점', gr.length + '문제') +
+          g('정답률', gr.length ? Math.round(ok / gr.length * 100) + '%' : '–') + g('1년 AI 호출', aiN + '번') + g('오늘 AI', u.today_ai + ' / ' + (u.role === 'owner' ? '∞' : u.daily_limit)) + g('푼 문제(전체)', u.total_attempts) + '</div>' +
+        '<div class="weak"><h4>약한 범위 (3문제 이상 푼 범위 중 정답률 낮은 순)</h4>' + (weak.map(function (k) { return '<span class="pill">' + esc(k) + ' · ' + Math.round(bySub[k][0] / bySub[k][1] * 100) + '% (' + bySub[k][1] + ')</span>'; }).join('') || '<span class="muted">데이터가 부족해요.</span>') + '</div>' +
+        '<div><h4>쓰는 기기</h4>' + (Object.keys(dev).map(function (k) { return '<span class="pill">' + esc(k) + ' · ' + dev[k] + '</span>'; }).join(' ') || '<span class="muted">–</span>') + '</div>' +
+        '<div><h4>관리자 메모</h4><textarea id="udNote" maxlength="300"' + (ed ? '' : ' disabled') + ' placeholder="이 사용자에 대한 메모(관리자만 보여요)">' + esc(u.note || '') + '</textarea>' +
+          (ed ? '<div style="margin-top:6px"><button class="btn sm primary" type="button" id="udSave">메모 저장</button></div>' : '') + '</div>' +
+        '<div><h4>최근 활동 ' + Math.min(20, rows.length) + '건 <button class="btn sm" type="button" id="udAll">활동 기록 탭에서 전체 보기</button></h4><div class="tablewrap"><table><tbody>' +
+          rows.slice(0, 20).map(function (a) { return '<tr><td class="mono">' + stamp(a.at) + '</td><td>' + (ACT[a.action] || esc(a.action)) + '</td><td class="d">' + esc(detailText(a)) + '</td></tr>'; }).join('') +
+          '</tbody></table></div></div>';
+      if (ed) $('#udSave').onclick = function () { setUser(u.id, { note: $('#udNote').value.trim() }).then(function () { toast('메모를 저장했어요.'); }); };
+      $('#udAll').onclick = function () { d.close(); goTo('activity', { '#aUser': u.id, '#aDays': '365', '#aAction': '' }); };
+    }).catch(function (e) { $('#udBody').textContent = e.message; });
+  }
+  $('#udClose').addEventListener('click', function () { $('#uDetail').close(); });
 
   // ---- 활동 기록
   var ACT = { demo: '데모 명령', visit: '접속', signup: '가입', question: '문제 받기', grade: '채점', subnet: '서브넷 풀이', explain: '내 문제 해설', report: '문제 신고', admin: '관리자 작업' };
@@ -480,25 +702,31 @@
   }
   function loadActivity() {
     if (!users.length) loadUsers();
-    var p = new URLSearchParams({ days: $('#aDays').value, user: $('#aUser').value, action: $('#aAction').value, limit: '500' });
+    var lim = LAB ? 5000 : 500;
+    var p = new URLSearchParams({ days: $('#aDays').value, user: $('#aUser').value, action: $('#aAction').value, limit: String(lim) });
     return api('/api/admin/activity?' + p).then(function (rows) {
-      $('#aCount').textContent = rows.length + '건' + (rows.length >= 500 ? ' (최근 500건)' : '');
-      $('#aRows').innerHTML = rows.map(function (a) {
+      acts = rows; $('#aCount').textContent = rows.length.toLocaleString() + '건' + (rows.length >= lim ? ' (최근 ' + lim.toLocaleString() + '건)' : '');
+      renderActivity();
+    }).catch(function (e) { toast(e.message); });
+  }
+  var acts = [];
+  function renderActivity() {
+      var rows = acts, cut = pagerHtml($('#aPager'), rows.length, 'activity', PAGE, renderActivity);
+      $('#aRows').innerHTML = rows.slice(cut[0], cut[1]).map(function (a) {
         var u = a.profiles || {};
         return '<tr><td class="mono" style="font-size:12.5px">' + stamp(a.at) + '</td><td>' + esc(u.name || u.email || '–') + '</td>' +
           '<td>' + (ACT[a.action] || esc(a.action)) + (a.ai ? ' <span class="pill ai">AI</span>' : a.action === 'question' && a.detail && a.detail.source === 'bank' ? ' <span class="pill bank">은행</span>' : '') + '</td>' +
           '<td class="d">' + esc(detailText(a)) + '</td><td class="em">' + esc(a.device || '') + '</td></tr>';
       }).join('') || '<tr><td colspan="5" class="muted">기록이 없어요.</td></tr>';
-    }).catch(function (e) { toast(e.message); });
   }
-  ['#aUser', '#aAction', '#aDays'].forEach(function (s) { $(s).addEventListener('change', loadActivity); });
+  ['#aUser', '#aAction', '#aDays'].forEach(function (s) { $(s).addEventListener('change', function () { pg.activity = 1; saveHash(); loadActivity(); }); });
 
   // ---- 문제은행
   var qs = [];
   function loadBank() {
     var p = new URLSearchParams({ status: $('#qLow').checked ? '' : $('#qStatus').value, sub: $('#qSub').value, low: $('#qLow').checked ? '1' : '' });
     return api('/api/admin/questions?' + p).then(function (r) {
-      qs = r.questions; renderQs();
+      qsAll = r.questions; applyQ();
       var target = r.bank_min || 30;
       $('#bkNote').textContent = '· 출제 중 문제가 ' + target + '개 이상인 묶음부터 재사용';
       $('#buckets').innerHTML = r.buckets.map(function (b) {
@@ -509,8 +737,29 @@
     }).catch(function (e) { toast(e.message); });
   }
   var QST = { active: '출제 중', flagged: '출제 중지', hidden: '숨김' };
+  var qsAll = [];
+  function applyQ() {
+    var t = LAB ? $('#qSearch').value.trim().toLowerCase() : '', df = LAB ? $('#qDiff').value : '';
+    qs = qsAll.filter(function (q) { return (!t || (q.question + ' ' + q.sub).toLowerCase().indexOf(t) >= 0) && (!df || q.difficulty === df); });
+    if (LAB) sortQs(); renderQs();
+  }
+  $('#qSearch').addEventListener('input', function () { pg.bank = 1; sel.bank.clear(); saveHash(); applyQ(); });
+  function sortQs() {
+    var so = $('#qSort').value, rate = function (q) { return q.graded ? q.correct / q.graded : 2; };
+    if (so === 'reports_desc') sortBy(qs, 0, -1, function (q) { return q.reports; });
+    if (so === 'rate_asc') sortBy(qs, 0, 1, rate);
+    if (so === 'served_desc') sortBy(qs, 0, -1, function (q) { return q.served; });
+    if (so === 'created_desc') sortBy(qs, 0, -1, function (q) { return q.created_at || ''; });
+  }
   function renderQs() {
-    $('#qList').innerHTML = qs.map(function (q, i) {
+    var cut = pagerHtml($('#qPager'), qs.length, 'bank', 20, renderQs);
+    $('#qCount').textContent = LAB ? qs.length + '문제' : '';
+    selbarHtml($('#qSel'), 'bank', '문제', qs.map(function (q) { return q.id; }), [
+      ['검토 완료 · 다시 출제', 'primary', function () { selQs('resolve'); }], ['출제 중지', '', function () { selQs('flag'); }], ['숨기기', 'danger', function () { selQs('hide'); }]]);
+    var page = qs.slice(cut[0], cut[1]);
+    if (LAB) $('#qAll').checked = page.length > 0 && page.every(function (q) { return sel.bank.has(q.id); });
+    $('#qList').innerHTML = page.map(function (q, j) {
+      var i = cut[0] + j;
       var rate = q.graded ? Math.round(q.correct / q.graded * 100) + '%' : '–';
       var opts = (q.choices || []).map(function (c, k) {
         var L = 'ABCD'[k], note = (q.option_notes || [])[k];
@@ -520,13 +769,31 @@
       if (q.status !== 'active' || q.reports) acts.push('<button class="btn sm primary" data-a="resolve">검토 완료 · 다시 출제</button>');
       if (q.status !== 'hidden') acts.push('<button class="btn sm danger" data-a="hide">숨기기</button>');
       acts.push('<button class="btn sm" data-a="edit">고치기</button>');
-      return '<article class="qc ' + q.status + '" data-i="' + i + '"><div class="meta"><span class="pill ' + q.status + '">' + QST[q.status] + '</span><span class="pill">' + esc(q.sub) + '</span><span class="pill">' + esc(q.difficulty) + '</span><span class="pill">' + (q.qtype === 'mcq' ? '객관식' : '주관식') + '</span>' +
+      return '<article class="qc ' + q.status + '" data-i="' + i + '"><div class="meta">' + (LAB ? '<input class="ckl" type="checkbox" data-ck' + (sel.bank.has(q.id) ? ' checked' : '') + ' aria-label="선택">' : '') + '<span class="pill ' + q.status + '">' + QST[q.status] + '</span><span class="pill">' + esc(q.sub) + '</span><span class="pill">' + esc(q.difficulty) + '</span><span class="pill">' + (q.qtype === 'mcq' ? '객관식' : '주관식') + '</span>' +
         '<span class="stat">출제 ' + q.served + ' · 채점 ' + q.graded + ' · 정답률 ' + rate + ' · 신고 ' + q.reports + '</span></div>' +
         '<div class="qt">' + esc(q.question) + '</div>' + (opts ? '<ol>' + opts + '</ol>' : '<div class="ex"><b>모범 답안</b> ' + esc(q.answer) + '</div>') +
         (q.explanation ? '<div class="ex">' + esc(q.explanation) + '</div>' : '') +
         (q.report_reasons && q.report_reasons.length ? '<div class="rs">신고: ' + q.report_reasons.map(esc).join(' / ') + '</div>' : '') +
         '<div class="acts">' + acts.join('') + '</div><div class="edit" hidden></div></article>';
     }).join('') || '<p class="muted">해당하는 문제가 없어요.</p>';
+  }
+  RENDER.bank = renderQs;
+  $('#qList').addEventListener('change', function (e) {
+    if (!e.target.hasAttribute('data-ck')) return; var q = qs[+e.target.closest('.qc').dataset.i];
+    e.target.checked ? sel.bank.add(q.id) : sel.bank.delete(q.id); renderQs();
+  });
+  $('#qAll').addEventListener('change', function () { var on = this.checked; $('#qList').querySelectorAll('.qc').forEach(function (c) { var id = qs[+c.dataset.i].id; on ? sel.bank.add(id) : sel.bank.delete(id); }); renderQs(); });
+  var QOP = { resolve: '검토 완료 · 다시 출제', flag: '출제 중지', hide: '숨기기' };
+  function selQs(op) {
+    var list = qs.filter(function (q) { return sel.bank.has(q.id); });
+    var before = list.map(function (q) { return { id: q.id, status: q.status, reports: q.reports, report_reasons: q.report_reasons || [] }; });
+    return askConfirm('고른 ' + list.length + '문제 ' + QOP[op] + '할까요?', '모의 문제은행에만 적용돼요. 실행 뒤 10초 안에 되돌릴 수 있어요.', list.map(function (q) { return q.sub + ' · ' + q.question.slice(0, 50); }), QOP[op]).then(function (ok) {
+      if (!ok) return { st: 'cancel', msg: '취소했어요. 아무것도 바뀌지 않았어요.' };
+      return api('/api/admin/questions-bulk', { op: op, ids: list.map(function (q) { return q.id; }) }).then(function (r) {
+        sel.bank.clear(); var m = r.updated + '문제 ' + QOP[op];
+        return loadBank().then(function () { offerUndo(m, function () { return api('/api/admin/questions-bulk', { op: 'restore', items: before }).then(loadBank); }); return { st: 'done', msg: m }; });
+      });
+    }).catch(function (e) { toast(e.message); return { st: 'fail', msg: e.message }; });
   }
   function saveQ(i, fields, msg) {
     return api('/api/admin/question', Object.assign({ id: qs[i].id }, fields)).then(function (q) { Object.assign(qs[i], q, { report_reasons: fields.resolve ? [] : qs[i].report_reasons }); renderQs(); toast(msg || '저장했어요.'); })
@@ -555,27 +822,42 @@
       saveQ(i, f);
     }
   });
-  ['#qStatus', '#qSub', '#qLow'].forEach(function (s) { $(s).addEventListener('change', loadBank); });
+  ['#qStatus', '#qSub', '#qLow', '#qSort', '#qDiff'].forEach(function (s) { $(s).addEventListener('change', function () { pg.bank = 1; sel.bank.clear(); saveHash(); loadBank(); }); });
 
   // ---- 앱 신고(Tracer Route, 익명)
   var ars = [], AR_REASON = { answer: '정답이 틀림', both: '정답이 둘 이상', explanation: '해설이 틀림', typo: '오타·표현', other: '기타' };
   function loadAppReports() {
     return api('/api/admin/app-reports?open=' + $('#arOpen').value + '&days=' + $('#arDays').value).then(function (r) {
-      ars = r.reports; $('#arCount').textContent = '미처리 ' + r.open + '건' + ($('#arOpen').value === '0' || $('#arDays').value !== '0' ? ' · ' + ars.length + '건 표시' : '');
+      ars = r.reports;
+      if (LAB) {
+        var rs = $('#arReason').value, t = $('#arSearch').value.trim().toLowerCase();
+        ars = ars.filter(function (x) { return (!rs || x.reason === rs) && (!t || (x.question + ' ' + (x.note || '') + ' ' + x.app_qid).toLowerCase().indexOf(t) >= 0); });
+      } $('#arCount').textContent = '미처리 ' + r.open + '건' + (LAB || $('#arOpen').value === '0' || $('#arDays').value !== '0' ? ' · ' + ars.length + '건 표시' : '');
       var open = ars.filter(function (x) { return !x.resolved; });
-      $('#arBulkDone').hidden = open.length < 2 || !AI_ON; $('#arBulkDone').textContent = '보이는 미처리 ' + open.length + '건 모두 처리';
+      $('#arBulkDone').hidden = open.length < 2 || !AI_ON || LAB; $('#arBulkDone').textContent = '보이는 미처리 ' + open.length + '건 모두 처리';
+      if (LAB) {
+        var so = $('#arSort').value;
+        if (so === 'at_asc') sortBy(ars, 0, 1, function (x) { return x.at; });
+        if (so === 'same_desc') sortBy(ars, 0, -1, function (x) { return x.open_same * 1e13 + new Date(x.at).getTime() / 1e3; });
+      }
       renderAppReports();
     }).catch(function (e) { toast(e.message); });
   }
   function renderAppReports() {
-    $('#arList').innerHTML = ars.map(function (x, i) {
+    var cut = pagerHtml($('#arPager'), ars.length, 'appr', 20, renderAppReports);
+    selbarHtml($('#arSel'), 'appr', '건', ars.map(function (x) { return x.id; }), [
+      ['처리 완료', 'primary', function () { selArs(true); }], ['다시 열기', '', function () { selArs(false); }]]);
+    var page = ars.slice(cut[0], cut[1]);
+    if (LAB) $('#arAll').checked = page.length > 0 && page.every(function (x) { return sel.appr.has(x.id); });
+    $('#arList').innerHTML = page.map(function (x, j) {
+      var i = cut[0] + j;
       var acts = [];
       if (!x.resolved) {
         acts.push('<button class="btn sm primary" data-a="done">처리 완료</button>');
         if (x.open_same > 1) acts.push('<button class="btn sm" data-a="doneAll">같은 문제 ' + x.open_same + '건 모두 처리</button>');
       } else acts.push('<button class="btn sm" data-a="reopen">다시 열기</button>');
       if (x.bank && x.bank.status === 'active') acts.push('<button class="btn sm danger" data-a="stopWeb">웹 출제 중지</button>');
-      return '<article class="qc ' + (x.resolved ? 'hidden' : 'flagged') + '" data-i="' + i + '"><div class="meta">' +
+      return '<article class="qc ' + (x.resolved ? 'hidden' : 'flagged') + '" data-i="' + i + '"><div class="meta">' + (LAB ? '<input class="ckl" type="checkbox" data-ck' + (sel.appr.has(x.id) ? ' checked' : '') + ' aria-label="선택">' : '') +
         '<span class="pill ' + (x.resolved ? 'active' : 'flagged') + '">' + (x.resolved ? '처리됨' : '미처리') + '</span>' +
         '<span class="pill">' + esc(AR_REASON[x.reason] || x.reason) + '</span>' + (x.sub ? '<span class="pill">' + esc(x.sub) + '</span>' : '') +
         '<span class="pill mono" title="앱 문제 ID">' + esc(x.app_qid) + '</span>' +
@@ -586,6 +868,23 @@
         '<div class="acts">' + acts.join('') + '</div></article>';
     }).join('') || '<p class="muted">' + ($('#arOpen').value === '1' ? '미처리 신고가 없어요.' : '아직 신고가 없어요.') + '</p>';
   }
+  RENDER.appr = renderAppReports;
+  $('#arList').addEventListener('change', function (e) {
+    if (!e.target.hasAttribute('data-ck')) return; var x = ars[+e.target.closest('.qc').dataset.i];
+    e.target.checked ? sel.appr.add(x.id) : sel.appr.delete(x.id); renderAppReports();
+  });
+  $('#arAll').addEventListener('change', function () { var on = this.checked; $('#arList').querySelectorAll('.qc').forEach(function (c) { var id = ars[+c.dataset.i].id; on ? sel.appr.add(id) : sel.appr.delete(id); }); renderAppReports(); });
+  function selArs(resolved) {
+    var list = ars.filter(function (x) { return sel.appr.has(x.id); }), lab = resolved ? '처리 완료' : '다시 열기';
+    var before = list.map(function (x) { return { id: x.id, resolved: x.resolved }; });
+    return askConfirm('고른 신고 ' + list.length + '건 ' + lab + '할까요?', '실행 뒤 10초 안에 되돌릴 수 있어요.', list.map(function (x) { return (AR_REASON[x.reason] || x.reason) + ' · ' + String(x.question).slice(0, 60); }), lab).then(function (ok) {
+      if (!ok) return { st: 'cancel', msg: '취소했어요. 아무것도 바뀌지 않았어요.' };
+      return api('/api/admin/app-reports-bulk', { ids: list.map(function (x) { return x.id; }), resolved: resolved }).then(function (r) {
+        sel.appr.clear(); var m = '신고 ' + r.updated + '건 ' + lab;
+        return loadAppReports().then(function () { offerUndo(m, function () { return api('/api/admin/app-reports-bulk', { op: 'restore', items: before }).then(loadAppReports); }); return { st: 'done', msg: m }; });
+      });
+    }).catch(function (e) { toast(e.message); return { st: 'fail', msg: e.message }; });
+  }
   $('#arList').addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return; var x = ars[+b.closest('.qc').dataset.i];
     var done = function (m) { return function () { toast(m); loadAppReports(); }; };
@@ -594,7 +893,8 @@
     if (b.dataset.a === 'reopen') api('/api/admin/app-report', { id: x.id, resolved: false }).then(done('다시 열었어요.')).catch(function (e) { toast(e.message); });
     if (b.dataset.a === 'stopWeb') api('/api/admin/question', { id: x.bank.id, status: 'flagged' }).then(done('웹 출제를 멈췄어요. 문제은행 탭에서 고칠 수 있어요.')).catch(function (e) { toast(e.message); });
   });
-  $('#arOpen').addEventListener('change', loadAppReports); $('#arDays').addEventListener('change', loadAppReports);
+  $('#arSearch').addEventListener('input', function () { pg.appr = 1; sel.appr.clear(); saveHash(); loadAppReports(); });
+  ['#arOpen', '#arDays', '#arSort', '#arReason'].forEach(function (x) { $(x).addEventListener('change', function () { pg.appr = 1; sel.appr.clear(); saveHash(); loadAppReports(); }); });
   function bulkAppReports() {
     var open = ars.filter(function (x) { return !x.resolved; });
     if (!open.length) { toast('미처리 신고가 없어요.'); return Promise.resolve({ st: 'fail', msg: '처리할 미처리 신고가 없어서 실행하지 않았어요.' }); }
@@ -623,10 +923,18 @@
     var idle = /접속\s*(안|않|하지\s*않)|안\s*들어|미접속|활동\s*(안|없)/.test(t);
     var del = /지워|삭제|정리/.test(t) && !/취소/.test(t);
     var c = function (command, args) { return { command: command, args: args || {}, source: 'rules', confidence: 1 }; };
+    if (/되돌려|되돌리|실행\s*취소|방금\s*(거|것)\s*취소/.test(t)) return c('undo_last');
+    if (/오늘\s*할\s*일|확인할\s*(거|것)|처리할\s*(거|것)|할\s*일\s*(보여|뭐)/.test(t)) return c('show_todo');
     if (/삭제\s*예정/.test(t) && /취소|풀어/.test(t)) return c('unmark_delete_all');
+    if (/차단/.test(t) && /해제|풀어/.test(t) && /모두|전부|다\b|다\s/.test(t)) return c('select_users', { op: 'unblock', status: 'blocked', inactive_days: 0, joined_days: 0 });
+    var flagged = /출제\s*중지|멈춘|중지된/.test(t), lowq = /정답률\s*(낮|이상)/.test(t);
+    if ((flagged || lowq) && /숨겨|숨기/.test(t)) return c('select_questions', { op: 'hide', target: flagged ? 'flagged' : 'low' });
+    if (lowq && /출제\s*중지(해|시켜)|멈춰/.test(t)) return c('select_questions', { op: 'flag', target: 'low' });
+    if (flagged && /다시\s*출제|검토\s*완료|풀어/.test(t)) return c('select_questions', { op: 'resolve', target: 'flagged' });
     if (idle && del) return d ? c('mark_delete_inactive', { inactive_days: snap(d, [30, 90, 180, 365]) }) : null;
     if (/승인/.test(t) && /(모두|전부|다)\s*승인|승인\s*해/.test(t) && !q) return c('approve_all_pending');
-    if (/신고/.test(t) && /처리\s*(해|완료)/.test(t) && !q) return c('resolve_app_reports', { days: d ? snap(d, [1, 7, 30, 90]) : 0 });
+    var reason = /오타|띄어쓰기/.test(t) ? 'typo' : /정답이?\s*둘|정답\s*여러/.test(t) ? 'both' : /정답이?\s*틀/.test(t) ? 'answer' : /해설/.test(t) ? 'explanation' : '';
+    if (/신고/.test(t) && /처리\s*(해|완료)/.test(t) && !q) return c('resolve_app_reports', { days: d ? snap(d, [1, 7, 30, 90]) : 0, reason: reason });
     if (q) {
       if (idle && d) return c('answer', { what: 'inactive', days: d });
       if (/신고/.test(t)) return c('answer', d ? { what: 'app_reports', days: d } : { what: 'open_app_reports' });
@@ -639,14 +947,20 @@
     }
     if (!/보여|찾아|열어|목록|확인|띄워|알려/.test(t)) return null;
     if (idle) return c('show_users', { status: '', inactive_days: d ? snap(d, [30, 90, 180, 365]) : 365 });
-    if (/신고/.test(t)) return c('show_app_reports', { open: /미처리|안\s*된/.test(t) ? '1' : '0', days: d ? snap(d, [1, 7, 30, 90]) : 0 });
+    if (/신고/.test(t)) return c('show_app_reports', { open: /미처리|안\s*된/.test(t) ? '1' : '0', days: d ? snap(d, [1, 7, 30, 90]) : 0, reason: reason, sort: /같은\s*문제|많은\s*순/.test(t) ? 'same_desc' : 'at_desc' });
+    if (/가입/.test(t) && /최근|새로|신규|가입자/.test(t)) return c('show_users', { status: '', inactive_days: 0, joined_days: snap(d || 7, [1, 7, 30, 90]), sort: 'created_desc' });
+    if (/AI|제미나이/.test(t) && /많이|제일|가장/.test(t)) return c('show_users', { status: '', inactive_days: 0, joined_days: 0, sort: 'ai_desc' });
+    if (/(문제|많이)\s*(많이\s*)?푼|열심히/.test(t)) return c('show_users', { status: '', inactive_days: 0, joined_days: 0, sort: 'attempts_desc' });
     if (/승인\s*대기/.test(t)) return c('show_users', { status: 'pending', inactive_days: 0 });
     if (/차단/.test(t)) return c('show_users', { status: 'blocked', inactive_days: 0 });
     if (/삭제\s*예정/.test(t)) return c('show_users', { status: 'delete', inactive_days: 0 });
     if (/사용자\s*수|유저\s*수|접속자|방문자/.test(t)) return c('show_dashboard', { days: snap(d || 7, [7, 14, 30, 90]) });
     if (/활동|기록|로그/.test(t)) return c('show_activity', { days: snap(d || 7, [1, 7, 30, 90]), action: '' });
-    if (/정답률|정답\s*이상/.test(t)) return c('show_bank', { status: '', low: true });
-    if (/문제은행|출제\s*중지/.test(t)) return c('show_bank', { status: 'flagged', low: false });
+    var TOPIC = t.match(/OSPF|VLAN|NAT|ACL|DHCP|DNS|IPv6|IPv4|STP|RSTP|SSH|EtherChannel|LACP|QoS|NTP|SNMP|Syslog|SDN|REST|JSON|Ansible|WPA\d?|트렁크|서브넷/i);
+    var diff = /어려운|hard/i.test(t) ? 'hard' : /쉬운|easy/i.test(t) ? 'easy' : /중간|medium/i.test(t) ? 'medium' : '';
+    if (/정답률|정답\s*이상/.test(t)) return c('show_bank', { status: '', low: true, q: TOPIC ? TOPIC[0] : '', diff: diff, sort: 'rate_asc' });
+    if (/문제은행|출제\s*중지/.test(t)) return c('show_bank', { status: /출제\s*중지/.test(t) ? 'flagged' : '', low: false, q: TOPIC ? TOPIC[0] : '', diff: diff, sort: 'reports_desc' });
+    if (TOPIC && /문제/.test(t)) return c('show_bank', { status: '', low: false, q: TOPIC[0], diff: diff, sort: 'reports_desc' });
     return null;
   }
   // 화면을 바꾸지 않고 숫자로만 답한다(데이터는 이 화면 안에서만 계산, AI로 보내지 않음)
@@ -665,24 +979,48 @@
   };
   var SHOW = {
     show_dashboard: function (a) { setv('#dDays', a.days); return show('dash').then(function () { return '대시보드를 최근 ' + DAYS(a.days) + '로 열었어요.'; }); },
-    show_users: function (a) { $('#uSearch').value = ''; setv('#uStatus', a.status); setv('#uIdle', a.inactive_days); return show('users').then(function () { return '사용자 탭 · ' + $('#uStatus').selectedOptions[0].text + (a.inactive_days ? ' · ' + DAYS(a.inactive_days) + ' 넘게 미접속' : '') + ' → ' + $('#uCount').textContent; }); },
+    show_todo: function () { return show('todo').then(function () { return '오늘 할 일을 열었어요.'; }); },
+    show_users: function (a) { $('#uSearch').value = ''; setv('#uStatus', a.status || ''); setv('#uIdle', a.inactive_days || 0); if (LAB) { setv('#uJoined', a.joined_days || 0); setv('#uSort', a.sort || 'last_desc'); } pg.users = 1; sel.users.clear(); return show('users').then(function () { return '사용자 탭 · ' + $('#uStatus').selectedOptions[0].text + (a.inactive_days ? ' · ' + DAYS(a.inactive_days) + ' 넘게 미접속' : '') + ' → ' + $('#uCount').textContent; }); },
     show_activity: function (a) { setv('#aUser', ''); setv('#aDays', a.days); setv('#aAction', a.action); return show('activity').then(function () { return '활동 기록 · ' + $('#aDays').selectedOptions[0].text + ' · ' + $('#aAction').selectedOptions[0].text + ' → ' + $('#aCount').textContent; }); },
-    show_bank: function (a) { setv('#qStatus', a.status); $('#qLow').checked = !!a.low; return show('bank').then(function () { return '문제은행 · ' + ($('#qLow').checked ? '정답률 낮은 문제' : $('#qStatus').selectedOptions[0].text) + ' → ' + qs.length + '문제'; }); },
-    show_app_reports: function (a) { setv('#arOpen', a.open); setv('#arDays', a.days); return show('appr').then(function () { return '앱 신고 · ' + $('#arOpen').selectedOptions[0].text + ' · ' + $('#arDays').selectedOptions[0].text + ' → ' + ars.length + '건'; }); }
+    show_bank: function (a) { setv('#qStatus', a.status || ''); $('#qLow').checked = !!a.low; if (LAB) { $('#qSearch').value = a.q || ''; setv('#qDiff', a.diff || ''); setv('#qSort', a.sort || 'reports_desc'); } pg.bank = 1; sel.bank.clear(); return show('bank').then(function () { return '문제은행 · ' + ($('#qLow').checked ? '정답률 낮은 문제' : $('#qStatus').selectedOptions[0].text) + ' → ' + qs.length + '문제'; }); },
+    show_app_reports: function (a) { setv('#arOpen', a.open); setv('#arDays', a.days || 0); if (LAB) { setv('#arReason', a.reason || ''); $('#arSearch').value = ''; setv('#arSort', a.sort || 'at_desc'); } pg.appr = 1; sel.appr.clear(); return show('appr').then(function () { return '앱 신고 · ' + $('#arOpen').selectedOptions[0].text + ' · ' + $('#arDays').selectedOptions[0].text + ' → ' + ars.length + '건'; }); }
   };
   var ACTS = {  // 실행 명령: 화면을 먼저 맞춘 뒤, 그 화면의 일괄 버튼과 같은 동작(확인창 포함)
     mark_delete_inactive: function (a) { return SHOW.show_users({ status: '', inactive_days: a.inactive_days }).then(function () { return bulkUsers('mark_delete', bulk.del); }); },
     unmark_delete_all: function () { return SHOW.show_users({ status: 'delete', inactive_days: 0 }).then(function () { return bulkUsers('unmark_delete', bulk.undel); }); },
     approve_all_pending: function () { return SHOW.show_users({ status: 'pending', inactive_days: 0 }).then(function () { return bulkUsers('approve', bulk.approve); }); },
-    resolve_app_reports: function (a) { return SHOW.show_app_reports({ open: '1', days: a.days }).then(function () { return bulkAppReports(); }); }
+    resolve_app_reports: function (a) { return SHOW.show_app_reports({ open: '1', days: a.days, reason: a.reason }).then(function () {
+      if (!LAB) return bulkAppReports();
+      if (!ars.length) return { st: 'fail', msg: '처리할 미처리 신고가 없어서 실행하지 않았어요.' };
+      ars.forEach(function (x) { sel.appr.add(x.id); }); return selArs(true);
+    }); },
+    select_users: function (a) { return SHOW.show_users({ status: a.status, inactive_days: a.inactive_days, joined_days: a.joined_days }).then(function () {
+      if (!lastUserIds.length) return { st: 'fail', msg: '조건에 맞는 사람이 없어서 실행하지 않았어요.' };
+      lastUserIds.forEach(function (id) { sel.users.add(id); }); renderUsers(); return selUsers(a.op);
+    }); },
+    select_questions: function (a) {
+      var f = { flagged: { status: 'flagged' }, low: { status: '', low: true, sort: 'rate_asc' }, hidden: { status: 'hidden' }, active: { status: 'active' } }[a.target] || {};
+      return SHOW.show_bank(f).then(function () {
+        var list = a.target === 'low' ? qs.filter(function (q) { return q.graded >= 5 && q.correct / q.graded < 0.3; }) : qs;
+        if (!list.length) return { st: 'fail', msg: '조건에 맞는 문제가 없어서 실행하지 않았어요.' };
+        list.forEach(function (q) { sel.bank.add(q.id); }); renderQs(); return selQs(a.op);
+      });
+    },
+    undo_last: function () {
+      if ($('#undo').hidden) return Promise.resolve({ st: 'fail', msg: '되돌릴 작업이 없어요(작업 뒤 10초 안에만 되돌릴 수 있어요).' });
+      $('#undoBtn').click(); return Promise.resolve({ st: 'done', msg: '방금 작업을 되돌렸어요.' });
+    }
   };
   function describe(c, a) {
     a = a || {};
     return ({
-      show_dashboard: '대시보드(최근 ' + DAYS(a.days) + ') 보기', show_users: '사용자 목록 보기' + (a.status ? '(' + ({ active: '사용 중', pending: '승인 대기', blocked: '차단', delete: '삭제 예정' })[a.status] + ')' : '') + (a.inactive_days ? ' · ' + DAYS(a.inactive_days) + ' 넘게 미접속' : ''),
-      show_activity: '활동 기록(' + DAYS(a.days) + ') 보기', show_bank: '문제은행 보기' + (a.low ? '(정답률 낮은 문제)' : ''), show_app_reports: '앱 신고 보기(' + (a.open === '1' ? '미처리' : '전체') + (a.days ? ' · 최근 ' + DAYS(a.days) : '') + ')',
+      show_dashboard: '대시보드(최근 ' + DAYS(a.days) + ') 보기', show_users: '사용자 목록 보기' + (a.status ? '(' + ({ active: '사용 중', pending: '승인 대기', blocked: '차단', delete: '삭제 예정' })[a.status] + ')' : '') + (a.inactive_days ? ' · ' + DAYS(a.inactive_days) + ' 넘게 미접속' : '') + (a.joined_days ? ' · 최근 ' + DAYS(a.joined_days) + ' 가입' : '') + (a.sort && a.sort !== 'last_desc' ? ' · ' + ({ last_asc: '마지막 접속 오래된순', created_desc: '가입 최근순', created_asc: '가입 오래된순', attempts_desc: '푼 문제 많은순', ai_desc: '오늘 AI 많은순', name_asc: '이름순' })[a.sort] : ''),
+      show_activity: '활동 기록(' + DAYS(a.days) + ') 보기', show_bank: '문제은행 보기' + (a.low ? '(정답률 낮은 문제)' : '') + (a.q ? ' · "' + a.q + '"' : '') + (a.diff ? ' · ' + a.diff : ''), show_app_reports: '앱 신고 보기(' + (a.open === '1' ? '미처리' : '전체') + (a.days ? ' · 최근 ' + DAYS(a.days) : '') + (a.reason ? ' · ' + ({ answer: '정답이 틀림', both: '정답이 둘', explanation: '해설', typo: '오타', other: '기타' })[a.reason] : '') + (a.sort === 'same_desc' ? ' · 같은 문제 많은 순' : '') + ')',
       answer: '숫자로 답하기', mark_delete_inactive: DAYS(a.inactive_days) + ' 넘게 미접속한 사용자 삭제 예정 표시', unmark_delete_all: '삭제 예정 모두 취소',
-      approve_all_pending: '승인 대기 모두 승인', resolve_app_reports: '미처리 신고 처리 완료'
+      approve_all_pending: '승인 대기 모두 승인', resolve_app_reports: '미처리 신고 처리 완료' + (a.reason ? '(' + ({ answer: '정답이 틀림', both: '정답이 둘', explanation: '해설', typo: '오타' })[a.reason] + ')' : ''),
+      show_todo: '오늘 할 일 보기', undo_last: '방금 작업 되돌리기',
+      select_users: '조건에 맞는 사용자 모두 ' + ({ approve: '승인', block: '차단', unblock: '차단 해제', mark_delete: '삭제 예정', unmark_delete: '삭제 예정 취소' })[a.op],
+      select_questions: ({ flagged: '출제 중지', low: '정답률 낮은', hidden: '숨긴', active: '출제 중' })[a.target] + ' 문제 모두 ' + ({ hide: '숨기기', flag: '출제 중지', resolve: '다시 출제' })[a.op]
     })[c] || '해당하는 명령 없음';
   }
   var ST = { show: '화면 바꿈', answer: '답변', done: '실행함', wait: '확인 필요', cancel: '취소', fail: '못 함' };
@@ -735,7 +1073,15 @@
       if (!m.admin) { gate('관리자만 볼 수 있는 화면이에요. (' + m.email + ')', false); return; }
       AI_ON = DEMO || !!m.admin_ai;
       $('#gate').hidden = true; $('#tabs').hidden = false; $('#cmd').hidden = !AI_ON; $('#who').textContent = (m.name || m.email) + ' · ' + ROLE[m.role] + ' · 로그인됨';
-      var t = (location.hash || '').slice(1); show(['dash', 'users', 'activity', 'bank', 'appr'].indexOf(t) >= 0 ? t : 'dash');
+      var hs = (location.hash || '').slice(1).split('?'), t = hs[0];
+      t = ['dash', 'users', 'activity', 'bank', 'appr'].concat(LAB ? ['todo'] : []).indexOf(t) >= 0 ? t : 'dash';
+      if (LAB) {
+        document.querySelectorAll('[data-lab]').forEach(function (el) { el.hidden = false; });
+        $('#dDays').insertAdjacentHTML('beforeend', '<option value="180">180일</option><option value="365">1년</option>');
+        $('#aDays').insertAdjacentHTML('beforeend', '<option value="180">180일</option><option value="365">1년</option>');
+        loadHash(t, hs[1]);
+      }
+      show(t);
     }).catch(function (e) { gate(e.message, true); });
   }
   $('#logoutBtn').addEventListener('click', function () { sb.auth.signOut().then(function () { location.href = './'; }); });
