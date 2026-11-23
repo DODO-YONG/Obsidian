@@ -518,7 +518,8 @@ def me(p: dict) -> dict:
     prog = db.one("progress", {"user_id": f"eq.{p['id']}", "select": "data,updated_at"})
     return {"id": p["id"], "email": p["email"], "name": p["name"], "role": p["role"], "status": p["status"],
             "can_practice": p["can_practice"], "can_explain": p["can_explain"], "daily_limit": p["daily_limit"],
-            "ai_left": min(ai_left(p), 9999), "progress": (prog or {}).get("data"), "admin": is_admin(p)}
+            "ai_left": min(ai_left(p), 9999), "progress": (prog or {}).get("data"), "admin": is_admin(p),
+            "admin_ai": is_admin(p) and admin_ai_on()}
 
 
 def save_progress(p: dict, data) -> dict:
@@ -716,6 +717,16 @@ def admin_update_question(p: dict, body: dict) -> dict:
     return out[0] if out else {}
 
 
+# ── 실제 관리자 화면의 명령창·일괄 작업은 기본으로 꺼 둔다(모의 화면에서만 시험). 켜려면 Vercel 환경변수 TRACER_ADMIN_AI=1
+def admin_ai_on() -> bool:
+    return os.environ.get("TRACER_ADMIN_AI") == "1"
+
+
+def require_admin_ai() -> None:
+    if not admin_ai_on():
+        raise ApiError(403, "실제 관리자 화면의 명령창·일괄 작업은 아직 꺼져 있어요(모의 관리자 화면에서 시험해 주세요).")
+
+
 # ── 여러 사용자 한꺼번에(사용자 탭의 일괄 버튼). 한 명씩 같은 권한 검사를 거친다.
 BULK_OPS = {"mark_delete", "unmark_delete", "approve"}
 
@@ -723,6 +734,7 @@ BULK_OPS = {"mark_delete", "unmark_delete", "approve"}
 def admin_users_bulk(p: dict, body: dict) -> dict:
     """mark_delete: 삭제 예정 표시(실제로 지우지 않음) · unmark_delete: 예정 취소 · approve: 승인 대기 → 사용 중."""
     require_admin(p)
+    require_admin_ai()
     op = str(body.get("op", ""))
     if op not in BULK_OPS:
         raise ApiError(400, "할 수 없는 작업이에요.")
@@ -849,6 +861,7 @@ def _interpret(text: str) -> dict:
 
 def admin_ask(p: dict, body: dict) -> dict:
     require_admin(p)
+    require_admin_ai()
     if p["role"] != "owner" and ai_left(p) <= 0:
         raise ApiError(429, "오늘 AI 사용 한도를 다 썼어요.")
     res = _interpret(body.get("prompt", ""))

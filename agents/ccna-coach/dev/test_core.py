@@ -141,6 +141,13 @@ try: core.admin_update_app_report(o, {"id": 999999}); ok(False, "")
 except core.ApiError as e: ok(e.code == 404, "없는 신고는 404")
 
 # 관리자 명령창 + 일괄 작업(웹 관리자 전용)
+os.environ.pop("TRACER_ADMIN_AI", None)
+ok(not core.me(o)["admin_ai"], "실제 관리자 명령창은 기본으로 꺼짐")
+for f, b in ((core.admin_users_bulk, {"op": "approve", "ids": ["x"]}), (core.admin_ask, {"prompt": "신고 보여줘"})):
+    try: f(o, b); ok(False, "")
+    except core.ApiError as e: ok(e.code == 403, "꺼져 있으면 서버도 거부: " + f.__name__)
+os.environ["TRACER_ADMIN_AI"] = "1"
+ok(core.me(o)["admin_ai"], "TRACER_ADMIN_AI=1이면 켜짐")
 ok(core.admin_summary(o, {"days": "30"})["days"] == 30 and len(core.admin_summary(o, {"days": "30"})["daily"]) == 30, "대시보드 기간 30일")
 ok(core.admin_summary(o, {"days": "999"})["days"] == 14, "허용 밖 기간은 14일")
 ok(len(core.admin_app_reports(o, {"open": "0", "days": "7"})["reports"]) == 3, "앱 신고 기간 필터")

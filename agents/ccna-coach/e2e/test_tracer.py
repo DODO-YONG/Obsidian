@@ -655,7 +655,20 @@ def test_question_single_line_with_show_command_has_no_cli(logged_in, errors, ba
 
 
 # ---------- 관리자: 모의 화면(?demo=1)·명령창 ----------
-IDLE4 = ["배수아", "Taylor Moon", "문가온", "권예린"]
+_JS_STATS = """() => {
+  const d = window.TracerAdminDemo.db, now = Date.now(), DAY = 864e5;
+  const idle = d.users.filter(u => now - new Date(u.last_seen || u.created_at) > 365 * DAY);
+  const me = d.users.find(u => u.role === 'owner' && u.email.startsWith('admin@'));
+  const ed = u => u.role !== 'owner' && u.id !== me.id && u.role === 'user';
+  return {idle: idle.length, openRep: d.app_reports.filter(r => !r.resolved).length,
+          pending: d.users.filter(u => u.status === 'pending').length,
+          delTargets: idle.filter(u => ed(u) && !u.delete_at).length,
+          idleDeleted: idle.filter(u => u.delete_at).length};
+}"""
+
+
+def _stats(page):
+    return page.evaluate(_JS_STATS)
 
 
 def _demo(page, base_url):
@@ -670,40 +683,56 @@ def _cmd(page, text):
     return page.locator("#cmdLog li").first
 
 
+def test_admin_demo_mode_labels_and_size(page, errors, base_url):
+    _demo(page, base_url)
+    expect(page.locator("#modeTag")).to_contain_text("모의")
+    expect(page.locator("#mDemo")).to_have_attribute("aria-current", "page")
+    expect(page.locator("html")).to_have_class(re.compile("demo"))
+    page.locator("#demoSize").select_option("100")
+    page.wait_for_url(re.compile("n=100"))
+    expect(page.locator("#demoBar")).to_be_visible()
+    assert len(page.evaluate("() => window.TracerAdminDemo.db.users")) >= 100
+
+
 def test_admin_demo_rule_filter_and_answer(page, errors, base_url):
     _demo(page, base_url)
+    st = _stats(page)
     li = _cmd(page, "1년 동안 접속 안 한 유저 찾아줘")
     expect(li.locator(".st")).to_contain_text("화면 바꿈")
     expect(page.locator("#uIdle")).to_have_value("365")
-    expect(page.locator("#uCount")).to_contain_text("4명")
+    expect(page.locator("#uCount")).to_contain_text(f"{st['idle']}명")
     page.locator("#tabs [data-tab=appr]").click()
     li = _cmd(page, "미처리 신고 몇 건이야?")
     expect(li.locator(".st")).to_contain_text("답변")
-    expect(li).to_contain_text("5건")
+    expect(li).to_contain_text(f"{st['openRep']}건")
     expect(page.locator("#tabs [data-tab=appr]")).to_have_attribute("aria-selected", "true")
 
 
 def test_admin_demo_delete_confirm_yes_and_no(page, errors, base_url):
     _demo(page, base_url)
+    st = _stats(page)
+    assert st["delTargets"] > 0
     _cmd(page, "1년 동안 접속 안 한 유저 지워줘")
     expect(page.locator("dialog#ask")).to_be_visible()
-    expect(page.locator("#askL li")).to_have_count(4)
+    expect(page.locator("#askL li")).to_have_count(min(st["delTargets"], 101))
     page.locator("#askNo").click()
     expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("취소")
-    expect(page.locator("#uRows .pill.del")).to_have_count(0)
+    assert _stats(page)["idleDeleted"] == st["idleDeleted"]
     _cmd(page, "1년 동안 접속 안 한 유저 지워줘")
     page.locator("#askYes").click()
     expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("실행함")
-    for n in IDLE4:
-        expect(page.locator("#uRows tr", has_text=n).locator(".pill.del")).to_be_visible()
-    expect(page.locator("#uRows .pill.del")).to_have_count(4)
+    after = _stats(page)
+    assert after["delTargets"] == 0
+    assert after["idleDeleted"] == st["idleDeleted"] + st["delTargets"]
 
 
 def test_admin_demo_approve_all_pending(page, errors, base_url):
     _demo(page, base_url)
+    assert _stats(page)["pending"] > 0
     _cmd(page, "승인 대기 모두 승인해줘")
     page.locator("#askYes").click()
     expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("실행함")
+    assert _stats(page)["pending"] == 0
     page.locator("#tabs [data-tab=users]").click()
     page.locator("#uStatus").select_option("pending")
     expect(page.locator("#uRows tr[data-id]")).to_have_count(0)
@@ -724,8 +753,10 @@ def test_admin_demo_ai_fallback_low_confidence_and_refusal(page, errors, base_ur
 def test_admin_real_has_command_bar_and_new_filters(logged_in, errors, base_url):
     page = logged_in
     page.goto(base_url + "/ccna/admin.html")
-    expect(page.locator("#cmd")).to_be_visible()
+    expect(page.locator("#modeTag")).to_contain_text("실제")
+    expect(page.locator("#mReal")).to_have_attribute("aria-current", "page")
     expect(page.locator("#demoBar")).to_be_hidden()
+    expect(page.locator("#cmd")).to_be_hidden()          # 명령창 꺼짐(TRACER_ADMIN_AI 없음)
     page.locator("#dDays").select_option("7")
     expect(page.locator("#days .day")).to_have_count(7)
     page.locator("#dDays").select_option("30")
@@ -733,9 +764,12 @@ def test_admin_real_has_command_bar_and_new_filters(logged_in, errors, base_url)
     page.locator("#tabs [data-tab=users]").click()
     expect(page.locator("#uIdle")).to_be_visible()
     expect(page.locator("#uStatus option[value=delete]")).to_have_count(1)
-    expect(page.locator("#uRows [data-del]").first).to_be_visible()
-    page.locator("#uRows [data-del]").first.click()
-    expect(page.locator("dialog#ask")).to_be_visible()
-    page.locator("#askNo").click()
+    expect(page.locator("#uRows [data-del]")).to_have_count(0)
+    for i in ("#uBulkApprove", "#uBulkDelete", "#uBulkUndelete"):
+        expect(page.locator(i)).to_be_hidden()
     page.locator("#tabs [data-tab=appr]").click()
     expect(page.locator("#arDays")).to_be_visible()
+    expect(page.locator("#arBulkDone")).to_be_hidden()
+    for path in ("/api/admin/ask", "/api/admin/users-bulk"):
+        r = page.request.post(base_url + path, data={}, headers={"Authorization": "Bearer a"})
+        assert r.status == 403

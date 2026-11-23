@@ -147,6 +147,19 @@
   .st.wait, .st.cancel { background: var(--part-soft); color: var(--part); }
   .st.fail { background: var(--bad-soft); color: var(--bad); }
   .cmd .hint { font-size: 12px; color: var(--ink-3); }
+  /* 실제/모의 구분: 머리말 전환 칸 + 모의는 주황 테마 */
+  .mode { display: inline-flex; border: 1px solid var(--rule); border-radius: 999px; padding: 2px; gap: 2px; flex: none; }
+  .mode a { font-size: 12.5px; padding: 4px 11px; border-radius: 999px; color: var(--ink-2); text-decoration: none; white-space: nowrap; }
+  .mode a[aria-current="page"] { font-weight: 700; }
+  .mode a.real[aria-current="page"] { background: var(--ok-soft); color: var(--ok); }
+  .mode a.demo[aria-current="page"] { background: var(--part-soft); color: var(--part); }
+  .logo .tag { font-family: var(--sans); font-size: 11.5px; font-weight: 700; padding: 1px 8px; border-radius: 999px; }
+  .logo .tag.real { background: var(--ok-soft); color: var(--ok); }
+  .logo .tag.demo { background: var(--part-soft); color: var(--part); }
+  html.demo { --accent: var(--part); --accent-soft: var(--part-soft); }
+  html.demo header { border-bottom: 3px solid var(--part); }
+  html.demo body { box-shadow: inset 0 0 0 3px var(--part); min-height: 100vh; }
+  .demo-bar select { background: var(--panel); border-color: var(--part); color: var(--part); padding: 2px 6px; margin-left: 6px; }
   .demo-bar { background: var(--part-soft); color: var(--part); border-radius: 10px; padding: 8px 12px; font-size: 13px; margin-bottom: 12px; }
   .pill.del { background: var(--bad-soft); color: var(--bad); }
   dialog.ask { border: 1px solid var(--rule); border-radius: 14px; background: var(--panel); color: var(--ink); padding: 18px; width: min(460px, calc(100vw - 32px)); }
@@ -167,7 +180,8 @@
 <body>
 <header>
   <div class="bar">
-    <div class="logo"><img class="mk" src="icon.svg" alt="" aria-hidden="true">TRACER <small>관리자</small></div>
+    <div class="logo"><img class="mk" src="icon.svg" alt="" aria-hidden="true">TRACER <small>관리자</small> <span class="tag real" id="modeTag">실제 데이터</span></div>
+    <nav class="mode" aria-label="관리자 화면 종류"><a class="real" href="admin.html" id="mReal" aria-current="page">실제 관리자</a><a class="demo" href="admin.html?demo=1" id="mDemo">모의 관리자</a></nav>
     <nav class="tabs" role="tablist" aria-label="관리 메뉴" id="tabs" hidden>
       <button role="tab" aria-selected="true" data-tab="dash">대시보드</button>
       <button role="tab" aria-selected="false" data-tab="users">사용자</button>
@@ -188,7 +202,8 @@
     <div><button class="btn primary" id="loginBtn" type="button" hidden>Google로 로그인</button></div>
   </div>
 
-  <div class="demo-bar" id="demoBar" hidden>모의 관리자 화면이에요. 가상의 사용자·신고로 동작하고 실제 데이터는 바뀌지 않아요. 새로고침하면 처음 상태로 돌아가요.</div>
+  <div class="demo-bar" id="demoBar" hidden><b>모의 관리자 화면</b> — 지어낸 사용자·신고·활동으로 동작하고 실제 데이터는 바뀌지 않아요. 새로고침하면 처음 상태로 돌아가요.
+    <label>데이터 양<select id="demoSize" aria-label="모의 데이터 양"><option value="100">사용자 100명</option><option value="300">사용자 300명</option><option value="1000">사용자 1,000명</option><option value="3000">사용자 3,000명</option></select></label> <span id="demoStat"></span></div>
   <form class="cmd" id="cmd" hidden autocomplete="off">
     <div class="row">
       <input type="text" id="cmdIn" maxlength="300" placeholder="예: 최근 7일 신고 내역 보여줘" aria-label="관리자 명령">
@@ -228,7 +243,7 @@
       <thead><tr><th>사용자</th><th>역할</th><th>상태</th><th>마지막 접속</th><th>오늘 AI</th><th>하루 한도</th><th>AI 문제</th><th>내 문제 해설</th><th>푼 문제</th><th></th></tr></thead>
       <tbody id="uRows"></tbody>
     </table></div>
-    <p class="muted" style="font-size:12.5px">권한을 끄면 그 기능의 AI 요청이 즉시 막혀요(서브넷 계산은 로그인 없이 누구나 가능). 차단하면 모든 AI 기능이 막히고, 관리자 지정은 주인만 할 수 있어요. <b>삭제 예정</b>은 표시만 하고 지우지 않아요(그 사용자가 다시 접속하면 자동으로 풀려요).</p>
+    <p class="muted" style="font-size:12.5px">권한을 끄면 그 기능의 AI 요청이 즉시 막혀요(서브넷 계산은 로그인 없이 누구나 가능). 차단하면 모든 AI 기능이 막히고, 관리자 지정은 주인만 할 수 있어요. <b>삭제 예정</b>은 표시만 하고 지우지 않아요(그 사용자가 다시 접속하면 자동으로 풀려요). 명령창·일괄 작업·삭제 예정 버튼은 지금 <b>모의 관리자 화면에서만</b> 켜져 있어요.</p>
   </section>
 
   <section id="v-activity" hidden>
@@ -301,6 +316,7 @@
 
   var sb = null, me = null, topics = [], users = [];
   var DEMO = /[?&]demo(=|&|$)/.test(location.search);
+  var AI_ON = false;  // 명령창·일괄 작업: 모의 화면은 늘 켜짐, 실제 화면은 서버가 켜 줄 때만(TRACER_ADMIN_AI=1)
   function api(path, body) {
     if (DEMO) return window.TracerAdminDemo.api(path, body);
     return sb.auth.getSession().then(function (r) {
@@ -377,9 +393,10 @@
         (!st || (st === 'delete' ? !!u.delete_at : u.status === st)) && (!idle || idleDays(u) > idle);
     });
     $('#uCount').textContent = rows.length + '명';
-    bulk.del = idle ? rows.filter(function (u) { return canEdit(u) && !u.delete_at; }) : [];
-    bulk.undel = rows.filter(function (u) { return canEdit(u) && u.delete_at; });
-    bulk.approve = rows.filter(function (u) { return canEdit(u) && u.status === 'pending'; });
+    if (!AI_ON) { bulk.del = []; bulk.undel = []; bulk.approve = []; }
+    else bulk.del = idle ? rows.filter(function (u) { return canEdit(u) && !u.delete_at; }) : [];
+    if (AI_ON) bulk.undel = rows.filter(function (u) { return canEdit(u) && u.delete_at; });
+    if (AI_ON) bulk.approve = rows.filter(function (u) { return canEdit(u) && u.status === 'pending'; });
     var bb = function (id, list, label) { $(id).hidden = !list.length; $(id).textContent = label + ' (' + list.length + '명)'; };
     bb('#uBulkDelete', bulk.del, '보이는 사용자 삭제 예정으로'); bb('#uBulkUndelete', bulk.undel, '삭제 예정 취소'); bb('#uBulkApprove', bulk.approve, '승인 대기 모두 승인');
     $('#uRows').innerHTML = rows.map(function (u) {
@@ -390,7 +407,7 @@
         if (u.status === 'pending') acts.push('<button class="btn sm primary" data-set="status:active">승인</button>');
         acts.push(u.status === 'blocked' ? '<button class="btn sm" data-set="status:active">차단 해제</button>' : '<button class="btn sm danger" data-set="status:blocked">차단</button>');
         if (me.role === 'owner') acts.push(u.role === 'admin' ? '<button class="btn sm" data-set="role:user">관리자 해제</button>' : '<button class="btn sm" data-set="role:admin">관리자 지정</button>');
-        acts.push(u.delete_at ? '<button class="btn sm" data-del="unmark_delete">예정 취소</button>' : '<button class="btn sm danger" data-del="mark_delete">삭제 예정</button>');
+        if (AI_ON) acts.push(u.delete_at ? '<button class="btn sm" data-del="unmark_delete">예정 취소</button>' : '<button class="btn sm danger" data-del="mark_delete">삭제 예정</button>');
       }
       acts.push('<button class="btn sm" data-log="' + u.id + '">활동</button>');
       return '<tr data-id="' + u.id + '"><td><b>' + esc(u.name || '(이름 없음)') + '</b><br><span class="em">' + esc(u.email) + '</span></td>' +
@@ -546,7 +563,7 @@
     return api('/api/admin/app-reports?open=' + $('#arOpen').value + '&days=' + $('#arDays').value).then(function (r) {
       ars = r.reports; $('#arCount').textContent = '미처리 ' + r.open + '건' + ($('#arOpen').value === '0' || $('#arDays').value !== '0' ? ' · ' + ars.length + '건 표시' : '');
       var open = ars.filter(function (x) { return !x.resolved; });
-      $('#arBulkDone').hidden = open.length < 2; $('#arBulkDone').textContent = '보이는 미처리 ' + open.length + '건 모두 처리';
+      $('#arBulkDone').hidden = open.length < 2 || !AI_ON; $('#arBulkDone').textContent = '보이는 미처리 ' + open.length + '건 모두 처리';
       renderAppReports();
     }).catch(function (e) { toast(e.message); });
   }
@@ -716,7 +733,8 @@
     return api('/api/me').then(function (m) {
       me = m; $('#logoutBtn').hidden = false;
       if (!m.admin) { gate('관리자만 볼 수 있는 화면이에요. (' + m.email + ')', false); return; }
-      $('#gate').hidden = true; $('#tabs').hidden = false; $('#cmd').hidden = false; $('#who').textContent = (m.name || m.email) + ' · ' + ROLE[m.role] + ' · 로그인됨';
+      AI_ON = DEMO || !!m.admin_ai;
+      $('#gate').hidden = true; $('#tabs').hidden = false; $('#cmd').hidden = !AI_ON; $('#who').textContent = (m.name || m.email) + ' · ' + ROLE[m.role] + ' · 로그인됨';
       var t = (location.hash || '').slice(1); show(['dash', 'users', 'activity', 'bank', 'appr'].indexOf(t) >= 0 ? t : 'dash');
     }).catch(function (e) { gate(e.message, true); });
   }
@@ -727,9 +745,17 @@
     $('#qSub').innerHTML = '<option value="">모든 범위</option>' + t.map(function (d) { return '<optgroup label="' + esc(d.id + '. ' + d.name) + '">' + d.subs.map(function (s) { return '<option value="' + s.id + '">' + s.id + ' ' + esc(s.name) + '</option>'; }).join('') + '</optgroup>'; }).join('');
   }).catch(function () {});
   if (DEMO) {  // 모의 관리자: 로그인 없이 브라우저 안 가짜 DB로
-    $('#demoBar').hidden = false; document.title = 'TRACER 관리자 (모의)';
+    $('#demoBar').hidden = false; document.title = 'TRACER 관리자 (모의)'; root.classList.add('demo');
+    $('#modeTag').className = 'tag demo'; $('#modeTag').textContent = '모의 · 가상 데이터';
+    $('#mReal').removeAttribute('aria-current'); $('#mDemo').setAttribute('aria-current', 'page');
+    $('#demoSize').addEventListener('change', function () { location.href = 'admin.html?demo=1&n=' + this.value; });
     var sc = document.createElement('script'); sc.src = 'admin-demo.js';
-    sc.onload = function () { start().then(function () { $('#logoutBtn').hidden = true; }); };
+    sc.onload = function () {
+      var D = window.TracerAdminDemo, db = D.db;
+      if ($('#demoSize').querySelector('option[value="' + D.size + '"]')) $('#demoSize').value = String(D.size);
+      $('#demoStat').textContent = '· 신고 ' + db.app_reports.length + '건 · 문제 ' + db.questions.length + '개 · 활동 ' + db.activity.length.toLocaleString() + '건';
+      start().then(function () { $('#logoutBtn').hidden = true; });
+    };
     sc.onerror = function () { gate('모의 데이터를 불러오지 못했어요.', false); };
     document.head.appendChild(sc);
   } else fetch('/api/config').then(function (r) { return r.json(); }).then(function (c) {
