@@ -102,6 +102,12 @@ class handler(BaseHTTPRequestHandler):
                 return core.admin_questions(p, qs)
             if route == "admin/app-reports":
                 return core.admin_app_reports(p, qs)
+            if route == "admin/sub-stats":
+                return core.admin_sub_stats(p, qs)
+            if route == "admin/report":
+                return core.admin_report(p, qs)
+            if route == "admin/command-log":
+                return core.admin_command_log(p, qs)
             raise core.ApiError(404, "없는 주소")
 
         self._run(go)
@@ -149,6 +155,14 @@ class handler(BaseHTTPRequestHandler):
                 return core.admin_update_question(p, body)
             if route == "admin/app-report":
                 return core.admin_update_app_report(p, body)
+            if route == "admin/questions-bulk":
+                return core.admin_questions_bulk(p, body)
+            if route == "admin/app-reports-bulk":
+                return core.admin_app_reports_bulk(p, body)
+            if route == "admin/command-log":
+                return core.admin_command_log_save(p, body)
+            if route == "admin/command-log-clear":
+                return core.admin_command_log_clear(p, body)
             if route == "admin/users-bulk":
                 return core.admin_users_bulk(p, body)
             if route == "admin/ask":

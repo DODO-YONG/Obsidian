@@ -1,12 +1,15 @@
 """가짜 Supabase(메모리 표)·가짜 제미나이·가짜 로그인. 시험과 로컬 화면 확인용 — 실제 서비스·사용량 없음."""
 import os, sys, uuid, random, itertools
+from datetime import datetime, timedelta, timezone
 sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parents[3] / "docs" / "api"))
 os.environ.update(SUPABASE_URL="x", SUPABASE_SERVICE_ROLE_KEY="x", SUPABASE_ANON_KEY="x", GOOGLE_API_KEY="x",
                   TRACER_OWNER_EMAIL="owner@example.com", TRACER_BANK_MIN="3")
 import _db as db, _gemini as gc, _core as core
 
-T = {k: [] for k in ["profiles", "activity_log", "questions", "question_seen", "question_reports", "attempts", "progress", "app_reports"]}
+T = {k: [] for k in ["profiles", "activity_log", "questions", "question_seen", "question_reports", "attempts", "progress", "app_reports", "admin_command_log"]}
 ids = itertools.count(1)
+def _ts(v):
+    return datetime.fromisoformat(str(v).replace("Z", "+00:00"))
 def match(r, params):
     for k, v in params.items():
         if k in ("select", "order", "limit", "offset", "on_conflict"): continue
@@ -18,7 +21,8 @@ def match(r, params):
         if op == "is" and val == "false" and x is not False: return False
         if op == "is" and val == "null" and x is not None: return False
         if op == "not" and val == "is.null" and x is None: return False
-        if op == "gte" and k == "at": pass
+        if op == "gte" and k == "at":
+            if x is None or _ts(x) < _ts(val): return False
         if op == "gte" and k != "at" and not (x >= int(val)): return False
         if op == "in" and str(x) not in val.strip("()").split(","): return False
     return True
@@ -50,8 +54,9 @@ def insert(t, rows, on_conflict=None, ignore_dupes=False, returning=True):
         if t == "questions": r = {"id": str(uuid.uuid4()), "status": "active", "served": 0, "graded": 0, "correct": 0, "reports": 0, **r}
         if t == "activity_log": r = {"ai": False, "counted": False, "at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(), **r}
         if t == "question_reports": r = {"resolved": False, **r}
-        if t == "app_reports": r = {"id": next(ids), "resolved": False, "note": None, "app_version": None, "lang": None, "at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(), **r}
-        if t == "attempts": r = {"at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(), **r}
+        if t == "app_reports": r = {"id": next(ids), "resolved": False, "note": None, "app_version": None, "lang": None, "at": datetime.now(timezone.utc).isoformat(), **r}
+        if t == "admin_command_log": r = {"id": next(ids), "at": datetime.now(timezone.utc).isoformat(), **r}
+        if t == "attempts": r = {"at": datetime.now(timezone.utc).isoformat(), **r}
         T[t].append(r); out.append(r)
     return [dict(x) for x in out] if returning else None
 db.insert = insert
@@ -60,6 +65,13 @@ def update(t, p, f):
     for r in rs: r.update(f)
     return [dict(r) for r in rs]
 db.update = update
+def delete(t, p):
+    if not p: raise db.DBError("삭제 조건이 없어요")
+    kept = [r for r in T[t] if not match(r, p)]
+    n = len(T[t]) - len(kept)
+    T[t][:] = kept
+    return n
+db.delete = delete
 def rpc(name, a=None):
     a = a or {}
     if name == "bucket_size": return len([q for q in T["questions"] if (q["sub"], q["difficulty"], q["qtype"], q["status"]) == (a["p_sub"], a["p_diff"], a["p_qtype"], "active")])
@@ -98,7 +110,49 @@ def rpc(name, a=None):
         c = Counter((q["sub"], q["difficulty"], q["qtype"], q["status"]) for q in T["questions"])
         keys = sorted({k[:3] for k in c})
         return [{"sub": k[0], "difficulty": k[1], "qtype": k[2], "active": c[k + ("active",)], "flagged": c[k + ("flagged",)], "hidden": c[k + ("hidden",)]} for k in keys]
-    raise Exception(name)
+    if name == "admin_period":
+        f, to = _ts(a["p_from"]), _ts(a["p_to"])
+        rows = [r for r in T["activity_log"] if r.get("at") and f <= _ts(r["at"]) < to]
+        graded = [r for r in rows if r.get("action") == "grade"]
+        correct = sum(1 for r in graded if (r.get("detail") or {}).get("verdict") == "정답")
+        return {
+            "visitors": len({r["user_id"] for r in rows if r.get("user_id")}),
+            "answers": sum(1 for r in rows if r.get("action") in ("grade", "subnet")),
+            "ai_calls": sum(1 for r in rows if r.get("ai")),
+            "signups": sum(1 for r in rows if r.get("action") == "signup"),
+            "graded": len(graded), "correct": correct,
+            "rate": round(correct * 100 / len(graded), 1) if graded else None,
+        }
+    if name == "admin_sub_stats":
+        since = datetime.now(timezone.utc) - timedelta(days=a.get("p_days", 30))
+        by = {}
+        for r in T["activity_log"]:
+            if r.get("action") != "grade" or not r.get("at") or _ts(r["at"]) < since: continue
+            sub = (r.get("detail") or {}).get("sub")
+            if not sub: continue
+            s = by.setdefault(sub, {"graded": 0, "correct": 0, "users": set()})
+            s["graded"] += 1
+            s["correct"] += 1 if (r.get("detail") or {}).get("verdict") == "정답" else 0
+            if r.get("user_id"): s["users"].add(r["user_id"])
+        out = [{"sub": sub, "graded": s["graded"], "correct": s["correct"], "users": len(s["users"]),
+                "rate": round(s["correct"] * 100 / s["graded"], 1) if s["graded"] else None} for sub, s in by.items()]
+        return sorted(out, key=lambda r: (r["rate"] if r["rate"] is not None else 101, -r["graded"]))
+    if name == "admin_report":
+        days = a.get("p_days", 30)
+        now = datetime.now(timezone.utc)
+        cur = rpc("admin_period", {"p_from": (now - timedelta(days=days)).isoformat(), "p_to": now.isoformat()})
+        prev = rpc("admin_period", {"p_from": (now - timedelta(days=2 * days)).isoformat(), "p_to": (now - timedelta(days=days)).isoformat()})
+        since = now - timedelta(days=days)
+        cnt = {}
+        for r in T["activity_log"]:
+            if r.get("user_id") and r.get("at") and _ts(r["at"]) >= since:
+                cnt[r["user_id"]] = cnt.get(r["user_id"], 0) + 1
+        pmap = {p["id"]: p for p in T["profiles"]}
+        top_users = [{"id": uid, "email": pmap.get(uid, {}).get("email", ""), "name": pmap.get(uid, {}).get("name", ""), "actions": n}
+                     for uid, n in sorted(cnt.items(), key=lambda kv: -kv[1])[:5]]
+        return {"days": days, "cur": cur, "prev": prev, "prev_partial": False, "top_users": top_users,
+                "daily": rpc("admin_daily", {"p_days": days})}
+    raise db.DBError(name)
 db.rpc = rpc
 calls = {"n": 0}
 def ask_json(sys_, prompt, schema=None, temperature=0.7):

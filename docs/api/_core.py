@@ -543,9 +543,12 @@ DASH_DAYS = (7, 14, 30, 90)
 def admin_summary(p: dict, params: dict | None = None) -> dict:
     require_admin(p)
     since = today_start_iso()
-    days = int((params or {}).get("days") or 14)
-    days = days if days in DASH_DAYS else 14
-    return {"days": days,
+    days = max(1, min(int((params or {}).get("days") or 14), 365))
+    now = datetime.now(timezone.utc)
+    period = _safe_rpc("admin_period", {"p_from": (now - timedelta(days=days)).isoformat(), "p_to": now.isoformat()})
+    prev = _safe_rpc("admin_period", {"p_from": (now - timedelta(days=2 * days)).isoformat(),
+                                      "p_to": (now - timedelta(days=days)).isoformat()})
+    return {"days": days, "period": period, "prev": prev,
         "users": db.count("profiles", {}),
         "blocked": db.count("profiles", {"status": "eq.blocked"}),
         "pending": db.count("profiles", {"status": "eq.pending"}),
@@ -559,6 +562,35 @@ def admin_summary(p: dict, params: dict | None = None) -> dict:
         "bank_min": BANK_MIN, "bank_ratio": BANK_RATIO,
         "daily": db.rpc("admin_daily", {"p_days": days}) or [],
     }
+
+
+def _safe_rpc(name: str, args: dict):
+    """새 함수(admin_full.sql)가 아직 없으면 None → 화면은 그 칸만 숨긴다."""
+    try:
+        return db.rpc(name, args)
+    except db.DBError:
+        return None
+
+
+def admin_sub_stats(p: dict, params: dict) -> dict:
+    """범위별 정답률(기간 안 채점 기록), 낮은 순."""
+    require_admin(p)
+    days = max(1, min(int(params.get("days") or 30), 365))
+    rows = _safe_rpc("admin_sub_stats", {"p_days": days}) or []
+    for r in rows:
+        r["name"] = SUB_INDEX.get(r.get("sub"), (None, ""))[1]
+        r["rate"] = float(r["rate"]) if r.get("rate") is not None else None
+    return {"days": days, "subs": rows}
+
+
+def admin_report(p: dict, params: dict) -> dict:
+    """보고서: 활동 기록을 한국 달력 n일로 묶은 요약(이번 기간 + 그 전 같은 길이)."""
+    require_admin(p)
+    days = max(1, min(int(params.get("days") or 30), 365))
+    out = _safe_rpc("admin_report", {"p_days": days})
+    if not out:
+        raise ApiError(503, "보고서용 DB 함수가 아직 없어요(admin_full.sql을 Supabase에서 실행해 주세요).")
+    return out
 
 
 def _safe_count(table: str, params: dict) -> int:
@@ -653,10 +685,10 @@ def admin_update_user(p: dict, body: dict) -> dict:
 
 def admin_activity(p: dict, params: dict) -> list:
     require_admin(p)
-    days = max(1, min(int(params.get("days") or 7), 90))
+    days = max(1, min(int(params.get("days") or 7), 365))
     since = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
     q = {"select": "id,action,detail,ai,device,at,user_id,profiles(email,name)", "at": f"gte.{since}",
-         "order": "at.desc", "limit": str(max(1, min(int(params.get("limit") or 300), 1000)))}
+         "order": "at.desc", "limit": str(max(1, min(int(params.get("limit") or 300), 5000)))}
     if re.fullmatch(r"[0-9a-f-]{36}", params.get("user") or ""):
         q["user_id"] = f"eq.{params['user']}"
     if re.fullmatch(r"[a-z]+", params.get("action") or ""):
@@ -668,7 +700,7 @@ def admin_questions(p: dict, params: dict) -> dict:
     require_admin(p)
     q = {"select": "id,sub,difficulty,qtype,question,choices,answer,explanation,option_notes,key_concept,cli_example,"
                    "tip,model,status,served,graded,correct,reports,created_at",
-         "order": "reports.desc,created_at.desc", "limit": str(max(1, min(int(params.get("limit") or 100), 300)))}
+         "order": "reports.desc,created_at.desc", "limit": str(max(1, min(int(params.get("limit") or 100), 3000)))}
     if params.get("status") in ("active", "flagged", "hidden"):
         q["status"] = f"eq.{params['status']}"
     if params.get("sub") in SUB_INDEX:
@@ -728,7 +760,15 @@ def require_admin_ai() -> None:
 
 
 # ── 여러 사용자 한꺼번에(사용자 탭의 일괄 버튼). 한 명씩 같은 권한 검사를 거친다.
-BULK_OPS = {"mark_delete", "unmark_delete", "approve"}
+BULK_OPS = {"mark_delete", "unmark_delete", "approve", "block", "unblock", "restore"}
+
+
+def _can_touch(p: dict, t: dict) -> bool:
+    return not (t["id"] == p["id"] or t["role"] == "owner" or (t["role"] == "admin" and p["role"] != "owner"))
+
+
+def _ids(body: dict, pat: str = r"[0-9a-zA-Z-]{1,36}", n: int = 500) -> list:
+    return [str(x) for x in (body.get("ids") or []) if re.fullmatch(pat, str(x))][:n]
 
 
 def admin_users_bulk(p: dict, body: dict) -> dict:
@@ -738,26 +778,142 @@ def admin_users_bulk(p: dict, body: dict) -> dict:
     op = str(body.get("op", ""))
     if op not in BULK_OPS:
         raise ApiError(400, "할 수 없는 작업이에요.")
-    ids = [str(x) for x in (body.get("ids") or []) if re.fullmatch(r"[0-9a-zA-Z-]{1,36}", str(x))][:500]
+    if op == "restore":  # 되돌리기: 작업 전 상태·삭제 예정 값으로
+        items = {str(x.get("id")): x for x in (body.get("items") or [])[:500] if isinstance(x, dict)}
+        body = {"ids": list(items)}
+    ids = _ids(body)
     if not ids:
         raise ApiError(400, "대상 사용자가 없어요.")
     rows = db.select("profiles", {"id": f"in.({','.join(ids)})", "select": "*"})
     done, skipped = [], 0
     for t in rows:
-        if t["id"] == p["id"] or t["role"] == "owner" or (t["role"] == "admin" and p["role"] != "owner"):
+        if not _can_touch(p, t):
             skipped += 1
             continue
-        if op == "approve":
-            if t["status"] != "pending":
+        st = t["status"]
+        if op == "restore":
+            x = items[t["id"]]
+            if x.get("status") not in ("active", "pending", "blocked"):
                 skipped += 1
                 continue
+            fields = {"status": x["status"], "delete_at": x.get("delete_at") or None}
+        elif (op == "approve" and st != "pending") or (op == "unblock" and st != "blocked") or (op == "block" and st == "blocked") \
+                or (op == "mark_delete" and t.get("delete_at")) or (op == "unmark_delete" and not t.get("delete_at")):
+            skipped += 1
+            continue
+        elif op in ("approve", "unblock"):
             fields = {"status": "active"}
+        elif op == "block":
+            fields = {"status": "blocked"}
         else:
             fields = {"delete_at": now_iso() if op == "mark_delete" else None}
         db.update("profiles", {"id": f"eq.{t['id']}"}, fields)
         done.append(t["id"])
     log_activity(p, "admin", {"bulk": op, "n": len(done)})
     return {"ok": True, "op": op, "updated": len(done), "skipped": skipped + len(ids) - len(rows), "ids": done}
+
+
+UUID = r"[0-9a-f-]{36}"
+
+
+def admin_questions_bulk(p: dict, body: dict) -> dict:
+    """문제 여러 개: hide 숨기기 · flag 출제 중지 · resolve 검토 완료(신고 닫고 다시 출제) · restore 되돌리기."""
+    require_admin(p)
+    require_admin_ai()
+    op = str(body.get("op", ""))
+    done = []
+    if op == "restore":
+        for x in (body.get("items") or [])[:500]:
+            if not isinstance(x, dict):
+                continue
+            qid = str(x.get("id", ""))
+            if not re.fullmatch(UUID, qid) or x.get("status") not in ("active", "flagged", "hidden"):
+                continue
+            if db.update("questions", {"id": f"eq.{qid}"}, {"status": x["status"], "reports": max(0, int(x.get("reports") or 0)), "updated_at": now_iso()}):
+                done.append(qid)
+    elif op in ("hide", "flag", "resolve"):
+        ids = _ids(body, UUID)
+        if not ids:
+            raise ApiError(400, "대상 문제가 없어요.")
+        where = {"id": f"in.({','.join(ids)})"}
+        if op == "resolve":
+            db.update("question_reports", {"question_id": f"in.({','.join(ids)})", "resolved": "is.false"}, {"resolved": True})
+            out = db.update("questions", where, {"status": "active", "reports": 0, "updated_at": now_iso()})
+        else:
+            out = db.update("questions", where, {"status": "hidden" if op == "hide" else "flagged", "updated_at": now_iso()})
+        done = [r["id"] for r in out]
+    else:
+        raise ApiError(400, "할 수 없는 작업이에요.")
+    log_activity(p, "admin", {"bulk": "questions " + op, "n": len(done)})
+    return {"ok": True, "updated": len(done), "ids": done}
+
+
+def admin_app_reports_bulk(p: dict, body: dict) -> dict:
+    """앱 신고 여러 개: resolved true/false · op=restore(items의 resolved로)."""
+    require_admin(p)
+    require_admin_ai()
+    done = []
+    if body.get("op") == "restore":
+        for x in (body.get("items") or [])[:500]:
+            if not isinstance(x, dict):
+                continue
+            try:
+                rid = int(x.get("id"))
+            except (TypeError, ValueError):
+                continue
+            if db.update("app_reports", {"id": f"eq.{rid}"}, {"resolved": bool(x.get("resolved"))}):
+                done.append(rid)
+    else:
+        ids = [int(x) for x in (body.get("ids") or []) if str(x).isdigit()][:500]
+        if not ids:
+            raise ApiError(400, "대상 신고가 없어요.")
+        resolved = bool(body.get("resolved", True))
+        out = db.update("app_reports", {"id": f"in.({','.join(map(str, ids))})", "resolved": f"is.{str(not resolved).lower()}"}, {"resolved": resolved})
+        done = [r["id"] for r in out]
+    log_activity(p, "admin", {"bulk": "app_reports " + str(body.get("op") or ("done" if body.get("resolved", True) else "reopen")), "n": len(done)})
+    return {"ok": True, "updated": len(done), "ids": done}
+
+
+# ── 명령 기록(관리자 사용 기록): 화면이 명령마다 한 줄 저장 → 명령 기록 탭·보고서가 여기서 읽는다(admin_full.sql)
+CMD_ST = {"show", "answer", "done", "wait", "cancel", "fail", ""}
+CMD_PATH = {"rules", "ai", "manual", "sql", ""}
+
+
+def _cmd_row(r: dict) -> dict:
+    steps = [str(x)[:120] for x in (r.get("steps") or [])][:30] if isinstance(r.get("steps"), list) else []
+    conf = r.get("conf")
+    return {"session": str(r.get("session") or "")[:40], "text": _EMAIL.sub("(이메일)", str(r.get("text") or ""))[:300],
+            "path": r.get("path") if r.get("path") in CMD_PATH - {""} else None, "conf": float(conf) if isinstance(conf, (int, float)) else None,
+            "command": re.sub(r"[^a-z_]", "", str(r.get("command") or ""))[:40], "descr": str(r.get("desc") or "")[:200],
+            "steps": steps, "st": r.get("st") if r.get("st") in CMD_ST - {""} else None, "msg": _EMAIL.sub("(이메일)", str(r.get("msg") or ""))[:500],
+            "ms": max(0, min(int(r.get("ms") or 0), 600000)), "sql": str(r.get("sql") or "")[:2000] or None,
+            "undo_key": str(r.get("undoKey") or "")[:40] or None, "undone_at": r.get("undone") or None}
+
+
+def admin_command_log_save(p: dict, body: dict) -> dict:
+    """id 없으면 새 줄, 있으면 그 줄(내 기록만)을 고친다."""
+    require_admin(p)
+    row = _cmd_row(body)
+    rid = body.get("id")
+    if isinstance(rid, int) and rid > 0:
+        out = db.update("admin_command_log", {"id": f"eq.{rid}", "admin_id": f"eq.{p['id']}"}, row)
+    else:
+        out = db.insert("admin_command_log", [{**row, "admin_id": p["id"]}])
+    return {"id": out[0]["id"] if out else None}
+
+
+def admin_command_log(p: dict, params: dict) -> list:
+    require_admin(p)
+    try:
+        return db.select("admin_command_log", {"select": "*", "order": "at.desc", "limit": str(max(1, min(int(params.get("limit") or 300), 2000)))})
+    except db.DBError:
+        return []
+
+
+def admin_command_log_clear(p: dict, body: dict) -> dict:
+    """내가 남긴 명령 기록만 지운다(다른 관리자 기록은 그대로)."""
+    require_admin(p)
+    return {"ok": True, "deleted": db.delete("admin_command_log", {"admin_id": f"eq.{p['id']}"})}
 
 
 # ── 관리자 명령창(웹 관리자 화면 전용): 말로 한 명령 → '정해진 명령 하나'로 바꾼다. 실행은 화면의 기존 필터·버튼이 한다.
@@ -931,7 +1087,7 @@ DEMO_SQL_SECTION = """E) sql_query {sql, title, target} — for ANY find / list 
   combinations, thresholds or joins. title = short Korean title of the result. target = the table whose rows (with an `id` column) are
   returned: users | questions | app_reports | activity | other. Always include `id` when returning rows of users/questions/app_reports.
   Never write INSERT/UPDATE/DELETE/DDL. Changes are done only by the commands in C).
-  Tables (mock data; timestamps are UTC text 'YYYY-MM-DD HH:MM:SS'; compare with datetime('now','-10 days'); booleans are 0/1):
+  Tables (copied into the admin's browser; timestamps are UTC text 'YYYY-MM-DD HH:MM:SS'; compare with datetime('now','-10 days'); booleans are 0/1):
   users(id, name, email, role[owner|admin|user], status[active|pending|blocked], created_at, last_seen NULL=never,
         delete_at NULL=not marked, daily_limit, can_practice, can_explain, today_ai, total_attempts, note)
   questions(id, sub e.g. '3.4', difficulty[easy|medium|hard], status[active|flagged|hidden], question, answer,
@@ -948,16 +1104,17 @@ DEMO_ASK_SYS = ADMIN_ASK_SYS.replace("D) none —", DEMO_SQL_SECTION + "D) none 
 DEMO_ASK_SCHEMA = json.loads(json.dumps(ADMIN_ASK_SCHEMA))
 DEMO_ASK_SCHEMA["properties"]["args"]["properties"].update({"sql": {"type": "string"}, "title": {"type": "string"}, "target": {"type": "string"},
                                                             "download": {"type": "boolean"}})
-DEMO_ONLY = {"sql_query": "SQL 조회는 모의 화면에서만 돼요.", "show_report": "보고서는 모의 화면에서만 볼 수 있어요."}
+DEMO_ONLY = {"demo_add_users": "가상 사용자 만들기는 모의 화면에서만 돼요."}
 
 
 def _interpret(text: str, demo: bool = False) -> dict:
     text = _EMAIL.sub("(이메일)", str(text).strip()[:300])  # 혹시 적은 이메일은 제미나이로 보내지 않는다
     if not text:
         raise ApiError(400, "명령을 입력해 주세요.")
-    out, _model = gc.ask_json(DEMO_ASK_SYS if demo else ADMIN_ASK_SYS, text, DEMO_ASK_SCHEMA if demo else ADMIN_ASK_SCHEMA, temperature=0.1)
+    # 실제 화면도 SQL 조회·보고서를 쓴다(SQL은 관리자 브라우저 안 SQLite에서 실행, 제미나이엔 표 구조와 문장만)
+    out, _model = gc.ask_json(DEMO_ASK_SYS, text, DEMO_ASK_SCHEMA, temperature=0.1)
     res = clean_command(out if isinstance(out, dict) else {})
-    if res["command"] in DEMO_ONLY and not demo:  # 실제 화면은 SQL 조회·보고서를 쓰지 않는다
+    if res["command"] in DEMO_ONLY and not demo:
         res = {"command": "none", "kind": "none", "args": {}, "reply": DEMO_ONLY[res["command"]], "confidence": res["confidence"], "unsure": False}
     return {**res, "source": "ai"}
 
@@ -968,7 +1125,7 @@ def admin_ask(p: dict, body: dict) -> dict:
     if p["role"] != "owner" and ai_left(p) <= 0:
         raise ApiError(429, "오늘 AI 사용 한도를 다 썼어요.")
     res = _interpret(body.get("prompt", ""))
-    log_activity(p, "admin", {"ask": res["command"]}, ai=True)  # 명령 문장 자체는 기록하지 않는다
+    log_activity(p, "admin", {"ask": res["command"]}, ai=True)  # 문장은 명령 기록(admin_command_log)에 남는다
     return res
 
 

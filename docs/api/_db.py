@@ -93,6 +93,13 @@ def update(table: str, params: dict, fields: dict) -> list:
     return out or []
 
 
+def delete(table: str, params: dict) -> int:
+    if not params:  # 조건 없는 전체 삭제는 막는다
+        raise DBError("삭제 조건이 없어요")
+    _, out = _call("DELETE", f"{_url()}/rest/v1/{table}{_q(params)}", {**_svc_headers(), "Prefer": "return=representation"})
+    return len(out or [])
+
+
 def rpc(name: str, args: dict | None = None):
     _, out = _call("POST", f"{_url()}/rest/v1/rpc/{name}", _svc_headers(), args or {})
     return out
