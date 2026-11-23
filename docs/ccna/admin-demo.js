@@ -170,6 +170,34 @@
         bank_min: 30, bank_ratio: 0.7, daily: daily(n),
         period: period(now - n * DAY, now), prev: period(now - 2 * n * DAY, now - n * DAY) };
     },
+    'admin/report': function (p) {  // 보고서: 활동 기록을 기간으로 묶어 센다(이번 기간 + 바로 전 같은 길이)
+      var n = Math.max(1, Math.min(365, parseInt(p.get('days'), 10) || 30)), end = Date.now() + 1, from = end - n * DAY, pfrom = from - n * DAY;
+      function agg(a0, a1) {
+        var o = { total: 0, ai: 0, active_users: 0, signups: 0, graded: 0, correct: 0, rate: null, by_action: {}, by_device: {}, by_hour: [], _u: {}, _pu: {} };
+        for (var h = 0; h < 24; h++) o.by_hour.push(0);
+        activity.forEach(function (a) {
+          var t = new Date(a.at).getTime(); if (t < a0 || t >= a1) return;
+          o.total++; o._u[a.user_id] = 1; if (a.ai) o.ai++;
+          o.by_action[a.action] = (o.by_action[a.action] || 0) + 1;
+          var dv = a.device || '알 수 없음'; o.by_device[dv] = (o.by_device[dv] || 0) + 1;
+          o.by_hour[new Date(t).getHours()]++;
+          if (a.action === 'grade') { o.graded++; if (a.detail.verdict === '정답') o.correct++; }
+          if (a.action !== 'admin') o._pu[a.user_id] = (o._pu[a.user_id] || 0) + 1;
+        });
+        users.forEach(function (u) { var t = new Date(u.created_at).getTime(); if (t >= a0 && t < a1) o.signups++; });
+        o.active_users = Object.keys(o._u).length; o.rate = o.graded ? Math.round(o.correct / o.graded * 1000) / 10 : null;
+        return o;
+      }
+      var cur = agg(from, end), prev = agg(pfrom, from);
+      var top = Object.keys(cur._pu).map(function (id) { var u = users.find(function (x) { return x.id === id; }) || {}; return { name: u.name || '', email: u.email || '', n: cur._pu[id] }; })
+        .sort(function (a, b) { return b.n - a.n; }).slice(0, 5);
+      [cur, prev].forEach(function (o) { delete o._u; delete o._pu; });
+      var days = {}, keys = [];
+      for (var k = n - 1; k >= 0; k--) { var key = dayKey(Date.now() - k * DAY); keys.push(key); days[key] = { day: key, total: 0, _u: {} }; }
+      activity.forEach(function (a) { var t = new Date(a.at).getTime(); if (t < from) return; var o = days[dayKey(t)]; if (o) { o.total++; o._u[a.user_id] = 1; } });
+      return { days: n, cur: cur, prev: prev, top_users: top,
+        daily: keys.map(function (k) { var o = days[k]; return { day: k, total: o.total, users: Object.keys(o._u).length }; }) };
+    },
     'admin/sub-stats': function (p) {  // 범위별 정답률(기간 안 채점 기록)
       var n = +p.get('days') || 30, from = now - n * DAY, by = {};
       activity.forEach(function (a) {

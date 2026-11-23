@@ -790,6 +790,7 @@ ADMIN_COMMANDS = {
     "show_weak_topics":     {"days": ("int", 1, 365, 30)},
     "export_csv":           {"target": ["current", "users", "activity", "bank", "appr"]},
     "show_trace":           {"only_bad": [False, True]},
+    "show_report":          {"days": ("int", 1, 365, 30), "download": [False, True]},  # 모의 화면 전용
     "rerun":                {"no": "int"},
     "sql_query":            {"sql": "sql", "title": "title", "target": ["other", "users", "questions", "app_reports", "activity"]},  # 모의 화면 전용
 }
@@ -831,6 +832,8 @@ C) Change data (the page shows the targets and asks the admin to confirm first):
 - show_weak_topics {days} — accuracy by exam topic, weakest first ("약한 범위", "범위별 정답률").
 - rerun {no} — run command-log entry number `no` again ("3번 다시 실행해줘").
 - show_trace {only_bad: bool} — the command log of this page ("명령 기록", "못 알아들은 명령").
+- show_report {days, download: bool} — summary report of user activity + admin command log ("보고서", "리포트", "활동 요약").
+  download true when they want the report as a file ("받아줘", "다운로드", "파일로").
 - export_csv {target: current|users|activity|bank|appr} — download the current filtered list as CSV ("엑셀로 받아줘").
 D) none — anything else: a specific person, editing or deleting questions, settings, the Android app, general chat.
 
