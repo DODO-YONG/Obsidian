@@ -91,7 +91,7 @@ Obsidian Git 플러그인이 파일이 바뀌면 5분 안에 커밋하고 GitHub
 
 ## 6. 제미나이 부르는 방법 (Antigravity CLI)
 
-사용자는 **Claude에게만 말하면** 됩니다. 제미나이가 필요한 일은 Claude가 아래처럼 맡기고 결과를 정리합니다.
+사용자는 **Claude에게만 말하면** 됩니다. 제미나이가 필요한 일은 Claude가 아래처럼 맡기고 결과를 정리합니다. **사용자가 "제미나이한테"라고 말하지 않아도** Claude가 작업 중에 필요하다고 판단하면 직접 부르고, 부를 때마다 한 줄로 알립니다. 언제 부르는지는 `CLAUDE.md` 협업 칸에 있습니다.
 
 ```
 scripts/gemini.sh "raw/projects/ccna/ospf.pdf 를 읽고 요약 초안을 wiki/_inbox/ 에 써 줘"
