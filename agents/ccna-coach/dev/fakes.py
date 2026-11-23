@@ -137,21 +137,38 @@ def rpc(name, a=None):
         out = [{"sub": sub, "graded": s["graded"], "correct": s["correct"], "users": len(s["users"]),
                 "rate": round(s["correct"] * 100 / s["graded"], 1) if s["graded"] else None} for sub, s in by.items()]
         return sorted(out, key=lambda r: (r["rate"] if r["rate"] is not None else 101, -r["graded"]))
-    if name == "admin_report":
-        days = a.get("p_days", 30)
+    if name == "admin_report":  # 실제 SQL(admin_full.sql)과 같은 모양: cur/prev = total·ai·active_users·signups·graded·correct·rate·by_action·by_device·by_hour
+        days = max(1, min(int(a.get("p_days") or 1), 365))
         now = datetime.now(timezone.utc)
-        cur = rpc("admin_period", {"p_from": (now - timedelta(days=days)).isoformat(), "p_to": now.isoformat()})
-        prev = rpc("admin_period", {"p_from": (now - timedelta(days=2 * days)).isoformat(), "p_to": (now - timedelta(days=days)).isoformat()})
+        today = now.date()
+        def agg(t0, t1):
+            logs = [r for r in T["activity_log"] if r.get("at") and t0 <= _ts(r["at"]) < t1]
+            g = [r for r in logs if r.get("action") == "grade"]
+            ok_ = [r for r in g if (r.get("detail") or {}).get("verdict") == "정답"]
+            by_a, by_d, hr = {}, {}, [0] * 24
+            for r in logs:
+                by_a[r.get("action")] = by_a.get(r.get("action"), 0) + 1
+                dv = r.get("device") or "알 수 없음"; by_d[dv] = by_d.get(dv, 0) + 1
+                hr[(_ts(r["at"]) + timedelta(hours=9)).hour] += 1
+            return {"total": len(logs), "ai": sum(1 for r in logs if r.get("ai")), "active_users": len({r.get("user_id") for r in logs}),
+                    "signups": sum(1 for p_ in T["profiles"] if p_.get("created_at") and t0 <= _ts(p_["created_at"]) < t1),
+                    "graded": len(g), "correct": len(ok_), "rate": round(len(ok_) * 100 / len(g), 1) if g else None,
+                    "by_action": by_a, "by_device": by_d, "by_hour": hr}
         since = now - timedelta(days=days)
         cnt = {}
         for r in T["activity_log"]:
-            if r.get("user_id") and r.get("at") and _ts(r["at"]) >= since:
+            if r.get("user_id") and r.get("at") and _ts(r["at"]) >= since and r.get("action") != "admin":
                 cnt[r["user_id"]] = cnt.get(r["user_id"], 0) + 1
-        pmap = {p["id"]: p for p in T["profiles"]}
-        top_users = [{"id": uid, "email": pmap.get(uid, {}).get("email", ""), "name": pmap.get(uid, {}).get("name", ""), "actions": n}
+        pmap = {p_["id"]: p_ for p_ in T["profiles"]}
+        top_users = [{"id": uid, "email": pmap.get(uid, {}).get("email", ""), "name": pmap.get(uid, {}).get("name", ""), "n": n}
                      for uid, n in sorted(cnt.items(), key=lambda kv: -kv[1])[:5]]
-        return {"days": days, "cur": cur, "prev": prev, "prev_partial": False, "top_users": top_users,
-                "daily": rpc("admin_daily", {"p_days": days})}
+        daily = []
+        for i in range(days):
+            d = today - timedelta(days=days - 1 - i)
+            rs = [r for r in T["activity_log"] if r.get("at") and _ts(r["at"]).date() == d]
+            daily.append({"day": d.isoformat(), "total": len(rs), "users": len({r.get("user_id") for r in rs})})
+        return {"days": days, "cur": agg(since, now + timedelta(seconds=1)), "prev": agg(now - timedelta(days=2 * days), since),
+                "prev_partial": False, "top_users": top_users, "daily": daily}
     raise db.DBError(name)
 db.rpc = rpc
 calls = {"n": 0}

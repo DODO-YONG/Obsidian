@@ -23,22 +23,18 @@ PORT = int(os.environ.get("TRACER_E2E_PORT") or _free_port())
 BASE = f"http://127.0.0.1:{PORT}"
 
 
-@pytest.fixture(scope="session")
-def base_url():
-    try:
-        socket.create_connection(("127.0.0.1", PORT), timeout=0.2).close()
-        raise RuntimeError(f"{PORT}번 포트를 이미 다른 서버가 쓰고 있음(예전 시험 서버가 안 꺼졌을 수 있음). "
-                           f"`lsof -nP -iTCP:{PORT} -sTCP:LISTEN`로 확인 후 끄기")
-    except OSError:
-        pass
-    env = {**os.environ, "TRACER_HARNESS_PORT": str(PORT)}
+def _start(port, extra=None):
+    base = f"http://127.0.0.1:{port}"
+    env = {**os.environ, "TRACER_HARNESS_PORT": str(port), **(extra or {})}
+    if not extra:
+        env.pop("TRACER_ADMIN_AI", None)
     for k in ("GOOGLE_API_KEY", "SUPABASE_SERVICE_ROLE_KEY", "ANTHROPIC_API_KEY"):
         env.pop(k, None)  # 진짜 키가 섞여 들어가지 않게
     proc = subprocess.Popen([sys.executable, str(HARNESS)], env=env,
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     for _ in range(100):
         try:
-            socket.create_connection(("127.0.0.1", PORT), timeout=0.2).close()
+            socket.create_connection(("127.0.0.1", port), timeout=0.2).close()
             break
         except OSError:
             if proc.poll() is not None:
@@ -47,7 +43,28 @@ def base_url():
     else:
         proc.kill()
         raise RuntimeError("시험 서버가 10초 안에 뜨지 않음")
+    return proc, base
+
+
+@pytest.fixture(scope="session")
+def base_url():
+    try:
+        socket.create_connection(("127.0.0.1", PORT), timeout=0.2).close()
+        raise RuntimeError(f"{PORT}번 포트를 이미 다른 서버가 쓰고 있음(예전 시험 서버가 안 꺼졌을 수 있음). "
+                           f"`lsof -nP -iTCP:{PORT} -sTCP:LISTEN`로 확인 후 끄기")
+    except OSError:
+        pass
+    proc, _ = _start(PORT)
     yield BASE
+    proc.terminate()
+    proc.wait(timeout=5)
+
+
+@pytest.fixture(scope="session")
+def base_url_ai():
+    """관리 기능을 켠 서버(TRACER_ADMIN_AI=1). 기본 서버와 별개 포트."""
+    proc, base = _start(_free_port(), {"TRACER_ADMIN_AI": "1"})
+    yield base
     proc.terminate()
     proc.wait(timeout=5)
 

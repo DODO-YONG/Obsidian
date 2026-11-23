@@ -1383,3 +1383,89 @@ def test_admin_real_hides_report_tab(logged_in, errors, base_url):
     page.goto(base_url + "/ccna/admin.html")
     expect(page.locator("#modeTag")).to_contain_text("실제")
     expect(page.locator("#tabs [data-tab=report]")).to_be_hidden()
+
+
+# ---------- 실제 관리자 화면 + 관리 기능 켜짐(TRACER_ADMIN_AI=1, base_url_ai 서버) ----------
+def _real_ai(page, base_url_ai, mode_rules=True):
+    page.goto(base_url_ai + "/ccna/admin.html")
+    expect(page.locator("#modeTag")).to_contain_text("실제")
+    expect(page.locator("#cmd")).to_be_visible()
+
+
+def _blocked_n(page, base):
+    r = page.request.get(base + "/api/admin/users", headers={"Authorization": "Bearer a"})
+    assert r.ok
+    d = r.json()
+    rows = d["users"] if isinstance(d, dict) else d
+    return sum(1 for u in rows if u.get("status") == "blocked")
+
+
+def test_admin_real_ai_on_shows_lab_tabs(logged_in, errors, base_url_ai):
+    page = logged_in
+    _real_ai(page, base_url_ai)
+    for t in ("todo", "report", "trace", "query"):
+        expect(page.locator(f"#tabs [data-tab={t}]")).to_be_visible()
+    expect(page.locator("#cmdMode")).to_have_value("rules")   # 실제 화면 기본 '규칙 우선'
+
+
+def test_admin_real_ai_command_saved_to_server_and_persists(logged_in, errors, base_url_ai):
+    page = logged_in
+    _real_ai(page, base_url_ai)
+    li = _cmd(page, "미처리 신고 몇 건이야?")
+    expect(li.locator(".st")).to_contain_text("답변")
+    page.locator("#tabs [data-tab=trace]").click()
+    expect(page.locator("#tRows")).to_contain_text("미처리 신고")
+    page.reload()
+    expect(page.locator("#cmd")).to_be_visible()
+    page.locator("#tabs [data-tab=trace]").click()
+    expect(page.locator("#tRows")).to_contain_text("미처리 신고")
+    r = page.request.get(base_url_ai + "/api/admin/command-log", headers={"Authorization": "Bearer a"})
+    assert any("미처리 신고" in (x.get("text") or "") for x in r.json())
+
+
+def test_admin_real_ai_report_tab_info(logged_in, errors, base_url_ai):
+    page = logged_in
+    _real_ai(page, base_url_ai)
+    page.locator("#tabs [data-tab=report]").click()
+    expect(page.locator("#v-report")).to_be_visible()
+    expect(page.locator("#rInfo")).to_contain_text("활동")
+    expect(page.locator("#rInfo")).to_contain_text("명령")
+
+
+def test_admin_real_ai_users_bulk_block_and_undo(logged_in, errors, base_url_ai):
+    page = logged_in
+    _real_ai(page, base_url_ai)
+    before = _blocked_n(page, base_url_ai)
+    page.locator("#tabs [data-tab=users]").click()
+    expect(page.locator("#uRows [data-ck]").first).to_be_visible()
+    page.locator("#uAll").check()
+    page.locator("#uSel").get_by_role("button", name="차단", exact=True).click()
+    expect(page.locator("dialog#ask")).to_be_visible()
+    page.locator("#askYes").click()
+    expect(page.locator("#undo")).to_be_visible()
+    assert _blocked_n(page, base_url_ai) > before
+    page.locator("#undoBtn").click()
+    page.wait_for_function("() => document.querySelector('#undo').hidden")
+    assert _blocked_n(page, base_url_ai) == before
+
+
+def test_admin_real_ai_clear_log_only_mine(logged_in, errors, base_url_ai):
+    page = logged_in
+    _real_ai(page, base_url_ai)
+    _cmd(page, "미처리 신고 몇 건이야?")
+    page.locator("#tabs [data-tab=trace]").click()
+    expect(page.locator("#tRows")).to_contain_text("미처리 신고")
+    expect(page.locator("#tRows")).to_contain_text("다른관리자기록")
+    page.locator("#tClear").click()
+    page.locator("#askYes").click()
+    expect(page.locator("#tRows")).not_to_contain_text("미처리 신고")
+    expect(page.locator("#tRows")).to_contain_text("다른관리자기록")   # 다른 관리자 기록은 그대로
+
+
+def test_admin_real_ai_off_keeps_lab_hidden(logged_in, errors, base_url):
+    page = logged_in
+    page.goto(base_url + "/ccna/admin.html")
+    expect(page.locator("#modeTag")).to_contain_text("실제")
+    for t in ("todo", "report", "trace", "query"):
+        expect(page.locator(f"#tabs [data-tab={t}]")).to_be_hidden()
+    expect(page.locator("#cmd")).to_be_hidden()

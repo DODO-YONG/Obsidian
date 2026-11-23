@@ -24,6 +24,8 @@ else:
         for _d in fakes.core.DIFFS:
             for _ in range(2): fakes.core.generate(_sid, _d, "mcq", _owner)
 fakes.calls["n"] = 0
+if os.environ.get("TRACER_ADMIN_AI") == "1":   # 시험용: 다른 관리자의 명령 기록 1건(내 기록만 지우는지 확인)
+    fakes.db.insert("admin_command_log", [{"admin_id": "other-admin", "no": 1, "text": "다른관리자기록", "st": "done", "path": "rules"}])
 # 앱(Tracer Route) 익명 신고 예시: 첫 문제는 웹 문제은행과 연결, 같은 문제 신고 2건, 나머지는 앱 전용
 _q0 = fakes.T["questions"][0]
 fakes.db.insert("app_reports", [
