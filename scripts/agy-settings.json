@@ -6,24 +6,21 @@
   "modelProvider": "",
   "permissions": {
     "allow": [
-      "read_file(/Users/mj/Obsidian/raw)",
-      "read_file(/Users/mj/Obsidian/wiki)",
-      "read_file(/Users/mj/Obsidian/docs)",
-      "read_file(/Users/mj/Obsidian/agents)",
-      "read_file(/Users/mj/Obsidian/GEMINI.md)",
-      "read_file(/Users/mj/Obsidian/CLAUDE.md)",
-      "read_file(/Users/mj/Obsidian/index.md)",
-      "read_file(/Users/mj/Obsidian/log.md)",
-      "read_file(/Users/mj/Obsidian/README.md)",
-      "write_file(/Users/mj/Obsidian/wiki/_inbox)"
+      "read_file(/Users/mj/Obsidian)",
+      "write_file(/Users/mj/Obsidian)",
+      "command(*)",
+      "write_file(/Users/mj/Obsidian/.git)",
+      "read_file(/Users/mj/Obsidian/.git)"
     ],
     "deny": [
-      "read_file(/Users/mj/Obsidian/private)",
       "read_file(/Users/mj/Obsidian/.env)",
       "read_file(/Users/mj/Obsidian/agents/heartline/server/.env)",
-      "read_file(/Users/mj/Obsidian/reports)",
-      "read_file(/Users/mj/Obsidian/.git)",
-      "command(*)"
+      "write_file(/Users/mj/Obsidian/raw)",
+      "command(git push --force)",
+      "command(git push -f)",
+      "command(git commit --no-verify)",
+      "command(git commit -n)"
     ]
-  }
+  },
+  "useG1Credits": false
 }
