@@ -983,3 +983,175 @@ def test_admin_real_has_no_todo_tab_or_user_detail(logged_in, errors, base_url):
     expect(page.locator("#uRows [data-detail]")).to_have_count(0)
     page.locator("#uRows tr[data-id] b").first.click()
     expect(page.locator("dialog#uDetail")).not_to_be_visible()
+
+
+# ---------- 관리자 모의 3단계: 비교·범위별 정답률·CSV·묶음 접기 ----------
+def _csv_lines(download):
+    text = open(download.path(), encoding="utf-8", newline="").read()
+    assert text.startswith("﻿")
+    return text[1:].split("\r\n")
+
+
+def test_admin_demo_dashboard_compare_and_subjects(page, errors, base_url):
+    _demo(page, base_url)
+    expect(page.locator("#cmpPanel")).to_be_visible()
+    expect(page.locator("#cmpT")).to_contain_text("vs 그 전")
+    expect(page.locator("#cmp > div")).to_have_count(5)
+    expect(page.locator("#cmp")).to_contain_text(re.compile("[▲▼]"))
+    expect(page.locator("#days .day .nums").first).to_contain_text("가입")
+    expect(page.locator("#subPanel")).to_be_visible()
+    expect(page.locator("#subs [data-sub]").first).to_be_visible()
+    n = page.locator("#subs [data-sub]").count()
+    assert 0 < n <= 10
+    page.locator("#subMore").click()
+    assert page.locator("#subs [data-sub]").count() >= n
+    btn = page.locator("#subs [data-sub]").first
+    sub = btn.get_attribute("data-sub")
+    btn.click()
+    expect(page.locator("#v-bank")).to_be_visible()
+    expect(page.locator("#qSub")).to_have_value(sub)
+    expect(page.locator("#qSort")).to_have_value("rate_asc")
+
+
+def test_admin_demo_csv_downloads(page, errors, base_url):
+    _demo(page, base_url)
+    for tab, target, count_sel in [("users", "users", "#uPager"), ("bank", "bank", "#qCount"), ("appr", "appr", None)]:
+        page.locator(f"#tabs [data-tab={tab}]").click()
+        if tab == "bank":
+            page.locator("#qStatus").select_option("")
+        if tab == "appr":
+            page.locator("#arOpen").select_option("0")
+        list_sel = {"users": "#uRows tr[data-id]", "bank": "#qList [data-ck]", "appr": "#arList [data-ck]"}[tab]
+        expect(page.locator(list_sel).first).to_be_visible()
+        btn = page.locator(f"[data-csv={target}]")
+        expect(btn).to_be_visible()
+        expect(btn).to_contain_text("CSV")
+        with page.expect_download() as dl:
+            btn.click()
+        d = dl.value
+        assert re.fullmatch(rf"tracer-demo-{target}-\d{{8}}\.csv", d.suggested_filename)
+        lines = _csv_lines(d)
+        assert len(lines) > 2
+        if tab == "users":
+            total = page.evaluate("() => window.TracerAdminDemo.db.users.length")
+            expect(page.locator("#uPager")).to_contain_text(f"/ {total}")
+            assert len(lines) == total + 1
+        if tab == "bank":
+            total = page.evaluate("() => window.TracerAdminDemo.db.questions.length")
+            assert len(lines) == total + 1
+        if tab == "appr":
+            total = page.evaluate("() => window.TracerAdminDemo.db.app_reports.length")
+            assert len(lines) == total + 1
+    page.locator("#tabs [data-tab=activity]").click()
+    expect(page.locator("[data-csv=activity]")).to_be_visible()
+
+
+def test_admin_demo_command_compare_weak_csv_and_buckets(page, errors, base_url):
+    _demo(page, base_url)
+    li = _cmd(page, "지난주랑 비교해줘")
+    expect(li.locator(".st")).to_contain_text("화면 바꿈")
+    expect(li).to_contain_text("최근 7일 vs 그 전")
+    expect(page.locator("#dDays")).to_have_value("7")
+    li = _cmd(page, "약한 범위 보여줘")
+    expect(li.locator(".st")).to_contain_text("화면 바꿈")
+    page.locator("#cmdIn").fill("사용자 목록 CSV로 받아줘")
+    with page.expect_download() as dl:
+        page.locator("#cmdGo").click()
+    assert dl.value.suggested_filename.startswith("tracer-demo-users-")
+    expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("실행함")
+    page.locator("#tabs [data-tab=bank]").click()
+    expect(page.locator("#buckets")).to_be_hidden()
+    page.locator("#bkToggle").click()
+    expect(page.locator("#buckets")).to_be_visible()
+
+
+def test_admin_real_has_no_stage3_elements(logged_in, errors, base_url):
+    page = logged_in
+    page.goto(base_url + "/ccna/admin.html")
+    expect(page.locator("#modeTag")).to_contain_text("실제")
+    expect(page.locator("#cmpPanel")).to_be_hidden()
+    expect(page.locator("#subPanel")).to_be_hidden()
+    for tab in ("users", "bank", "appr"):
+        page.locator(f"#tabs [data-tab={tab}]").click()
+        expect(page.locator(f"[data-csv={tab}]")).to_be_hidden()
+
+
+@pytest.mark.parametrize("login", [False, True])
+def test_app_mypage_demo_admin_card(page, errors, base_url, login):
+    if login:
+        page.add_init_script("localStorage.setItem('fake-tok', 'a')")
+    page.goto(base_url + "/ccna/app.html")
+    page.locator("#tab-mypage").click()
+    card = page.locator("a#demoAdmin")
+    expect(card).to_be_visible()
+    expect(card).to_have_attribute("href", "admin.html?demo=1")
+    expect(card).to_contain_text("관리자 화면 체험")
+    card.click()
+    expect(page).to_have_url(re.compile(r"admin\.html\?demo=1"))
+    expect(page.locator("#modeTag")).to_contain_text("모의")
+
+
+# ---------- 관리자 모의: 명령 기록 탭 ----------
+def _demo_fresh(page, base_url):
+    page.add_init_script("if (!sessionStorage.getItem('t-cleared')) { localStorage.removeItem('tracer-admin-demo-trace'); sessionStorage.setItem('t-cleared', '1'); }")
+    _demo(page, base_url)
+
+
+def test_admin_demo_trace_records_steps_and_persists(page, errors, base_url):
+    _demo_fresh(page, base_url)
+    _cmd(page, "미처리 신고 몇 건이야?")
+    expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("답변")
+    _cmd(page, "승인 대기 모두 승인해줘")
+    expect(page.locator("dialog#ask")).to_be_visible()
+    page.locator("#askNo").click()
+    expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("취소")
+    _cmd(page, "오늘 날씨 어때")
+    expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("못 함")
+    li = _cmd(page, "명령 기록 보여줘")
+    expect(li.locator(".st")).to_contain_text("화면 바꿈")
+    expect(page.locator("#v-trace")).to_be_visible()
+    rows = page.locator("#tRows tr")
+    expect(rows.filter(has_text="오늘 날씨 어때")).to_have_count(1)
+    n = rows.count()
+    assert n >= 3
+    expect(page.locator("#tCount")).to_contain_text(str(n))
+    expect(rows.filter(has_text="오늘 날씨 어때")).to_contain_text("규칙에 없음 → AI에 해석 요청")
+    expect(rows.filter(has_text="오늘 날씨 어때")).to_contain_text("해당 명령 없음")
+    expect(rows.filter(has_text="미처리 신고 몇 건이야")).to_contain_text("규칙으로 해석")
+    expect(rows.filter(has_text="미처리 신고 몇 건이야")).to_contain_text("숫자 계산(화면 안)")
+    expect(rows.filter(has_text="승인 대기 모두 승인")).to_contain_text("관리자: 취소")
+    page.locator("#tSt").select_option("fail")
+    expect(rows).to_have_count(1)
+    expect(rows.first).to_contain_text("오늘 날씨 어때")
+    page.locator("#tSt").select_option("")
+    page.locator("#tPath").select_option("ai")
+    expect(rows).to_have_count(1)
+    page.locator("#tPath").select_option("")
+    page.reload()
+    page.locator("#tabs [data-tab=trace]").click()
+    expect(page.locator("#tRows tr").filter(has_text="오늘 날씨 어때")).to_have_count(1)
+    expect(page.locator("#tRows tr").filter(has_text="미처리 신고 몇 건이야")).to_have_count(1)
+
+
+def test_admin_demo_trace_csv_and_clear(page, errors, base_url):
+    _demo_fresh(page, base_url)
+    _cmd(page, "미처리 신고 몇 건이야?")
+    expect(page.locator("#cmdLog li").first.locator(".st")).to_contain_text("답변")
+    page.locator("#tabs [data-tab=trace]").click()
+    expect(page.locator("#tRows tr")).to_have_count(1)
+    with page.expect_download() as dl:
+        page.locator("[data-csv=trace]").click()
+    assert dl.value.suggested_filename.startswith("tracer-demo-trace-")
+    assert len(_csv_lines(dl.value)) == 2
+    page.locator("#tClear").click()
+    expect(page.locator("dialog#ask")).to_be_visible()
+    page.locator("#askYes").click()
+    expect(page.locator("#tRows tr[data-id], #tRows tr td[colspan]").or_(page.locator("#tRows tr")).first).to_be_visible()
+    assert page.evaluate("() => (JSON.parse(localStorage.getItem('tracer-admin-demo-trace') || '[]')).length") == 0
+
+
+def test_admin_real_has_no_trace_tab(logged_in, errors, base_url):
+    page = logged_in
+    page.goto(base_url + "/ccna/admin.html")
+    expect(page.locator("#modeTag")).to_contain_text("실제")
+    expect(page.locator("[data-tab=trace]")).to_be_hidden()

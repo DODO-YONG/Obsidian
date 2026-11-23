@@ -264,6 +264,16 @@
       list.forEach(function (x) { x.resolved = b.resolved !== false; });
       log({ app_report: b.id, resolved: b.resolved !== false, n: list.length }); return { ok: true, updated: list.length };
     },
+    'demo/add-users': function (b) {  // 모의 데이터 도구: 가상 사용자 더 만들기(승인 대기 등)
+      var st = ['pending', 'active', 'blocked'].indexOf(b.status) >= 0 ? b.status : 'pending', n = Math.max(1, Math.min(50, +b.n || 10)), made = [];
+      for (var k = 0; k < n; k++) {
+        var nm = (rnd() < 0.55 ? pick(SUR) + pick(GIV) : pick(EN) + ' ' + pick(ENL)), ago = between(0, 0.3);
+        var u = addUser(nm, 'user', ago, ago + between(0, 0.05), st); u._dev = pick(DEV);
+        act(u, new Date(u.created_at).getTime(), 'signup', {}); delete u._dev; made.push(u.id);
+      }
+      activity.sort(function (a, b2) { return b2.at.localeCompare(a.at); });
+      log({ bulk: 'demo add ' + st, n: n }); return { ok: true, added: n, status: st, ids: made };
+    },
     'admin/ask': function (b) {  // 규칙으로 안 된 말만 여기로 온다 → 실제 제미나이(모의 화면용, 하루 30회 제한)
       return fetch('/api/demo/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: b.prompt }) })
         .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) throw new Error(j.error || 'AI 연결 실패'); return j; }); })

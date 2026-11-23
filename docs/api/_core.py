@@ -784,7 +784,8 @@ ADMIN_COMMANDS = {
     "select_users":         {"op": ["approve", "block", "unblock", "mark_delete", "unmark_delete"],
                              "status": ["", "active", "pending", "blocked", "delete"], "inactive_days": [0, 30, 90, 180, 365], "joined_days": [0, 1, 7, 30, 90]},
     "select_questions":     {"op": ["hide", "flag", "resolve"], "target": ["flagged", "low", "hidden", "active"]},
-    "undo_last":            {},
+    "undo_last":            {"kind": ["", "approve", "block", "unblock", "mark_delete", "unmark_delete", "questions", "app_reports"], "no": "int"},
+    "demo_add_users":       {"status": ["pending", "active", "blocked"], "n": [10, 5, 20, 50]},
     "compare_period":       {"days": [7, 14, 30, 90, 180, 365]},
     "show_weak_topics":     {"days": [30, 7, 14, 90, 180, 365]},
     "export_csv":           {"target": ["current", "users", "activity", "bank", "appr"]},
@@ -792,7 +793,7 @@ ADMIN_COMMANDS = {
 }
 COMMAND_KIND = {"answer": "answer", "mark_delete_inactive": "act", "unmark_delete_all": "act", "approve_all_pending": "act",
                 "resolve_app_reports": "act", "select_users": "act", "select_questions": "act", "undo_last": "act",
-                "export_csv": "act"}
+                "export_csv": "act", "demo_add_users": "act"}
 ADMIN_ASK_SYS = """You turn a Korean admin's request for the TRACER web admin page into exactly ONE command from this fixed list.
 You cannot do anything outside this list. Never invent commands or values. Snap numbers to the closest allowed value
 ("오늘"=1, "며칠/일주일"=7, "2주"=14, "한 달"=30, "3달"=90, "반년"=180, "1년/일년"=365).
@@ -821,7 +822,9 @@ C) Change data (the page shows the targets and asks the admin to confirm first):
   the filter and apply op (e.g. "차단된 사람 모두 해제" -> {op:"unblock", status:"blocked"}).
 - select_questions {op: hide|flag|resolve, target: flagged|low|hidden|active} — e.g. "출제 중지 문제 다 숨겨" -> {op:"hide", target:"flagged"},
   "정답률 낮은 문제 출제 중지" -> {op:"flag", target:"low"}.
-- undo_last {} — undo the last change ("방금 거 되돌려").
+- undo_last {kind: ""|approve|block|unblock|mark_delete|unmark_delete|questions|app_reports} — undo the most recent change,
+  or the most recent one of that kind ("방금 거 되돌려" -> "", "승인한 거 되돌려" -> approve), or command-log entry number no ("3번 되돌려" -> no:3).
+- demo_add_users {status: pending|active|blocked, n} — mock page only: create fake users ("승인 대기 더미 10명 넣어줘").
 - compare_period {days} — compare the last `days` with the period before ("지난주랑 비교", "저번 달보다 늘었어?").
 - show_weak_topics {days} — accuracy by exam topic, weakest first ("약한 범위", "범위별 정답률").
 - show_trace {only_bad: bool} — the command log of this page ("명령 기록", "못 알아들은 명령").
@@ -876,7 +879,12 @@ def clean_command(out: dict) -> dict:
     raw = out.get("args") if isinstance(out.get("args"), dict) else {}
     args = {}
     for k, allowed in ADMIN_COMMANDS[cmd].items():
-        if allowed == "text":  # 짧은 주제어만(글자·숫자·공백·.-), 사람 이름 같은 건 화면이 거르지 않지만 30자로 제한
+        if allowed == "int":  # 명령 기록 번호(0 = 지정 안 함)
+            try:
+                args[k] = max(0, min(int(raw.get(k) or 0), 100000))
+            except (TypeError, ValueError):
+                args[k] = 0
+        elif allowed == "text":  # 짧은 주제어만(글자·숫자·공백·.-), 사람 이름 같은 건 화면이 거르지 않지만 30자로 제한
             args[k] = re.sub(r"[^\w .\-]", "", str(raw.get(k) or ""))[:30].strip()
         else:
             args[k] = _closest(raw.get(k, allowed[0]), allowed)
