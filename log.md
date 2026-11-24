@@ -397,3 +397,5 @@
 ## [2026-11-24] output | 소개팅 앱 실제 시험: 사용자 가입 → 운영자 등록 → 사진·셀카 승인 → 활성화까지 실제 서버에서 확인
 
 ## [2026-11-24] output | 소개팅 앱 이름·아이콘 시안 2차: noted.(추천)·say when·her call, 이름 겹침 조사(agy)로 Upfront·Candid·Fess 제외
+
+## [2026-11-24] output | 소개팅 앱 이름 say when 결정: 웹 파비콘·아이콘·manifest·머리말 반영
