@@ -399,3 +399,5 @@
 ## [2026-11-24] output | 소개팅 앱 이름·아이콘 시안 2차: noted.(추천)·say when·her call, 이름 겹침 조사(agy)로 Upfront·Candid·Fess 제외
 
 ## [2026-11-24] output | 소개팅 앱 이름 say when 결정: 웹 파비콘·아이콘·manifest·머리말 반영
+
+## [2026-11-24] output | 소개팅 앱 구글 로그인 앱 이름 Dating Beta → say when
