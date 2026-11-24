@@ -19,6 +19,10 @@
 5. 고친 뒤 후속 작업도 내가 한다: `docs/` HTML → `scripts/bump-site-version.sh`, 위키 페이지 → `index.md`·`log.md`, 할 일 → `wiki/개발 보드.md`.
 6. 다른 사람의 개인정보(앱 회원 데이터 등)는 다루지 않는다. 사용자가 대신 동의할 수 없다.
 
+## Antigravity 앱에서 일할 때 (Claude가 없을 때)
+- `scripts/agy-settings.json`이 안 걸린다 → 위 막힌 것들을 **스스로** 지킨다. 푸시·`~/dating` 푸시·Supabase 적용·배포는 하지 않는다. `~/dating`은 시킬 때만, 시험 후 로컬 커밋까지.
+- 시작·끝 확인, `log.md` 끝 `(앱)` 표시 등 전체 규칙: 작업지시서 **6-1**.
+
 ## 인수인계 메모: `wiki/_inbox/_인수인계.md` (맨 아래에 추가만)
 Claude에게 넘길 일이 있을 때만 쓴다.
 ```markdown

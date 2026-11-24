@@ -361,3 +361,5 @@
 ## [2026-11-24] output | 소개팅 앱 결정: 크루 모드는 솔로·크루 선택형, Claude 재점검 대기(인수인계)
 
 ## [2026-11-24] query | Claude 없을 때 Antigravity 앱에서 대신 작업하는 협의안: 사용자 결정 3개(모델·dating 코드 범위·반영 방식), Claude에게 작업지시서 반영 부탁(인수인계) (앱)
+
+## [2026-11-24] output | 협업 규칙: Claude 없을 때 Antigravity 앱 대신 작업(작업지시서 6-1, 앱 Claude Opus 예외, dating 로컬 커밋까지, 푸시·DB는 Claude)
