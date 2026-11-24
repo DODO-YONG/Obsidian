@@ -365,3 +365,5 @@
 ## [2026-11-24] output | 협업 규칙: Claude 없을 때 Antigravity 앱 대신 작업(작업지시서 6-1, 앱 Claude Opus 예외, dating 로컬 커밋까지, 푸시·DB는 Claude)
 
 ## [2026-11-24] query | 소개팅 앱 크루 기능 Claude 재점검: 양쪽 전원 동의, 차단·선호가 크루를 뚫지 못하게, 매칭 뒤 멤버 추가 금지, Tinder Social·Grouper 사실 확인, 남은 결정 추천
+
+## [2026-11-24] output | 협업 규칙 6-1: Antigravity 앱 Telemetry 꺼짐 확인 → private/ 작업도 가능

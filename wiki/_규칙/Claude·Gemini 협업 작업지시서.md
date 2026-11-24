@@ -117,7 +117,7 @@ scripts/gemini.sh -m gemini-3.8-flash-medium "OSPF hello 간격 기본값을 공
 Claude Code 사용량이 다 됐을 때 사용자가 **Antigravity 앱**(agy CLI 아님)에서 직접 볼트 작업을 시킨다. 앱은 위 `gemini.sh`·`agy-settings.json`이 걸리지 않으므로 아래를 **스스로** 지킨다.
 
 - **모델**: 앱에서는 **Claude Opus를 써도 된다**(사용자 결정, AI Credits 꺼짐 사용자 확인). "제미나이 모델만"(6번 위)은 Claude가 부르는 agy CLI에만 해당하는 규칙이고, 이 앱은 예외다. 한도가 다 되면 크레딧을 켜지 않고 멈춘다.
-- **보내는 내용**: Telemetry는 계정 설정이라 앱에도 적용되는 것으로 보지만 앱 화면에서는 아직 `미확인`이다. 사용자가 앱 설정에서 꺼짐을 확인하기 전까지는 `private/` 작업을 맡기지 않는다.
+- **보내는 내용**: 앱도 Telemetry 꺼짐(2026-11-24 사용자 확인) → agy와 같은 등급, `private/` 작업도 맡겨도 된다.
 - **스스로 지킬 것**: `.env` 읽지 않기, `raw/` 쓰지 않기, `--no-verify` 금지, 바꾼 파일만 `git add <파일>`.
 - **커밋·푸시**: 앱 샌드박스가 `.git` 쓰기를 막으므로 커밋만 샌드박스 밖에서 한다(사용자가 `git add`·`git commit` 항상 허용). 앱 셸은 네트워크가 되지만 **푸시는 하지 않는다**(Obsidian 자동 백업이 한다).
 - **`~/dating` 코드**: **사용자가 시킬 때만** 고치고, 시험을 돌린 뒤 **로컬 커밋까지만** 한다. 푸시·Supabase 적용은 Claude가 한다.
