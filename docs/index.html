@@ -15,12 +15,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=20261125083840">
-<link rel="stylesheet" href="tracer-how.css?v=20261125083840">
+<link rel="stylesheet" href="style.css?v=20261125085520">
+<link rel="stylesheet" href="tracer-how.css?v=20261125085520">
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261125083840';
+  var SITE_V = '20261125085520';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -46,6 +46,7 @@
       <a href="#log">작업 기록</a>
       <a href="#rules">지키는 것</a>
       <a href="#next">다음</a>
+      <a href="journal/">작업 일지</a>
       <a href="map.html">작업실 지도</a>
     </nav>
     <button class="theme-btn" id="themeBtn" type="button" aria-label="어두운 화면으로 전환">
@@ -69,6 +70,7 @@
         <a class="btn" href="https://tracer-eosin.vercel.app/ccna/">🧠 CCNA 코치 써 보기</a>
         <a class="btn" href="heartline/">💗 Heartline 써 보기</a>
         <a class="btn" href="shadow/">🎧 SHADOW 열기</a>
+        <a class="btn" href="journal/">📓 작업 일지</a>
       </div>
     </div>
 
@@ -78,13 +80,7 @@
         <div><span class="prompt">$</span> git log --oneline --reverse</div>
         <!-- gitlog:start -->
         <ol>
-          <li class="day"># 11-17 ~ 11-20 · 4일 · 104 commits (접음)</li>
-          <li class="day"># 6일차 · 11-22 · 16 commits</li>
-          <li><span class="h">f5e644a</span><span class="t">01:12</span><span class="m">TRACER 문제은행: IP 연결 248문제 추가, 보기 길이 편향 수정, 전체 검수</span></li>
-          <li><span class="h">9b6ef30</span><span class="t">01:22</span><span class="m">TRACER: 세트 풀기(5·10·20문제 연속)와 마이페이지</span></li>
-          <li><span class="h">6b2ad2e</span><span class="t">01:37</span><span class="m">TRACER: 틀린 문제 다시 풀기, 주관식 잠시 멈춤, 출시 체크리스트</span></li>
-          <li><span class="h">16aca6a</span><span class="t">06:42</span><span class="m">DY-004 TWIN·DY-005 PRIMER 정리, SHADOW 출시 계획, Tracer Route 앱…</span></li>
-          <li class="more">… 외 12개 (잡음·작은 수정 포함)</li>
+          <li class="day"># 11-17 ~ 11-22 · 5일 · 120 commits (접음)</li>
           <li class="day"># 7일차 · 11-23 · 31 commits</li>
           <li><span class="h">599c36e</span><span class="t">09:55</span><span class="m">웹 관리자 명령창 + 모의 관리자 화면(admin.html?demo=1)</span></li>
           <li><span class="h">14f7109</span><span class="t">10:21</span><span class="m">모의 관리자 1·2단계 + 명령창 확장, 모의 데이터 1년치·500명</span></li>
@@ -97,8 +93,11 @@
           <li><span class="h">2c692d5</span><span class="t">09:13</span><span class="m">소개팅 앱 1b DB 완료 기록(보드·허브·분담 기록·log)</span></li>
           <li><span class="h">d3c5b0e</span><span class="t">09:17</span><span class="m">보드: 소개팅 앱 화면은 사용자가 따로 작업(규칙 SPEC-web-1b)</span></li>
           <li class="more">… 외 51개 (잡음·작은 수정 포함)</li>
+          <li class="day"># 9일차 · 11-25 · 2 commits</li>
+          <li><span class="h">61b68d1</span><span class="t">08:38</span><span class="m">작업 보고 메일: 매일 밤 10시 일일 보고·일요일 주간 보고(work-report.py + launchd)</span></li>
+          <li><span class="h">bc05275</span><span class="t">08:46</span><span class="m">작업 보고 메일 첫 발송 확인</span></li>
         </ol>
-        <div class="tail">206 commits · 7 days<span class="cursor" aria-hidden="true"></span></div>
+        <div class="tail">208 commits · 8 days<span class="cursor" aria-hidden="true"></span></div>
         <!-- gitlog:end -->
       </div>
     </figure>
@@ -564,6 +563,6 @@
   }
 })();
 </script>
-<script src="tracer-how.js?v=20261125083840" defer></script>
+<script src="tracer-how.js?v=20261125085520" defer></script>
 </body>
 </html>

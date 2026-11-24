@@ -208,6 +208,8 @@ def main():
         report("daily", day, mail)
         if day.weekday() == 6:  # 일요일 밤엔 주간도
             report("weekly", day, mail)
+        # 공개 작업 일지 사이트(docs/journal) 갱신·푸시 — 공개 저장소 기록만 씀
+        subprocess.run([sys.executable, str(VAULT / "scripts" / "journal-site.py"), "auto", "--push"])
     elif kind in ("daily", "weekly"):
         report(kind, day, mail)
     else:

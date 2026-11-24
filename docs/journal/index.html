@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>작업 일지 · Q-BRANCH</title>
+<meta name="description" content="Claude Code로 에이전트를 만들며 매일·매주 한 일을 쉬운 말로 정리한 작업 일지.">
+<meta property="og:title" content="작업 일지 · Q-BRANCH">
+<meta property="og:description" content="매일·매주 무엇을 만들었는지 쉬운 말로 정리한 기록">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://dodo-yong.github.io/Obsidian/preview.png">
+<meta name="theme-color" content="#0E1319">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M10 9h12M10 16h12M10 23h7' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<script>
+/* 기본은 어두운 화면. 밝은 화면을 고른 사람만 밝게(작업실 사이트와 같은 저장값 'theme') */
+(function () { try { if (localStorage.getItem('theme') === 'light') document.documentElement.setAttribute('data-theme', 'light'); } catch (e) {} })();
+/* 새 버전 자동 확인 (scripts/bump-site-version.sh) */
+(function () {
+  var SITE_V = '20261125083840';
+  fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
+    if (!j.v || j.v === SITE_V) return;
+    var k = 'site-reloaded-' + j.v;
+    try { if (sessionStorage.getItem(k)) return; sessionStorage.setItem(k, '1'); } catch (e) { return; }
+    location.replace(location.pathname + '?v=' + j.v + location.hash);
+  }).catch(function () {});
+})();
+</script>
+<link rel="stylesheet" href="../style.css?v=20261125083840">
+<style>
+  main > section { border-top: 0; padding-top: 0; padding-bottom: 0; }
+  main > .hero-j { padding: 48px 0 36px; }
+  .hero-j { display: grid; gap: 28px; }
+  .hero-j h1 { font-size: var(--step-4); letter-spacing: -.02em; margin-top: 14px; }
+  .hero-j h1 .hl { color: var(--signal); }
+  .hero-j .lead { color: var(--ink-2); max-width: 640px; margin: 12px 0 0; font-size: var(--step-1); }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; }
+  .stat { background: var(--panel); padding: 16px 18px; }
+  .stat b { display: block; font-family: var(--mono); font-size: var(--step-3); font-weight: 600; line-height: 1.1; }
+  .stat span { color: var(--ink-3); font-size: var(--step--1); }
+
+  .how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .how li { list-style: none; background: var(--panel); border: 1px solid var(--rule); border-radius: var(--radius); padding: 16px 18px; position: relative; }
+  .how ol { margin: 0; padding: 0; display: contents; }
+  .how .n { font-family: var(--mono); font-size: 12px; color: var(--signal); letter-spacing: .08em; }
+  .how h3 { font-size: var(--step-0); margin: 4px 0 4px; }
+  .how p { margin: 0; color: var(--ink-2); font-size: var(--step--1); line-height: 1.6; }
+  .sec-h { display: flex; align-items: baseline; gap: 12px; margin: 8px 0 14px; }
+  .sec-h h2 { font-size: var(--step-2); }
+  .sec-h .mono { color: var(--ink-3); font-size: 13px; }
+
+  /* 활동 띠: 하루 = 한 칸, 커밋 수만큼 진하게 */
+  .strip { display: flex; gap: 6px; overflow-x: auto; padding: 4px 2px 10px; scrollbar-width: thin; }
+  .cell { flex: none; width: 46px; text-align: center; text-decoration: none; color: var(--ink-3); font-family: var(--mono); font-size: 11px; }
+  .cell i { display: block; height: 46px; border-radius: 8px; background: var(--sunk); border: 1px solid var(--rule); margin-bottom: 4px; position: relative; }
+  .cell i[data-l="1"] { background: color-mix(in srgb, var(--signal) 25%, var(--sunk)); }
+  .cell i[data-l="2"] { background: color-mix(in srgb, var(--signal) 50%, var(--sunk)); }
+  .cell i[data-l="3"] { background: color-mix(in srgb, var(--signal) 75%, var(--sunk)); }
+  .cell i[data-l="4"] { background: var(--signal); }
+  .cell i em { position: absolute; inset: 0; display: grid; place-items: center; font-style: normal; color: var(--ink); font-weight: 600; font-size: 12px; }
+  .cell i[data-l="3"] em, .cell i[data-l="4"] em { color: #fff; }
+  .cell:hover i { outline: 2px solid var(--signal); outline-offset: 1px; }
+  .cell.off { pointer-events: none; opacity: .55; }
+
+  /* 보기 바꾸기 */
+  .bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 22px 0 16px; padding-bottom: 14px; border-bottom: 1px solid var(--rule); }
+  .seg { display: inline-flex; background: var(--sunk); border-radius: 10px; padding: 3px; }
+  .seg button { border: 0; background: none; color: var(--ink-2); font: inherit; font-size: var(--step--1); padding: 7px 16px; border-radius: 8px; cursor: pointer; min-height: 36px; }
+  .seg button[aria-pressed="true"] { background: var(--panel); color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+  .chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; min-width: 0; flex: 1; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex: none; border: 1px solid var(--rule); background: var(--panel); color: var(--ink-2); font: inherit; font-size: 13px; padding: 5px 12px; border-radius: 999px; cursor: pointer; white-space: nowrap; min-height: 32px; }
+  .chip[aria-pressed="true"] { border-color: var(--signal); color: var(--signal); background: var(--signal-soft); }
+
+  /* 카드 */
+  main > .list { display: grid; gap: 16px; padding-bottom: 60px; }
+  .card { background: var(--panel); border: 1px solid var(--rule); border-radius: var(--radius); padding: 22px 24px; scroll-margin-top: 76px; }
+  .card:target { border-color: var(--signal); box-shadow: 0 0 0 3px var(--signal-soft); }
+  .card-h { display: flex; gap: 16px; align-items: flex-start; }
+  .date { flex: none; min-width: 64px; text-align: center; border-right: 1px solid var(--rule); padding-right: 16px; }
+  .date b { display: block; white-space: nowrap; font-family: var(--mono); font-size: 26px; line-height: 1.1; font-weight: 600; }
+  .date span { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+  .card-h h3 { font-size: var(--step-1); line-height: 1.45; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .tag { font-family: var(--mono); font-size: 12px; color: var(--ink-3); background: var(--sunk); padding: 2px 8px; border-radius: 6px; }
+  .tag.live { color: var(--ok); background: var(--ok-soft); }
+  .projs { display: grid; gap: 14px; margin-top: 18px; }
+  .proj h4 { font-size: var(--step-0); display: flex; gap: 8px; align-items: center; }
+  .proj h4 .e { font-size: 18px; }
+  .proj .out { color: var(--ink-2); margin: 2px 0 0; font-size: var(--step--1); }
+  .proj ul { margin: 6px 0 0; padding-left: 1.2em; color: var(--ink-2); }
+  .proj li { margin: 3px 0; line-height: 1.65; }
+  .proj li::marker { color: var(--ink-3); }
+  .learned { margin: 18px 0 0; padding: 12px 14px; border-left: 3px solid var(--lock); background: var(--lock-soft); border-radius: 0 8px 8px 0; font-size: var(--step--1); }
+  .learned b { color: var(--lock); margin-right: 6px; }
+  .summary { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+  .summary li { padding-left: 22px; position: relative; color: var(--ink); }
+  .summary li::before { content: "›"; position: absolute; left: 6px; color: var(--signal); font-weight: 700; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+  .box { background: var(--sunk); border-radius: 10px; padding: 14px 16px; }
+  .box h4 { font-size: 13px; font-family: var(--mono); color: var(--ink-3); letter-spacing: .04em; font-weight: 500; }
+  .box ul { margin: 6px 0 0; padding-left: 1.1em; font-size: var(--step--1); color: var(--ink-2); }
+  .box li { margin: 3px 0; }
+  .more { margin-top: 12px; border: 0; background: none; color: var(--signal); font: inherit; font-size: var(--step--1); cursor: pointer; padding: 6px 0; }
+  .card.folded .projs .proj:nth-child(n+3), .card.folded .learned { display: none; }
+  .empty { color: var(--ink-3); text-align: center; padding: 40px 0; }
+  .foot { color: var(--ink-3); font-size: 13px; padding: 24px 0 40px; border-top: 1px solid var(--rule); }
+
+  @media (max-width: 720px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .how { grid-template-columns: 1fr; }
+    .cols { grid-template-columns: 1fr; }
+    .card { padding: 18px 16px; }
+    .date { min-width: 50px; padding-right: 12px; }
+    .date b { font-size: 19px; }
+    .card-h { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../" aria-label="작업실 첫 화면">
+      <span class="brand-mark"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 5l3 3-3 3M8.5 11.5h4"/></svg></span>
+      <span class="brand-text">Q-BRANCH <span class="brand-sub">· 작업 일지</span></span>
+    </a>
+    <nav class="nav" aria-label="페이지">
+      <a href="../">작업실</a>
+      <a href="./" aria-current="true">작업 일지</a>
+      <a href="../map.html">작업실 지도</a>
+    </nav>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="밝은 화면으로 전환">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+  <section class="hero-j">
+    <div>
+      <p class="kicker"><span class="pulse" aria-hidden="true"></span>매일 밤 10시 자동 갱신</p>
+      <h1>오늘은 <span class="hl">무엇을</span> 만들었나</h1>
+      <p class="lead">Claude Code로 나에게 필요한 에이전트를 만들면서, 하루하루 한 일을 쉬운 말로 남깁니다. 날짜를 누르면 그날 기록으로, 「주별」을 누르면 한 주 회고로 갑니다.</p>
+    </div>
+    <div class="stats" id="stats" aria-label="지금까지 숫자"></div>
+    <div class="how" aria-label="이 일지가 만들어지는 방법">
+      <ol>
+        <li><span class="n">01 · 기록</span><h3>작업마다 커밋</h3><p>코드나 문서를 바꿀 때마다 무엇을 했는지 한 줄씩 git 기록에 남깁니다.</p></li>
+        <li><span class="n">02 · 요약</span><h3>AI가 쉬운 말로</h3><p>매일 밤 제미나이가 그날 기록을 읽고 프로젝트별로 묶어, 처음 보는 사람도 알 수 있게 풀어 씁니다.</p></li>
+        <li><span class="n">03 · 쌓기</span><h3>여기에 자동으로</h3><p>정리된 하루와 한 주가 이 페이지에 쌓입니다. 사람이 손대지 않아도 매일 늘어납니다.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section aria-labelledby="act-t">
+    <div class="sec-h"><h2 id="act-t">활동</h2><span class="mono">칸 숫자 = 그날 커밋 수</span></div>
+    <div class="strip" id="strip"></div>
+  </section>
+
+  <div class="bar">
+    <div class="seg" role="group" aria-label="보기">
+      <button type="button" data-view="days" aria-pressed="true">일자별</button>
+      <button type="button" data-view="weeks" aria-pressed="false">주별</button>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="프로젝트로 거르기"></div>
+  </div>
+
+  <section class="list" id="list" aria-live="polite"><p class="empty">불러오는 중…</p></section>
+</main>
+
+<footer class="wrap foot" id="foot"></footer>
+
+<script>
+(function () {
+  var root = document.documentElement, btn = document.getElementById('themeBtn');
+  function isDark() { return root.getAttribute('data-theme') !== 'light'; }
+  function sync() { btn.setAttribute('aria-label', isDark() ? '밝은 화면으로 전환' : '어두운 화면으로 전환'); }
+  sync();
+  btn.addEventListener('click', function () {
+    var next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+
+  var data, view = 'days', filter = '';
+  try { if (localStorage.getItem('journal-view') === 'weeks') view = 'weeks'; } catch (e) {}
+  if (/^#w-/.test(location.hash)) view = 'weeks';
+  if (/^#d-/.test(location.hash)) view = 'days';
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function md(d) { return +d.slice(5, 7) + '.' + +d.slice(8, 10); }
+  function today() { var t = new Date(); t.setMinutes(t.getMinutes() - t.getTimezoneOffset()); return t.toISOString().slice(0, 10); }
+
+  fetch('data.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
+    data = j; init();
+  }).catch(function () { document.getElementById('list').innerHTML = '<p class="empty">기록을 불러오지 못했습니다.</p>'; });
+
+  function projectsOf(x) { return (x.projects || []).map(function (p) { return p.name; }); }
+
+  function init() {
+    var days = data.days || [], weeks = data.weeks || [];
+    var total = days.reduce(function (a, d) { return a + (d.commits || 0); }, 0);
+    var names = {};
+    days.forEach(function (d) { projectsOf(d).forEach(function (n) { names[n] = (names[n] || 0) + 1; }); });
+    var first = days.length ? days[days.length - 1].date : '';
+    document.getElementById('stats').innerHTML = [
+      [days.length, '작업한 날'], [weeks.length, '주'], [total, '커밋'], [Object.keys(names).length, '프로젝트']
+    ].map(function (s) { return '<div class="stat"><b>' + s[0] + '</b><span>' + s[1] + '</span></div>'; }).join('');
+
+    // 활동 띠: 첫날부터 오늘까지 빠짐없이(쉰 날은 빈 칸)
+    var byDate = {}; days.forEach(function (d) { byDate[d.date] = d; });
+    var max = Math.max.apply(null, days.map(function (d) { return d.commits || 0; }).concat([1]));
+    var cells = [], t = today();
+    if (first) for (var d = new Date(first + 'T12:00:00'); ; d.setDate(d.getDate() + 1)) {
+      var k = d.toISOString().slice(0, 10); if (k > t) break;
+      var x = byDate[k], c = x ? x.commits : 0, l = c ? Math.min(4, Math.ceil(c / max * 4)) : 0;
+      cells.push('<a class="cell' + (x ? '' : ' off') + '" href="#d-' + k + '" title="' + k + ' · 커밋 ' + c + '건"><i data-l="' + l + '">' + (c ? '<em>' + c + '</em>' : '') + '</i>' + md(k) + '</a>');
+    }
+    var strip = document.getElementById('strip');
+    strip.innerHTML = cells.join('');
+    strip.scrollLeft = strip.scrollWidth;
+    strip.addEventListener('click', function (e) { if (e.target.closest('.cell')) setView('days', true); });
+
+    var top = Object.keys(names).sort(function (a, b) { return names[b] - names[a]; });
+    document.getElementById('chips').innerHTML = '<button class="chip" type="button" data-p="" aria-pressed="true">전체</button>' +
+      top.map(function (n) { return '<button class="chip" type="button" data-p="' + esc(n) + '" aria-pressed="false">' + esc(n) + '</button>'; }).join('');
+    document.getElementById('chips').addEventListener('click', function (e) {
+      var b = e.target.closest('.chip'); if (!b) return;
+      filter = b.getAttribute('data-p');
+      [].forEach.call(this.children, function (c) { c.setAttribute('aria-pressed', String(c === b)); });
+      render();
+    });
+    document.querySelectorAll('.seg button').forEach(function (b) {
+      b.addEventListener('click', function () { setView(b.getAttribute('data-view')); });
+    });
+    document.getElementById('foot').innerHTML = '마지막 갱신 ' + esc(data.updated || '') + ' · 공개 저장소의 커밋 기록만으로 만듭니다 · <a href="../">작업실로</a>';
+    setView(view, true);
+    if (location.hash) { var el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView(); }
+  }
+
+  function setView(v, keep) {
+    view = v;
+    try { localStorage.setItem('journal-view', v); } catch (e) {}
+    document.querySelectorAll('.seg button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-view') === v)); });
+    render();
+  }
+
+  function proj(p, withOut) {
+    return '<div class="proj"><h4><span class="e" aria-hidden="true">' + esc(p.emoji || '•') + '</span>' + esc(p.name) + '</h4>' +
+      (withOut && p.outcome ? '<p class="out">' + esc(p.outcome) + '</p>' : '') +
+      '<ul>' + (p.items || []).map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul></div>';
+  }
+  function list(title, arr) {
+    return arr && arr.length ? '<div class="box"><h4>' + title + '</h4><ul>' + arr.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul></div>' : '';
+  }
+  function hit(x) { return !filter || projectsOf(x).indexOf(filter) >= 0; }
+
+  function render() {
+    var el = document.getElementById('list'), t = today(), html;
+    if (view === 'days') {
+      html = (data.days || []).filter(hit).map(function (d) {
+        var ps = d.projects || [];
+        if (filter) ps = ps.filter(function (p) { return p.name === filter; });
+        var fold = !filter && ps.length > 2;
+        return '<article class="card' + (fold ? ' folded' : '') + '" id="d-' + d.date + '">' +
+          '<div class="card-h"><div class="date"><b>' + md(d.date) + '</b><span>' + esc(d.weekday) + '요일</span></div>' +
+          '<div><h3>' + esc(d.headline) + '</h3><div class="meta"><span class="tag">커밋 ' + d.commits + '</span>' +
+          (d.date === t ? '<span class="tag live">오늘</span>' : '') + ps.map(function (p) { return '<span class="tag">' + esc(p.emoji || '') + ' ' + esc(p.name) + '</span>'; }).join('') + '</div></div></div>' +
+          '<div class="projs">' + ps.map(function (p) { return proj(p); }).join('') + '</div>' +
+          (d.learned ? '<p class="learned"><b>오늘의 한 줄</b>' + esc(d.learned) + '</p>' : '') +
+          (fold ? '<button class="more" type="button">나머지 ' + (ps.length - 2) + '개 프로젝트 더 보기 ↓</button>' : '') +
+          '</article>';
+      });
+    } else {
+      html = (data.weeks || []).filter(hit).map(function (w) {
+        var ps = w.projects || [];
+        if (filter) ps = ps.filter(function (p) { return p.name === filter; });
+        var live = w.end >= t;
+        return '<article class="card" id="w-' + w.start + '">' +
+          '<div class="card-h"><div class="date"><b>' + md(w.start) + '</b><span>~ ' + md(w.end) + '</span></div>' +
+          '<div><h3>' + esc(w.title) + '</h3><div class="meta"><span class="tag">커밋 ' + w.commits + '</span>' +
+          (live ? '<span class="tag live">진행 중 · 매일 갱신</span>' : '') + '</div></div></div>' +
+          (filter ? '' : '<ul class="summary">' + (w.summary || []).map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ul>') +
+          '<div class="projs">' + ps.map(function (p) { return proj(p, true); }).join('') + '</div>' +
+          (filter ? '' : '<div class="cols">' + list('정한 것', w.decisions) + list('다음에 할 것', w.next) + '</div>') +
+          '</article>';
+      });
+    }
+    el.innerHTML = html.length ? html.join('') : '<p class="empty">이 프로젝트 기록이 없습니다.</p>';
+  }
+
+  document.getElementById('list').addEventListener('click', function (e) {
+    var b = e.target.closest('.more'); if (!b) return;
+    b.closest('.card').classList.remove('folded'); b.remove();
+  });
+  window.addEventListener('hashchange', function () {
+    var v = /^#w-/.test(location.hash) ? 'weeks' : 'days';
+    if (v !== view) setView(v);
+    var el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView();
+  });
+})();
+</script>
+</body>
+</html>
