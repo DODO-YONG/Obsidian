@@ -104,6 +104,7 @@ scripts/gemini.sh -m gemini-3.8-flash-medium "OSPF hello 간격 기본값을 공
 - **모델**: 기본은 `gemini-4-neon-high`입니다. 가벼운 일(요약·번역·점검)은 `gemini-3.8-flash-medium`으로 한도를 아낍니다. 목록은 `agy models`로 봅니다. 목록에 Claude 모델도 있지만 쓰지 않습니다.
 - **권한 설정** (`scripts/agy-settings.json`, 2026-11-23 시험 통과): 볼트 전체 읽기·쓰기·셸·git 커밋 허용, 셸은 샌드박스. 막는 것은 키 파일 읽기(도구·셸 `cat` 모두 거부), `raw/` 쓰기, `--no-verify`뿐입니다(시험: `.env` 거부, `raw/` 쓰기 거부, `private/` 읽기·`git commit` 성공).
   - 작업 폴더는 볼트 루트이고, `GEMINI.md`를 자동으로 읽습니다.
+- **보이게 실행** (`-w`, 2026-11-24 사용자 요청): Claude가 agy를 부를 땐 Bash 백그라운드 대신 **터미널 패널 탭**에서 `scripts/gemini.sh -w ... 2>&1 | tee <로그>`로 돌려 사용자가 진행(읽는 파일·실행 명령·쓰는 글)을 볼 수 있게 한다. `-w`는 `--output-format stream-json`을 `scripts/agy-watch.py`로 읽기 좋게 바꾼다.
 - **볼트 밖 비공개 저장소** (`-d <폴더>`, 2026-11-23 시험 통과): `scripts/gemini.sh -d ~/dating "할 일"`. `gemini.sh`의 `REPOS` 목록에 있는 폴더만 되고(지금은 `~/dating`), 설정은 `scripts/agy-settings-repo.json` — **그 폴더만** 읽기·쓰기·셸·커밋, `.env` 읽기(도구·셸)·푸시·`--no-verify`·볼트 접근은 막습니다(시험: 저장소 읽기 성공, 미끼 `.env` 도구·셸 거부, 볼트 파일 거부). 푸시는 Claude가 합니다.
 - **보내는 내용**: `private/` 포함 볼트 안 내용은 맡겨도 됩니다. Tracer-Route는 아직 `REPOS`에 넣지 않았습니다.
 - **Mac Gemini 앱**: 사용자가 제미나이와 직접 이야기할 때 그대로 씁니다. 이 앱은 `GEMINI.md`를 자동으로 읽지 않으니, 앱으로 볼트 작업을 시킬 때는 "`GEMINI.md` 먼저 읽어"라고 말합니다. `CLAUDE.md` 맨 위에도 제미나이용 핵심 3줄이 있습니다.

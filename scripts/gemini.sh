@@ -14,20 +14,23 @@
 #   - -d <폴더>: 볼트 밖 비공개 저장소에서 일하게 할 때. 아래 REPOS 목록에 있는 폴더만.
 #     그 폴더만 읽기·쓰기(scripts/agy-settings-repo.json), .env 읽기·푸시 금지
 #     예: scripts/gemini.sh -d ~/dating "db/test/ 에 권한 시험 써 줘"
+#   - -w: 진행을 실시간으로 보여 줌(도구 사용·글이 나오는 대로, scripts/agy-watch.py). 터미널 탭에서 볼 때
 set -e
 VAULT="$(cd "$(dirname "$0")/.." && pwd)"
 AGY="${AGY:-$HOME/.local/bin/agy}"
 MODEL="gemini-4-neon-high"
 EFFORT=""
 DIR=""
+WATCH=""
 # 볼트 밖에서 agy가 일해도 되는 비공개 저장소(사용자가 허락한 것만 추가)
 REPOS="$HOME/dating"
-while getopts "m:e:d:" opt; do
+while getopts "m:e:d:w" opt; do
   case "$opt" in
     m) MODEL="$OPTARG" ;;
     e) EFFORT="$OPTARG" ;;
     d) DIR="$OPTARG" ;;
-    *) echo "사용: scripts/gemini.sh [-m 모델] [-e low|medium|high] [-d 저장소] \"할 일\"" >&2; exit 2 ;;
+    w) WATCH=1 ;;
+    *) echo "사용: scripts/gemini.sh [-m 모델] [-e low|medium|high] [-d 저장소] [-w] \"할 일\"" >&2; exit 2 ;;
   esac
 done
 shift $((OPTIND - 1))
@@ -63,4 +66,8 @@ else
 fi
 set -- -p "$1" --model "$MODEL" --settings "$SETTINGS" --print-timeout 20m
 [ -n "$EFFORT" ] && set -- "$@" --effort "$EFFORT"
+if [ -n "$WATCH" ]; then
+  "$AGY" "$@" --output-format stream-json 2>&1 | python3 "$VAULT/scripts/agy-watch.py"
+  exit $?
+fi
 exec "$AGY" "$@"
