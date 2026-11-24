@@ -56,5 +56,7 @@ date: 2026-11-23
 
 - **Supabase 연결**(2026-11-24): 무료 두 번째 프로젝트 `dating`(서울 ap-northeast-2), 조직은 Free·Spend cap 켬·카드 없음(넘으면 멈춤, 요금 없음). SQL 3개 적용 후 점검(정책 6·RLS 빠진 표 0·실시간 matches·messages·비공개 버킷 2). 브라우저 키는 **publishable**(공개용)만 `config.js`에. ⚠️ 붙여 넣을 때 한글이 깨지는 문제(클립보드 인코딩) → 한글 든 함수 3개·저장소 정책 다시 만들어 해결, 다음부턴 `LANG=en_US.UTF-8 pbcopy`. 멈춤 막기 = GitHub Actions `keepalive.yml`이 하루 한 번 `public.ping()`.
 
+- **웹 호스팅 = Vercel Hobby(무료)**(2026-11-24 사용자): 프로젝트 `dating-web`(저장소 `web/` 폴더, 푸시하면 자동 배포), 주소 https://dating-web-liart-mu.vercel.app (자동 이름, 나중에 바꿀 수 있음). Vercel GitHub 앱 권한은 `Obsidian`·`dating` 두 저장소만. 보안 헤더는 `web/vercel.json`(frame-ancestors none·nosniff·no-referrer·카메라 등 권한 끔·검색 제외·no-cache). Supabase Site URL·리다이렉트(이 주소 + localhost:8813) 등록.
+
 ## 남은 일
 - [[개발 보드]]에서 관리

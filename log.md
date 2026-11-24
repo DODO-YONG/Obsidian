@@ -381,3 +381,5 @@
 ## [2026-11-24] output | 협업 규칙 7-5: 순서에 매이지 않는 일은 agy 먼저 출발(명세 → agy → Claude)
 
 ## [2026-11-24] output | 소개팅 앱 Supabase 연결(서울 무료 프로젝트, SQL 3개 적용·점검, publishable 키, 멈춤 막기 워크플로)
+
+## [2026-11-24] output | 소개팅 앱 웹 Vercel 배포(dating-web, 보안 헤더), Supabase 로그인 주소 등록
