@@ -385,3 +385,5 @@
 ## [2026-11-24] output | 소개팅 앱 웹 Vercel 배포(dating-web, 보안 헤더), Supabase 로그인 주소 등록
 
 ## [2026-11-24] output | 소개팅 앱 구글 로그인 연결(구글 클라우드 dating-beta, 테스트 모드, Supabase Google 켬)
+
+## [2026-11-24] output | 협업 규칙 7-6: 계정 대시보드 화면 조작은 Antigravity 앱(Claude는 할 일 목록·결과 확인)
