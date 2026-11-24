@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- 매일 밤 22:00 작업 보고 메일(일요일엔 주간도). 설치: cp 이 파일 ~/Library/LaunchAgents/ && launchctl load ~/Library/LaunchAgents/com.dodo-yong.work-report.plist
+     Mac이 잠들어 있었으면 깨어날 때 한 번 실행된다. -->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.dodo-yong.work-report</string>
+  <key>ProgramArguments</key>
+  <array><string>/opt/homebrew/bin/python3</string><string>/Users/mj/Obsidian/scripts/work-report.py</string><string>auto</string></array>
+  <key>WorkingDirectory</key><string>/Users/mj/Obsidian</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key><string>/Users/mj/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    <key>LANG</key><string>en_US.UTF-8</string>
+  </dict>
+  <key>StartCalendarInterval</key>
+  <dict><key>Hour</key><integer>22</integer><key>Minute</key><integer>0</integer></dict>
+  <key>ProcessType</key><string>Background</string>
+  <key>StandardOutPath</key><string>/Users/mj/Obsidian/private/보고서/work-report.log</string>
+  <key>StandardErrorPath</key><string>/Users/mj/Obsidian/private/보고서/work-report.log</string>
+</dict>
+</plist>

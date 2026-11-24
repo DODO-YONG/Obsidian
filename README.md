@@ -126,6 +126,7 @@ private/                비공개 — 이 저장소에서 제외, 별도 비공�
 |---|---|
 | `scripts/backup-private.sh` | `private/`를 비공개 저장소에 백업 (푸시 전 비공개 여부 확인) |
 | `scripts/bump-site-version.sh` | 공개 사이트 버전 올리기 (자동 새로고침용, `tracer-how.*?v=` 포함) + 아래 git log 상자 갱신 |
+| `scripts/work-report.py` | 매일 밤 10시 작업 보고 메일(일요일엔 주간 보고 함께). 커밋·log를 모아 제미나이가 요약, Gmail 앱 비밀번호로 발송. 예약은 `scripts/com.dodo-yong.work-report.plist`(launchd) |
 | `scripts/update-site-log.py` | 소개 페이지 맨 위 git log 상자를 실제 커밋으로 다시 만듦. 하루 커밋이 많으면 4개만 보이고 '외 N개'로 축약(서버 주소 갱신 등 잡음 제외, 최근 3일만 펼침). 먼저 보여 줄 커밋·문구는 `docs/gitlog-highlights.txt` |
 | `tools/wiki_ab_test.py` | 같은 질문을 위키로·위키 없이 답하게 해 토큰·시간 비교 (구독 사용량 듦, `--dry-run`은 0) → [결과](wiki/shared/위키%20효과%20측정.md) |
 
