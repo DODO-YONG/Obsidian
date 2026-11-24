@@ -58,5 +58,7 @@ date: 2026-11-23
 
 - **웹 호스팅 = Vercel Hobby(무료)**(2026-11-24 사용자): 프로젝트 `dating-web`(저장소 `web/` 폴더, 푸시하면 자동 배포), 주소 https://dating-web-liart-mu.vercel.app (자동 이름, 나중에 바꿀 수 있음). Vercel GitHub 앱 권한은 `Obsidian`·`dating` 두 저장소만. 보안 헤더는 `web/vercel.json`(frame-ancestors none·nosniff·no-referrer·카메라 등 권한 끔·검색 제외·no-cache). Supabase Site URL·리다이렉트(이 주소 + localhost:8813) 등록.
 
+- **구글 로그인 연결**(2026-11-24): 구글 클라우드 새 프로젝트 `dating-beta`(결제 계정 없음 = 무료), 로그인 화면 이름 **Dating Beta**(임시), External·**테스트 모드**(등록한 테스트 사용자만 로그인), OAuth 클라이언트 `dating-web`(출처 = Vercel 주소, 콜백 = Supabase). Supabase Google 켬, 클라이언트 비밀값은 사용자가 직접 넣음. 서버가 구글 로그인으로 넘기는 것까지 확인. 지원 이메일은 개인 Gmail → 공개 출시 전 앱 전용 메일로.
+
 ## 남은 일
 - [[개발 보드]]에서 관리
