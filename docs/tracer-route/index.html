@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tracer Route · Become a tester</title>
+<meta name="description" content="Tracer Route: free networking certification practice app for Android. 1,808 original questions with full explanations. Join the closed test in 2 minutes.">
+<meta property="og:title" content="Tracer Route: free network practice app. Testers wanted">
+<meta property="og:description" content="1,808 original CCNA-topic practice questions with full explanations. Free, no ads, no sign-up. Join the Android closed test in 2 minutes.">
+<meta property="og:image" content="https://dodo-yong.github.io/Obsidian/tracer-route/img/s1.jpg">
+<meta property="og:url" content="https://dodo-yong.github.io/Obsidian/tracer-route/">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="../ccna/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../ccna/apple-touch-icon.png">
+<script>
+(function () {
+  var d = document.documentElement, t = 'dark', l = 'en';
+  try { if (localStorage.getItem('tr-theme') === 'light') t = 'light'; } catch (e) {}
+  try { var s = localStorage.getItem('tr-lang'); if (s === 'ko' || s === 'en') l = s; else if ((navigator.language || '').toLowerCase().indexOf('ko') === 0) l = 'ko'; } catch (e) {}
+  d.setAttribute('data-theme', t); d.setAttribute('data-lang', l); d.lang = l;
+})();
+</script>
+<style>
+  :root {
+    --bg: #F3F5F4; --panel: #FFFFFF; --ink: #121A18; --ink-2: #3E4A48; --ink-3: #6B7876; --rule: #D8DFDC; --accent: #146C63; --accent-ink: #FFFFFF; --soft: #E3EFEC;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg: #0E1413; --panel: #151D1B; --ink: #E5EDEA; --ink-2: #B3C0BC; --ink-3: #849390; --rule: #26322F; --accent: #5FC7B8; --accent-ink: #0B1210; --soft: #18302C; color-scheme: dark; } }
+  :root[data-theme="dark"] { --bg: #0E1413; --panel: #151D1B; --ink: #E5EDEA; --ink-2: #B3C0BC; --ink-3: #849390; --rule: #26322F; --accent: #5FC7B8; --accent-ink: #0B1210; --soft: #18302C; color-scheme: dark; }
+  [data-lang="en"] [lang="ko"], [data-lang="ko"] [lang="en"] { display: none !important; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.65; word-break: keep-all; overflow-wrap: anywhere; }
+  header { position: sticky; top: 0; background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule); z-index: 3; }
+  .bar { max-width: 820px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+  .mk { width: 26px; height: 26px; border-radius: 7px; flex: none; }
+  .bar b { font-size: 16px; }
+  .sp { flex: 1; }
+  .bar button { color: var(--ink-2); font: inherit; font-size: 14px; border: 1px solid var(--rule); background: var(--panel); border-radius: 999px; padding: 4px 12px; cursor: pointer; }
+  main { max-width: 820px; margin: 0 auto; padding: 28px 16px 64px; }
+  .hero { display: grid; gap: 22px; align-items: center; }
+  .hero img.ic { width: 72px; height: 72px; border-radius: 18px; }
+  .k { font-size: 12.5px; letter-spacing: .12em; color: var(--accent); font-weight: 700; text-transform: uppercase; }
+  h1 { font-size: clamp(27px, 6vw, 38px); margin: 6px 0 8px; line-height: 1.25; }
+  .lead { color: var(--ink-2); font-size: 17.5px; margin: 0 0 16px; }
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .pills li { font-size: 13.5px; border: 1px solid var(--rule); background: var(--panel); border-radius: 999px; padding: 4px 12px; color: var(--ink-2); }
+  .cta { display: inline-block; margin-top: 20px; background: var(--accent); color: var(--accent-ink); font-weight: 700; text-decoration: none; padding: 12px 20px; border-radius: 12px; }
+  h2 { font-size: 21px; margin: 44px 0 12px; line-height: 1.35; }
+  p, li { color: var(--ink-2); }
+  strong { color: var(--ink); }
+  a { color: var(--accent); }
+  .shots { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 2px 12px; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+  .shots img { width: 200px; height: auto; aspect-ratio: 675 / 1200; border-radius: 14px; border: 1px solid var(--rule); scroll-snap-align: start; flex: none; background: var(--panel); }
+  .hint { font-size: 13px; color: var(--ink-3); margin: 2px 0 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+  .card { background: var(--panel); border: 1px solid var(--rule); border-radius: 14px; padding: 14px 16px; }
+  .card b { display: block; color: var(--ink); margin-bottom: 2px; }
+  .card span { color: var(--ink-2); font-size: 15px; }
+  .safe { background: var(--soft); border-radius: 16px; padding: 18px 18px 8px; }
+  .safe ul { margin: 0; padding-left: 0; list-style: none; }
+  .safe li { padding: 0 0 12px 30px; position: relative; }
+  .safe li::before { content: "✓"; position: absolute; left: 4px; top: 0; color: var(--accent); font-weight: 800; }
+  .steps { counter-reset: s; display: grid; gap: 14px; }
+  .step { background: var(--panel); border: 1px solid var(--rule); border-radius: 16px; padding: 16px 18px; }
+  .step h3 { margin: 0 0 6px; font-size: 17.5px; display: flex; gap: 10px; align-items: center; }
+  .step h3::before { counter-increment: s; content: counter(s); width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-size: 15px; flex: none; }
+  .step ol { margin: 8px 0 12px; padding-left: 22px; }
+  .step li { margin: 3px 0; }
+  .btn { display: inline-block; background: var(--accent); color: var(--accent-ink); font-weight: 700; text-decoration: none; padding: 10px 16px; border-radius: 10px; }
+  .tip { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; margin: 16px 0 0; }
+  details { background: var(--panel); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 16px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+  details p { margin: 8px 0 2px; }
+  footer { max-width: 820px; margin: 0 auto; padding: 0 16px 40px; color: var(--ink-3); font-size: 13.5px; }
+  footer a { color: var(--ink-2); }
+  @media (min-width: 720px) { .hero { grid-template-columns: 1fr 230px; } .hero .shot { display: block; } }
+  .hero .shot { display: none; width: 230px; border-radius: 16px; border: 1px solid var(--rule); }
+  section { scroll-margin-top: 64px; }
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <img class="mk" src="../ccna/icon.svg" alt="" aria-hidden="true">
+  <b>Tracer Route</b><span class="sp"></span>
+  <button id="langBtn" type="button"><span lang="en">한국어</span><span lang="ko">English</span></button>
+  <button id="themeBtn" type="button" aria-label="Toggle light/dark theme">◐</button>
+</div></header>
+
+<main>
+  <div class="hero">
+    <div>
+      <img class="ic" src="../ccna/icon.svg" alt="Tracer Route app icon">
+      <div class="k" lang="en">Android · Closed test · Testers wanted</div>
+      <div class="k" lang="ko">안드로이드 · 비공개 테스트 · 테스터 모집</div>
+      <h1 lang="en">Practice for network certification, and understand every answer.</h1>
+      <h1 lang="ko">네트워크 자격증 공부, 답마다 이유까지 이해하기</h1>
+      <p class="lead" lang="en">Tracer Route has 1,808 original practice questions on the CCNA 200-301 topics. Each one explains why the answer is right and why the other choices are wrong.</p>
+      <p class="lead" lang="ko">Tracer Route에는 CCNA 200-301 범위의 직접 만든 연습 문제 1,808개가 있어요. 문제마다 정답인 이유와 나머지 보기가 틀린 이유를 설명해 줘요.</p>
+      <ul class="pills">
+        <li lang="en">Free</li><li lang="ko">무료</li>
+        <li lang="en">No ads</li><li lang="ko">광고 없음</li>
+        <li lang="en">No sign-up</li><li lang="ko">회원가입 없음</li>
+        <li lang="en">Works offline</li><li lang="ko">오프라인 사용</li>
+      </ul>
+      <a class="cta" href="#join"><span lang="en">Become a tester (2 min) ↓</span><span lang="ko">테스터 되기 (2분) ↓</span></a>
+    </div>
+    <img class="shot" src="img/s1.jpg" alt="Question with notes for each choice" width="230" height="409">
+  </div>
+
+  <section>
+    <h2 lang="en">What's inside</h2>
+    <h2 lang="ko">어떤 앱인가요</h2>
+    <div class="shots" aria-label="Screenshots">
+      <img src="img/s1.jpg" alt="Notes for every choice" loading="lazy" width="200" height="356">
+      <img src="img/s2.jpg" alt="Full explanation" loading="lazy" width="200" height="356">
+      <img src="img/s3.jpg" alt="Choose topics, level and count" loading="lazy" width="200" height="356">
+      <img src="img/s4.jpg" alt="Screenshot" loading="lazy" width="200" height="356">
+      <img src="img/s5.jpg" alt="Screenshot" loading="lazy" width="200" height="356">
+      <img src="img/s6.jpg" alt="Screenshot" loading="lazy" width="200" height="356">
+      <img src="img/s7.jpg" alt="Screenshot" loading="lazy" width="200" height="356">
+    </div>
+    <p class="hint" lang="en">Swipe to see more →</p>
+    <p class="hint" lang="ko">옆으로 넘겨 더 보기 →</p>
+
+    <div class="grid" style="margin-top:16px">
+      <div class="card"><b lang="en">1,808 questions</b><b lang="ko">문제 1,808개</b>
+        <span lang="en">6 domains, 52 topics, 3 levels. Pick exactly what to study.</span>
+        <span lang="ko">6개 영역, 52개 주제, 3단계 난이도. 공부할 범위를 직접 골라요.</span></div>
+      <div class="card"><b lang="en">Full explanations</b><b lang="ko">자세한 해설</b>
+        <span lang="en">Why it's right, why the others are wrong, the key concept, an IOS command and a tip.</span>
+        <span lang="ko">정답 이유, 오답 이유, 핵심 개념, IOS 명령어 예시, 공부 팁까지.</span></div>
+      <div class="card"><b lang="en">Subnetting practice</b><b lang="ko">서브넷 연습</b>
+        <span lang="en">Unlimited problems, generated and checked on your phone.</span>
+        <span lang="ko">앱이 문제를 무제한으로 만들고 바로 채점해요.</span></div>
+      <div class="card"><b lang="en">Review and progress</b><b lang="ko">복습과 진행률</b>
+        <span lang="en">Missed questions come back. See accuracy and weak topics by domain.</span>
+        <span lang="ko">틀린 문제는 다시 나와요. 영역별 정답률과 약한 주제를 보여 줘요.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 lang="en">Is it safe to install?</h2>
+    <h2 lang="ko">설치해도 안전한가요?</h2>
+    <div class="safe">
+      <ul lang="en">
+        <li><strong>Installed from Google Play</strong>, through its official testing program, and reviewed by Google. No APK files.</li>
+        <li><strong>Only one permission: Internet.</strong> No location, camera, contacts, photos or storage.</li>
+        <li><strong>No ads, analytics or tracking</strong>, and no advertising ID.</li>
+        <li><strong>No account.</strong> It never asks for your name, email or phone number.</li>
+        <li><strong>Your progress stays on your phone</strong> and is deleted when you uninstall.</li>
+        <li>Data leaves your phone <strong>only if you tap "Report an error"</strong>. That report is anonymous (question, reason, optional note, app version) and sent over HTTPS.</li>
+      </ul>
+      <ul lang="ko">
+        <li><strong>구글 플레이에서 설치해요.</strong> 공식 테스트 프로그램을 거치고 Google 검토를 통과한 앱이에요. APK 파일을 따로 받지 않아요.</li>
+        <li><strong>권한은 '인터넷' 하나뿐이에요.</strong> 위치·카메라·연락처·사진·저장소 권한은 없어요.</li>
+        <li><strong>광고·분석·추적 프로그램이 없어요.</strong> 광고 ID도 쓰지 않아요.</li>
+        <li><strong>계정이 없어요.</strong> 이름·이메일·전화번호를 묻지 않아요.</li>
+        <li><strong>푼 기록은 내 폰에만 저장돼요.</strong> 앱을 지우면 같이 지워져요.</li>
+        <li>기기 밖으로 나가는 건 <strong>직접 '오류 신고'를 눌렀을 때뿐</strong>이에요. 이때도 문제 정보, 신고 이유, 메모(선택), 앱 버전만 익명으로 HTTPS로 보내요.</li>
+      </ul>
+    </div>
+    <p lang="en">Details: <a href="privacy.html">Privacy policy</a></p>
+    <p lang="ko">자세한 내용: <a href="privacy.html#ko">개인정보 처리방침</a></p>
+  </section>
+
+  <section id="join">
+    <h2 lang="en">How to become a tester (2 minutes)</h2>
+    <h2 lang="ko">테스터 되는 방법 (2분)</h2>
+    <p lang="en">Google Play lets solo developers publish only after <strong>12 testers have tested for 14 days</strong>. Do these two steps <strong>in order</strong>, on your Android phone if you can.</p>
+    <p lang="ko">구글 플레이 규정상 개인 개발자는 <strong>12명 이상이 14일 동안 테스트</strong>해야 정식 출시할 수 있어요. 아래 두 단계를 <strong>순서대로</strong> 해 주세요. 안드로이드 폰에서 하면 가장 편해요.</p>
+
+    <div class="steps">
+      <div class="step">
+        <h3><span lang="en">Join the tester list</span><span lang="ko">테스터 명단에 이름 올리기</span></h3>
+        <ol lang="en">
+          <li>Open the link below while signed in to Google.</li>
+          <li>Tap <strong>Join group</strong>.</li>
+          <li>Tap <strong>Join group</strong> again in the pop-up. Done. You won't get spam.</li>
+        </ol>
+        <ol lang="ko">
+          <li>구글 계정에 로그인된 상태에서 아래 링크를 열어 주세요.</li>
+          <li><strong>그룹 가입</strong>(Join group)을 눌러 주세요.</li>
+          <li>창이 뜨면 <strong>그룹 가입</strong>을 한 번 더 누르면 끝이에요. 스팸은 오지 않아요.</li>
+        </ol>
+        <a class="btn" href="https://groups.google.com/g/tracer-route-testers" target="_blank" rel="noopener"><span lang="en">Open tester group →</span><span lang="ko">테스터 그룹 열기 →</span></a>
+      </div>
+      <div class="step">
+        <h3><span lang="en">Opt in and install</span><span lang="ko">테스터 참여하고 설치하기</span></h3>
+        <ol lang="en">
+          <li>Open the link below.</li>
+          <li>Tap <strong>Become a tester</strong>.</li>
+          <li>When it says you're a tester, tap <strong>Download it on Google Play</strong> and install.</li>
+        </ol>
+        <ol lang="ko">
+          <li>아래 링크를 열어 주세요.</li>
+          <li><strong>테스터 되기</strong>(Become a tester)를 눌러 주세요.</li>
+          <li>"테스터가 되었습니다"가 나오면 <strong>Google Play에서 다운로드</strong>를 눌러 설치해 주세요.</li>
+        </ol>
+        <a class="btn" href="https://play.google.com/apps/testing/io.github.dodoyong.tracerroute" target="_blank" rel="noopener"><span lang="en">Become a tester →</span><span lang="ko">테스터 되기 →</span></a>
+      </div>
+    </div>
+
+    <p class="tip" lang="en"><strong>Use the same Google account</strong> as the Play Store on your phone for both steps. Then just keep the app installed for 14 days. Opening it now and then helps too.</p>
+    <p class="tip" lang="ko">두 단계 모두 <strong>폰 플레이 스토어와 같은 구글 계정</strong>으로 해 주세요. 그다음엔 14일 동안 앱을 지우지 않고 두시면 돼요. 가끔 열어 주시면 더 좋아요.</p>
+  </section>
+
+  <section>
+    <h2 lang="en">Questions</h2>
+    <h2 lang="ko">자주 묻는 질문</h2>
+    <div lang="en">
+      <details><summary>It says "App not available".</summary><p>You skipped step 1, or your browser is signed in to a different Google account than your Play Store. Switch accounts and start from step 1.</p></details>
+      <details><summary>Do I need to be studying for CCNA?</summary><p>No. Just installing and keeping it for 14 days helps a lot. If you do study networking, honest feedback is very welcome.</p></details>
+      <details><summary>How do I send feedback?</summary><p>Tap "Report an error" under any explanation. It comes straight to me.</p></details>
+      <details><summary>Can I uninstall after the test?</summary><p>Yes, anytime after 14 days. Your study history is deleted with the app.</p></details>
+    </div>
+    <div lang="ko">
+      <details><summary>"앱을 사용할 수 없음"이 떠요.</summary><p>1단계를 안 하셨거나, 브라우저와 플레이 스토어의 구글 계정이 달라서예요. 같은 계정으로 바꾸고 1단계부터 해 주세요.</p></details>
+      <details><summary>CCNA 공부를 안 해도 되나요?</summary><p>네. 설치해서 14일 동안 두기만 해도 큰 도움이 돼요. 네트워크 공부를 하신다면 솔직한 의견도 환영이에요.</p></details>
+      <details><summary>의견은 어떻게 보내요?</summary><p>해설 아래 '오류 신고' 버튼을 눌러 주세요. 저에게 바로 와요.</p></details>
+      <details><summary>테스트가 끝나면 지워도 되나요?</summary><p>네, 14일이 지나면 언제든 지우셔도 돼요. 공부 기록도 앱과 함께 지워져요.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p lang="en">Tracer Route is an independent study app by a solo developer (GitHub DODO-YONG). Cisco and CCNA are trademarks of Cisco Systems, Inc. This app is not affiliated with or endorsed by Cisco. All questions are original practice questions, not real exam questions. · <a href="privacy.html">Privacy policy</a></p>
+  <p lang="ko">Tracer Route는 개인 개발자(GitHub DODO-YONG)가 만든 독립 학습 앱이에요. Cisco와 CCNA는 Cisco Systems, Inc.의 상표이며, 이 앱은 Cisco와 관계가 없어요. 모든 문제는 직접 만든 연습 문제이고 실제 시험 문제가 아니에요. · <a href="privacy.html#ko">개인정보 처리방침</a></p>
+</footer>
+
+<script>
+(function () {
+  var d = document.documentElement;
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    var t = d.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    d.setAttribute('data-theme', t);
+    try { localStorage.setItem('tr-theme', t); } catch (e) {}
+  });
+  document.getElementById('langBtn').addEventListener('click', function () {
+    var l = d.getAttribute('data-lang') === 'en' ? 'ko' : 'en';
+    d.setAttribute('data-lang', l); d.lang = l;
+    try { localStorage.setItem('tr-lang', l); } catch (e) {}
+  });
+  if (location.hash === '#ko' || location.hash === '#en') {
+    var h = location.hash.slice(1); d.setAttribute('data-lang', h); d.lang = h;
+  }
+})();
+</script>
+</body>
+</html>
