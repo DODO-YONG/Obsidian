@@ -5,7 +5,7 @@
 **Aspiring Network & Security Engineer** · building AI agents and automation tools
 
 I'm building a career in network and security engineering, with the goal of working in KY or IN.
-Before tech I spent three years in retail management in South Korea, then moved into data science as a bootcamp teaching assistant and mentor. I learn by building: in the past weeks I designed, shipped, and operated several small AI agents and web apps on my own, with security and zero running cost as ground rules.
+Before tech I spent three years in retail management in South Korea, then moved into data science as a bootcamp teaching assistant and mentor. I learn by building: recently I designed, shipped, and operated several small AI agents and web apps on my own, with security and zero running cost as ground rules.
 
 [🌐 Workshop site](https://dodo-yong.github.io/Obsidian/) · [📓 Work journal (daily & weekly)](https://dodo-yong.github.io/Obsidian/journal/?lang=en) · [🧠 TRACER (live)](https://tracer-eosin.vercel.app/ccna/) · [📁 Main repository](https://github.com/DODO-YONG/Obsidian)
 
@@ -14,10 +14,10 @@ Before tech I spent three years in retail management in South Korea, then moved 
 ## 💼 Experience
 > All roles below were in **Seoul, South Korea**.
 
-**Teaching Assistant, Mentor & Code Reviewer — data science bootcamps** · Contract · Dec 2020 – Mar 2022
-- **Fast Campus** (a leading Korean tech-education company) — **SeSAC Business Big Data Analyst program** (a Seoul city-funded software academy), Aug 2021 – Jan 2022: learning manager. Answered learner questions on lectures and projects, wrote and graded assignments, wrote lecture notes, and ran day-to-day course operations (Python, SQL, Linux, Tableau, ML/DL).
-- **Fast Campus — Big Data Analysis online course** (part of K-Digital Credit, a Korean government-funded digital-skills program), from Jul 2021: assistant instructor and reviewer. Answered questions and evaluated and reviewed project code.
+**Teaching Assistant, Mentor & Code Reviewer — data science bootcamps** · Contract · Dec 2020 – Apr 2025
+- **Fast Campus** (a leading Korean tech-education company) — **Big Data Analysis online course** (part of K-Digital Credit, a Korean government-funded digital-skills program), Jul 2021 – Apr 2025: assistant instructor and reviewer. Answered questions and evaluated and reviewed project code.
 - **Day1 Company** (Korean edtech company) — **Zero-Base Data Science School**, Mar 2021 – Mar 2022: mentor for an online bootcamp. Answered learners' questions and gave assignment feedback (Python, SQL, Linux, ML/DL).
+- **Fast Campus — SeSAC Business Big Data Analyst program** (a Seoul city-funded software academy), Aug 2021 – Jan 2022: learning manager. Answered learner questions on lectures and projects, wrote and graded assignments, wrote lecture notes, and ran day-to-day course operations (Python, SQL, Linux, Tableau, ML/DL).
 - **Fast Campus — corporate training**, Jun 2021 – Sep 2021: lab assistant for data analysis, machine learning, and Python courses delivered to large Korean employers (KB Financial Group, SK Group, LG Electronics).
 - **Fast Campus — SK Academy AI/DT training**, Dec 2020 – Jan 2021: lab assistant for SK Group new hires' data analysis course (code reviews, hands-on labs, troubleshooting).
 
@@ -52,7 +52,7 @@ Before tech I spent three years in retail management in South Korea, then moved 
 | Project | What it does | Built with |
 |---|---|---|
 | 🧠 **[TRACER](https://tracer-eosin.vercel.app/ccna/)** — CCNA practice site | Public CCNA 200-301 practice site with Google sign-in. Serves questions from a 1,808-question bank with full explanations (including why each wrong choice is wrong), saves progress per account, and adds XP, titles, and quests. Includes an admin console (user roles, daily AI limits, activity log, flagged questions) and a natural-language admin command bar. | JavaScript · Vercel serverless · Supabase (Postgres, Auth) · Gemini (free tier) · Playwright tests on GitHub Actions |
-| 📱 **Tracer Route** — Android app | Offline version of TRACER for Android with the question bank built in, English/Korean UI, anonymous error reports, and a privacy policy. Release build ready; Google Play closed testing next. | Capacitor · Android · Supabase |
+| 📱 **Tracer Route** — Android app | Offline version of TRACER for Android with the question bank built in, English/Korean UI, anonymous error reports, and a privacy policy. Submitted for Google Play closed testing. | Capacitor · Android · Supabase |
 | 🛡️ **[SENTINEL](https://github.com/DODO-YONG/security-agent)** — web security checker | Non-intrusive website security agent: checks authorization first, then reads only responses (headers, cookies, TLS, page content) and writes a report with risk levels and fixes. No attacks. | Python · Claude Agent SDK |
 | 🎤 **MIRROR** — interview coach | Practice coach for AWS Leadership Principles interviews. Asks about the weakest principles first, digs in with follow-up questions, and scores answers on STAR structure, numbers, and principle fit. | Python · Claude Agent SDK |
 | 💗 **[Heartline](https://dodo-yong.github.io/Obsidian/heartline/)** — conversational web app | Web app where users design a chat persona (personality, tone, relationship) and talk in a messenger-style UI, with an English-practice mode and built-in safety rules. Planned, built, tested, and presented in one day. | JavaScript · Python · Gemini |
