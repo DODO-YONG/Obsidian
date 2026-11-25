@@ -72,9 +72,8 @@ Before tech I spent three years in retail management in South Korea, then moved 
 - **Networking:** routing, switching, subnetting · Cisco Packet Tracer · Wireshark
 - **Data center operations (in training):** server rack installation · cabling · hardware diagnostics and replacement · server maintenance
 - **Security:** non-intrusive web checks (headers, cookies, TLS) · secret scanning with pre-commit hooks · least-privilege database rules · privacy policies
-- **Development:** Python · JavaScript · HTML/CSS · SQL (PostgreSQL) · Linux shell · Flask
-- **Data:** pandas · scikit-learn · XGBoost/LightGBM · YOLO · Tableau · R
-- **Cloud & DevOps:** AWS EC2/Lambda · Vercel · Supabase · GitHub Pages · GitHub Actions (CI, scheduled jobs) · Playwright end-to-end tests
+- **Development:** Python · JavaScript · HTML/CSS · SQL (PostgreSQL) · Linux shell
+- **Cloud & DevOps:** AWS (EC2) · Vercel · Supabase · GitHub Pages · GitHub Actions (CI, scheduled jobs) · Playwright end-to-end tests
 - **AI tooling:** Claude Code · Claude Agent SDK · Gemini · multi-agent workflows (two AI assistants splitting tasks in parallel)
 
 ## 🧭 How I work
