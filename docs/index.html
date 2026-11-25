@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>나만의 에이전트 작업실</title>
-<meta name="description" content="AWS 인턴십 과정에서 Claude Code로 나에게 필요한 에이전트를 하나씩 만들어 보는 학습 기록.">
+<meta name="description" content="AWS 교육과정에서 Claude Code로 나에게 필요한 에이전트를 하나씩 만들어 보는 학습 기록.">
 <meta property="og:title" content="나만의 에이전트 작업실">
-<meta property="og:description" content="AWS 인턴십 과정에서 Claude Code로 에이전트를 만들어 보는 학습 기록">
+<meta property="og:description" content="AWS 교육과정에서 Claude Code로 에이전트를 만들어 보는 학습 기록">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://dodo-yong.github.io/Obsidian/preview.png">
 <meta name="theme-color" content="#F4F6F8" media="(prefers-color-scheme: light)">
@@ -15,12 +15,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=20261125090948">
-<link rel="stylesheet" href="tracer-how.css?v=20261125090948">
+<link rel="stylesheet" href="style.css?v=20261125093252">
+<link rel="stylesheet" href="tracer-how.css?v=20261125093252">
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261125090948';
+  var SITE_V = '20261125093252';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -58,9 +58,9 @@
 <main id="main">
   <div class="wrap hero" id="top">
     <div>
-      <p class="kicker"><span class="pulse" aria-hidden="true"></span>Agent DY · AWS 인턴십 과정 · 학습 기록</p>
+      <p class="kicker"><span class="pulse" aria-hidden="true"></span>Agent DY · AWS 교육과정 · 학습 기록</p>
       <h1>나에게 필요한 에이전트를<br><span class="hl">하나씩</span> 만들어 보는 중</h1>
-      <p class="lead">AWS 인턴십 과정에서 Claude Code를 써 가며 배우고 있습니다. 지금은 초기 버전 에이전트 여섯 개(SENTINEL · MIRROR · TRACER · SWEEPER · CUPID · SHADOW)와, 메모와 코드를 함께 정리하는 Obsidian 위키가 있습니다.</p>
+      <p class="lead">AWS 교육과정에서 Claude Code를 써 가며 배우고 있습니다. 지금은 초기 버전 에이전트 여섯 개(SENTINEL · MIRROR · TRACER · SWEEPER · CUPID · SHADOW)와, 메모와 코드를 함께 정리하는 Obsidian 위키가 있습니다.</p>
       <div class="cta">
         <a class="btn primary" href="#agents">만든 에이전트 보기
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
@@ -93,12 +93,14 @@
           <li><span class="h">2c692d5</span><span class="t">09:13</span><span class="m">소개팅 앱 1b DB 완료 기록(보드·허브·분담 기록·log)</span></li>
           <li><span class="h">d3c5b0e</span><span class="t">09:17</span><span class="m">보드: 소개팅 앱 화면은 사용자가 따로 작업(규칙 SPEC-web-1b)</span></li>
           <li class="more">… 외 51개 (잡음·작은 수정 포함)</li>
-          <li class="day"># 9일차 · 11-25 · 3 commits</li>
+          <li class="day"># 9일차 · 11-25 · 7 commits</li>
           <li><span class="h">61b68d1</span><span class="t">08:38</span><span class="m">작업 보고 메일: 매일 밤 10시 일일 보고·일요일 주간 보고(work-report.py + launchd)</span></li>
           <li><span class="h">bc05275</span><span class="t">08:46</span><span class="m">작업 보고 메일 첫 발송 확인</span></li>
           <li><span class="h">88d43f7</span><span class="t">08:55</span><span class="m">공개 작업 일지 사이트(docs/journal): 일자별·주별 쉬운 말 기록 + 매일 밤 자동 갱신</span></li>
+          <li><span class="h">a67a75f</span><span class="t">09:09</span><span class="m">GitHub 프로필 영문 이력서 + 작업 일지 영어판 + 보고 메일에 일지 링크</span></li>
+          <li class="more">… 외 3개 (잡음·작은 수정 포함)</li>
         </ol>
-        <div class="tail">209 commits · 8 days<span class="cursor" aria-hidden="true"></span></div>
+        <div class="tail">213 commits · 8 days<span class="cursor" aria-hidden="true"></span></div>
         <!-- gitlog:end -->
       </div>
     </figure>
@@ -564,6 +566,6 @@
   }
 })();
 </script>
-<script src="tracer-how.js?v=20261125090948" defer></script>
+<script src="tracer-how.js?v=20261125093252" defer></script>
 </body>
 </html>

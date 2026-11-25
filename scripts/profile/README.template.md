@@ -33,7 +33,7 @@ Before tech I spent three years in retail management in South Korea, then moved 
 ## 🎓 Education
 | School / Program | Location | Dates |
 |---|---|---|
-| **Korea Polytechnics, Ulsan Campus — AX Program: Data Center Operations (DCO) Engineer, with AWS** (Korea Polytechnics is South Korea's government-run technical college system. Selective 6-week, 240-hour full-time program, 20 seats: server maintenance, networking, Linux, Python automation; hands-on server rack installation, cabling, and hardware diagnostics and replacement. Graduates receive an AWS certificate of completion.) | Ulsan, South Korea | Nov 2026 – Dec 2026 · in progress |
+| **Korea Polytechnics** (Korean government-run technical college) **— Data Center Operations Engineer program with AWS** (6 weeks, 240 hours) | Ulsan, South Korea | Nov 2026 – Dec 2026 · in progress |
 | **Fast Campus — Data Science School** (bootcamp: Python, Git, ML/DL, AWS EC2; 5 team projects) | Seoul, South Korea | Jul 2020 – Dec 2020 |
 | **KIC Campus — Big Data Analyst program** (bootcamp: SQL, R, Linux, Python) | Seoul, South Korea | Feb 2020 – Jun 2020 |
 | **CPI Language Academy** — English as a Second Language (3 months) | Philippines | Oct 2019 – Jan 2020 |
