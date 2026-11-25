@@ -84,6 +84,18 @@
         "../dating/web"
       ],
       "port": 8813
+    },
+    {
+      "name": "tracer-app",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8797",
+        "--directory",
+        "/Users/mj/Tracer-Route/app/www"
+      ],
+      "port": 8797
     }
   ]
 }
