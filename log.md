@@ -430,3 +430,5 @@
 
 ## [2026-11-25] output | Antigravity 앱에 Google Workspace 공식 플러그인 3종(Drive·Gmail·Calendar) 연결 (앱)
 - OAuth 연결 및 Gmail 읽기 동작 확인, 협업 작업지시서·GEMINI.md 반영안 인수인계 메모에 전달
+
+## [2026-11-25] output | Tracer Route 1.1 홈 탭 — 비공개 테스트 검토 제출
