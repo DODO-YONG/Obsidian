@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- 1시간마다 옵시디언 볼트 전체를 구글 드라이브에 자동 백업한다.
+     설치: cp /Users/mj/Obsidian/scripts/com.dodo-yong.obsidian-gdrive-backup.plist ~/Library/LaunchAgents/ && launchctl load ~/Library/LaunchAgents/com.dodo-yong.obsidian-gdrive-backup.plist
+     해제: launchctl unload ~/Library/LaunchAgents/com.dodo-yong.obsidian-gdrive-backup.plist -->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.dodo-yong.obsidian-gdrive-backup</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/sh</string>
+    <string>/Users/mj/Obsidian/scripts/backup-gdrive.sh</string>
+  </array>
+  <key>WorkingDirectory</key><string>/Users/mj/Obsidian</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key><string>/Users/mj/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    <key>LANG</key><string>en_US.UTF-8</string>
+  </dict>
+  <key>StartInterval</key><integer>3600</integer>
+  <key>ProcessType</key><string>Background</string>
+  <key>StandardOutPath</key><string>/tmp/obsidian-gdrive-backup.log</string>
+  <key>StandardErrorPath</key><string>/tmp/obsidian-gdrive-backup.log</string>
+</dict>
+</plist>

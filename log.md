@@ -422,3 +422,7 @@
 ## [2026-11-25] output | 작업실 소개 페이지 문구를 간결·전문적으로 정리(포트폴리오형), 작업 기록 → 주요 이력 요약
 
 ## [2026-11-25] output | 사이트 문구에서 도구(Claude)·교육과정 언급 제거, 작업 일지·개발 환경(옛 작업실 지도) 페이지 문구 정리
+
+
+## [2026-11-25] output | 옵시디언 볼트 전체 구글 드라이브 백업 스크립트·자동 실행 설정 추가 (앱)
+- `scripts/backup-gdrive.sh`(rclone sync + `_archive` 버전 보관, `.env` 등 포함), `scripts/com.dodo-yong.obsidian-gdrive-backup.plist`(1시간 주기 launchd), `wiki/shared/백업 현황.md` 갱신
