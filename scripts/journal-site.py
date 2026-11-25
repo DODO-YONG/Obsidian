@@ -5,6 +5,7 @@
         python3 scripts/journal-site.py day YYYY-MM-DD    # 그날 다시 만들기
         python3 scripts/journal-site.py week YYYY-MM-DD   # 그 날짜가 속한 주(월~일) 다시 만들기
         python3 scripts/journal-site.py auto [--push]     # 매일 밤: 어제(바뀌었으면)·오늘·이번 주 갱신
+        python3 scripts/journal-site.py translate         # 영어판(en)이 빠진 날·주 채우기
 
 공개 사이트라서 **공개 저장소(이 볼트) 커밋과 log.md만** 쓴다. 비공개 저장소(~/dating, ~/Tracer-Route)·private/는 읽지 않는다.
 요약은 제미나이(agy, 추가 요금 없음). 결과: docs/journal/data.json
@@ -66,6 +67,21 @@ RULES = ("이 글은 누구나 보는 공개 사이트에 올라간다. 처음 �
          "파일을 만들거나 고치거나 명령을 실행하지 말고, JSON 하나만 출력하라(코드블록 표시 없이). " + PROJECT_HINT)
 
 
+EN_NAMES = ("Project names: keep TRACER, Tracer Route, Heartline, SHADOW, MIRROR, SENTINEL, SWEEPER as is; "
+            "'소개팅 앱 say when' → 'say when (dating app)'; '작업실·위키' → 'Workshop & Wiki'.")
+
+
+def translate(j):
+    """한국어 일지 JSON을 영어로(공개 프로필·영어 화면용). 키·이모지는 그대로."""
+    keys = ("headline", "projects", "learned", "title", "summary", "decisions", "next")
+    src = {k: j[k] for k in keys if k in j}
+    prompt = ("Translate every Korean string value in this JSON into clear, natural English for a public "
+              "portfolio read by recruiters. Keep the same keys and structure, keep emoji, be concise, "
+              "use past tense for work done, do not add facts. " + EN_NAMES +
+              " Do not create or edit files or run commands. Output only the JSON.\n\n" + json.dumps(src, ensure_ascii=False))
+    return ask_json(prompt)
+
+
 def build_day(day):
     raw = commits(day, day)
     logs = log_entries(day, day)
@@ -80,6 +96,7 @@ def build_day(day):
     j = ask_json(prompt) or {"headline": f"커밋 {len(raw)}건", "projects": [{"name": "작업 기록", "emoji": "📝", "items": [c[12:] for c in raw[:8]]}], "learned": ""}
     d = dt.date.fromisoformat(day)
     j.update(date=day, weekday=WD[d.weekday()], commits=len(raw))
+    j["en"] = translate(j)
     return j
 
 
@@ -95,6 +112,7 @@ def build_week(monday):
               "projects마다 items 2~5개, decisions 2~5개, next 최대 3개.\n\n" + "\n".join(f"- {c}" for c in raw))
     j = ask_json(prompt) or {"title": f"커밋 {len(raw)}건", "summary": [], "projects": [], "decisions": [], "next": []}
     j.update(start=monday, end=sunday, commits=len(raw))
+    j["en"] = translate(j)
     return j
 
 
@@ -153,6 +171,12 @@ def main():
                 put_week(data, m)
                 have_w.add(m)
             d += dt.timedelta(days=1)
+    elif cmd == "translate":  # 영어가 빠진 날·주만
+        for x in data["days"] + data["weeks"]:
+            if not x.get("en"):
+                x["en"] = translate(x)
+                print("en:", x.get("date") or x.get("start"), (x["en"] or {}).get("headline") or (x["en"] or {}).get("title"), flush=True)
+                save(data)
     elif cmd == "day":
         put_day(data, a[1])
     elif cmd == "week":
@@ -166,6 +190,8 @@ def main():
         put_week(data, monday_of(today))
         if "--push" in a:
             push()
+            # GitHub 프로필(영문 이력서)의 최근 작업 칸도 갱신
+            subprocess.run([sys.executable, str(VAULT / "scripts" / "profile-readme.py")])
     else:
         sys.exit(__doc__)
 

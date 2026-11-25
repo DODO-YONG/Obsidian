@@ -15,7 +15,21 @@
    "learned": "정기적인 작업 보고를 자동화하여 매일과 매주의 작업 흐름을 꾸준히 챙길 수 있게 되었습니다.",
    "date": "2026-11-25",
    "weekday": "수",
-   "commits": 2
+   "commits": 2,
+   "en": {
+    "headline": "Built automated reporting emails to summarize and send work updates every night and weekend.",
+    "projects": [
+     {
+      "name": "Workshop & Wiki",
+      "emoji": "📮",
+      "items": [
+       "Built an automation to summarize work updates and send them via email every night at 10 PM and every Sunday.",
+       "Verified the first delivery to confirm the automation successfully sends work report emails."
+      ]
+     }
+    ],
+    "learned": "Automated regular work reporting to consistently track daily and weekly workflows."
+   }
   },
   {
    "headline": "소개팅 앱 say when의 이름을 정하고 실제 배포와 가입 시험을 마쳤다.",
@@ -42,7 +56,31 @@
    "learned": "초기 시험판에서는 무리한 자동화보다 운영자가 직접 회원을 초대하고 승인하는 방식으로 안전성을 먼저 확보하기로 결정했다.",
    "date": "2026-11-24",
    "weekday": "화",
-   "commits": 55
+   "commits": 55,
+   "en": {
+    "headline": "Named the dating app 'say when', completed web deployment, and tested user signups.",
+    "projects": [
+     {
+      "name": "say when (dating app)",
+      "emoji": "💌",
+      "items": [
+       "Finalized the service name as 'say when', integrated Google login, and deployed the web beta.",
+       "Improved the UI and database so notes sent with likes seamlessly carry over into the first chat upon matching.",
+       "Built an admin dashboard to review and approve signups and photos, and established automated daily data backups.",
+       "Defined the user flow, safety guidelines, and rollout plan for the group dating feature with friends."
+      ]
+     },
+     {
+      "name": "Workshop & Wiki",
+      "emoji": "🛠️",
+      "items": [
+       "Refined collaboration rules so order-independent tasks launch early, allowing AI tools to work without bottlenecks.",
+       "Reorganized the dev board's completed list around recent tasks to make progress easy to track at a glance."
+      ]
+     }
+    ],
+    "learned": "Decided to prioritize safety in the initial beta by having admins manually invite and approve members rather than over-automating."
+   }
   },
   {
    "headline": "학습 사이트 관리자 기능 확장과 두 AI의 동등한 협업 체계 완성",
@@ -78,7 +116,40 @@
    "learned": "클로드와 제미나이에게 동등한 권한을 주고 역할을 분담해 개발 속도와 코드 검증 수준을 함께 끌어올렸습니다.",
    "date": "2026-11-23",
    "weekday": "월",
-   "commits": 31
+   "commits": 31,
+   "en": {
+    "headline": "Expanded learning platform admin features and established an equal dual-AI collaboration system",
+    "projects": [
+     {
+      "name": "TRACER",
+      "emoji": "🌐",
+      "items": [
+       "Built a public demo admin console and interactive command interface.",
+       "Added command undo/redo and periodic statistical report downloads.",
+       "Implemented a loading screen visualizing network routes while waiting for AI responses.",
+       "Applied admin features and database schemas validated in the mock environment to the production admin console."
+      ]
+     },
+     {
+      "name": "Workshop & Wiki",
+      "emoji": "🛠️",
+      "items": [
+       "Established collaboration rules for Claude and Gemini to work together with equal permissions.",
+       "Defined criteria for parallel task distribution between the two AIs on large development workloads.",
+       "Set up an experimental environment to compare and review code output between AIs."
+      ]
+     },
+     {
+      "name": "say when (dating app)",
+      "emoji": "💬",
+      "items": [
+       "Designed core service concept, key differentiators, sign-up screens, and initial data structures.",
+       "Strengthened security by resolving 21 AI security review findings."
+      ]
+     }
+    ],
+    "learned": "Accelerated development velocity and elevated code verification standards by dividing roles and granting equal authority to Claude and Gemini."
+   }
   },
   {
    "headline": "네트워크 학습 앱 출시 준비를 마치고 문제은행을 대폭 보강했습니다.",
@@ -114,7 +185,40 @@
    "learned": "앱 출시 대상을 인도 등 영어권 중심으로 정하고 개인 개발자 계정으로 배포하기로 결정했습니다.",
    "date": "2026-11-22",
    "weekday": "일",
-   "commits": 16
+   "commits": 16,
+   "en": {
+    "headline": "Completed launch preparations for the network learning app and significantly expanded the question bank.",
+    "projects": [
+     {
+      "name": "Tracer Route",
+      "emoji": "📱",
+      "items": [
+       "Completed the app icon, splash screen, and store listing feature graphics.",
+       "Added anonymous error reporting and published an English-first privacy policy.",
+       "Updated the official landing page and fixed navigation and text rendering issues.",
+       "Registered an individual developer account for the store release and prepared distribution packages."
+      ]
+     },
+     {
+      "name": "TRACER",
+      "emoji": "🌐",
+      "items": [
+       "Added 248 questions on network connectivity, resolved option length bias, and completed full review.",
+       "Built a question-set mode for continuous practice and a My Page dashboard to track study history.",
+       "Added a review feature for incorrect answers and improved table and log displays on the question screen."
+      ]
+     },
+     {
+      "name": "SHADOW",
+      "emoji": "🎧",
+      "items": [
+       "Established the product direction for a browser extension that auto-pauses video for recording and shadowing practice.",
+       "Defined a service architecture requiring no video downloads and integrated release plans into the backlog."
+      ]
+     }
+    ],
+    "learned": "Decided to target English-speaking regions such as India and distribute through an individual developer account."
+   }
   },
   {
    "headline": "TRACER 상시 운영 배포와 문제은행 구축, 새 영어 코치를 선보인 날",
@@ -151,7 +255,41 @@
    "learned": "자주 쓰는 객관식 문제를 대규모 문제은행으로 미리 구축해 인공지능 호출 비용을 없애고 속도를 높였습니다.",
    "date": "2026-11-20",
    "weekday": "금",
-   "commits": 26
+   "commits": 26,
+   "en": {
+    "headline": "Deployed TRACER to production, built a question bank, and introduced a new English coach",
+    "projects": [
+     {
+      "name": "TRACER",
+      "emoji": "🎯",
+      "items": [
+       "Integrated Google authentication and a database to officially deploy the service for public access.",
+       "Separated the landing page from the problem-solving interface and established a privacy policy.",
+       "Pre-populated 1,560 questions, enabling fast multiple-choice practice without AI calls.",
+       "Fixed an issue where completed questions were re-graded when advancing to the next question, and added automated checks."
+      ]
+     },
+     {
+      "name": "SHADOW",
+      "emoji": "🗣️",
+      "items": [
+       "Built the initial version of an English coach that lets users shadow YouTube audio and check their intonation curves and pronunciation.",
+       "Added a dictionary feature showing instant definitions on click and configured auto-launch on system startup.",
+       "Introduced the core features and sample screens of the English coach on a public landing page."
+      ]
+     },
+     {
+      "name": "Workshop & Wiki",
+      "emoji": "📋",
+      "items": [
+       "Created a new development board to aggregate tasks across multiple projects in one place.",
+       "Added a visual overview page mapping workshop automation tools and workflow architecture at a glance.",
+       "Introduced a test-writing assistant to automatically verify that new features work correctly."
+      ]
+     }
+    ],
+    "learned": "Eliminated AI call costs and boosted speed by pre-building a large question bank for frequently used multiple-choice questions."
+   }
   },
   {
    "headline": "가상 연인 서비스 기획부터 앱 개발, 발표 준비까지 하루 만에 마쳤다.",
@@ -178,7 +316,31 @@
    "learned": "서버에 대화 기록을 남기지 않고 민감한 정보를 스스로 가리는 안전장치를 개발 최우선 과제로 삼았다.",
    "date": "2026-11-19",
    "weekday": "목",
-   "commits": 22
+   "commits": 22,
+   "en": {
+    "headline": "Completed a virtual companion service from planning and app development to presentation prep in a single day.",
+    "projects": [
+     {
+      "name": "Heartline",
+      "emoji": "💌",
+      "items": [
+       "Created product specifications and UI screens, and established safety rules to mask sensitive information.",
+       "Wrote over 40 automated tests first, then implemented the chat server and UI.",
+       "Added a persona feature to let users customize and chat with their own virtual companion.",
+       "Created ready-to-run executable packages and finalized presentation materials."
+      ]
+     },
+     {
+      "name": "Workshop & Wiki",
+      "emoji": "🛠️",
+      "items": [
+       "Added new project cards and work logs to the introduction page.",
+       "Built an auto-organizing feature that neatly collapses long logs to highlight key takeaways."
+      ]
+     }
+    ],
+    "learned": "Prioritized safety mechanisms that store no chat logs on the server and automatically mask sensitive information."
+   }
   },
   {
    "headline": "네트워크 학습 사이트를 열고 작업 환경의 자동화와 절약 체계를 세운 날",
@@ -229,7 +391,55 @@
    "learned": "규칙을 길게 나열하기보다 핵심만 추린 요약본을 제공하는 것이 인공지능의 자원 소모를 크게 줄이고 응답 속도를 높인다는 것을 확인했다.",
    "date": "2026-11-18",
    "weekday": "수",
-   "commits": 48
+   "commits": 48,
+   "en": {
+    "headline": "Launched a network learning platform and established workflow automation and resource-saving systems",
+    "projects": [
+     {
+      "name": "TRACER",
+      "emoji": "🌐",
+      "items": [
+       "Connected a network certification practice web app to an AI answer server and opened it for public access.",
+       "Translated questions and explanations into English and added gamification elements such as XP, levels, and achievement badges.",
+       "Built architectural diagrams and visualization views to illustrate data flows and system mechanisms clearly."
+      ]
+     },
+     {
+      "name": "Workshop & Wiki",
+      "emoji": "🛠️",
+      "items": [
+       "Configured an automated 5-minute backup system to safely save and archive ongoing work.",
+       "Condensed rule documentation to core essentials, reducing AI resource consumption and processing time by over 50%.",
+       "Strengthened pre-commit hooks to automatically prevent accidental exposure of sensitive keys and passwords.",
+       "Built a public overview webpage to display ongoing tasks and project history at a glance."
+      ]
+     },
+     {
+      "name": "SWEEPER",
+      "emoji": "🧹",
+      "items": [
+       "Built the first version of an assistant that automatically categorizes and organizes scattered files across Downloads and Desktop.",
+       "Designed a human-in-the-loop workflow where the assistant scans files while actual organization requires manual user approval to prevent accidental data loss."
+      ]
+     },
+     {
+      "name": "SENTINEL",
+      "emoji": "🛡️",
+      "items": [
+       "Migrated security audit tools into the workspace and compiled a project roadmap and directory index.",
+       "Established protection rules to exclude audit reports and secret configs, publishing only sanitized example configurations."
+      ]
+     },
+     {
+      "name": "MIRROR",
+      "emoji": "🪞",
+      "items": [
+       "Built the first version of an AI interview coach to facilitate realistic interview practice tailored to targeted questions."
+      ]
+     }
+    ],
+    "learned": "Confirmed that providing concise rule summaries rather than lengthy lists significantly cuts AI resource consumption and accelerates response times."
+   }
   },
   {
    "headline": "보안 점검 도구를 구축하고 작업 기록 소개 페이지를 정비했습니다.",
@@ -255,7 +465,30 @@
    "learned": "",
    "date": "2026-11-17",
    "weekday": "화",
-   "commits": 5
+   "commits": 5,
+   "en": {
+    "headline": "Built a security inspection tool and revamped the work log introduction page.",
+    "projects": [
+     {
+      "name": "Workshop & Wiki",
+      "emoji": "🛠️",
+      "items": [
+       "Created a new web introduction page so anyone can browse the work logs.",
+       "Polished the mobile layout to prevent text overflow and enhance readability.",
+       "Updated the introduction page to include hourly automated backup rules and task wrap-up procedures."
+      ]
+     },
+     {
+      "name": "SENTINEL",
+      "emoji": "🛡️",
+      "items": [
+       "Built the first version of an AI tool that autonomously inspects website security.",
+       "Established the core framework of the tool to automatically identify website security vulnerabilities."
+      ]
+     }
+    ],
+    "learned": ""
+   }
   }
  ],
  "weeks": [
@@ -310,7 +543,57 @@
    ],
    "start": "2026-11-23",
    "end": "2026-11-29",
-   "commits": 88
+   "commits": 88,
+   "en": {
+    "projects": [
+     {
+      "name": "TRACER",
+      "emoji": "🧭",
+      "outcome": "Enabled general users to safely explore and test AI administrator features in a sandbox environment.",
+      "items": [
+       "Introduced a demo admin console backed by one year of mock data without impacting production data",
+       "Implemented natural-language AI queries for metrics lookup alongside undo functionality",
+       "Developed a reporting dashboard to export learning statistics and question accuracy rates by period",
+       "Added visual route guidance cards to indicate progress during AI processing delays"
+      ]
+     },
+     {
+      "name": "say when (dating app)",
+      "emoji": "💬",
+      "outcome": "Established the brand identity and completed the initial web beta deployment covering onboarding through admin approval.",
+      "items": [
+       "Finalized the service name as 'say when' and standardized the UI around a dark theme",
+       "Created an intuitive interaction model where profile bios serve as opening conversation starters",
+       "Built Google authentication, an admin approval dashboard, and automated backups, followed by web deployment",
+       "Designed a duo 'Crew Mode' allowing pairs of close friends to join together"
+      ]
+     },
+     {
+      "name": "Workshop & Wiki",
+      "emoji": "⚙️",
+      "outcome": "Formulated collaboration guidelines between AI agents and automated daily progress logging.",
+      "items": [
+       "Established a multi-agent protocol for Claude and Gemini to divide responsibilities and work concurrently",
+       "Built an automated reporting system that aggregates and dispatches work logs nightly and on weekends"
+      ]
+     }
+    ],
+    "title": "Admin Tool Modernization and New Service Foundations",
+    "summary": [
+     "Expanded TRACER safely into production by adding an open-access mock admin portal and natural-language AI query tools.",
+     "Defined the brand name, visual design, and core mechanics for the dating service 'say when', successfully deploying its initial web beta.",
+     "Formulated cooperative multi-agent protocols and built automated systems for dispatching work progress reports."
+    ],
+    "decisions": [
+     "Finalized the dating service name as 'say when' and limited the initial beta release to an invite-only rollout.",
+     "Simplified initial outreach by letting a short profile intro serve as the opening message without extra friction.",
+     "Granted equal operational permissions to both AI agents and partitioned order-independent tasks for concurrent execution."
+    ],
+    "next": [
+     "Invite initial users to the 'say when' beta and gather early product feedback",
+     "Verify the operational stability of newly released admin capabilities and AI analytics queries"
+    ]
+   }
   },
   {
    "title": "웹 배포부터 앱 출시 준비까지의 한 주",
@@ -372,8 +655,67 @@
    ],
    "start": "2026-11-16",
    "end": "2026-11-22",
-   "commits": 117
+   "commits": 117,
+   "en": {
+    "projects": [
+     {
+      "name": "TRACER",
+      "emoji": "🧭",
+      "outcome": "Enabled anyone to practice certification exam questions in a web browser and receive AI explanations.",
+      "items": [
+       "Built a question bank of over 1,500 questions and integrated it into automated multiple-choice practice",
+       "Added Google login, continuous question sets, incorrect answer reviews, and a user profile page",
+       "Deployed an always-on web server and introduced automated testing to verify UI behavior"
+      ]
+     },
+     {
+      "name": "Tracer Route",
+      "emoji": "📱",
+      "outcome": "Prepared the mobile app for launch with required store assets and policy documentation.",
+      "items": [
+       "Designed the app icon, splash screen, and promotional graphics for app store listings",
+       "Published privacy policies in English and Korean tailored for English-speaking users",
+       "Set up an in-app anonymous reporting channel for immediate issue reporting"
+      ]
+     },
+     {
+      "name": "Heartline",
+      "emoji": "💬",
+      "outcome": "Designed, built, and presented a web service for conversing with customizable AI personas.",
+      "items": [
+       "Implemented persona settings allowing users to create and customize conversation partners",
+       "Wrote 46 automated functional and scenario tests to ensure error-free operation",
+       "Completed presentation materials and submission bundle detailing core architecture and demo screens"
+      ]
+     },
+     {
+      "name": "Workshop & Wiki",
+      "emoji": "🛠️",
+      "outcome": "Built guardrails to automatically preserve work records and prevent unnecessary costs and security risks.",
+      "items": [
+       "Implemented an automated backup system that saves and logs history within 5 minutes of editing",
+       "Introduced blocking rules to prevent secret key leaks and unintended AI billing",
+       "Revamped the portfolio site and established a unified development board tracking all project tasks"
+      ]
+     }
+    ],
+    "title": "A Week from Web Deployment to App Launch Preparation",
+    "summary": [
+     "Officially deployed TRACER, a network certification study service, to the web and built a large-scale question bank.",
+     "Prepared the Tracer Route mobile app for store release, and prototyped and presented the Heartline conversational web app.",
+     "Secured the development environment with automated backups and sensitive data protection rules."
+    ],
+    "decisions": [
+     "Decided to serve multiple-choice questions solely from the question bank and use AI only for explanations to minimize AI usage fees.",
+     "Decided to release the Tracer Route app first via a personal developer account, targeting English-speaking regions.",
+     "Decided against using separate cloud drive backups on Mac, tailoring the workflow directly to the local machine environment."
+    ],
+    "next": [
+     "Complete the Google Play release process for the Tracer Route mobile app",
+     "Proceed with full-scale development and launch preparation for the English shadowing coach (SHADOW) project"
+    ]
+   }
   }
  ],
- "updated": "2026-11-25 08:54"
+ "updated": "2026-11-25 09:02"
 }

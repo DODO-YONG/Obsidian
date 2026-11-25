@@ -17,6 +17,8 @@
 <script>
 /* 기본은 어두운 화면. 밝은 화면을 고른 사람만 밝게(작업실 사이트와 같은 저장값 'theme') */
 (function () { try { if (localStorage.getItem('theme') === 'light') document.documentElement.setAttribute('data-theme', 'light'); } catch (e) {} })();
+/* 언어: 기본 한국어, ?lang=en 이면 영어(영문 프로필에서 들어올 때). 고른 값은 이 브라우저에 기억 */
+(function () { var l = 'ko', q = /[?&]lang=(en|ko)\b/.exec(location.search); if (q) { l = q[1]; try { localStorage.setItem('journal-lang', l); } catch (e) {} } else { try { if (localStorage.getItem('journal-lang') === 'en') l = 'en'; } catch (e) {} } document.documentElement.setAttribute('lang', l); })();
 /* 새 버전 자동 확인 (scripts/bump-site-version.sh) */
 (function () {
   var SITE_V = '20261125083840';
@@ -24,7 +26,7 @@
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
     try { if (sessionStorage.getItem(k)) return; sessionStorage.setItem(k, '1'); } catch (e) { return; }
-    location.replace(location.pathname + '?v=' + j.v + location.hash);
+    location.replace(location.pathname + '?v=' + j.v + (document.documentElement.lang === 'en' ? '&lang=en' : '') + location.hash);
   }).catch(function () {});
 })();
 </script>
@@ -107,6 +109,7 @@
   .more { margin-top: 12px; border: 0; background: none; color: var(--signal); font: inherit; font-size: var(--step--1); cursor: pointer; padding: 6px 0; }
   .card.folded .projs .proj:nth-child(n+3), .card.folded .learned { display: none; }
   .empty { color: var(--ink-3); text-align: center; padding: 40px 0; }
+  .lang-btn { font-family: var(--mono); font-size: 13px; font-weight: 600; text-decoration: none; }
   .foot { color: var(--ink-3); font-size: 13px; padding: 24px 0 40px; border-top: 1px solid var(--rule); }
 
   @media (max-width: 720px) {
@@ -126,13 +129,14 @@
   <div class="wrap">
     <a class="brand" href="../" aria-label="작업실 첫 화면">
       <span class="brand-mark"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 5l3 3-3 3M8.5 11.5h4"/></svg></span>
-      <span class="brand-text">Q-BRANCH <span class="brand-sub">· 작업 일지</span></span>
+      <span class="brand-text">Q-BRANCH <span class="brand-sub" data-en="· Work Journal">· 작업 일지</span></span>
     </a>
     <nav class="nav" aria-label="페이지">
-      <a href="../">작업실</a>
-      <a href="./" aria-current="true">작업 일지</a>
-      <a href="../map.html">작업실 지도</a>
+      <a href="../" data-en="Workshop">작업실</a>
+      <a href="./" aria-current="true" data-en="Journal">작업 일지</a>
+      <a href="../map.html" data-en="Map">작업실 지도</a>
     </nav>
+    <a class="theme-btn lang-btn" id="langBtn" href="?lang=en" aria-label="English">EN</a>
     <button class="theme-btn" id="themeBtn" type="button" aria-label="밝은 화면으로 전환">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
     </button>
@@ -142,29 +146,29 @@
 <main id="main" class="wrap">
   <section class="hero-j">
     <div>
-      <p class="kicker"><span class="pulse" aria-hidden="true"></span>매일 밤 10시 자동 갱신</p>
-      <h1>오늘은 <span class="hl">무엇을</span> 만들었나</h1>
-      <p class="lead">Claude Code로 나에게 필요한 에이전트를 만들면서, 하루하루 한 일을 쉬운 말로 남깁니다. 날짜를 누르면 그날 기록으로, 「주별」을 누르면 한 주 회고로 갑니다.</p>
+      <p class="kicker"><span class="pulse" aria-hidden="true"></span><span data-en="Updated automatically every night at 10 PM (KST)">매일 밤 10시 자동 갱신</span></p>
+      <h1 data-en="What did I <span class='hl'>build</span> today?">오늘은 <span class="hl">무엇을</span> 만들었나</h1>
+      <p class="lead" data-en="A daily log of what I build while making my own AI agents with Claude Code, written in plain language. Tap a date for that day, or switch to <b>Weekly</b> for a weekly review.">Claude Code로 나에게 필요한 에이전트를 만들면서, 하루하루 한 일을 쉬운 말로 남깁니다. 날짜를 누르면 그날 기록으로, 「주별」을 누르면 한 주 회고로 갑니다.</p>
     </div>
     <div class="stats" id="stats" aria-label="지금까지 숫자"></div>
     <div class="how" aria-label="이 일지가 만들어지는 방법">
       <ol>
-        <li><span class="n">01 · 기록</span><h3>작업마다 커밋</h3><p>코드나 문서를 바꿀 때마다 무엇을 했는지 한 줄씩 git 기록에 남깁니다.</p></li>
-        <li><span class="n">02 · 요약</span><h3>AI가 쉬운 말로</h3><p>매일 밤 제미나이가 그날 기록을 읽고 프로젝트별로 묶어, 처음 보는 사람도 알 수 있게 풀어 씁니다.</p></li>
-        <li><span class="n">03 · 쌓기</span><h3>여기에 자동으로</h3><p>정리된 하루와 한 주가 이 페이지에 쌓입니다. 사람이 손대지 않아도 매일 늘어납니다.</p></li>
+        <li><span class="n">01 · 기록</span><h3 data-en="Commit every change">작업마다 커밋</h3><p data-en="Every change to code or docs leaves a one-line note in git.">코드나 문서를 바꿀 때마다 무엇을 했는지 한 줄씩 git 기록에 남깁니다.</p></li>
+        <li><span class="n">02 · 요약</span><h3 data-en="AI writes it up">AI가 쉬운 말로</h3><p data-en="Each night Gemini reads the day&#39;s commits, groups them by project, and rewrites them so anyone can follow.">매일 밤 제미나이가 그날 기록을 읽고 프로젝트별로 묶어, 처음 보는 사람도 알 수 있게 풀어 씁니다.</p></li>
+        <li><span class="n">03 · 쌓기</span><h3 data-en="Published here">여기에 자동으로</h3><p data-en="Each day and week is added to this page automatically, with no manual editing.">정리된 하루와 한 주가 이 페이지에 쌓입니다. 사람이 손대지 않아도 매일 늘어납니다.</p></li>
       </ol>
     </div>
   </section>
 
   <section aria-labelledby="act-t">
-    <div class="sec-h"><h2 id="act-t">활동</h2><span class="mono">칸 숫자 = 그날 커밋 수</span></div>
+    <div class="sec-h"><h2 id="act-t" data-en="Activity">활동</h2><span class="mono" data-en="number = commits that day">칸 숫자 = 그날 커밋 수</span></div>
     <div class="strip" id="strip"></div>
   </section>
 
   <div class="bar">
     <div class="seg" role="group" aria-label="보기">
-      <button type="button" data-view="days" aria-pressed="true">일자별</button>
-      <button type="button" data-view="weeks" aria-pressed="false">주별</button>
+      <button type="button" data-view="days" aria-pressed="true" data-en="Daily">일자별</button>
+      <button type="button" data-view="weeks" aria-pressed="false" data-en="Weekly">주별</button>
     </div>
     <div class="chips" id="chips" role="group" aria-label="프로젝트로 거르기"></div>
   </div>
@@ -187,6 +191,12 @@
     sync();
   });
 
+  var EN = document.documentElement.getAttribute('lang') === 'en';
+  function L(ko, en) { return EN ? en : ko; }
+  if (EN) { document.querySelectorAll('[data-en]').forEach(function (e) { e.innerHTML = e.getAttribute('data-en'); }); document.querySelectorAll('.how .n').forEach(function (e, i) { e.textContent = ['01 · RECORD', '02 · SUMMARIZE', '03 · PUBLISH'][i]; }); document.title = 'Work Journal · Q-BRANCH'; }
+  var lb = document.getElementById('langBtn'); lb.textContent = EN ? '한' : 'EN'; lb.href = EN ? '?lang=ko' : '?lang=en'; lb.setAttribute('aria-label', EN ? '한국어' : 'English');
+  function loc(x) { return EN && x.en ? Object.assign({}, x, x.en) : x; }
+  var WDE = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   var data, view = 'days', filter = '';
   try { if (localStorage.getItem('journal-view') === 'weeks') view = 'weeks'; } catch (e) {}
   if (/^#w-/.test(location.hash)) view = 'weeks';
@@ -197,8 +207,9 @@
   function today() { var t = new Date(); t.setMinutes(t.getMinutes() - t.getTimezoneOffset()); return t.toISOString().slice(0, 10); }
 
   fetch('data.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
+    j.days = (j.days || []).map(loc); j.weeks = (j.weeks || []).map(loc);
     data = j; init();
-  }).catch(function () { document.getElementById('list').innerHTML = '<p class="empty">기록을 불러오지 못했습니다.</p>'; });
+  }).catch(function () { document.getElementById('list').innerHTML = '<p class="empty">' + L('기록을 불러오지 못했습니다.', 'Could not load the journal.') + '</p>'; });
 
   function projectsOf(x) { return (x.projects || []).map(function (p) { return p.name; }); }
 
@@ -209,7 +220,7 @@
     days.forEach(function (d) { projectsOf(d).forEach(function (n) { names[n] = (names[n] || 0) + 1; }); });
     var first = days.length ? days[days.length - 1].date : '';
     document.getElementById('stats').innerHTML = [
-      [days.length, '작업한 날'], [weeks.length, '주'], [total, '커밋'], [Object.keys(names).length, '프로젝트']
+      [days.length, L('작업한 날', 'days worked')], [weeks.length, L('주', 'weeks')], [total, L('커밋', 'commits')], [Object.keys(names).length, L('프로젝트', 'projects')]
     ].map(function (s) { return '<div class="stat"><b>' + s[0] + '</b><span>' + s[1] + '</span></div>'; }).join('');
 
     // 활동 띠: 첫날부터 오늘까지 빠짐없이(쉰 날은 빈 칸)
@@ -219,7 +230,7 @@
     if (first) for (var d = new Date(first + 'T12:00:00'); ; d.setDate(d.getDate() + 1)) {
       var k = d.toISOString().slice(0, 10); if (k > t) break;
       var x = byDate[k], c = x ? x.commits : 0, l = c ? Math.min(4, Math.ceil(c / max * 4)) : 0;
-      cells.push('<a class="cell' + (x ? '' : ' off') + '" href="#d-' + k + '" title="' + k + ' · 커밋 ' + c + '건"><i data-l="' + l + '">' + (c ? '<em>' + c + '</em>' : '') + '</i>' + md(k) + '</a>');
+      cells.push('<a class="cell' + (x ? '' : ' off') + '" href="#d-' + k + '" title="' + k + ' · ' + L('커밋 ' + c + '건', c + ' commits') + '"><i data-l="' + l + '">' + (c ? '<em>' + c + '</em>' : '') + '</i>' + md(k) + '</a>');
     }
     var strip = document.getElementById('strip');
     strip.innerHTML = cells.join('');
@@ -227,7 +238,7 @@
     strip.addEventListener('click', function (e) { if (e.target.closest('.cell')) setView('days', true); });
 
     var top = Object.keys(names).sort(function (a, b) { return names[b] - names[a]; });
-    document.getElementById('chips').innerHTML = '<button class="chip" type="button" data-p="" aria-pressed="true">전체</button>' +
+    document.getElementById('chips').innerHTML = '<button class="chip" type="button" data-p="" aria-pressed="true">' + L('전체', 'All') + '</button>' +
       top.map(function (n) { return '<button class="chip" type="button" data-p="' + esc(n) + '" aria-pressed="false">' + esc(n) + '</button>'; }).join('');
     document.getElementById('chips').addEventListener('click', function (e) {
       var b = e.target.closest('.chip'); if (!b) return;
@@ -238,7 +249,7 @@
     document.querySelectorAll('.seg button').forEach(function (b) {
       b.addEventListener('click', function () { setView(b.getAttribute('data-view')); });
     });
-    document.getElementById('foot').innerHTML = '마지막 갱신 ' + esc(data.updated || '') + ' · 공개 저장소의 커밋 기록만으로 만듭니다 · <a href="../">작업실로</a>';
+    document.getElementById('foot').innerHTML = L('마지막 갱신 ', 'Last updated ') + esc(data.updated || '') + L(' · 공개 저장소의 커밋 기록만으로 만듭니다 · <a href="../">작업실로</a>', ' KST · built only from this public repository\'s commits · <a href="https://github.com/DODO-YONG">GitHub profile</a>');
     setView(view, true);
     if (location.hash) { var el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView(); }
   }
@@ -268,12 +279,12 @@
         if (filter) ps = ps.filter(function (p) { return p.name === filter; });
         var fold = !filter && ps.length > 2;
         return '<article class="card' + (fold ? ' folded' : '') + '" id="d-' + d.date + '">' +
-          '<div class="card-h"><div class="date"><b>' + md(d.date) + '</b><span>' + esc(d.weekday) + '요일</span></div>' +
-          '<div><h3>' + esc(d.headline) + '</h3><div class="meta"><span class="tag">커밋 ' + d.commits + '</span>' +
-          (d.date === t ? '<span class="tag live">오늘</span>' : '') + ps.map(function (p) { return '<span class="tag">' + esc(p.emoji || '') + ' ' + esc(p.name) + '</span>'; }).join('') + '</div></div></div>' +
+          '<div class="card-h"><div class="date"><b>' + md(d.date) + '</b><span>' + (EN ? WDE[new Date(d.date + 'T12:00:00').getDay()] : esc(d.weekday) + '요일') + '</span></div>' +
+          '<div><h3>' + esc(d.headline) + '</h3><div class="meta"><span class="tag">' + L('커밋 ', 'commits ') + d.commits + '</span>' +
+          (d.date === t ? '<span class="tag live">' + L('오늘', 'today') + '</span>' : '') + ps.map(function (p) { return '<span class="tag">' + esc(p.emoji || '') + ' ' + esc(p.name) + '</span>'; }).join('') + '</div></div></div>' +
           '<div class="projs">' + ps.map(function (p) { return proj(p); }).join('') + '</div>' +
-          (d.learned ? '<p class="learned"><b>오늘의 한 줄</b>' + esc(d.learned) + '</p>' : '') +
-          (fold ? '<button class="more" type="button">나머지 ' + (ps.length - 2) + '개 프로젝트 더 보기 ↓</button>' : '') +
+          (d.learned ? '<p class="learned"><b>' + L('오늘의 한 줄', 'Takeaway') + '</b>' + esc(d.learned) + '</p>' : '') +
+          (fold ? '<button class="more" type="button">' + L('나머지 ' + (ps.length - 2) + '개 프로젝트 더 보기 ↓', 'Show ' + (ps.length - 2) + ' more ↓') + '</button>' : '') +
           '</article>';
       });
     } else {
@@ -283,15 +294,15 @@
         var live = w.end >= t;
         return '<article class="card" id="w-' + w.start + '">' +
           '<div class="card-h"><div class="date"><b>' + md(w.start) + '</b><span>~ ' + md(w.end) + '</span></div>' +
-          '<div><h3>' + esc(w.title) + '</h3><div class="meta"><span class="tag">커밋 ' + w.commits + '</span>' +
-          (live ? '<span class="tag live">진행 중 · 매일 갱신</span>' : '') + '</div></div></div>' +
+          '<div><h3>' + esc(w.title) + '</h3><div class="meta"><span class="tag">' + L('커밋 ', 'commits ') + w.commits + '</span>' +
+          (live ? '<span class="tag live">' + L('진행 중 · 매일 갱신', 'in progress · updated daily') + '</span>' : '') + '</div></div></div>' +
           (filter ? '' : '<ul class="summary">' + (w.summary || []).map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ul>') +
           '<div class="projs">' + ps.map(function (p) { return proj(p, true); }).join('') + '</div>' +
-          (filter ? '' : '<div class="cols">' + list('정한 것', w.decisions) + list('다음에 할 것', w.next) + '</div>') +
+          (filter ? '' : '<div class="cols">' + list(L('정한 것', 'Decisions'), w.decisions) + list(L('다음에 할 것', 'Next'), w.next) + '</div>') +
           '</article>';
       });
     }
-    el.innerHTML = html.length ? html.join('') : '<p class="empty">이 프로젝트 기록이 없습니다.</p>';
+    el.innerHTML = html.length ? html.join('') : '<p class="empty">' + L('이 프로젝트 기록이 없습니다.', 'No entries for this project.') + '</p>';
   }
 
   document.getElementById('list').addEventListener('click', function (e) {

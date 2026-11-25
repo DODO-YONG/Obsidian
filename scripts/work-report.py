@@ -191,6 +191,8 @@ def report(kind, day, mail=True):
         mail_md = f"{body}\n\n---\n## 원본 기록\n\n{raw}\n"
     else:
         mail_md = body + "\n"
+    link = "https://dodo-yong.github.io/Obsidian/journal/" + (f"#d-{s}" if kind == "daily" else f"#w-{s}")
+    mail_md = f"📓 공개 작업 일지: {link}\n\n" + mail_md
     path = OUT / fname
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(md, encoding="utf-8")
