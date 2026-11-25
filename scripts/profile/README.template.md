@@ -5,45 +5,47 @@
 **Aspiring Network & Security Engineer** · building AI-assisted tools with Claude Code
 
 I'm building a career in network and security engineering, with the goal of working in KY or IN.
-Before tech I spent three years in retail management, then moved into data science as a teaching assistant and mentor. I learn by building: in the past weeks I designed, shipped, and operated several small AI agents and web apps on my own, with security and zero running cost as ground rules.
+Before tech I spent three years in retail management in South Korea, then moved into data science as a bootcamp teaching assistant and mentor. I learn by building: in the past weeks I designed, shipped, and operated several small AI agents and web apps on my own, with security and zero running cost as ground rules.
 
 [🌐 Workshop site](https://dodo-yong.github.io/Obsidian/) · [📓 Work journal (daily & weekly)](https://dodo-yong.github.io/Obsidian/journal/?lang=en) · [🧠 TRACER (live)](https://tracer-eosin.vercel.app/ccna/) · [📁 Main repository](https://github.com/DODO-YONG/Obsidian)
 
 ---
 
 ## 💼 Experience
-**Teaching Assistant, Mentor & Code Reviewer — data science programs** · Contract · 2020.12 – 2022.03
-- **Fast Campus — [SeSAC] Business Big Data Analyst program** (2021.08 – 2022.01): learning manager. Answered learner questions on lectures and projects, wrote and graded assignments, wrote lecture notes, and ran day-to-day course operations (Python, SQL, Linux, Tableau, ML/DL).
-- **Fast Campus — [KDC] Big Data Analysis online course** (from 2021.07): assistant instructor and reviewer. Answered questions and evaluated and reviewed project code.
-- **Day1 Company — Zero-Base Data Science School** (2021.03 – 2022.03): mentor. Answered online learners' questions and gave assignment feedback (Python, SQL, Linux, ML/DL).
-- **Fast Campus — corporate training practice coach** (2021.06 – 2021.09): lab assistant for data analysis, machine learning, and Python courses at KB Financial Group Data Analysis Academy, SK University Citizen Data Scientist, and LG Electronics big data career-transition program.
-- **Fast Campus — SK Academy AI/DT training** (2020.12 – 2021.01): lab assistant for SK new hires' structured/unstructured data analysis course (code reviews, hands-on labs, troubleshooting).
+> All roles below were in **Seoul, South Korea**.
 
-**Deepnoid** · Contract · 2021.02 – 2021.03
+**Teaching Assistant, Mentor & Code Reviewer — data science bootcamps** · Contract · Dec 2020 – Mar 2022
+- **Fast Campus** (a leading Korean tech-education company) — **SeSAC Business Big Data Analyst program** (a Seoul city-funded software academy), Aug 2021 – Jan 2022: learning manager. Answered learner questions on lectures and projects, wrote and graded assignments, wrote lecture notes, and ran day-to-day course operations (Python, SQL, Linux, Tableau, ML/DL).
+- **Fast Campus — Big Data Analysis online course** (part of K-Digital Credit, a Korean government-funded digital-skills program), from Jul 2021: assistant instructor and reviewer. Answered questions and evaluated and reviewed project code.
+- **Day1 Company** (Korean edtech company) — **Zero-Base Data Science School**, Mar 2021 – Mar 2022: mentor for an online bootcamp. Answered learners' questions and gave assignment feedback (Python, SQL, Linux, ML/DL).
+- **Fast Campus — corporate training**, Jun 2021 – Sep 2021: lab assistant for data analysis, machine learning, and Python courses delivered to large Korean employers (KB Financial Group, SK Group, LG Electronics).
+- **Fast Campus — SK Academy AI/DT training**, Dec 2020 – Jan 2021: lab assistant for SK Group new hires' data analysis course (code reviews, hands-on labs, troubleshooting).
+
+**Deepnoid** (Korean medical-imaging AI company) · Contract · Feb 2021 – Mar 2021
 - Collected and prepared data for the clinical research team.
 
-**E-Land World (SPAO)** · Assistant Manager · 2016.09 – 2019.09
-- **Opening & CS manager, Suwon Mangpo store:** opened a new store and reached ₩100M in sales in the first week.
-- **Store manager, Bundang store:** grew men's suit sales KPI by 30% year over year.
-- **Online channel sales, Gangnam store:** reached ₩300M in monthly sales.
+**E-Land World — SPAO** (a major Korean fast-fashion brand) · Assistant Manager · Sep 2016 – Sep 2019
+- **New-store opening & customer service manager:** opened a new store and reached about US$70K (₩100M) in sales in the first week.
+- **Store manager:** grew men's suit sales 30% year over year.
+- **Online channel sales:** reached about US$210K (₩300M) in monthly sales.
 - Left to change careers into data and technology.
 
-## 🎓 Education & Training
-| Program | Period |
-|---|---|
-| AWS training program | 2026 · in progress |
-| Fast Campus — Data Science School (Python, Git, ML/DL, AWS EC2; 5 team projects) | 2020.07 – 2020.12 |
-| KIC Campus — Big Data Analyst program (SQL, R, Linux, Python) | 2020.02 – 2020.06 |
-| CPI Language Academy (Philippines) — ESL | 2019.10 – 2020.01 |
-| **Inha University — B.A. in Law** | 2007.03 – 2013.02 |
+## 🎓 Education
+| School / Program | Location | Dates |
+|---|---|---|
+| **AWS education program** | — | 2026 · in progress |
+| **Fast Campus — Data Science School** (bootcamp: Python, Git, ML/DL, AWS EC2; 5 team projects) | Seoul, South Korea | Jul 2020 – Dec 2020 |
+| **KIC Campus — Big Data Analyst program** (bootcamp: SQL, R, Linux, Python) | Seoul, South Korea | Feb 2020 – Jun 2020 |
+| **CPI Language Academy** — English as a Second Language (3 months) | Philippines | Oct 2019 – Jan 2020 |
+| **Inha University — Bachelor of Laws (LL.B.)** (four-year university) | Incheon, South Korea | Mar 2007 – Feb 2013 |
 
 ## 📜 Certifications
-| Certification | Status |
-|---|---|
-| Google Cybersecurity Professional Certificate | ✅ Completed |
-| Cisco CCNA 200-301 | 📚 In progress |
-| Engineer Big Data Analysis (빅데이터분석기사, Korea) | ✅ 2021.07 |
-| SQL Developer (SQLD, Korea) | ✅ 2020.10 |
+| Certification | Issued by | Status |
+|---|---|---|
+| Google Cybersecurity Professional Certificate | Google (via Coursera) | ✅ Completed |
+| Cisco CCNA 200-301 | Cisco | 📚 In progress |
+| Engineer Big Data Analysis — Korean national technical qualification for data analysts | Korea Data Agency (K-DATA), South Korea | ✅ Jul 2021 |
+| SQL Developer (SQLD) — Korean national certification in SQL and data modeling | Korea Data Agency (K-DATA), South Korea | ✅ Oct 2020 |
 
 ## 🛠️ Projects
 
@@ -58,10 +60,10 @@ Before tech I spent three years in retail management, then moved into data scien
 | 🧹 **SWEEPER** — laptop cleanup helper | Scans Downloads/Desktop without AI, then proposes cleanup; nothing moves until approved in the terminal, and deletions go to the Trash only. | Python · Claude Agent SDK |
 | 🐛 **[worm-arena](https://github.com/DODO-YONG/worm-arena)** | Browser worm game with single-player and same-network multiplayer. | Python · HTML/JavaScript |
 
-**Earlier data science projects (2020, team projects):**
+**Earlier data science projects (2020, bootcamp team projects in Korea):**
 [YOLO video object detection](https://github.com/DODO-YONG/deeplearning-repo-2) (YOLOv5, image augmentation) ·
 [Voting-participation prediction](https://github.com/DODO-YONG/ml-repo-3) (LightGBM, XGBoost, AutoML) ·
-[Weekly local-content alert service](https://github.com/DODO-YONG/crawling-repo-3) (Selenium, Scrapy, Flask, AWS EC2/Lambda, Kakao API) ·
+[Weekly local-content alert service](https://github.com/DODO-YONG/crawling-repo-3) (Selenium, Scrapy, Flask, AWS EC2/Lambda, KakaoTalk messaging API) ·
 [Sneaker resale price prediction](https://github.com/DODO-YONG/reg-repo-5) (regression, ensemble models)
 
 **Study logs:** [CCNA study log](https://github.com/DODO-YONG/ccna-study-log) (Packet Tracer labs) · [TryHackMe write-ups](https://github.com/DODO-YONG/tryhackme-writeups) (no flags or answers)
