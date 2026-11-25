@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Q-BRANCH · AI 에이전트 포트폴리오</title>
-<meta name="description" content="Claude Code로 설계·배포·운영한 AI 에이전트 포트폴리오. 네트워크·보안, 무료 인프라, 자동화.">
+<meta name="description" content="직접 설계·배포·운영하는 AI 에이전트 포트폴리오. 네트워크·보안, 무료 인프라, 자동화.">
 <meta property="og:title" content="Q-BRANCH · AI 에이전트 포트폴리오">
-<meta property="og:description" content="Claude Code로 설계·배포·운영한 AI 에이전트 포트폴리오">
+<meta property="og:description" content="직접 설계·배포·운영하는 AI 에이전트 포트폴리오">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://dodo-yong.github.io/Obsidian/preview.png">
 <meta name="theme-color" content="#F4F6F8" media="(prefers-color-scheme: light)">
@@ -15,12 +15,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=20261125094255">
-<link rel="stylesheet" href="tracer-how.css?v=20261125094255">
+<link rel="stylesheet" href="style.css?v=20261125094600">
+<link rel="stylesheet" href="tracer-how.css?v=20261125094600">
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261125094255';
+  var SITE_V = '20261125094600';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -47,7 +47,7 @@
       <a href="#rules">원칙</a>
       <a href="#next">로드맵</a>
       <a href="journal/">작업 일지</a>
-      <a href="map.html">작업실 지도</a>
+      <a href="map.html">개발 환경</a>
     </nav>
     <button class="theme-btn" id="themeBtn" type="button" aria-label="어두운 화면으로 전환">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
@@ -58,9 +58,9 @@
 <main id="main">
   <div class="wrap hero" id="top">
     <div>
-      <p class="kicker"><span class="pulse" aria-hidden="true"></span>Agent DY · 네트워크·보안 · AWS 교육과정 수강 중</p>
+      <p class="kicker"><span class="pulse" aria-hidden="true"></span>Agent DY · Network · Security · Automation</p>
       <h1>설계부터 운영까지,<br><span class="hl">AI 에이전트</span> 포트폴리오</h1>
-      <p class="lead">Claude Code로 실사용 도구를 설계·배포·운영합니다. 에이전트 6종과 설계 문서를 하나의 저장소로 관리하며, 모든 서비스는 무료 인프라에서 추가 비용 없이 동작합니다.</p>
+      <p class="lead">실사용 도구를 직접 설계·배포·운영합니다. 에이전트 6종과 설계 문서를 하나의 저장소로 관리하며, 모든 서비스는 무료 인프라에서 추가 비용 없이 동작합니다.</p>
       <div class="cta">
         <a class="btn primary" href="#agents">에이전트
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
@@ -91,14 +91,14 @@
           <li><span class="h">2c692d5</span><span class="t">09:13</span><span class="m">소개팅 앱 1b DB 완료 기록(보드·허브·분담 기록·log)</span></li>
           <li><span class="h">d3c5b0e</span><span class="t">09:17</span><span class="m">보드: 소개팅 앱 화면은 사용자가 따로 작업(규칙 SPEC-web-1b)</span></li>
           <li class="more">… 외 51개 (잡음·작은 수정 포함)</li>
-          <li class="day"># 9일차 · 11-25 · 8 commits</li>
+          <li class="day"># 9일차 · 11-25 · 9 commits</li>
           <li><span class="h">61b68d1</span><span class="t">08:38</span><span class="m">작업 보고 메일: 매일 밤 10시 일일 보고·일요일 주간 보고(work-report.py + launchd)</span></li>
           <li><span class="h">bc05275</span><span class="t">08:46</span><span class="m">작업 보고 메일 첫 발송 확인</span></li>
           <li><span class="h">88d43f7</span><span class="t">08:55</span><span class="m">공개 작업 일지 사이트(docs/journal): 일자별·주별 쉬운 말 기록 + 매일 밤 자동 갱신</span></li>
           <li><span class="h">a67a75f</span><span class="t">09:09</span><span class="m">GitHub 프로필 영문 이력서 + 작업 일지 영어판 + 보고 메일에 일지 링크</span></li>
-          <li class="more">… 외 4개 (잡음·작은 수정 포함)</li>
+          <li class="more">… 외 5개 (잡음·작은 수정 포함)</li>
         </ol>
-        <div class="tail">214 commits · 8 days<span class="cursor" aria-hidden="true"></span></div>
+        <div class="tail">215 commits · 8 days<span class="cursor" aria-hidden="true"></span></div>
         <!-- gitlog:end -->
       </div>
     </figure>
@@ -158,7 +158,7 @@
         <p class="label"><span class="n">02</span>에이전트</p>
         <div>
           <h2>에이전트</h2>
-          <p>코드명(DY-00x)으로 관리합니다. SENTINEL·MIRROR·SWEEPER는 Claude Agent SDK(Python), TRACER·CUPID는 Gemini API 무료 등급, SHADOW는 외부 API 없이 로컬에서 동작합니다. 개발 도구와 자동화 구성은 <a href="map.html">작업실 지도</a>에 있습니다.</p>
+          <p>코드명(DY-00x)으로 관리합니다. SENTINEL·MIRROR·SWEEPER는 Python 에이전트, TRACER·CUPID는 웹 서비스, SHADOW는 외부 API 없이 로컬에서 동작합니다. 개발 도구와 자동화 구성은 <a href="map.html">개발 환경</a>에 있습니다.</p>
         </div>
       </div>
 
@@ -438,7 +438,7 @@
 
 <footer>
   <div class="wrap">
-    <span>Built with Claude Code · Claude Agent SDK · Obsidian · GitHub Pages</span>
+    <span>© DODO-YONG · Hosted on GitHub Pages</span>
     <a href="https://github.com/DODO-YONG/Obsidian">github.com/DODO-YONG/Obsidian</a>
   </div>
 </footer>
@@ -493,6 +493,6 @@
   }
 })();
 </script>
-<script src="tracer-how.js?v=20261125094255" defer></script>
+<script src="tracer-how.js?v=20261125094600" defer></script>
 </body>
 </html>

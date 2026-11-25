@@ -127,14 +127,14 @@
 <a class="skip" href="#main">본문으로 건너뛰기</a>
 <header class="topbar">
   <div class="wrap">
-    <a class="brand" href="../" aria-label="작업실 첫 화면">
+    <a class="brand" href="../" aria-label="포트폴리오 첫 화면">
       <span class="brand-mark"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 5l3 3-3 3M8.5 11.5h4"/></svg></span>
       <span class="brand-text">Q-BRANCH <span class="brand-sub" data-en="· Work Journal">· 작업 일지</span></span>
     </a>
     <nav class="nav" aria-label="페이지">
-      <a href="../" data-en="Workshop">작업실</a>
+      <a href="../" data-en="Portfolio">포트폴리오</a>
       <a href="./" aria-current="true" data-en="Journal">작업 일지</a>
-      <a href="../map.html" data-en="Map">작업실 지도</a>
+      <a href="../map.html" data-en="Dev setup">개발 환경</a>
     </nav>
     <a class="theme-btn lang-btn" id="langBtn" href="?lang=en" aria-label="English">EN</a>
     <button class="theme-btn" id="themeBtn" type="button" aria-label="밝은 화면으로 전환">
@@ -146,16 +146,16 @@
 <main id="main" class="wrap">
   <section class="hero-j">
     <div>
-      <p class="kicker"><span class="pulse" aria-hidden="true"></span><span data-en="Updated automatically every night at 10 PM (KST)">매일 밤 10시 자동 갱신</span></p>
-      <h1 data-en="What did I <span class='hl'>build</span> today?">오늘은 <span class="hl">무엇을</span> 만들었나</h1>
-      <p class="lead" data-en="A daily log of what I build while making my own AI agents with Claude Code, written in plain language. Tap a date for that day, or switch to <b>Weekly</b> for a weekly review.">Claude Code로 나에게 필요한 에이전트를 만들면서, 하루하루 한 일을 쉬운 말로 남깁니다. 날짜를 누르면 그날 기록으로, 「주별」을 누르면 한 주 회고로 갑니다.</p>
+      <p class="kicker"><span class="pulse" aria-hidden="true"></span><span data-en="Updated nightly · 10 PM KST">매일 밤 10시 갱신</span></p>
+      <h1 data-en="Work <span class='hl'>Journal</span>">작업 <span class="hl">일지</span></h1>
+      <p class="lead" data-en="Daily and weekly summaries of my project work, generated from commit history.">커밋 기록을 바탕으로 정리한 일자별·주별 작업 요약입니다.</p>
     </div>
     <div class="stats" id="stats" aria-label="지금까지 숫자"></div>
     <div class="how" aria-label="이 일지가 만들어지는 방법">
       <ol>
-        <li><span class="n">01 · 기록</span><h3 data-en="Commit every change">작업마다 커밋</h3><p data-en="Every change to code or docs leaves a one-line note in git.">코드나 문서를 바꿀 때마다 무엇을 했는지 한 줄씩 git 기록에 남깁니다.</p></li>
-        <li><span class="n">02 · 요약</span><h3 data-en="AI writes it up">AI가 쉬운 말로</h3><p data-en="Each night Gemini reads the day&#39;s commits, groups them by project, and rewrites them so anyone can follow.">매일 밤 제미나이가 그날 기록을 읽고 프로젝트별로 묶어, 처음 보는 사람도 알 수 있게 풀어 씁니다.</p></li>
-        <li><span class="n">03 · 쌓기</span><h3 data-en="Published here">여기에 자동으로</h3><p data-en="Each day and week is added to this page automatically, with no manual editing.">정리된 하루와 한 주가 이 페이지에 쌓입니다. 사람이 손대지 않아도 매일 늘어납니다.</p></li>
+        <li><span class="n">01 · 기록</span><h3 data-en="Commits">커밋</h3><p data-en="Every change is recorded in git.">모든 변경을 git에 기록합니다.</p></li>
+        <li><span class="n">02 · 요약</span><h3 data-en="Summary">요약</h3><p data-en="A nightly job groups commits by project and summarizes them.">매일 밤 프로젝트별로 묶어 요약합니다.</p></li>
+        <li><span class="n">03 · 게시</span><h3 data-en="Publish">게시</h3><p data-en="Days and weeks are published here automatically.">일자별·주별로 자동 게시됩니다.</p></li>
       </ol>
     </div>
   </section>
@@ -249,7 +249,7 @@
     document.querySelectorAll('.seg button').forEach(function (b) {
       b.addEventListener('click', function () { setView(b.getAttribute('data-view')); });
     });
-    document.getElementById('foot').innerHTML = L('마지막 갱신 ', 'Last updated ') + esc(data.updated || '') + L(' · 공개 저장소의 커밋 기록만으로 만듭니다 · <a href="../">작업실로</a>', ' KST · built only from this public repository\'s commits · <a href="https://github.com/DODO-YONG">GitHub profile</a>');
+    document.getElementById('foot').innerHTML = L('마지막 갱신 ', 'Last updated ') + esc(data.updated || '') + L(' · 공개 저장소의 커밋 기록만으로 만듭니다 · <a href="../">포트폴리오</a>', ' KST · built only from this public repository\'s commits · <a href="https://github.com/DODO-YONG">GitHub profile</a>');
     setView(view, true);
     if (location.hash) { var el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView(); }
   }
