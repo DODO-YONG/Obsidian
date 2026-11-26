@@ -13,13 +13,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=20261125220327">
+<link rel="stylesheet" href="style.css?v=20261126095121">
 <script>
 /* 기본은 어두운 화면. 직접 고른 값이 있으면 그것을 따른다. */
 try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
 /* 새 버전 자동 확인 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261125220327';
+  var SITE_V = '20261126095121';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -252,9 +252,9 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
           </article>
           <article class="item">
             <div class="top"><h4>작업 보고 메일</h4><span class="cost zero">Claude 토큰 0</span></div>
-            <span class="path">scripts/work-report.py · journal-site.py · profile-readme.py · com.dodo-yong.work-report.plist</span>
-            <p>볼트·소개팅 앱·Tracer Route의 커밋과 위키 로그를 모아 제미나이가 쉬운 말로 요약하고, 내 Gmail로 보냅니다. 일요일엔 한 주 보고서도 함께 옵니다. 요약이 안 되면 목록 그대로 보냅니다. 보고서 파일은 공개 저장소에 올라가지 않습니다. 이어서 공개 저장소 기록만으로 <a href="journal/">작업 일지</a>(일자별·주별, 한국어·영어)를 갱신해 올리고, GitHub 프로필(영문 이력서)의 최근 작업 칸도 바꿉니다. 메일에는 일지 링크가 함께 갑니다.</p>
-            <dl><dt>언제</dt><dd>매일 밤 10시 (Mac이 잠들어 있었으면 깨어날 때)</dd></dl>
+            <span class="path">scripts/work-report.py · journal-site.py · profile-readme.py · com.dodo-yong.work-report.plist · com.dodo-yong.morning-report.plist</span>
+            <p>볼트·소개팅 앱·Tracer Route의 커밋과 위키 로그를 모아 제미나이가 쉬운 말로 요약하고, 내 Gmail로 보냅니다. 일요일엔 한 주 보고서도 함께 옵니다. 요약이 안 되면 목록 그대로 보냅니다. 보고서 파일은 공개 저장소에 올라가지 않습니다. 이어서 공개 저장소 기록만으로 <a href="journal/">작업 일지</a>(일자별·주별, 한국어·영어)를 갱신해 올리고, GitHub 프로필(영문 이력서)의 최근 작업 칸도 바꿉니다. 메일에는 일지 링크가 함께 갑니다. 아침에는 어제 한 일과 오늘 할 일(개발 보드 위쪽·기다리는 일·직접 해야 할 일)을 따로 보냅니다.</p>
+            <dl><dt>언제</dt><dd>매일 밤 10시, 아침 보고는 매일 아침 7시 30분 (Mac이 잠들어 있었으면 깨어날 때)</dd></dl>
           </article>
           <article class="item">
             <div class="top"><h4>제미나이 부르기</h4><span class="cost zero">Claude 토큰 0</span></div>

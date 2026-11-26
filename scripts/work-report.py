@@ -3,6 +3,7 @@
 
   사용: python3 scripts/work-report.py daily [YYYY-MM-DD] [--no-mail]
         python3 scripts/work-report.py weekly [YYYY-MM-DD] [--no-mail]   # 그 날짜가 속한 주(월~일)
+        python3 scripts/work-report.py morning [YYYY-MM-DD] [--no-mail]  # 아침 보고: 어제 한 일 + 오늘 할 일
         python3 scripts/work-report.py auto                              # 매일 밤 자동 실행용: 오늘 일일 + 일요일이면 주간
 
 모으는 것: 볼트·소개팅 앱(~/dating)·Tracer Route(~/Tracer-Route) 커밋, log.md 항목, 개발 보드 다음 할 일.
@@ -97,13 +98,18 @@ def collect(start, end):
 def summarize(kind, start, end, raw):
     """agy에 요약을 맡긴다. 파일은 건드리지 말고 글만 출력하게 한다."""
     period = start if start == end else f"{start} ~ {end}"
-    shape = ("1) 한 줄 요약 2) 프로젝트별로 한 일(쉬운 말, 항목 3~6개씩) 3) 내일 할 만한 일 3개"
-             if kind == "daily" else
-             "1) 이번 주 세 줄 요약 2) 프로젝트별 성과(무엇이 가능해졌나 중심) "
-             "3) 결정한 것 4) 막혔거나 미룬 것 5) 다음 주 우선순위 3개")
+    shape = {
+        "daily": "1) 한 줄 요약 2) 프로젝트별로 한 일(쉬운 말, 항목 3~6개씩) 3) 내일 할 만한 일 3개",
+        "weekly": "1) 이번 주 세 줄 요약 2) 프로젝트별 성과(무엇이 가능해졌나 중심) "
+                  "3) 결정한 것 4) 막혔거나 미룬 것 5) 다음 주 우선순위 3개",
+        "morning": "1) 어제 한 일 두세 줄 2) 오늘 할 일 3~5개(할 일 보드 위쪽 우선, "
+                   "어제 하다 만 일·기다리는 일(검토·승인·테스터 등)이 있으면 확인할 것으로 넣기, 각 항목 한 줄) "
+                   "3) 사용자가 직접 해야 하는 일이 있으면 따로 표시",
+    }[kind]
+    what = {"daily": "하루 작업 보고서", "weekly": "한 주 작업 보고서", "morning": "아침 보고(어제 정리 + 오늘 할 일)"}[kind]
     prompt = (
         f"아래는 {period} 동안의 작업 기록(커밋·위키 로그·할 일 보드)이다. "
-        f"이걸로 {'하루' if kind == 'daily' else '한 주'} 작업 보고서를 한국어 마크다운으로 써라. "
+        f"이걸로 {what}를 한국어 마크다운으로 써라. "
         f"형식: {shape}. 개발 용어는 쉬운 말로 풀고, 기록에 없는 일은 지어내지 마라. "
         "파일을 만들거나 고치거나 명령을 실행하지 말고, 보고서 본문만 출력하라. 제목(#)은 쓰지 마라.\n\n"
         + raw)
@@ -169,17 +175,22 @@ def report(kind, day, mail=True):
     if kind == "weekly":
         start = day - dt.timedelta(days=day.weekday())
         end = start + dt.timedelta(days=6)
+    elif kind == "morning":  # 어제 기록으로 오늘 할 일
+        start = end = day - dt.timedelta(days=1)
     else:
         start = end = day
     s, e = start.isoformat(), end.isoformat()
     raw, total = collect(s, e)
-    if total == 0 and not log_entries(s, e):
+    if total == 0 and not log_entries(s, e) and kind != "morning":
         body = "기록된 작업이 없습니다. 쉬어 가는 날도 필요해요."
         summary_ok = False
     else:
         summary, summary_ok = summarize(kind, s, e, raw)
         body = summary or raw
-    if kind == "daily":
+    if kind == "morning":
+        title = f"☀️ 아침 보고 {day.isoformat()} ({'월화수목금토일'[day.weekday()]}) — 오늘 할 일"
+        fname = f"아침/{day.isoformat()}.md"
+    elif kind == "daily":
         title = f"📋 일일 작업 보고 {s} ({'월화수목금토일'[start.weekday()]}) — 커밋 {total}건"
         fname = f"일일/{s}.md"
     else:
@@ -191,7 +202,7 @@ def report(kind, day, mail=True):
         mail_md = f"{body}\n\n---\n## 원본 기록\n\n{raw}\n"
     else:
         mail_md = body + "\n"
-    link = "https://dodo-yong.github.io/Obsidian/journal/" + (f"#d-{s}" if kind == "daily" else f"#w-{s}")
+    link = "https://dodo-yong.github.io/Obsidian/journal/" + (f"#w-{s}" if kind == "weekly" else f"#d-{s}")
     mail_md = f"📓 공개 작업 일지: {link}\n\n" + mail_md
     path = OUT / fname
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -212,7 +223,7 @@ def main():
             report("weekly", day, mail)
         # 공개 작업 일지 사이트(docs/journal) 갱신·푸시 — 공개 저장소 기록만 씀
         subprocess.run([sys.executable, str(VAULT / "scripts" / "journal-site.py"), "auto", "--push"])
-    elif kind in ("daily", "weekly"):
+    elif kind in ("daily", "weekly", "morning"):
         report(kind, day, mail)
     else:
         sys.exit(__doc__)
