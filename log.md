@@ -546,3 +546,6 @@
 
 ## [2026-11-27] lint | agy 모델 규칙 정리: 작업은 Neon·Argon·Carbon만, 자동 보고 스크립트만 flash 예외
 - CLAUDE.md·[[Claude·Gemini 협업 작업지시서]] 문구 통일("만"), 예시·`gemini.sh` 주석의 flash를 `gemini-4-neon-medium`으로
+
+## [2026-11-27] output | 원어민 교사 앱: 학원별 정적 페이지 2,356곳 배포(한글 0)·매달 자동 갱신 연결
+- [[원어민 교사 앱 기획_261126]] 개발 현황·보드 갱신
