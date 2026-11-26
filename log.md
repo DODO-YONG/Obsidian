@@ -510,3 +510,6 @@
 
 ## [2026-11-26] output | 원어민 교사 앱: 가입 안전·초대 코드 1단계 결정 및 DB 패치 (앱)
 - [[fair-work]] 설계 결정 갱신(신분 노출 0 약속 + 1인 3회 초대 코드 + 영문 맥락 질문 + 브라우저 언어 관리자 참고 배지), `db/patches/2026_11_26_member_invites_and_hints.sql`·`db/test/invites.test.js` 작성 및 통과
+
+## [2026-11-26] query | 경쟁 사이트 분석: ESL Whitelist Korea (앱)
+- [[경쟁 사이트 분석_ESL Whitelist Korea_261126]] 작성(`eslwhitelistkorea.com/app/map` 탐색, 가져올 UX 5가지·우리 우위 4가지), `index.md` 갱신
