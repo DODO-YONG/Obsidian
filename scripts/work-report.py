@@ -7,6 +7,7 @@
         python3 scripts/work-report.py auto                              # 매일 밤 자동 실행용: 오늘 일일 + 일요일이면 주간
 
 모으는 것: 볼트·소개팅 앱(~/dating)·Tracer Route(~/Tracer-Route) 커밋, log.md 항목, 개발 보드 다음 할 일.
+아침 보고엔 구글 캘린더 오늘 일정도(.env GCAL_ICS_URL, scripts/gcal_today.py).
 요약: 제미나이(agy, 사용자 AI Pro 로그인, 추가 요금 없음). 실패하면 목록 그대로 보낸다.
 저장: private/보고서/ (비공개 저장소 내용이 들어가서 공개 위키에 두지 않음)
 메일: Gmail SMTP + 앱 비밀번호. 값은 볼트 .env 에만(REPORT_GMAIL_USER, REPORT_GMAIL_APP_PASSWORD, REPORT_TO)
@@ -21,6 +22,9 @@ import sys
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import gcal_today  # noqa: E402
 
 VAULT = Path(__file__).resolve().parent.parent
 HOME = Path.home()
@@ -102,7 +106,7 @@ def summarize(kind, start, end, raw):
         "daily": "1) 한 줄 요약 2) 프로젝트별로 한 일(쉬운 말, 항목 3~6개씩) 3) 내일 할 만한 일 3개",
         "weekly": "1) 이번 주 세 줄 요약 2) 프로젝트별 성과(무엇이 가능해졌나 중심) "
                   "3) 결정한 것 4) 막혔거나 미룬 것 5) 다음 주 우선순위 3개",
-        "morning": "1) 어제 한 일 두세 줄 2) 오늘 할 일 3~5개(할 일 보드 위쪽 우선, "
+        "morning": "1) 어제 한 일 두세 줄 2) 오늘 할 일 3~5개(오늘 일정이 있으면 그 시간을 피해서, 할 일 보드 위쪽 우선, "
                    "어제 하다 만 일·기다리는 일(검토·승인·테스터 등)이 있으면 확인할 것으로 넣기, 각 항목 한 줄) "
                    "3) 사용자가 직접 해야 하는 일이 있으면 따로 표시",
     }[kind]
@@ -181,6 +185,16 @@ def report(kind, day, mail=True):
         start = end = day
     s, e = start.isoformat(), end.isoformat()
     raw, total = collect(s, e)
+    cal = None
+    if kind == "morning":
+        urls = gcal_today.urls_from_env(load_env())
+        if urls:
+            try:
+                cal = gcal_today.todays(urls, day) or ["일정 없음"]
+            except Exception as ex:  # noqa: BLE001
+                print("캘린더 읽기 실패:", ex, file=sys.stderr)
+                cal = ["(캘린더를 읽지 못했어요)"]
+            raw = "### 오늘 일정(구글 캘린더)\n" + "\n".join(f"- {c}" for c in cal) + "\n\n" + raw
     if total == 0 and not log_entries(s, e) and kind != "morning":
         body = "기록된 작업이 없습니다. 쉬어 가는 날도 필요해요."
         summary_ok = False
@@ -196,6 +210,8 @@ def report(kind, day, mail=True):
     else:
         title = f"🗓️ 주간 작업 보고 {s} ~ {e} — 커밋 {total}건"
         fname = f"주간/{s}_주간.md"
+    if cal:  # 일정은 요약에 맡기지 않고 그대로 맨 위에
+        body = "**📅 오늘 일정**\n" + "\n".join(f"- {c}" for c in cal) + "\n\n" + body
     md = f"# {title}\n\n{body}\n"
     if summary_ok:
         md += f"\n---\n\n<details><summary>원본 기록</summary>\n\n{raw}\n\n</details>\n"

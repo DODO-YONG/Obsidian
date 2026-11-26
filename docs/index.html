@@ -15,12 +15,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=20261126095121">
-<link rel="stylesheet" href="tracer-how.css?v=20261126095121">
+<link rel="stylesheet" href="style.css?v=20261126102938">
+<link rel="stylesheet" href="tracer-how.css?v=20261126102938">
 <script>
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261126095121';
+  var SITE_V = '20261126102938';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -91,10 +91,11 @@
           <li><span class="h">88d43f7</span><span class="t">08:55</span><span class="m">공개 작업 일지 사이트(docs/journal): 일자별·주별 쉬운 말 기록 + 매일 밤 자동 갱신</span></li>
           <li><span class="h">72c33d0</span><span class="t">21:56</span><span class="m">Tracer Route 테스터 모집 소개 페이지 추가(영·한, 안전 설명·참여 2단계·스크린샷)</span></li>
           <li class="more">… 외 23개 (잡음·작은 수정 포함)</li>
-          <li class="day"># 10일차 · 11-26 · 1 commits</li>
+          <li class="day"># 10일차 · 11-26 · 2 commits</li>
           <li><span class="h">29bffe3</span><span class="t">09:48</span><span class="m">개발 보드: Tracer Route 페이스북 모집글 수정 3개·새 글 2개 기록(11-26)</span></li>
+          <li><span class="h">635bde9</span><span class="t">09:51</span><span class="m">아침 보고 메일: 매일 07:30 어제 한 일·오늘 할 일(work-report.py morning + l…</span></li>
         </ol>
-        <div class="tail">234 commits · 9 days<span class="cursor" aria-hidden="true"></span></div>
+        <div class="tail">235 commits · 9 days<span class="cursor" aria-hidden="true"></span></div>
         <!-- gitlog:end -->
       </div>
     </figure>
@@ -489,6 +490,6 @@
   }
 })();
 </script>
-<script src="tracer-how.js?v=20261126095121" defer></script>
+<script src="tracer-how.js?v=20261126102938" defer></script>
 </body>
 </html>
