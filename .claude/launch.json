@@ -108,6 +108,18 @@
         "/Users/mj/midnight-run-korea/web"
       ],
       "port": 8812
+    },
+    {
+      "name": "midnight-run-2",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8813",
+        "--directory",
+        "/Users/mj/midnight-run-korea/web"
+      ],
+      "port": 8813
     }
   ]
 }
