@@ -23,7 +23,7 @@ EFFORT=""
 DIR=""
 WATCH=""
 # 볼트 밖에서 agy가 일해도 되는 비공개 저장소(사용자가 허락한 것만 추가)
-REPOS="$HOME/dating"
+REPOS="$HOME/dating $HOME/midnight-run-korea"
 while getopts "m:e:d:w" opt; do
   case "$opt" in
     m) MODEL="$OPTARG" ;;
