@@ -24,3 +24,4 @@ date: 2026-11-26
 - **리뷰 처음부터, 법률 검토 없음**(사용자 2026-11-26): 검색만 먼저 → 법률 검토 → 리뷰 순서를 없애고, 첫 공개에 검색 + 리뷰를 함께 연다. 위험은 기본 장치(출처 그대로·딱지 없음·3건 이상·이름·욕설 차단·삭제 요청 창구)로 줄인다.
 - **이름 Midnight Run Korea**(사용자 2026-11-26): 원어민 교사 은어 'midnight run'(계약을 못 버티고 밤에 몰래 출국) + Korea. 'Midnight Run'만으로는 1988년 영화·뉴욕 노숙인 지원 단체(midnightrun.org)·달리기 대회와 겹쳐서 Korea를 붙임. midnightrunkorea.com·midnightrunkorea.vercel.app 비어 있음(2026-11-26 확인). 'hagwon'·'blacklist'는 쓰지 않음. 소개 문구는 'Avoid the midnight run — check before you sign'처럼 **도망칠 일을 막는 곳**으로(계약 위반을 부추기는 인상 피함). 상표 등록은 확인 안 함.
 - **코드명 DY-010 LOOKOUT**(사용자 2026-11-26): 망보는 사람 — 계약 전에 미리 알려 줘서 runner가 안 생기게. RUNNER도 마음에 들었지만 목적(도망을 막는 것)과 반대 뜻이라 뺌. DY-009는 언어교환 앱 몫.
+- **운영 방식**(사용자 2026-11-26): 삭제·정정 요청은 사이트 안 양식 + 사이트용 새 Gmail(개인 메일 숨김) · 당분간 완전 무료(광고·학원 돈 없음) · 코드는 새 비공개 저장소 `DODO-YONG/midnight-run-korea` + Vercel 무료.
