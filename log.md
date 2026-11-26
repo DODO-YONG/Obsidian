@@ -513,3 +513,6 @@
 
 ## [2026-11-26] query | 경쟁 사이트 분석: ESL Whitelist Korea (앱)
 - [[경쟁 사이트 분석_ESL Whitelist Korea_261126]] 작성(`eslwhitelistkorea.com/app/map` 탐색, 가져올 UX 5가지·우리 우위 4가지), `index.md` 갱신
+
+## [2026-11-26] lint | 원어민 교사 앱: agy 추가 작업 검토·수정
+- [[원어민 교사 앱 기획_261126]] 개발 현황(국민연금 오연결 57곳 바로잡음·초대 코드 빈틈·화면, Tokyo Jon 본문 ⚠️ 모순), [[경쟁 사이트 분석_ESL Whitelist Korea_261126]] Claude 교차 확인, [[원어민 교사 앱 초기 홍보 전략_261126]] 초안 고침, [[fair-work]]·보드 갱신
