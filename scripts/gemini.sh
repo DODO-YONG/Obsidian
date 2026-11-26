@@ -3,7 +3,7 @@
 # 규칙: wiki/_규칙/Claude·Gemini 협업 작업지시서.md
 #   사용: scripts/gemini.sh [-m 모델] [-e 생각강도] "할 일"
 #   예:   scripts/gemini.sh "raw/projects/ccna/ospf.pdf 를 읽고 요약 초안을 wiki/_inbox/ 에 써 줘"
-#         scripts/gemini.sh -m gemini-3.8-flash-medium "OSPF hello 간격 기본값을 공식 문서로 확인해 줘"
+#         scripts/gemini.sh -m gemini-4-neon-medium "OSPF hello 간격 기본값을 공식 문서로 확인해 줘"
 # 안전장치:
 #   - 사용자 Google AI Pro 로그인으로만 실행(API 키 변수는 지우고 실행 → 추가 요금 없음)
 #   - 유료 AI 크레딧 사용 끔(useG1Credits=false, 켜져 있으면 멈춤). 한도가 다 되면 주간 리필까지 기다림

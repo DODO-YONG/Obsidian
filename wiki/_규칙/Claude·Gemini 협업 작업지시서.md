@@ -95,14 +95,14 @@ Obsidian Git 플러그인이 파일이 바뀌면 5분 안에 커밋하고 GitHub
 
 ```
 scripts/gemini.sh "raw/projects/ccna/ospf.pdf 를 ingest 해서 위키에 반영하고 커밋해 줘"
-scripts/gemini.sh -m gemini-3.8-flash-medium "OSPF hello 간격 기본값을 공식 문서로 확인해 줘"
+scripts/gemini.sh -m gemini-4-neon-medium "OSPF hello 간격 기본값을 공식 문서로 확인해 줘"
 ```
 
 - **도구**: Google Antigravity CLI(`agy`, `~/.local/bin/agy`). Gemini CLI는 2026-06-18부터 Pro 계정 요청을 처리하지 않습니다.
   - 설치: `curl -fsSL https://antigravity.google/cli/install.sh | bash`
   - 처음 한 번 `agy`를 실행해 **Google OAuth**로 로그인합니다. "Google Cloud 프로젝트"는 유료 청구 방식이라 고르지 않습니다.
 - **계정**: 사용자 Google AI Pro 로그인으로만 실행합니다. 스크립트가 API 키 변수를 지우고 실행하고, API 키 방식(`modelProvider`)이 켜져 있으면 멈춥니다. `agy`는 `.env`를 읽지 않습니다.
-- **모델** (`scripts/gemini.sh -m <모델>`, 목록은 `agy models` — 목록의 Claude 등 다른 회사 모델은 쓰지 않음. 볼트·개발 작업은 **Neon·Argon·Carbon** 위주):
+- **모델** (`scripts/gemini.sh -m <모델>`, 목록은 `agy models` — 목록의 Claude 등 다른 회사 모델은 쓰지 않음. 볼트·개발 작업은 **Neon·Argon·Carbon만**. 예외: 자동 보고 스크립트 `scripts/work-report.py`·`journal-site.py`는 한도 절약으로 `gemini-3.8-flash-medium`):
   - **일반·실무 (기본)**: 옵션 생략 (`gemini-4-neon-high`, 속도 우선 시 `gemini-4-neon-medium`) — 위키 작성·자료 ingest·요약·검색·코드 검토·테스트 작성
   - **전문 문서·구조화 분석**: `-m gemini-4-argon-high` — 약관·법률·기획 비교·체계적 분석
   - **고난도 추론**: `-m gemini-4-carbon-high` — 복잡한 설계 검토·원인 불명 버그·깊은 로직/보안 검증

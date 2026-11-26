@@ -27,7 +27,7 @@
 - **여러 단계 작업은 겹치지 않는 파일 단위로 agy와 병렬로 나눈다**(명세 주고 백그라운드, 결과는 확인 후 함께 커밋 — 작업지시서 7-5). **순서에 매이지 않는 일은 내 작업보다 agy를 먼저 띄운다**(명세 → agy 실행 → 내 작업). 끝나면 `wiki/shared/Claude·agy 분담 기록.md`에 한 줄(~12-07 비교 중). 코드 검토는 배포 전에.
 - **계정 대시보드 화면 조작**(Supabase·구글 클라우드·Vercel·GitHub 설정)은 **내가 Chrome으로 직접** 한다. 본인 확인·동의·비밀값만 사용자에게 부탁하고, 끝나면 API·명령어로 확인(작업지시서 7-6, 2026-11-24 Antigravity 분담안 되돌림).
 - **사용자가 말하지 않아도 내가 판단해서 부른다.** 부를 때: 큰 PDF·여러 자료 읽기, 최신 정보 검색(정책·API·버전·가격), 큰 변경 뒤 두 번째 검토, 영·한 글 초안. 부르지 않을 때: 몇 번의 도구 호출로 끝나는 작은 일(부르는 비용이 더 큼), 결과를 바로 이어서 고쳐야 하는 코드 작업. 부르면 "제미나이에게 ○○ 맡김(모델)" 한 줄로 알리고, 결과는 그대로 믿지 말고 확인한 뒤 쓴다.
-- **목적별 agy 모델 선택**(`scripts/gemini.sh -m <모델>`, 목록은 `agy models` — 작업에는 Neon·Argon·Carbon만 사용):
+- **목적별 agy 모델 선택**(`scripts/gemini.sh -m <모델>`, 목록은 `agy models` — 작업에는 Neon·Argon·Carbon만 사용. 예외: 자동 보고 `scripts/work-report.py`·`journal-site.py`는 `gemini-3.8-flash-medium`):
   - 일반 작업·위키 작성·자료 ingest·요약·검색·코드 검토·테스트 작성(기본) → 옵션 생략(`gemini-4-neon-high` 기본값, 속도 우선 시 `gemini-4-neon-medium`)
   - 전문 문서·약관·법률·구조화된 비교 분석 → `-m gemini-4-argon-high`
   - 복잡한 설계 검토·원인 불명 버그·고난도 로직/보안 검증 → `-m gemini-4-carbon-high`
