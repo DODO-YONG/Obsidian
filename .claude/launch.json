@@ -96,6 +96,18 @@
         "/Users/mj/Tracer-Route/app/www"
       ],
       "port": 8797
+    },
+    {
+      "name": "midnight-run",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8812",
+        "--directory",
+        "/Users/mj/midnight-run-korea/web"
+      ],
+      "port": 8812
     }
   ]
 }
