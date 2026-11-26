@@ -20,7 +20,7 @@
 6. 다른 사람의 개인정보(앱 회원 데이터 등)는 다루지 않는다. 사용자가 대신 동의할 수 없다.
 
 ## Antigravity 앱에서 일할 때 (Claude가 없을 때)
-- `scripts/agy-settings.json`이 안 걸린다 → 위 막힌 것들을 **스스로** 지킨다. 푸시·`~/dating` 푸시·Supabase 적용·배포는 하지 않는다. `~/dating`은 시킬 때만, 시험 후 로컬 커밋까지.
+- `scripts/agy-settings.json`이 안 걸린다 → 위 막힌 것들을 **스스로** 지킨다. 푸시·`~/dating` 푸시·Supabase 적용·배포는 하지 않는다. `~/dating`·`~/midnight-run-korea`는 시킬 때만, 시험 후 로컬 커밋까지. Claude Code와 동시에 일할 땐 작업지시서 6-2(구역 나누기, 커밋 전 `git status`·바꾼 파일만).
 - 시작·끝 확인, `log.md` 끝 `(앱)` 표시 등 전체 규칙: 작업지시서 **6-1**.
 
 ## 인수인계 메모: `wiki/_inbox/_인수인계.md` (맨 아래에 추가만)

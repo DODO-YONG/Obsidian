@@ -106,7 +106,7 @@ scripts/gemini.sh -m gemini-3.8-flash-medium "OSPF hello 간격 기본값을 공
 - **권한 설정** (`scripts/agy-settings.json`, 2026-11-23 시험 통과): 볼트 전체 읽기·쓰기·셸·git 커밋 허용, 셸은 샌드박스. 막는 것은 키 파일 읽기(도구·셸 `cat` 모두 거부), `raw/` 쓰기, `--no-verify`뿐입니다(시험: `.env` 거부, `raw/` 쓰기 거부, `private/` 읽기·`git commit` 성공).
   - 작업 폴더는 볼트 루트이고, `GEMINI.md`를 자동으로 읽습니다.
 - **보이게 실행** (`-w`, 2026-11-24 사용자 요청): Claude가 agy를 부를 땐 Bash 백그라운드 대신 **터미널 패널 탭**에서 `scripts/gemini.sh -w ... 2>&1 | tee <로그>`로 돌려 사용자가 진행(읽는 파일·실행 명령·쓰는 글)을 볼 수 있게 한다. `-w`는 `--output-format stream-json`을 `scripts/agy-watch.py`로 읽기 좋게 바꾼다.
-- **볼트 밖 비공개 저장소** (`-d <폴더>`, 2026-11-23 시험 통과): `scripts/gemini.sh -d ~/dating "할 일"`. `gemini.sh`의 `REPOS` 목록에 있는 폴더만 되고(지금은 `~/dating`), 설정은 `scripts/agy-settings-repo.json` — **그 폴더만** 읽기·쓰기·셸·커밋, `.env` 읽기(도구·셸)·푸시·`--no-verify`·볼트 접근은 막습니다(시험: 저장소 읽기 성공, 미끼 `.env` 도구·셸 거부, 볼트 파일 거부). 푸시는 Claude가 합니다.
+- **볼트 밖 비공개 저장소** (`-d <폴더>`, 2026-11-23 시험 통과): `scripts/gemini.sh -d ~/dating "할 일"`. `gemini.sh`의 `REPOS` 목록에 있는 폴더만 되고(지금은 `~/dating`·`~/midnight-run-korea`), 설정은 `scripts/agy-settings-repo.json` — **그 폴더만** 읽기·쓰기·셸·커밋, `.env` 읽기(도구·셸)·푸시·`--no-verify`·볼트 접근은 막습니다(시험: 저장소 읽기 성공, 미끼 `.env` 도구·셸 거부, 볼트 파일 거부). 푸시는 Claude가 합니다.
 - **보내는 내용**: `private/` 포함 볼트 안 내용은 맡겨도 됩니다. Tracer-Route는 아직 `REPOS`에 넣지 않았습니다.
 - **Mac Gemini 앱**: 사용자가 제미나이와 직접 이야기할 때 그대로 씁니다. 이 앱은 `GEMINI.md`를 자동으로 읽지 않으니, 앱으로 볼트 작업을 시킬 때는 "`GEMINI.md` 먼저 읽어"라고 말합니다. `CLAUDE.md` 맨 위에도 제미나이용 핵심 3줄이 있습니다.
 - **추가 요금 0원**: agy 한도(주간 리필)가 다 되면 **유료 AI 크레딧을 쓰지 않고 멈춘다**. `scripts/agy-settings.json`에 `useG1Credits: false`, `gemini.sh`는 계정 설정에서 크레딧이 켜져 있거나 제미나이가 아닌 모델(목록의 Claude 등)을 고르면 멈춘다. 돈이 드는 다른 길(API 키, Google Cloud 프로젝트 로그인 = 종량제)도 쓰지 않는다. 사용자는 `agy` `/config` → Use AI Credits가 꺼져 있는지만 확인.
@@ -120,13 +120,21 @@ Claude Code 사용량이 다 됐을 때 사용자가 **Antigravity 앱**(agy CLI
 - **보내는 내용**: 앱도 Telemetry 꺼짐(2026-11-24 사용자 확인) → agy와 같은 등급, `private/` 작업도 맡겨도 된다.
 - **스스로 지킬 것**: `.env` 읽지 않기, `raw/` 쓰지 않기, `--no-verify` 금지, 바꾼 파일만 `git add <파일>`.
 - **커밋·푸시**: 앱 샌드박스가 `.git` 쓰기를 막으므로 커밋만 샌드박스 밖에서 한다(사용자가 `git add`·`git commit` 항상 허용). 앱 셸은 네트워크가 되지만 **푸시는 하지 않는다**(Obsidian 자동 백업이 한다).
-- **`~/dating` 코드**: **사용자가 시킬 때만** 고치고, 시험을 돌린 뒤 **로컬 커밋까지만** 한다. 푸시·Supabase 적용은 Claude가 한다.
+- **`~/dating`·`~/midnight-run-korea` 코드**: **사용자가 시킬 때만** 고치고, 시험을 돌린 뒤 **로컬 커밋까지만** 한다. 푸시·Supabase 적용은 Claude가 한다.
 - **되돌리기 어려운 일**(배포, DB 적용, 푸시, 외부 발송)은 하지 않는다. 꼭 필요하면 매번 사용자에게 묻는다.
 - **시작할 때**: `git status`·`git log`·`wiki/_inbox/_인수인계.md`·`wiki/개발 보드.md`를 본다. Claude가 하다 만, 커밋 안 된 파일은 사용자가 시키기 전엔 건드리지 않는다.
 - **끝날 때**: 인수인계 메모에 한 일·하다 만 일·사용자 결정·점검 부탁을 적는다. 결정은 위키 페이지에도 적는다. `private/`를 바꿨으면 `scripts/backup-private.sh`가 필요하다고 적는다(실행은 Claude).
-- **검토 순서 거꾸로**: 앱이 쓴 코드·기획은 Claude가 돌아와서 검토한다(인수인계 메모의 점검 부탁부터).
+- **검토 순서 거꾸로**: 앱이 쓴 코드·기획은 Claude가 돌아와서 검토한다(인수인계 메모의 점검 부탁부터). **Claude는 돌아오면 맨 먼저 인수인계 메모에서 마지막 `claude →` 항목 뒤의 `gemini →` 항목을 전부 읽고**, 거기 적힌 사용자 결정·피드백·부탁을 할 일 목록으로 삼는다. git 기록·결과물만 보고 판단하지 않는다(2026-11-26: 메모를 안 보고 검토해 사용자 피드백·결정 여러 개를 놓친 일 뒤 추가).
 - **구분 표시**: 커밋은 지금처럼 `Co-Authored-By: Gemini <noreply@google.com>`, `log.md` 항목 끝에 `(앱)`을 붙여 CLI 작업과 구분한다.
 - **규칙 파일**(`CLAUDE.md`·`GEMINI.md`·이 작업지시서)은 앱이 직접 고치지 않고, 수정안을 인수인계 메모로 넘긴다.
+
+### 6-2. 동시에 작업할 때: Claude Code + Antigravity 앱 (2026-11-26, 앱 제안 반영)
+
+사용자가 둘을 **동시에** 열어 같은 저장소에서 일할 수 있다. 파일이 겹치지 않게:
+- **기본 구역**(비공개 앱 저장소 기준): Claude = 화면 코드(`web/*.html·js·css`, 관리자 화면), 본 DB 스키마(`db/migration.sql`), 푸시·Supabase 적용·배포. 앱 = 데이터 수집·조사(`data/` 새 스크립트·결과, `web/data/` 다시 만들기는 먼저 확인), 새 DB 패치·새 시험 파일(`db/patches/`·`db/test/` 새 파일), 위키 새 조사·기획 문서. 상대 구역을 고쳐야 하면 사용자에게 묻거나 인수인계 메모로 넘긴다.
+- **시작 전** `git status`로 상대가 고치는 중인 파일(커밋 안 된 것)을 보고 건드리지 않는다.
+- **커밋은 내가 바꾼 파일만** `git add <파일>` → `git diff --cached --name-only`로 확인(`-A`·`.` 금지).
+- 앱이 작업 중 사용자 피드백·결정을 받으면 바로 인수인계 메모에 적는다(Claude가 이어서 반영).
 
 ## 7. 작업 흐름
 
