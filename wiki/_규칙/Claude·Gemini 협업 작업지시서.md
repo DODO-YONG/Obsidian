@@ -102,7 +102,10 @@ scripts/gemini.sh -m gemini-3.8-flash-medium "OSPF hello 간격 기본값을 공
   - 설치: `curl -fsSL https://antigravity.google/cli/install.sh | bash`
   - 처음 한 번 `agy`를 실행해 **Google OAuth**로 로그인합니다. "Google Cloud 프로젝트"는 유료 청구 방식이라 고르지 않습니다.
 - **계정**: 사용자 Google AI Pro 로그인으로만 실행합니다. 스크립트가 API 키 변수를 지우고 실행하고, API 키 방식(`modelProvider`)이 켜져 있으면 멈춥니다. `agy`는 `.env`를 읽지 않습니다.
-- **모델**: 기본은 `gemini-4-neon-high`입니다. 가벼운 일(요약·번역·점검)은 `gemini-3.8-flash-medium`으로 한도를 아낍니다. 목록은 `agy models`로 봅니다. 목록에 Claude 모델도 있지만 쓰지 않습니다.
+- **모델** (`scripts/gemini.sh -m <모델>`, 목록은 `agy models` — 목록의 Claude 등 다른 회사 모델은 쓰지 않음):
+  - **가벼운 일** (단순 요약·번역·빠른 검색·간단한 점검): `-m gemini-4-hydrogen-medium` (또는 `gemini-3.8-flash-medium`) — 빠르고 한도 절약
+  - **일반·실무 (기본)**: 옵션 생략 (`gemini-4-neon-high`, 속도 우선 시 `gemini-4-neon-medium`) — 위키 작성·자료 ingest·코드 검토·테스트 작성
+  - **고난도 추론**: `-m gemini-4-carbon-high` — 복잡한 설계 검토·원인 불명 버그·깊은 분석 (약관·법률 등 전문 문서 분석은 `gemini-4-argon-high`)
 - **권한 설정** (`scripts/agy-settings.json`, 2026-11-23 시험 통과): 볼트 전체 읽기·쓰기·셸·git 커밋 허용, 셸은 샌드박스. 막는 것은 키 파일 읽기(도구·셸 `cat` 모두 거부), `raw/` 쓰기, `--no-verify`뿐입니다(시험: `.env` 거부, `raw/` 쓰기 거부, `private/` 읽기·`git commit` 성공).
   - 작업 폴더는 볼트 루트이고, `GEMINI.md`를 자동으로 읽습니다.
 - **보이게 실행** (`-w`, 2026-11-24 사용자 요청): Claude가 agy를 부를 땐 Bash 백그라운드 대신 **터미널 패널 탭**에서 `scripts/gemini.sh -w ... 2>&1 | tee <로그>`로 돌려 사용자가 진행(읽는 파일·실행 명령·쓰는 글)을 볼 수 있게 한다. `-w`는 `--output-format stream-json`을 `scripts/agy-watch.py`로 읽기 좋게 바꾼다.
