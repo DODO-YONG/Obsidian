@@ -486,3 +486,6 @@
 
 ## [2026-11-26] query | 원어민 교사 앱: 'Teacher market' 참고 화면 기록
 - [[원어민 교사 앱 기획_261126]] '나중에 참고'
+
+## [2026-11-26] output | 원어민 교사 앱 Supabase 연결, 소개팅 앱 Supabase 일시 정지
+- 무료 2개 한도 → dating 정지(복원 가능), midnight-run-korea(서울) 생성·DB 적용. 보드 갱신
