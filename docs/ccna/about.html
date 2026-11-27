@@ -22,7 +22,7 @@ if (/\.vercel\.app$/.test(location.hostname)) location.replace('https://dodo-yon
   document.documentElement.setAttribute('lang', l);
 })();
 (function () {
-  var SITE_V = '20261127164438';
+  var SITE_V = '20261127164901';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -31,8 +31,8 @@ if (/\.vercel\.app$/.test(location.hostname)) location.replace('https://dodo-yon
   }).catch(function () {});
 })();
 </script>
-<link rel="stylesheet" href="tracer-site.css?v=20261127164438">
-<link rel="stylesheet" href="../tracer-how.css?v=20261127164438">
+<link rel="stylesheet" href="tracer-site.css?v=20261127164901">
+<link rel="stylesheet" href="../tracer-how.css?v=20261127164901">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -250,8 +250,8 @@ if (/\.vercel\.app$/.test(location.hostname)) location.replace('https://dodo-yon
   <p class="fine">Tracer Route와 TRACER는 개인이 만든 비공식 학습 도구입니다. Cisco·CCNA는 Cisco Systems의 상표이며 이 사이트와 관계없습니다. · <a href="../tracer-route/privacy.html#ko">개인정보 처리방침</a></p>
 </main>
 
-<script src="tracer-auth.js?v=20261127164438"></script>
-<script src="../tracer-how.js?v=20261127164438" defer></script>
+<script src="tracer-auth.js?v=20261127164901"></script>
+<script src="../tracer-how.js?v=20261127164901" defer></script>
 <script>
 document.getElementById('themeBtn').addEventListener('click', function () {
   var r = document.documentElement, light = r.getAttribute('data-theme') === 'light';

@@ -292,7 +292,7 @@
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261127164438';
+  var SITE_V = '20261127164901';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -302,8 +302,8 @@
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
-<script src="tracer-auth.js?v=20261127164438"></script>
-<script src="tracer-wait.js?v=20261127164438"></script>
+<script src="tracer-auth.js?v=20261127164901"></script>
+<script src="tracer-wait.js?v=20261127164901"></script>
 </head>
 <body>
 <header>
@@ -733,6 +733,10 @@ var Subnet = (function () {
     if (on && !state.wait) state.wait = TracerWait.start(/채점/.test(label) ? 'grade' : /해설/.test(label) ? 'explain' : 'question', /제미나이/.test(label) ? { delay: 600 } : null);
     if (!on && state.wait) { state.wait.done(); state.wait = null; }
   }
+  function endWait() {   // 문제·결과가 화면에 뜨는 순간 대기 카드는 바로 없앤다(어느 경로로 왔든)
+    if (state.wait) { state.wait.done(true); state.wait = null; }
+    if (window.TracerWait && TracerWait.current()) TracerWait.current().done(true);
+  }
   $('#newQ').dataset.label = '세트 시작';
   // 세트: '세트 시작'을 누르면 정한 수(기본 5)만큼 이어서 풀고, 마지막 문제 뒤에 결과를 보여 준다.
   // 고른 범위에 안 푼 문제가 모자라도 서버가 다른 범위·이미 푼 문제로 채워 주므로 세트는 끝까지 이어진다.
@@ -750,7 +754,7 @@ var Subnet = (function () {
         .finally(function () { busy(btn, false); });
       return;
     }
-    if (state.qtype === 'subnet') { state.busy = false; state.q = Subnet.make(state.diff); state.choice = null; $('#qCard').classList.remove('graded'); renderQ(); $('#expBox').innerHTML = ''; showCard(); return; }
+    if (state.qtype === 'subnet') { ['#gradeBtn', '#nextBtn2'].forEach(function (k) { var b = $(k); if (b && b.dataset.label) busy(b, false); }); state.busy = false; state.q = Subnet.make(state.diff); state.choice = null; $('#qCard').classList.remove('graded'); renderQ(); $('#expBox').innerHTML = ''; showCard(); return; }
     busy(btn, true, '문제 준비 중');
     api('/api/question', { subs: Array.from(state.selected), difficulty: state.diff, qtype: state.qtype })
       .then(function (q) { state.q = q; state.choice = null; $('#qCard').classList.remove('graded'); renderQ(); $('#expBox').innerHTML = ''; showCard(); loadMe(true); })
@@ -769,6 +773,7 @@ var Subnet = (function () {
   }
   function vClass(v) { return v === '정답' ? 'ok' : v === '부분 정답' ? 'part' : 'bad'; }
   function renderSummary() {
+    endWait();
     var s = state.set, ok = s.items.filter(function (x) { return x.verdict === '정답'; }).length;
     var wrong = s.items.length - ok, pct = Math.round(ok / s.items.length * 100);
     var rows = s.items.map(function (x, i) {
@@ -815,6 +820,7 @@ var Subnet = (function () {
   }
 
   function renderQ() {
+    endWait();
     var q = state.q;
     var meta = '<div class="q-meta"><span class="pill acc">' + esc(q.sub) + '</span><span class="pill">' + esc(q.domain) + '</span>' +
       '<span class="pill">' + esc(q.difficulty) + '</span><span class="pill">' + ({ mcq: '객관식', short: '주관식', subnet: '서브넷 계산' }[q.qtype]) + '</span>' +
