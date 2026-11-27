@@ -18,21 +18,19 @@
 | 백업 | `wiki/shared/백업 현황.md` |
 
 ## 상세 규칙 (해당 작업 때만 읽는다)
-- **ingest·질문 저장·lint·첫 세션 세팅·hwp/엑셀/데이터 파일** → `wiki/_규칙/작업 규칙.md`
+- **ingest·질문 저장·lint·hwp/엑셀/데이터 파일** → `wiki/_규칙/작업 규칙.md`
 - **새 페이지·폴더 구조·산출물 위치·파일명·frontmatter·링크 규칙** → `wiki/_규칙/페이지 작성 규칙.md`
 - **제미나이와 일 나누기·제미나이 부르기** → `wiki/_규칙/Claude·Gemini 협업 작업지시서.md`
 
 ## 🤝 제미나이 협업 (요약)
-- 긴 자료 읽기·검색 조사·검토 의견은 `scripts/gemini.sh "할 일"`로 제미나이(Antigravity CLI, 사용자 Pro 로그인)에게 맡겨 Claude 사용량을 아낀다. 제미나이는 나와 **같은 권한**(볼트 전체·`private/`·셸·git 커밋, 푸시는 Obsidian 자동 백업. 키 파일 `.env` 읽기와 `raw/` 쓰기만 차단)이라 맡긴 일을 위키·코드에 직접 반영하고 커밋까지 한다.
-- **여러 단계 작업은 겹치지 않는 파일 단위로 agy와 병렬로 나눈다**(명세 주고 백그라운드, 결과는 확인 후 함께 커밋 — 작업지시서 7-5). **순서에 매이지 않는 일은 내 작업보다 agy를 먼저 띄운다**(명세 → agy 실행 → 내 작업). 끝나면 `wiki/shared/Claude·agy 분담 기록.md`에 한 줄(~12-07 비교 중). 코드 검토는 배포 전에.
-- **계정 대시보드 화면 조작**(Supabase·구글 클라우드·Vercel·GitHub 설정)은 **내가 Chrome으로 직접** 한다. 본인 확인·동의·비밀값만 사용자에게 부탁하고, 끝나면 API·명령어로 확인(작업지시서 7-6, 2026-11-24 Antigravity 분담안 되돌림).
-- **사용자가 말하지 않아도 내가 판단해서 부른다.** 부를 때: 큰 PDF·여러 자료 읽기, 최신 정보 검색(정책·API·버전·가격), 큰 변경 뒤 두 번째 검토, 영·한 글 초안. 부르지 않을 때: 몇 번의 도구 호출로 끝나는 작은 일(부르는 비용이 더 큼), 결과를 바로 이어서 고쳐야 하는 코드 작업. 부르면 "제미나이에게 ○○ 맡김(모델)" 한 줄로 알리고, 결과는 그대로 믿지 말고 확인한 뒤 쓴다.
-- **목적별 agy 모델 선택**(`scripts/gemini.sh -m <모델>`, 목록은 `agy models` — 작업에는 Neon·Argon·Carbon만 사용. 예외: 자동 보고 `scripts/work-report.py`·`journal-site.py`는 `gemini-3.8-flash-medium`):
-  - 일반 작업·위키 작성·자료 ingest·요약·검색·코드 검토·테스트 작성(기본) → 옵션 생략(`gemini-4-neon-high` 기본값, 속도 우선 시 `gemini-4-neon-medium`)
-  - 전문 문서·약관·법률·구조화된 비교 분석 → `-m gemini-4-argon-high`
-  - 복잡한 설계 검토·원인 불명 버그·고난도 로직/보안 검증 → `-m gemini-4-carbon-high`
-- 제미나이에게 맡긴 동안 그 범위의 파일은 내가 고치지 않는다. 끝나면 `git log`·`_인수인계.md`로 결과를 확인한다.
-- agy(사용자 AI Pro, Telemetry 끔)는 나와 같은 등급으로 본다: `private/` 내용도 맡겨도 된다. 볼트 밖 비공개 저장소는 `scripts/gemini.sh -d <폴더>`(허락된 `REPOS`만: 지금 `~/dating`·`~/midnight-run-korea`, 그 폴더만·`.env` 금지·푸시는 내가).
+- 제미나이(agy)는 `scripts/gemini.sh "할 일"`로 부른다. 나와 **같은 권한**이라 맡긴 일을 반영하고 커밋까지 한다(옵션·권한은 작업지시서 5·6).
+- **말하지 않아도 내가 판단해서 부른다.** 부를 때: 큰 PDF·여러 자료 읽기, 최신 정보 검색(정책·API·버전·가격), 큰 변경 뒤 두 번째 검토, 영·한 글 초안. 안 부를 때: 몇 번의 도구 호출로 끝나는 일, 결과를 바로 이어 고쳐야 하는 코드. 부르면 "제미나이에게 ○○ 맡김(모델)" 한 줄로 알리고, 결과는 확인한 뒤 쓴다.
+- **여러 단계 작업은 겹치지 않는 파일 단위로 agy와 병렬**, 순서에 매이지 않는 일은 **agy를 먼저 띄운다**(명세 → agy → 내 작업, "커밋하지 말 것"이면 확인 후 함께 커밋 — 작업지시서 7-5). 맡긴 파일은 끝날 때까지 안 고친다. 끝나면 [[Claude·agy 분담 기록]]에 한 줄(~12-07).
+- **모델**(`-m`, 제미나이 Neon·Argon·Carbon만. 예외: 자동 보고 `work-report.py`·`journal-site.py`는 `gemini-3.8-flash-medium`):
+  - 일반·위키·ingest·요약·검색·코드 검토·테스트(기본) → 생략(`gemini-4-neon-high`, 빠르게는 `gemini-4-neon-medium`)
+  - 전문 문서·약관·법률·구조화 비교 → `gemini-4-argon-high`
+  - 복잡한 설계·원인 불명 버그·고난도 로직/보안 → `gemini-4-carbon-high`
+- **계정 대시보드**(Supabase·구글 클라우드·Vercel·GitHub)는 **내가 Chrome으로 직접**, 본인 확인·동의·비밀값만 사용자에게(작업지시서 7-6).
 
 ## 항상 지킬 핵심
 - **`raw/`는 읽기 전용**(수정·삭제·이동 금지). 위키는 `wiki/`, 바이너리 산출물은 `wiki/projects/<프로젝트>/output/YYYY_MM_DD_제목.확장자`.
@@ -54,9 +52,8 @@
 - 개인정보(실명·연락처 등)를 위키에 쓰기 전엔 공개돼도 되는지 사용자에게 확인한다.
 
 ## 🔒 Tracer Route 앱·문제은행 = 비공개 저장소
-- 안드로이드 앱 **Tracer Route**(웹 TRACER의 앱판) 코드, **문제은행 원본(문제 JSON)**, 출시 문서는 비공개 저장소 `DODO-YONG/Tracer-Route`(로컬 `~/Tracer-Route`)에만 둔다. 이 볼트(공개)에 문제 파일·앱 코드를 만들거나 올리지 않는다(`.gitignore`에 `agents/ccna-coach/bank/`).
-- 웹 TRACER(`agents/ccna-coach`·`docs/ccna`·`docs/api`, Vercel)는 그대로 이 볼트에서 공개 운영. 문제는 Supabase DB에서 읽는다.
-- 문제를 DB에 넣을 땐 `python3 ~/Tracer-Route/bank/import_bank.py`. 실제 문제로 로컬 화면 확인은 미리보기 `tracer-real`.
+- 앱 **Tracer Route** 코드·**문제은행 원본(문제 JSON)**·출시 문서는 비공개 `~/Tracer-Route`(`DODO-YONG/Tracer-Route`)에만. 이 볼트엔 문제 파일·앱 코드를 만들지 않는다. 웹 TRACER(`agents/ccna-coach`·`docs/ccna`·`docs/api`)는 여기서 공개 운영, 문제는 Supabase DB에서 읽는다.
+- 문제 넣기 `python3 ~/Tracer-Route/bank/import_bank.py`, 실제 문제로 화면 확인은 미리보기 `tracer-real`.
 
 ## 🔒 `private/` (git 제외, Obsidian엔 보임)
 - 비공개 작업(면접 경험, 비자, 일정 등)은 `private/<주제>/`에, 그 안에 `_<주제> 인덱스.md`.
@@ -66,13 +63,11 @@
 ## 💸 비용 — 추가 요금 절대 없음
 - Claude 구독 외 비용 금지. `ANTHROPIC_API_KEY`를 제안·설정하지 않고, 에이전트 코드는 키가 있으면 실행을 거부(`refuse_paid_billing`) — 새 에이전트에도 넣는다.
 - 유료 API·클라우드 호스팅·유료 플러그인·유료 GitHub 기능을 제안하지 않는다.
-- agy(제미나이)도 추가 요금 없이: 유료 AI 크레딧(`useG1Credits`) 끔, API 키·Cloud 프로젝트 로그인 안 씀, 제미나이 모델만. 한도가 다 되면 기다린다. 예외: Claude가 없을 때 사용자가 **Antigravity 앱**에서 시키는 작업은 Claude Opus 허용(AI Credits 꺼짐, 2026-11-24, 작업지시서 6-1).
-- 사용자가 승인한 예외(2026-11-24): 소개팅 앱 미국 출시 때 Apple 개발자 등록비(연 $99). 다른 출시 비용은 매번 먼저 묻는다.
+- agy도 추가 요금 없이: 유료 AI 크레딧 끔, API 키·Cloud 프로젝트 안 씀, 한도가 다 되면 기다린다(`gemini.sh`가 막음). Antigravity 앱 작업만 Claude Opus 허용(`GEMINI.md`).
+- 승인된 예외: 소개팅 앱 미국 출시 Apple 개발자 등록비(연 $99). 다른 출시 비용은 매번 먼저 묻는다.
 - 구독 사용량도 아낀다: 시험 실행은 짧게, 실행 전 사용량이 든다고 알린다. 화면의 "$"는 API 요금 환산 참고치라고 명시.
 
-## 🔒 외부 AI로 보내는 기준 (2026-11-23 개정)
-- 기준은 회사가 아니라 **보낸 내용이 학습에 쓰이는지**다.
-- **agy(Antigravity CLI, 사용자 Google AI Pro, Telemetry 끔)** = Claude와 같은 등급. 사용자 본인 정보·`private/`도 된다.
-- 볼트 작업에 제미나이가 필요하면 **agy만** 쓴다. 무료 API 키로 직접 부르지 않는다(키는 TRACER·CUPID 앱 전용).
-- **제미나이 API 무료 키**(볼트 루트 `.env`의 `GOOGLE_API_KEY`, TRACER·CUPID가 씀)는 학습·사람 검토에 쓰이고 끌 수 없다 → 개인정보·비자·면접·`private/` 내용은 **보내지 않는다**.
+## 🔒 외부 AI로 보내는 기준 = 학습에 쓰이는지
+- **agy**(사용자 Google AI Pro, Telemetry 끔) = Claude와 같은 등급, `private/`도 된다. 볼트 작업의 제미나이는 **agy만**.
+- **제미나이 API 무료 키**(`.env`의 `GOOGLE_API_KEY`, TRACER·CUPID 앱 전용)는 학습에 쓰인다 → 개인정보·비자·면접·`private/` 내용은 보내지 않는다.
 - 어디에도 보내지 않는 것: 키·토큰, 다른 사람의 개인정보(앱 회원 데이터 등).

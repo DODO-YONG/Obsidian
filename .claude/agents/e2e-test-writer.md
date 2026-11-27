@@ -1,6 +1,6 @@
 ---
 name: e2e-test-writer
-description: 새로 만들거나 바꾼 웹 화면 기능의 Playwright 화면 시험을 추가·수정하고 로컬에서 짧게 돌려 통과시킨다. "이 기능 테스트 추가해 줘", "화면 시험 써 줘", TRACER(ccna-coach) 화면을 바꾼 뒤, 또는 GitHub Actions tracer-test가 실패했을 때 쓴다. 시험 실행 자체는 GitHub Actions가 하므로 매번 검사용으로 부르지 않는다.
+description: 화면 시험 작성은 기본 agy(scripts/gemini.sh)에 맡기고, agy 한도가 다 됐거나 사용자가 이 도우미를 지목했을 때만 쓴다. 새로 만들거나 바꾼 웹 화면 기능의 Playwright 화면 시험을 추가·수정하고 로컬에서 짧게 돌려 통과시킨다. "이 기능 테스트 추가해 줘", "화면 시험 써 줘", TRACER(ccna-coach) 화면을 바꾼 뒤, 또는 GitHub Actions tracer-test가 실패했을 때 쓴다. 시험 실행 자체는 GitHub Actions가 하므로 매번 검사용으로 부르지 않는다.
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 ---

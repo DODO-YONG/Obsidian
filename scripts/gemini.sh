@@ -1,8 +1,8 @@
 #!/bin/sh
 # Claude가 제미나이(Antigravity CLI, agy)에게 일을 시킬 때 쓰는 입구.
 # 규칙: wiki/_규칙/Claude·Gemini 협업 작업지시서.md
-#   사용: scripts/gemini.sh [-m 모델] [-e 생각강도] "할 일"
-#   예:   scripts/gemini.sh "raw/projects/ccna/ospf.pdf 를 읽고 요약 초안을 wiki/_inbox/ 에 써 줘"
+#   사용: scripts/gemini.sh [-m 모델] [-e 생각강도] [-d 저장소] [-w] "할 일"
+#   예:   scripts/gemini.sh "raw/projects/ccna/ospf.pdf 를 ingest 해서 위키에 반영하고 커밋해 줘"
 #         scripts/gemini.sh -m gemini-4-neon-medium "OSPF hello 간격 기본값을 공식 문서로 확인해 줘"
 # 안전장치:
 #   - 사용자 Google AI Pro 로그인으로만 실행(API 키 변수는 지우고 실행 → 추가 요금 없음)
@@ -59,12 +59,16 @@ if [ -n "$DIR" ]; then
   SETTINGS="$(mktemp -t agy-settings).json"
   sed "s#__DIR__#$DIR#g" "$VAULT/scripts/agy-settings-repo.json" > "$SETTINGS"
   cd "$DIR"
+  # 이 저장소엔 GEMINI.md가 없어 볼트 규칙을 못 읽는다 → 핵심 규칙을 할 일 앞에 붙인다
+  TASK="[규칙] 이 저장소 안에서만 일한다. .env 등 키 파일은 읽지 않는다. 키·토큰·비밀번호는 코드에 쓰지 않는다. 푸시·배포·DB 적용은 하지 않는다(Claude가 함). 고친 뒤 시험을 돌린다. 커밋은 할 일에 '커밋하지 말 것'이 없을 때만, 바꾼 파일만 git add <파일>(-A 금지, --no-verify 금지), 메시지 끝에 Co-Authored-By: Gemini <noreply@google.com>. 한국어로 짧게 보고한다.
+
+[할 일] $1"
 else
   SETTINGS="$VAULT/scripts/agy-settings.json"
-  mkdir -p "$VAULT/wiki/_inbox"
   cd "$VAULT"
+  TASK="$1"
 fi
-set -- -p "$1" --model "$MODEL" --settings "$SETTINGS" --print-timeout 20m
+set -- -p "$TASK" --model "$MODEL" --settings "$SETTINGS" --print-timeout 20m
 [ -n "$EFFORT" ] && set -- "$@" --effort "$EFFORT"
 if [ -n "$WATCH" ]; then
   "$AGY" "$@" --output-format stream-json 2>&1 | python3 "$VAULT/scripts/agy-watch.py"

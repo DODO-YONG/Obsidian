@@ -13,13 +13,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232C4BD6'/%3E%3Cpath d='M9 11l5 5-5 5M16 22h7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css?v=20261126102938">
+<link rel="stylesheet" href="style.css?v=20261127092032">
 <script>
 /* 기본은 어두운 화면. 직접 고른 값이 있으면 그것을 따른다. */
 try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
 /* 새 버전 자동 확인 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261126102938';
+  var SITE_V = '20261127092032';
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -200,7 +200,7 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
           <article class="item">
             <div class="top"><h4>시험 작성 도우미</h4><span class="cost once">기능마다 한 번</span></div>
             <span class="path">.claude/agents/e2e-test-writer.md · Sonnet</span>
-            <p>새 화면 기능을 만들면 그 기능의 Playwright 화면 시험을 써 주고, 내 Mac에서 짧게 돌려 통과시킵니다. 실행은 맡기지 않습니다(자동 장치가 함).</p>
+            <p>화면 시험은 기본으로 제미나이가 쓰고, 제미나이 한도가 다 됐을 때 이 도우미가 대신 써서 내 Mac에서 짧게 돌려 통과시킵니다. 실행은 맡기지 않습니다(자동 장치가 함).</p>
             <dl><dt>부르는 말</dt><dd>“이 기능 테스트 추가해 줘”</dd><dt>안 하는 것</dt><dd>커밋·화면 코드 수정·실제 로그인</dd></dl>
           </article>
           <article class="item">
@@ -259,7 +259,7 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
           <article class="item">
             <div class="top"><h4>제미나이 부르기</h4><span class="cost zero">Claude 토큰 0</span></div>
             <span class="path">scripts/gemini.sh · agy-watch.py · agy-settings.json · agy-settings-repo.json</span>
-            <p>긴 자료 읽기·검색 조사·검토 의견을 제미나이(Antigravity CLI, Pro 구독 로그인)에게 맡깁니다. Claude와 같은 권한으로 위키·코드에 바로 반영하고 커밋까지 합니다. 키 파일 읽기, 원본 자료 수정, 강제 푸시만 막습니다. <code>-d</code>로 허락된 비공개 저장소 한 곳에서만 일하게 할 수도 있습니다. <code>-w</code>를 붙이면 터미널 탭에서 제미나이가 어떤 파일을 읽고 무엇을 쓰는지 실시간으로 보입니다.</p>
+            <p>긴 자료 읽기·검색 조사·검토 의견을 제미나이(Antigravity CLI, Pro 구독 로그인)에게 맡깁니다. Claude와 같은 권한으로 위키·코드에 바로 반영하고 커밋까지 합니다. 키 파일 읽기, 원본 자료 수정, 강제 푸시만 막습니다. <code>-d</code>로 허락된 비공개 저장소 한 곳에서만 일하게 할 수도 있습니다(그 저장소엔 규칙 파일이 없어 핵심 규칙을 자동으로 붙여 보냄). <code>-w</code>를 붙이면 터미널 탭에서 제미나이가 어떤 파일을 읽고 무엇을 쓰는지 실시간으로 보입니다.</p>
             <dl><dt>언제</dt><dd>Claude가 많이 읽어야 하는 일을 맡길 때</dd></dl>
           </article>
         </div>
