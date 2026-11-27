@@ -588,3 +588,5 @@
 ## [2026-11-27] output | 원어민 교사 앱 학원 페이지 탭(Overview·Reviews·Interviews·Tokyo Jon)·목록 쪽 번호
 
 ## [2026-11-27] output | 원어민 교사 앱 Reviews·Lounge 목록 쪽 번호(Load more 없앰)
+
+## [2026-11-27] output | 원어민 교사 앱 지도+목록 한 화면(구글 지도식)·Lounge 지역 거르기
