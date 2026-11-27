@@ -586,3 +586,5 @@
 ## [2026-11-27] output | 원어민 교사 앱 리뷰 게시판 모양(한줄평 필수·제목 목록·상세 페이지)
 
 ## [2026-11-27] output | 원어민 교사 앱 학원 페이지 탭(Overview·Reviews·Interviews·Tokyo Jon)·목록 쪽 번호
+
+## [2026-11-27] output | 원어민 교사 앱 Reviews·Lounge 목록 쪽 번호(Load more 없앰)
