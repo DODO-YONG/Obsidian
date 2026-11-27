@@ -1,15 +1,15 @@
 /* TRACER 공통 대기 화면(이용 화면·관리자 화면). AI를 기다리는 동안 화면 아래에 뜨는 카드.
    - traceroute처럼: 패킷이 경로를 따라 움직이고, 지나간 '홉'(단계)이 터미널처럼 한 줄씩 찍힌다(걸린 ms 포함).
    - 진행 막대·경과 초·몇 초마다 바뀌는 팁(문제 화면은 CCNA 상식, 관리자 화면은 사용 팁).
-   - 0.4초 안에 끝나면 아예 안 보인다(저장된 문제처럼 빠른 응답은 깜빡임 없이). 12초 넘으면 "평소보다 오래 걸려요".
+   - 짧게 끝나면 아예 안 보인다: 문제·채점은 1.5초, 해설(제미나이)은 0.6초, 관리자는 0.4초 기준(문제은행 응답처럼 빠른 건 버튼 표시만). 12초 넘으면 "평소보다 오래 걸려요".
    - 페이지의 색(--panel·--accent 등)을 그대로 써서 밝은/어두운 화면 모두 맞고, "동작 줄이기" 설정이면 움직임을 줄인다.
    쓰는 법: var w = TracerWait.start('grade'); … w.step(2); … w.done();   (kind: question|grade|explain|admin|sql)
 */
 (function () {
   var KINDS = {
-    question: { title: '문제를 준비하고 있어요', steps: ['브라우저', 'TRACER 서버', '문제은행 확인', '제미나이에게 출제 요청', '문제 도착'], expect: 6 },
-    grade:    { title: '채점하고 있어요', steps: ['답안 전송', 'TRACER 서버', '정답 확인', '해설 준비', '결과 도착'], expect: 5 },
-    explain:  { title: '제미나이가 해설을 쓰고 있어요', steps: ['문제 전송', 'TRACER 서버', '문제 읽는 중', '해설 쓰는 중', '정리 중'], expect: 10 },
+    question: { title: '문제를 준비하고 있어요', steps: ['브라우저', 'TRACER 서버', '문제은행 확인', '제미나이에게 출제 요청', '문제 도착'], expect: 6, delay: 1500 },
+    grade:    { title: '채점하고 있어요', steps: ['답안 전송', 'TRACER 서버', '정답 확인', '해설 준비', '결과 도착'], expect: 5, delay: 1500 },
+    explain:  { title: '제미나이가 해설을 쓰고 있어요', steps: ['문제 전송', 'TRACER 서버', '문제 읽는 중', '해설 쓰는 중', '정리 중'], expect: 10, delay: 600 },
     admin:    { title: '명령을 처리하고 있어요', steps: ['명령 문장', 'TRACER 서버', '제미나이 해석', '명령 범위 확인', '화면에서 실행'], expect: 5 },
     sql:      { title: '조회하고 있어요', steps: ['명령 문장', '제미나이가 SQL 작성', '읽기 전용 검사', 'SQL 엔진 준비', '모의 데이터에서 실행'], expect: 8 }
   };
@@ -145,7 +145,7 @@
     // 단계를 시간에 맞춰 조금씩 앞으로(마지막 단계는 실제로 끝날 때만)
     var auto = Math.max(500, (K.expect || 6) * 1000 / (steps.length));
     for (var k = 1; k < steps.length - 1; k++) (function (k) { timers.push(setTimeout(function () { adv(k, false); }, auto * k * (k > 2 ? 1.4 : 1))); })(k);
-    timers.push(setTimeout(mount, opt.delay != null ? opt.delay : 400));
+    timers.push(setTimeout(mount, K.delay != null ? K.delay : 400));
     cur = w;
     return w;
   }
