@@ -292,7 +292,7 @@
 (function () { var t = 'dark'; try { if (localStorage.getItem('ccna-theme') === 'light') t = 'light'; } catch (e) {} document.documentElement.setAttribute('data-theme', t); })();
 /* 새 버전 자동 확인: 브라우저가 예전 페이지를 보여 주면 한 번만 새로고침 (scripts/bump-site-version.sh) */
 (function () {
-  var SITE_V = '20261127163325';
+  var SITE_V = '20261127164438';
   fetch('../version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j.v || j.v === SITE_V) return;
     var k = 'site-reloaded-' + j.v;
@@ -302,8 +302,8 @@
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
-<script src="tracer-auth.js?v=20261127163325"></script>
-<script src="tracer-wait.js?v=20261127163325"></script>
+<script src="tracer-auth.js?v=20261127164438"></script>
+<script src="tracer-wait.js?v=20261127164438"></script>
 </head>
 <body>
 <header>
@@ -728,7 +728,7 @@ var Subnet = (function () {
   // ---- 문제
   function busy(btn, on, label) {
     state.busy = on; btn.disabled = on; btn.innerHTML = on ? '<span class="spin" aria-hidden="true"></span>' + label : btn.dataset.label;
-    // 기다리는 동안 화면 아래 공통 대기 카드(문제·채점은 1.5초, 제미나이 일은 0.6초 안에 끝나면 안 보임)
+    // 기다리는 동안 화면 아래 공통 대기 카드(문제·채점은 4초, 제미나이 일은 0.6초 안에 끝나면 안 보임 — 그 전엔 버튼 스피너만)
     if (!window.TracerWait) return;
     if (on && !state.wait) state.wait = TracerWait.start(/채점/.test(label) ? 'grade' : /해설/.test(label) ? 'explain' : 'question', /제미나이/.test(label) ? { delay: 600 } : null);
     if (!on && state.wait) { state.wait.done(); state.wait = null; }
