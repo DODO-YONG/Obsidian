@@ -620,3 +620,5 @@
 ## [2026-11-28] output | 소개팅 앱 자동 작업(keepalive·backup) 끔
 
 ## [2026-11-28] output | 소개팅 앱 Vercel 사이트 비공개
+
+## [2026-11-28] output | 원어민 교사 앱 Tokyo Jon 이름 정리(메타·관리자·주석·DB 출처 값)
