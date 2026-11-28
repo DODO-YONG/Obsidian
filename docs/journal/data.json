@@ -1,74 +1,123 @@
 {
  "days": [
   {
-   "headline": "원어민 교사 앱의 익명 게시판과 지도 화면을 만들고 작업 규칙을 정리했습니다.",
+   "headline": "원어민 교사 앱 기능을 다듬고 소개팅 앱 운영을 잠시 보류했습니다.",
    "projects": [
     {
      "name": "원어민 교사 앱",
      "emoji": "🏫",
      "items": [
-      "전국 학원별 상세 안내 페이지를 배포하고 검색 엔진에 등록했습니다.",
-      "회원들이 안심하고 이야기를 나눌 수 있는 익명 소통 게시판을 새로 만들었습니다.",
-      "리뷰 작성과 회원가입 화면을 더 따뜻하고 쓰기 편한 모습으로 개편했습니다.",
-      "학원 위치 지도와 후기 목록을 한눈에 모아보고 지역별로 찾을 수 있게 개선했습니다.",
-      "타 취업 사이트 후기를 참고해 리뷰 항목을 보강하고 일본 확장 가능성을 조사했습니다."
+      "상단 메뉴와 후기 화면을 깔끔하게 다듬고 화면과 데이터에서 외부 출처 명칭을 정리했습니다.",
+      "사용자가 후기를 요청하는 버튼과 내가 쓴 글을 모아보는 화면을 새로 추가했습니다.",
+      "검색되지 않은 단어나 누락된 학원 제보를 기존 정보와 연결하는 관리 기능을 보완했습니다.",
+      "정보 정정 요청에 보낼 안내 답변 양식과 관리자 처리 기록 기능을 마련했습니다.",
+      "홍보 후보 커뮤니티의 실제 규모와 활동성을 확인한 뒤 작업 우선순위를 낮췄습니다."
+     ]
+    },
+    {
+     "name": "소개팅 앱 say when",
+     "emoji": "💌",
+     "items": [
+      "당분간 운영 계획이 없어 웹사이트를 외부에서 볼 수 없도록 비공개로 전환했습니다.",
+      "주기적으로 실행되던 서버 유지 및 백업 자동화 작업을 중단했습니다."
+     ]
+    }
+   ],
+   "learned": "홍보 대상 커뮤니티의 실제 활동성을 확인해 우선순위를 조정하고, 계획이 없는 서비스는 자동 작업을 꺼서 깔끔히 정리했습니다.",
+   "date": "2026-11-28",
+   "weekday": "토",
+   "commits": 19,
+   "en": {
+    "headline": "Polished features for the native English teacher app and paused dating app operations.",
+    "projects": [
+     {
+      "name": "Native English Teacher App",
+      "emoji": "🏫",
+      "items": [
+       "Polished the top navigation and review screens, and cleaned up external source references across the UI and data.",
+       "Added a review request button and a dedicated screen for users to view their own posts.",
+       "Enhanced admin features to link unmatched search terms and missing academy submissions to existing records.",
+       "Created response templates for data correction requests and added an admin activity logging system.",
+       "Deprioritized promotional outreach after verifying the actual scale and activity levels of candidate communities."
+      ]
+     },
+     {
+      "name": "say when (dating app)",
+      "emoji": "💌",
+      "items": [
+       "Made the website private to restrict external access, as there are no immediate operational plans.",
+       "Disabled recurring automated jobs for server maintenance and backups."
+      ]
+     }
+    ],
+    "learned": "Adjusted priorities after evaluating the actual activity of target communities, and cleanly wrapped up inactive services by disabling automated jobs."
+   }
+  },
+  {
+   "headline": "원어민 교사 앱의 소통 공간과 후기 기능을 마련하고 사용성을 다듬었습니다.",
+   "projects": [
+    {
+     "name": "원어민 교사 앱",
+     "emoji": "🏫",
+     "items": [
+      "학원별 안내 페이지를 2,300여 곳 넘게 구축하고 검색 엔진에 등록해 사이트 노출을 준비했습니다.",
+      "선생님들이 편하게 이야기 나눌 수 있는 회원 전용 익명 게시판과 주제별 후기 모아보기 기능을 개발해 선보였습니다.",
+      "지도와 학원 목록을 한눈에 비교하며 지역별로 편리하게 찾아볼 수 있도록 화면을 개편했습니다.",
+      "근무 조건과 면접 경험을 더 자세히 적을 수 있도록 후기 양식을 보강하고 화면 디자인을 따뜻한 분위기로 다듬었습니다."
      ]
     },
     {
      "name": "작업실·위키",
      "emoji": "🛠️",
      "items": [
-      "인공지능 보조 도구가 작업 목적에 알맞은 모델을 사용하도록 선택 기준을 정리했습니다.",
-      "작업 규칙 문서에서 중복되거나 오래된 내용을 정리해 한곳으로 모았습니다.",
-      "서비스 운영 비용을 줄이기 위해 웹사이트 호스팅 공간을 이전하는 계획을 세웠습니다."
+      "인공지능 도구를 작업 목적에 맞게 골라 쓸 수 있도록 모델 선택 기준을 정비했습니다.",
+      "협업 규칙 문서에서 중복되거나 오래된 기록을 덜어내고 핵심 기준을 한곳으로 모았습니다."
      ]
     },
     {
      "name": "TRACER",
      "emoji": "🌐",
      "items": [
-      "문제 풀이나 채점 응답이 빠를 때는 불필요한 대기 화면이 뜨지 않도록 조정했습니다.",
-      "서버 응답이 4초 이상 걸릴 때만 대기 안내를 띄우고 결과가 나오면 즉시 닫히게 개선했습니다."
+      "네트워크 문제 풀이 화면에서 결과가 빨리 나올 때는 로딩 창이 뜨지 않도록 반응 속도를 개선했습니다.",
+      "서버 응답 속도에 맞춰 대기 창이 나타나는 기준 시간을 조절해 문제 풀이 흐름이 끊기지 않게 했습니다."
      ]
     }
    ],
-   "learned": "핵심 기능에 집중하기 위해 부가 기능을 과감히 덜어내고, 익명 게시판은 운영자가 매일 직접 관리한다는 운영 기준을 세웠습니다.",
+   "learned": "부가 기능 욕심을 내려놓고 교사들이 가장 필요로 하는 솔직한 후기와 익명 소통이라는 핵심 가치에 집중하기로 결정했습니다.",
    "date": "2026-11-27",
    "weekday": "금",
-   "commits": 42,
+   "commits": 43,
    "en": {
-    "headline": "Built an anonymous board and map view for a native English teacher app, and organized workspace guidelines.",
+    "headline": "Built community spaces and review features for the native English teacher app and refined usability.",
     "projects": [
      {
       "name": "Native English Teacher App",
       "emoji": "🏫",
       "items": [
-       "Deployed nationwide academy detail pages and indexed them on search engines.",
-       "Built a new anonymous community board where members can share stories safely.",
-       "Redesigned review submission and sign-up screens to be friendlier and easier to use.",
-       "Revamped academy location maps and review listings to be viewable at a glance and searchable by region.",
-       "Expanded review criteria based on external job review platforms and researched expansion feasibility into Japan."
+       "Built information pages for over 2,300 academies and registered them with search engines for search visibility.",
+       "Developed and launched a members-only anonymous forum and topic-based review browsing for teachers to connect comfortably.",
+       "Redesigned the interface to enable convenient regional search by comparing maps and academy listings at a glance.",
+       "Expanded review forms to capture detailed working conditions and interview experiences, polishing the UI with a warm visual tone."
       ]
      },
      {
       "name": "Workshop & Wiki",
       "emoji": "🛠️",
       "items": [
-       "Established selection criteria so AI assistant tools use appropriate models suited to each task.",
-       "Consolidated workspace guidelines by removing duplicated and outdated documentation.",
-       "Planned website hosting migration to reduce service operational costs."
+       "Established model selection criteria to choose the right AI tools for specific task objectives.",
+       "Streamlined collaboration documentation by removing outdated and duplicate entries and centralizing core guidelines."
       ]
      },
      {
       "name": "TRACER",
       "emoji": "🌐",
       "items": [
-       "Prevented unnecessary loading screens from appearing when problem solving or grading responded quickly.",
-       "Updated loading indicators to display only when server responses exceed 4 seconds and dismiss immediately upon completion."
+       "Improved UI responsiveness on the network challenge screen by suppressing loading screens when results load quickly.",
+       "Adjusted loading display thresholds based on server response times to maintain an uninterrupted problem-solving flow."
       ]
      }
     ],
-    "learned": "Streamlined non-essential features to stay focused on core functionality, and established an operational policy of daily manual moderation for the anonymous board."
+    "learned": "Decided to set aside secondary features and focus on the core values teachers need most: candid reviews and anonymous communication."
    }
   },
   {
@@ -655,127 +704,149 @@
  ],
  "weeks": [
   {
-   "title": "관리자 도구 고도화와 서비스 출시 준비",
+   "title": "신규 서비스 배포와 AI 협업 체계 확립",
    "summary": [
-    "네트워크 문제 풀이 사이트의 관리자 화면에 인공지능 자연어 조회와 모의 체험 기능을 추가해 누구나 통계를 살펴볼 수 있게 했습니다.",
-    "네트워크 경로 추적 안드로이드 앱의 전 세계 비공개 시험 출시를 신청하고, 새 소개팅 서비스의 회원 가입과 기본 화면을 구축했습니다.",
-    "두 인공지능의 협업 규칙을 정리하고 매일 아침과 저녁 작업 상황을 메일로 보내주는 자동화 장치를 마련했습니다."
+    "원어민 교사를 위한 신규 정보 웹 서비스를 기획부터 정식 배포까지 빠르게 완성했습니다.",
+    "기존 네트워크 학습 웹사이트와 모바일 앱의 관리 기능을 고도화하고 전 세계 출시를 위한 테스트를 시작했습니다.",
+    "인공지능과의 효율적인 병렬 협업 규칙을 확립하고 작업 일지와 보고 메일 자동화 체계를 구축했습니다."
    ],
    "projects": [
     {
+     "name": "Midnight Run Korea",
+     "emoji": "🏫",
+     "outcome": "국내 원어민 교사들이 학원 정보를 쉽게 검색하고 솔직한 근무 후기를 안전하게 나눌 수 있게 되었습니다.",
+     "items": [
+      "공공데이터를 활용한 전국 학원 검색 및 지도 기반 위치 조회 기능 구현",
+      "실제 근무 경험을 공유하는 리뷰 작성 공간과 자유로운 소통을 위한 익명 게시판 개설",
+      "신뢰도 유지를 위한 회원 가입 승인 절차 및 허위 게시물 관리를 위한 검수 시스템 구축",
+      "검색 포털 등록과 함께 누구나 접속해 이용할 수 있도록 웹 서비스 정식 배포"
+     ]
+    },
+    {
      "name": "TRACER",
      "emoji": "🌐",
-     "outcome": "관리자가 일상적인 말로 질문해 사이트 통계를 조회하고, 일반 방문자도 모의 관리자 기능을 직접 체험할 수 있게 되었습니다.",
+     "outcome": "관리자가 일상적인 대화형 명령과 통계 화면을 통해 사이트 데이터를 손쉽게 관리할 수 있게 되었습니다.",
      "items": [
-      "자연어 질문으로 사이트 현황을 조회하는 관리자 명령창 및 모의 체험 화면 구축",
-      "일반 이용자를 위한 관리자 체험 기능과 인공지능 대기 시간 시각화 카드 추가",
-      "기간별 통계 비교, 정답률 분석, 보고서 파일 다운로드 등 관리자 기능 실제 사이트 적용"
+      "일상적인 문장으로 데이터를 조회하고 일괄 처리할 수 있는 관리자 명령창 구축",
+      "기간별 이용 통계, 문제 정답률 비교, 활동 요약 보고서 자동 생성 기능 추가",
+      "문제 풀이 및 채점 대기 화면을 개선하고 지연 시간에 맞춘 시각적 안내 카드 적용"
      ]
     },
     {
      "name": "Tracer Route",
      "emoji": "📱",
-     "outcome": "안드로이드 앱의 전 세계 출시 준비를 마치고 실제 사용자들의 시험 참여를 받을 수 있게 되었습니다.",
+     "outcome": "앱의 전 세계 정식 출시를 앞두고 글로벌 테스터 모집과 사전 점검을 시작했습니다.",
      "items": [
-      "앱 마켓 전 세계 출시 준비 및 비공개 시험 검토 제출",
-      "새로운 홈 화면 구성 반영 및 앱 소개 화면 이미지 최신화",
-      "국내외 테스터 모집을 위한 2개 국어 안내 웹페이지 개설 및 모집 진행"
+      "앱 스토어 사전 체험(비공개 테스트) 등록 및 홈 화면을 개선한 최신 버전 갱신",
+      "참여 방법과 앱 안전성을 안내하는 영문·국문 테스터 모집 전용 웹페이지 제작",
+      "글로벌 커뮤니티를 통한 초기 사용자 모집 및 스토어 안내 화면 정돈"
      ]
     },
     {
      "name": "소개팅 앱 say when",
      "emoji": "💬",
-     "outcome": "서비스 정식 이름을 확정하고 안전한 소셜 로그인과 회원 가입 흐름을 갖춘 시험판을 배포했습니다.",
+     "outcome": "사용자 편의 기능과 시제품을 점검한 뒤 운영 우선순위에 따라 서비스를 안전하게 정리했습니다.",
      "items": [
-      "서비스 이름을 'say when'으로 확정하고 차분한 로즈 및 어두운 색상 테마 정립",
-      "구글 계정을 통한 간편 로그인과 관리자 승인 기반의 안전한 회원 가입 절차 구축",
-      "관심 표현과 첫 대화를 자연스럽게 잇는 메시지 방식 및 친구와 함께하는 그룹 미팅 기능 기획"
+      "핵심 기능을 담은 초기 시제품 화면 제작 및 간편 로그인 연동",
+      "사용자 데이터 보호 규칙 마련 및 모바일 환경에 맞춘 디자인 다듬기",
+      "개발 우선순위 조정에 따라 작업을 중단하고 서버 및 사이트를 비공개로 전환"
      ]
     },
     {
      "name": "작업실·위키",
      "emoji": "🛠️",
-     "outcome": "인공지능 협업 체계를 체계화하고 매일의 작업 기록과 일정을 자동으로 챙기는 시스템을 마련했습니다.",
+     "outcome": "인공지능과의 원활한 공동 작업 규칙과 일일 보고 자동화 체계를 마련했습니다.",
      "items": [
-      "인공지능 모델별 작업 권한과 병렬 분담 기준을 명확히 한 협업 규칙 수립",
-      "매일 아침과 밤 작업 진행 상황 및 일정을 메일로 알려주는 자동 알림 시스템 구축",
-      "누구나 쉽게 읽을 수 있는 공개 작업 일지 페이지 개설 및 프로필 이력 정리"
+      "두 인공지능이 충돌 없이 역할을 나누어 작업할 수 있는 병렬 협업 기준 정립",
+      "매일 아침 하루 일정과 밤 작업 결과를 자동으로 정리해 발송하는 보고 메일 구축",
+      "작업 기록을 알기 쉽게 정리한 공개 일지 사이트 개설 및 대외 소개 프로필 개편"
      ]
     }
    ],
    "decisions": [
-    "소개팅 서비스 공식 명칭을 'say when'으로 정하고 어두운 테마와 로즈 색상을 기본 화면 디자인으로 확정함",
-    "Tracer Route 앱 출시 범위를 전 세계로 확대하고 정식 출시 전까지 비공개 테스터를 모집하기로 결정함",
-    "인공지능 협업 시 작업 영역을 나누어 효율적으로 분담하고 작업 규칙을 단일화함",
-    "TRACER 사이트에 인공지능 기반 관리자 통계 조회와 보고서 기능을 실제 켜기로 결정함"
+    "신규 원어민 교사 서비스는 법적 위험을 줄이기 위해 외부 글을 직접 옮겨오지 않고 자체적인 학원 검색과 리뷰를 중심으로 운영하기로 정했습니다.",
+    "소개팅 앱 서비스는 전략적 판단에 따라 추가 개발을 잠정 중단하고 비공개로 전환하기로 결정했습니다.",
+    "인공지능과의 협업 시 서로의 작업 구역을 분리하고 수정한 파일만 안전하게 반영하도록 규칙을 확립했습니다.",
+    "모바일 앱은 국내에 한정하지 않고 전 세계 사용자를 대상으로 사전 테스트를 거쳐 글로벌 출시하기로 결정했습니다."
    ],
    "next": [
-    "Tracer Route 비공개 테스트 피드백 수집 및 스토어 정식 출시 승인 진행",
-    "소개팅 앱 say when의 시험판 초대 및 이용 편의성 개선",
-    "관리자 도구와 작업실 자동 알림 시스템의 안정적인 운영 유지"
+    "원어민 교사 서비스의 초기 사용자 유입과 신규 리뷰 활성화",
+    "모바일 앱 사전 테스트 피드백 수집 및 정식 출시 준비",
+    "작업 일지와 자동 보고 체계를 바탕으로 한 지속적인 서비스 운영 및 관리"
    ],
    "start": "2026-11-23",
    "end": "2026-11-29",
-   "commits": 216,
+   "commits": 236,
    "en": {
     "projects": [
      {
+      "name": "Midnight Run Korea",
+      "emoji": "🏫",
+      "outcome": "Enabled native English teachers in Korea to easily search academy information and safely share candid workplace reviews.",
+      "items": [
+       "Implemented nationwide academy search and map-based location lookup using public open data",
+       "Built a review-sharing space for verified workplace experiences and an anonymous board for open community discussions",
+       "Set up an approval-based sign-up flow and content moderation system to maintain trust and prevent fraudulent posts",
+       "Officially launched the public web service with search engine indexing for open access"
+      ]
+     },
+     {
       "name": "TRACER",
       "emoji": "🌐",
-      "outcome": "Enabled administrators to query site statistics using natural language and allowed general visitors to experience a simulated admin console.",
+      "outcome": "Empowered administrators to manage site data effortlessly through natural language commands and analytics dashboards.",
       "items": [
-       "Built an admin command bar and interactive demo screen for querying site metrics with natural language",
-       "Added an admin demo mode for general visitors alongside an AI latency visualization card",
-       "Deployed core admin features to production, including period-over-period metric comparisons, solve-rate analytics, and report downloads"
+       "Built an admin command palette supporting natural language queries and batch operations",
+       "Added automated report generation for period-based usage metrics, question accuracy rates, and activity summaries",
+       "Improved problem-solving and grading screens with visual progress cards mapped to wait times"
       ]
      },
      {
       "name": "Tracer Route",
       "emoji": "📱",
-      "outcome": "Prepared the Android app for a global launch and opened onboarding for real-world user testing.",
+      "outcome": "Initiated global closed testing and pre-launch evaluations ahead of the worldwide app store release.",
       "items": [
-       "Prepared the app for a worldwide store release and submitted it for closed testing review",
-       "Applied a redesigned home screen layout and updated store listing screenshots",
-       "Launched a bilingual landing page to recruit global and domestic beta testers"
+       "Registered the app for app store closed testing and updated to the latest build featuring a revamped home screen",
+       "Created a bilingual (English/Korean) recruitment landing page detailing testing guidelines and app safety",
+       "Recruited early testers via global online communities and polished app store listing assets"
       ]
      },
      {
       "name": "say when (dating app)",
       "emoji": "💬",
-      "outcome": "Finalized the official service name and deployed a beta build featuring secure social login and user onboarding.",
+      "outcome": "Evaluated prototype features and usability, then gracefully sunset the service in line with operational priorities.",
       "items": [
-       "Finalized the service name as 'say when' and established a muted rose and dark color theme",
-       "Implemented Google Sign-In and an admin-approval onboarding flow for security",
-       "Designed an ice-breaking messaging flow connecting interest signals to initial chats, along with a group dating feature"
+       "Built an early prototype UI covering core flows with social login integration",
+       "Established user data protection policies and refined mobile-responsive UI design",
+       "Halted development following priority reallocations, taking the server and web service private"
       ]
      },
      {
       "name": "Workshop & Wiki",
       "emoji": "🛠️",
-      "outcome": "Systematized a multi-AI collaboration framework and established automated daily work logging and schedule tracking.",
+      "outcome": "Established parallel collaboration guidelines for AI assistants and built an automated daily reporting pipeline.",
       "items": [
-       "Established collaboration protocols clarifying workspace boundaries and task division across AI models",
-       "Automated morning and evening email briefings covering work progress and daily schedules",
-       "Published an accessible public work log and structured professional profile history"
+       "Defined parallel workflow protocols to prevent workspace collisions across multiple AI assistants",
+       "Built automated email reporting scripts dispatching daily schedules and overnight progress digests every morning",
+       "Launched a public dev log website showcasing work records and redesigned external public profiles"
       ]
      }
     ],
-    "title": "Advancing Admin Tooling and Preparing Service Launches",
+    "title": "New Service Launch and Establishment of AI Collaboration Workflows",
     "summary": [
-     "Added AI natural-language querying and interactive demo features to the network puzzle site's admin console, enabling all visitors to explore statistics.",
-     "Submitted the network tracer Android app for global closed testing review, and built onboarding and core screens for a new dating service.",
-     "Formulated collaboration protocols between two AI models and implemented an automated system delivering morning and evening email status updates."
+     "Delivered a new information web service for native English teachers from concept to production launch.",
+     "Enhanced administrative capabilities for the existing network learning platform and initiated global mobile app testing.",
+     "Formulated multi-AI collaboration protocols and automated work logs and daily reporting emails."
     ],
     "decisions": [
-     "Finalized 'say when' as the official name of the dating service, adopting a dark theme with rose accents as the default UI",
-     "Expanded the Tracer Route launch scope worldwide and decided to recruit closed beta testers prior to official release",
-     "Partitioned workspaces for AI collaboration to streamline parallel work and unified operational rules",
-     "Decided to enable AI-powered admin metrics querying and report generation on the live TRACER site"
+     "Decided to operate the native teacher service centered on in-house academy search and direct user reviews rather than scraping external posts, minimizing legal exposure.",
+     "Decided to pause further development on the dating app and take it private based on strategic prioritization.",
+     "Established strict protocols for AI collaboration to isolate work directories and safely commit only modified files.",
+     "Decided to target a worldwide audience rather than a local-only launch, proceeding through global pre-launch testing."
     ],
     "next": [
-     "Collect feedback from Tracer Route closed testing and pursue production app store approval",
-     "Invite users to the 'say when' beta and refine overall usability",
-     "Maintain the reliable operation of admin tools and automated workshop notifications"
+     "Drive early user acquisition and active review contributions for the native English teacher platform",
+     "Collect feedback from mobile app closed testing and prepare for the official global launch",
+     "Maintain ongoing service operations backed by public work logs and automated reporting systems"
     ]
    }
   },
@@ -901,5 +972,5 @@
    }
   }
  ],
- "updated": "2026-11-27 22:04"
+ "updated": "2026-11-28 22:04"
 }
